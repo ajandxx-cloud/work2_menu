@@ -21,6 +21,12 @@ Table~\ref{tab:exact_greedy_gap} reports the main approximation-quality diagnost
 
 Table~\ref{tab:robust_filtering} compares hard ETA filtering, calibrated filtering, interval-overlap filtering, and no ETA filtering. The key diagnostic is not only net profit, but also false-negative pruning, home-only menu share, and displayed menu size. A robust filter is useful only if it preserves operational credibility without removing most feasible meeting-point bundles before assortment optimization acts. The no-filter variant is included as an upper-bound diagnostic on candidate availability, not as a universal recommendation.
 
+\paragraph{Quantile error diagnostics.}
+Table~\ref{tab:filter_validity_summary} in Appendix~\ref{app:evidence_hierarchy} supplements the mean-error diagnostics with P50, P90, and P95 quantiles of displayed-offer absolute errors. Across the four filter variants, ETA P95 errors reach approximately 3\,600 seconds and IVT P95 errors reach approximately 3\,370 seconds, confirming that the filtering signal is coarse: a non-trivial share of displayed offers carry large prediction errors. The deployed blended filter shows ETA P50$\,{\approx}\,3{,}070$\,s and P90$\,{\approx}\,3{,}620$\,s, indicating that most displayed offers over-predict ETA by roughly one hour. This is consistent with the positive ETA bias column, which equals the MAE for the deployed filter (all errors are in the same direction). The heuristic and stronger filters achieve near-zero ETA errors by construction because they only display bundles whose heuristic ETA window is sufficiently narrow.
+
+\paragraph{False-negative pruning by distance.}
+The FN breakdown columns in Table~\ref{tab:filter_validity_summary} show that false-negative pruning concentrates in the far distance band ($>$1\,500\,m): across all filter variants, the far-band FN rate is approximately 8.4--8.7 candidates per request, while the near band ($<$500\,m) contributes fewer than 0.04 and the mid band (500--1\,500\,m) contributes approximately 0.11--0.13. This pattern is expected: distant meeting points are more likely to be filtered because the ETA prediction window is wider and more candidates fail the feasibility check. The concentration of false-negative pruning in the far band means that filtering preferentially removes distant meeting points, which is operationally conservative---nearby meeting points, which passengers are more likely to accept, are largely preserved.
+
 \subsection{Uptake-Regime Menu Value}
 \label{sec:uptake_regime}
 
