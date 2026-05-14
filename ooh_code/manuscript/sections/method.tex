@@ -37,10 +37,10 @@ Table~\ref{tab:mnl_params} reports the numerical values of all MNL utility param
 \hline
 Symbol & Description & Value & Source \\
 \hline
-$\beta$ & Price sensitivity & $-0.25$ & Simulator design parameter \\
+$\beta$ & Price sensitivity & $-0.25$ & Literature-bounded design parameter$^{\dagger}$ \\
 $\bar{u}$ & Base utility intercept & $-2.0$ & Simulator design parameter \\
 $u^{\text{home}}$ & Home-bundle utility bonus & $3.2$ & Simulator design parameter \\
-$\alpha_{\tau}$ & In-vehicle-time weight & $-0.002$ & Simulator design parameter \\
+$\alpha_{\tau}$ & In-vehicle-time weight & $-0.002$ & Literature-bounded design parameter$^{\dagger}$ \\
 $\alpha_{\Delta}$ & Pickup-time-deviation weight & $-0.0015$ & Simulator design parameter \\
 $\sigma$ & Walking-distance scale & $1.0$ (instance-distance units) & Simulator design parameter \\
 $R$ & Revenue target & $50.0$ & Simulator design parameter \\
@@ -48,6 +48,8 @@ $p_{\min}$ & Minimum price (floor) & $-6.0$ & Platform constraint \\
 $p_{\max}$ & Maximum price (cap) & $5.0$ & Platform constraint \\
 \hline
 \end{tabular}
+\noindent\rule{\linewidth}{0.4pt}
+\small $^{\dagger}$Literature-bounded design parameter: simulator value falls within or near the plausibility range reported in DRT and stated-preference studies (see discussion below). Not an estimated parameter from revealed-preference data.
 \end{table}
 
 The choice probability for bundle $b \in \mathcal{M}(r)$ is
@@ -56,6 +58,9 @@ The choice probability for bundle $b \in \mathcal{M}(r)$ is
   \label{eq:mnl_prob}
 \end{equation}
 where $u_0 = 0$ is the normalized utility of the outside option (no bundle chosen). Passengers may therefore reject the displayed menu entirely.
+
+\paragraph{Parameter plausibility ranges.}
+The MNL parameters in Table~\ref{tab:mnl_params} are fixed simulator design values rather than estimates from passenger surveys or revealed-preference data. However, two key parameters fall within plausibility ranges reported in the DRT and stated-preference literature. The price sensitivity $\beta = -0.25$ is consistent with the magnitude of fare coefficients estimated in DRT and ride-sourcing demand studies \citep{zha2019surge,diana2012stated}. The in-vehicle time weight $\alpha_{\tau} = -0.002$ corresponds to a low but non-trivial time valuation in the stylized utility units, compatible with the range of IVT coefficients in \citet{ben1985discrete} and related discrete-choice analyses. The outside-option utility $u_0 = 0$ (normalized) is tested across a symmetric scan in Section~\ref{sec:mnl_sensitivity}; this scan spans $u_0 \in \{-1.0, -0.5, 0.0, +0.5, +1.0\}$ to assess how the menu-optimization results respond to the attractiveness of opting out. Walking-distance sensitivity and home-bundle bonus lack direct literature anchors and remain uncalibrated design parameters; their sensitivity is partially captured by the regime-level MNL stress tests reported in Section~\ref{sec:mnl_sensitivity}. This framing constitutes literature-bounded sensitivity testing, not external demand validation with revealed preferences or survey data.
 
 \paragraph{Pricing transforms evaluated.} The pricing-baseline study keeps the same menu-construction logic but swaps the displayed-price transform. Three pricing rules are evaluated; they share the same predicted costs, feasible-set logic, route-aware scoring, and clipping constraints, so that the comparison isolates how much the pricing transform itself contributes once filtering and menu composition are held fixed. The price-sensitivity parameter $\beta$ governs how strongly passengers react to displayed prices, and the platform-level tradeoff between revenue extraction and demand stimulation is a recurring theme in ride-sourcing pricing analysis \citep{zha2019surge}.
 
@@ -164,4 +169,4 @@ Archival diagnostic & Earlier sensitivity and development sweeps & Implementatio
 }
 \end{table}
 
-Results are conditional on the MNL parameterization reported in Table~\ref{tab:mnl_params} and should not be interpreted as behaviorally validated predictions. The demand model encodes one stylized commuter-DRT preference regime; sensitivity to alternative parameterizations is discussed in Section~\ref{sec:results}.
+Results are conditional on the MNL parameterization reported in Table~\ref{tab:mnl_params} and should not be interpreted as behaviorally validated predictions. Price sensitivity and in-vehicle time weight fall within literature-bounded plausibility ranges (Table~\ref{tab:mnl_params}, footnote); the outside option is stress-tested across five utility levels in Section~\ref{sec:mnl_sensitivity}. The demand model encodes one stylized commuter-DRT preference regime; sensitivity to alternative parameterizations is discussed in Section~\ref{sec:results}.
