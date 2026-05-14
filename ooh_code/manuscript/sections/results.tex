@@ -10,7 +10,7 @@ All headline results use frozen predictors and paired replayed request traces. U
 
 \ArtifactTable{../artifacts/tables/phase29_exact_greedy_gap_summary.tex}{Exact-vs-greedy assortment diagnostics on the RC benchmark.}
 
-Table~\ref{tab:phase29_exact_greedy_gap} reports the main approximation-quality diagnostic. Exact enumeration is interpreted as the benchmark for the implemented menu-value surrogate when the candidate set is small enough to enumerate. Greedy forward selection is the scalable approximation. The logged relative optimality gap, menu-overlap rate, and build-time columns therefore answer a narrow but important question: how much surrogate value is lost when the system uses the operationally cheaper greedy construction rather than exact subset enumeration? This table is the primary evidence for the exact-small/greedy-large algorithmic claim; it should not be read as a proof of optimality for the full dynamic DRT routing problem.
+Table~\ref{tab:exact_greedy_gap} reports the main approximation-quality diagnostic. Exact enumeration is interpreted as the benchmark for the implemented menu-value surrogate when the candidate set is small enough to enumerate. Greedy forward selection is the scalable approximation. The logged relative optimality gap, menu-overlap rate, and build-time columns therefore answer a narrow but important question: how much surrogate value is lost when the system uses the operationally cheaper greedy construction rather than exact subset enumeration? This table is the primary evidence for the exact-small/greedy-large algorithmic claim; it should not be read as a proof of optimality for the full dynamic DRT routing problem.
 
 \subsection{Robust ETA Filtering}
 \label{sec:robust_filtering}
@@ -19,7 +19,7 @@ Table~\ref{tab:phase29_exact_greedy_gap} reports the main approximation-quality 
 
 \ArtifactTable{../artifacts/tables/phase30_robust_filtering_summary.tex}{Robust ETA-filtering comparison on the RC benchmark.}
 
-Table~\ref{tab:phase30_robust_filtering} compares hard ETA filtering, calibrated filtering, interval-overlap filtering, and no ETA filtering. The key diagnostic is not only net profit, but also false-negative pruning, home-only menu share, and displayed menu size. A robust filter is useful only if it preserves operational credibility without removing most feasible meeting-point bundles before assortment optimization acts. The no-filter variant is included as an upper-bound diagnostic on candidate availability, not as a universal recommendation.
+Table~\ref{tab:robust_filtering} compares hard ETA filtering, calibrated filtering, interval-overlap filtering, and no ETA filtering. The key diagnostic is not only net profit, but also false-negative pruning, home-only menu share, and displayed menu size. A robust filter is useful only if it preserves operational credibility without removing most feasible meeting-point bundles before assortment optimization acts. The no-filter variant is included as an upper-bound diagnostic on candidate availability, not as a universal recommendation.
 
 \subsection{Uptake-Regime Menu Value}
 \label{sec:uptake_regime}
@@ -28,7 +28,9 @@ Table~\ref{tab:phase30_robust_filtering} compares hard ETA filtering, calibrated
 
 \ArtifactTable{../artifacts/tables/phase31_uptake_menu_value_summary.tex}{Menu-value comparison across low, medium, and high uptake regimes.}
 
-Table~\ref{tab:phase31_uptake_menu_value} reports the low-, medium-, and high-uptake RC regimes. This table is the main guard against over-interpreting near-degenerate outside-option settings. When acceptance and non-home uptake are close to zero, profit differences mainly diagnose mechanism behavior; when uptake becomes behaviorally live, the same menu and pricing rules can be interpreted through operator profit, passenger surplus, non-home acceptance, and pricing-boundary diagnostics. The intended claim is therefore conditional: service-menu optimization matters most when passengers have enough willingness to consider meeting-point bundles and the outside option is not overwhelmingly attractive.
+Table~\ref{tab:uptake_menu_value} reports the low-, medium-, and high-uptake RC regimes. This table is the main guard against over-interpreting near-degenerate outside-option settings. When acceptance and non-home uptake are close to zero, profit differences mainly diagnose mechanism behavior; when uptake becomes behaviorally live, the same menu and pricing rules can be interpreted through operator profit, passenger surplus, non-home acceptance, and pricing-boundary diagnostics. The intended claim is therefore conditional: service-menu optimization matters most when passengers have enough willingness to consider meeting-point bundles and the outside option is not overwhelmingly attractive.
+
+When a filtering policy improves net profit but reduces the acceptance rate, the profit improvement does not automatically imply a service-quality improvement. Table~\ref{tab:rc_main_optout_welfare} reports passenger-facing welfare metrics separately so that operators can assess whether profit gains come at the expense of reduced service coverage or degraded passenger experience.
 
 \subsection{MNL Parameter Sensitivity}
 \label{sec:mnl_sensitivity}
@@ -49,6 +51,12 @@ The sensitivity evidence shows that the direction and rough magnitude of the men
 \ArtifactFigure{../artifacts/figures/rc_main_optout_gap_vs_full.png}{0.9\linewidth}{Policy net-profit gap against full display on the RC outside-option study.}{fig:main_policy_gap}
 
 The original RC outside-option benchmark remains useful as a mechanism check. It shows whether policies change menu exposure, home-only collapse, and candidate-set pruning under a demanding outside-option calibration. It is not the main operator-impact benchmark when full-display acceptance is behaviorally degenerate. Split-level uncertainty for RC, Austin, and Seattle is reported in Table~\ref{tab:policy_gap_uncertainty_summary}. The RC benchmark provides six split-level evaluation pairs. Reported gaps are split-level paired means with the observed range; the percentage effect is computed relative to the full-display net profit. When acceptance rates differ between policies (e.g., strict filtering reduces non-home acceptance), the profit gap partially reflects changed request composition rather than purely operational efficiency.
+
+Table~\ref{tab:profit_decomposition} decomposes the net-profit gap into fare revenue, discount cost, travel cost, service cost, and failure cost channels. The decomposition shows that the profit gap between policies is not driven by a single cost component; instead, filtering and assortment rules shift the composition of displayed bundles, which changes discount exposure, service costs, and failure penalties simultaneously. The direction of the net-profit gap is consistent across the tested regimes, but the source decomposition varies with the uptake regime and MNL calibration.
+
+\ArtifactTable{../artifacts/tables/operational_baselines_summary.tex}{Operational baseline comparison on the RC low-uptake benchmark. Insertion-cost greedy, minimum-lateness ranking, and random-top-k floor provide dispatch-floor reference points that do not apply menu optimization or ETA filtering. Gap and win rate are computed against exhaustive full display.}
+
+Table~\ref{tab:operational_baselines} reports the operational-baseline comparison under the RC low-uptake regime. All three operational baselines underperform full display on net profit, with gaps of approximately 4--6 units, confirming that even random selection does not catastrophically degrade performance in this low-uptake setting. The menu-optimization policies in Table~\ref{tab:rc_main_optout} therefore operate in a narrow reference-performance band: they must add value beyond what dispatch-floor selection already achieves, not merely beat a naive floor. This comparison does not establish service-quality bounds or generalize to higher-uptake regimes; it benchmarks the starting point from which menu optimization seeks improvement.
 
 \subsection{Cross-Instance Evaluation}
 \label{sec:cross_instance}
