@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: TR-E Submission Risk Closure
-current_phase: 01
-current_phase_name: operational-baseline-integration
-current_plan: 2
+current_phase: 02
+current_phase_name: demand calibration and outside option sensitivity
+current_plan: Not started
 status: executing
 stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-05-14T14:44:16.455Z"
+last_updated: "2026-05-14T14:49:15.228Z"
 last_activity: 2026-05-14
 progress:
   total_phases: 5
@@ -30,10 +30,10 @@ See: .planning/PROJECT.md (updated 2026-05-14)
 
 Phase: 01 (operational-baseline-integration) — EXECUTING
 Plan: 2 of 2
-Current Phase: 01
-Current Phase Name: operational-baseline-integration
+Current Phase: 02
+Current Phase Name: demand calibration and outside option sensitivity
 Total Phases: 5
-Current Plan: 2
+Current Plan: Not started
 Total Plans in Phase: 2
 Status: Ready to execute
 Last activity: 2026-05-14
@@ -57,6 +57,7 @@ Progress: [----------] 0%
 | 3 | 0/3 | - | - |
 | 4 | 0/2 | - | - |
 | 5 | 0/2 | - | - |
+| 01 | 2 | - | - |
 
 **Recent Trend:**
 
