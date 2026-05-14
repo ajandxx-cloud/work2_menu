@@ -45,8 +45,8 @@ This roadmap converts the Round 2 review in `review_ServiceMenuDRT_round2_202605
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Baseline taxonomy and method/experiment integration (Wave 1)
-- [ ] 01-02-PLAN.md — Operational-baseline results placement and interpretation (Wave 2, depends on 01-01)
+- [x] 01-01-PLAN.md — Baseline taxonomy and method/experiment integration (Wave 1)
+- [x] 01-02-PLAN.md — Operational-baseline results placement and interpretation (Wave 2, depends on 01-01)
 
 ### Phase 2: Demand Calibration and Outside-Option Sensitivity
 
