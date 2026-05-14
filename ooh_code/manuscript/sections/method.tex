@@ -1,0 +1,167 @@
+\section{Method}
+
+\subsection{Shared Bundle Predictor}
+\label{sec:predictor}
+
+A shared predictor is trained once per data split using the \emph{exhaustive full-display} regime, in which all feasible bundles $\mathcal{B}(r)$ are shown to every passenger. The core menu objects $\mathcal{B}(r)$, $\mathcal{M}(r)$, $b^0$, and the outside option are defined in Section~\ref{sec:notation_entities}. The predictor estimates three bundle-level operational signals from request and network features: predicted marginal cost $\hat{c}(b)$, predicted pickup ETA $\hat{\tau}_b$, and predicted in-vehicle time $\hat{\iota}_b$. Frozen evaluation then reuses this checkpoint while varying only the menu policy, isolating the effect of menu construction from any confound introduced by training a different predictor per policy.
+
+\paragraph{Architecture.} The predictor is a two-layer convolutional neural network (CNN-2d) that encodes the spatial state of the service area as a $2 \times 11 \times 11$ grid tensor (2 temporal layers, $11 \times 11$ spatial grid). The convolutional backbone consists of two Conv2d layers (16 and 32 filters, $3 \times 3$ kernels, same padding) followed by average pooling, producing a flattened spatial embedding. A 4-dimensional auxiliary feature vector (remaining vehicle capacity and related scalars) is concatenated before three fully connected layers (256 $\to$ 128 $\to$ 3 outputs). The three output heads predict $\hat{c}(b)$, $\hat{\tau}_b$, and $\hat{\iota}_b$ jointly. Training uses the Huber loss ($\delta = 1.0$) with the Adam optimizer (learning rate $10^{-3}$, replay buffer of 500 episodes).
+
+\paragraph{Input features.} The spatial grid encodes the current demand density and vehicle occupancy at each grid cell across two time intervals. The auxiliary vector encodes the remaining capacity of the candidate vehicle, the time elapsed in the current episode, and two bundle-specific scalars (walking distance and candidate meeting-point index). The predictor is trained on $(s_t, b, y_t)$ tuples collected under the full-display policy, where $y_t = (c_t, \tau_t, \iota_t)$ are the realized cost, pickup time, and in-vehicle time for the selected bundle.
+
+\paragraph{Prediction accuracy.} Predictor MAE on a held-out 20\% partition of the training buffer is reported in Appendix~\ref{app:predictor_validation}. The raw CNN cost head improves on a naive mean baseline, while ETA and IVT heads are blended at inference time with heuristic routing signals (blend weight 0.35 CNN, 0.65 heuristic). Because menu filtering acts on the blended signal rather than the raw CNN head, the paper distinguishes raw-head error from the effective signal diagnostics reported in Section~\ref{sec:results}.
+
+\paragraph{Deployed, predicted, and realized time quantities.} The implementation uses three distinct time quantities that should not be conflated. The \emph{predicted} quantities $(\hat{\tau}_b, \hat{\iota}_b)$ are the model-based bundle attributes passed into utility scoring and menu construction. The \emph{deployed filtering signal} is the ETA quantity actually thresholded by the implementation when ETA pre-screening is enabled; in the deployed policy this is the blended ETA signal described above, while companion variants replace that signal with heuristic, stronger-calibrated, or oracle-style proxies. The \emph{realized} quantities are the simulator outcomes observed after a passenger choice is made and the route is executed. Reported net profit, acceptance, walking, pickup deviation, and in-vehicle time outcomes are therefore realized performance metrics, whereas the ETA/IVT MAE diagnostics in Section~\ref{sec:results} evaluate the signal that was displayed or filtered.
+
+\subsection{MNL Choice Model and Implemented Pricing Rules}
+\label{sec:mnl}
+
+Passenger choice follows a Multinomial Logit model \citep{ben1985discrete,mcfadden1974conditional}. Given a displayed menu $\mathcal{M}(r)$, the utility of bundle $b$ for passenger $r$ is
+\begin{equation}
+  u_b = \bar{u} + \mathbb{1}[b = b^0]\cdot u^{\text{home}}
+        + \alpha_{\tau}\,\hat{\iota}_b
+        + \alpha_{\Delta}\,\Delta_b
+        - (1 - e^{-d_b / \sigma})
+        + \beta\, p_b,
+  \label{eq:utility}
+\end{equation}
+where $\bar{u}$ is a base utility intercept, $u^{\text{home}} > 0$ is the additional utility of the home bundle, $\hat{\iota}_b$ is predicted in-vehicle time, $\Delta_b = \hat{\tau}_b - t_r^{\text{req}}$ is the pickup time deviation, $d_b$ is walking distance, $\sigma > 0$ is a distance-scale parameter measured in the same distance units as the underlying instance, and $\beta < 0$ is the passenger price sensitivity. The saturating penalty $(1 - e^{-d_b/\sigma})$ equals zero at $d_b = 0$ and approaches $-1$ as $d_b \to \infty$, ensuring that walking disutility is monotone and bounded.
+
+Table~\ref{tab:mnl_params} reports the numerical values of all MNL utility parameters used in the experiments. These values are fixed design parameters of the simulator, not estimates from passenger survey data; they encode one stylized commuter-DRT preference regime and are held constant within each reported study.
+
+\begin{table}[t]
+\centering
+\caption{MNL utility parameter values used in the experiments.}
+\label{tab:mnl_params}
+\begin{tabular}{llrl}
+\hline
+Symbol & Description & Value & Source \\
+\hline
+$\beta$ & Price sensitivity & $-0.25$ & Simulator design parameter \\
+$\bar{u}$ & Base utility intercept & $-2.0$ & Simulator design parameter \\
+$u^{\text{home}}$ & Home-bundle utility bonus & $3.2$ & Simulator design parameter \\
+$\alpha_{\tau}$ & In-vehicle-time weight & $-0.002$ & Simulator design parameter \\
+$\alpha_{\Delta}$ & Pickup-time-deviation weight & $-0.0015$ & Simulator design parameter \\
+$\sigma$ & Walking-distance scale & $1.0$ (instance-distance units) & Simulator design parameter \\
+$R$ & Revenue target & $50.0$ & Simulator design parameter \\
+$p_{\min}$ & Minimum price (floor) & $-6.0$ & Platform constraint \\
+$p_{\max}$ & Maximum price (cap) & $5.0$ & Platform constraint \\
+\hline
+\end{tabular}
+\end{table}
+
+The choice probability for bundle $b \in \mathcal{M}(r)$ is
+\begin{equation}
+  \pi(b \mid \mathcal{M}) = \frac{e^{u_b}}{e^{u_0} + \sum_{b' \in \mathcal{M}} e^{u_{b'}}},
+  \label{eq:mnl_prob}
+\end{equation}
+where $u_0 = 0$ is the normalized utility of the outside option (no bundle chosen). Passengers may therefore reject the displayed menu entirely.
+
+\paragraph{Pricing transforms evaluated.} The pricing-baseline study keeps the same menu-construction logic but swaps the displayed-price transform. Three pricing rules are evaluated; they share the same predicted costs, feasible-set logic, route-aware scoring, and clipping constraints, so that the comparison isolates how much the pricing transform itself contributes once filtering and menu composition are held fixed. The price-sensitivity parameter $\beta$ governs how strongly passengers react to displayed prices, and the platform-level tradeoff between revenue extraction and demand stimulation is a recurring theme in ride-sourcing pricing analysis \citep{zha2019surge}.
+
+\emph{Cost-plus pricing.} The simplest rule removes the shared-offset optimization entirely:
+\[
+  p_b = \operatorname{clip}\!\bigl(\hat{c}(b) - R,\; p_{\min},\; p_{\max}\bigr),
+\]
+where $\hat{c}(b)$ is the predicted marginal cost and $R$ is a revenue target. Each displayed price equals predicted cost minus the revenue target, clipped to the platform bounds $[p_{\min},\, p_{\max}]$. This is the most transparent pricing rule: no demand-side parameter enters the price calculation. It serves as a baseline showing what happens when demand-aware price adjustment is removed, isolating the contribution of menu construction and filtering alone.
+
+\emph{Flat-markdown pricing.} A single constant offset is applied to every displayed bundle:
+\[
+  p_b = \operatorname{clip}\!\bigl(\hat{c}(b) + \kappa,\; p_{\min},\; p_{\max}\bigr),
+\]
+where $\kappa$ is one common constant calibrated per regime. Like cost-plus, the flat-markdown rule uses no demand model; unlike cost-plus, it applies a regime-tuned markdown rather than a cost-minus-target formula. Notably, the flat-markdown rule outperforms the Lambert-W transform in some calibrated uptake regimes, suggesting that the closed-form optimization does not always dominate simpler alternatives and that the practical value of the Lambert-W offset is regime-dependent.
+
+\emph{Lambert-W common-offset pricing.} The third rule prices a displayed menu through a shared offset derived from the Lambert-W function. For each bundle, $p_b^{\text{ref}}(\delta) = \hat{c}(b) - R - \delta$. Let $u_b^0$ denote the utility of $b$ evaluated at zero displayed price. The code constructs
+\[
+  S_{\text{impl}} = e^{u_0} + \sum_{b \in \mathcal{M}} e^{u_b^0 + \beta(\hat{c}(b) - R)},
+\]
+and solves
+\begin{equation}
+  \delta_{\text{impl}} = \frac{W_0(S_{\text{impl}}/e) + 1}{\beta},
+  \label{eq:lambertw}
+\end{equation}
+followed by clipped displayed prices
+\begin{equation}
+  p_b = \operatorname{clip}\!\bigl(\hat{c}(b) - R - \delta_{\text{impl}},\; p_{\min},\; p_{\max}\bigr).
+  \label{eq:price}
+\end{equation}
+This is an implemented common-offset pricing heuristic, not the exact optimizer of the simulator's clipped heterogeneous-cost profit objective. The full derivation is provided in Appendix~\ref{app:lambertw}. The home bundle is retained in the pricing set (\texttt{menu\_keep\_home=True}) for numerical stability because removing it sharply reduces the exponential mass in $S_{\text{impl}}$ and tends to collapse all OOH prices to the floor.
+
+\subsection{Greedy Menu Construction and System Evaluation}
+\label{sec:scoring}
+
+\paragraph{System evaluation cost.} Menu construction uses a route-aware surrogate cost for each displayed bundle,
+\begin{equation}
+  \hat{c}_{\text{sys}}(b) = \hat{c}(b)
+    + \underbrace{\mu_r \cdot \kappa \cdot \rho_b}_{\text{route-delay penalty}}
+    + \underbrace{\frac{\mu_q}{q_b + \epsilon}}_{\text{capacity-risk penalty}},
+  \label{eq:syscost}
+\end{equation}
+where $\rho_b$ is the predicted route-delay increment, $q_b$ is remaining vehicle capacity, $\kappa$ is a cost multiplier, and $\epsilon > 0$ is a numerical-stability constant.
+
+\paragraph{Menu-value surrogate.} After applying the common-offset pricing heuristic to a candidate menu, the implementation evaluates that menu with the surrogate
+\begin{equation}
+  \widehat{\Pi}(\mathcal{M}) = \sum_{b \in \mathcal{M}} \pi(b \mid \mathcal{M}) \bigl(p_b - \hat{c}_{\text{sys}}(b)\bigr),
+  \label{eq:menu_value}
+\end{equation}
+where $\pi(b \mid \mathcal{M})$ is the MNL probability from Eq.~\ref{eq:mnl_prob} and $p_b$ is the clipped displayed price from Eq.~\ref{eq:price}. This surrogate is not the exact global DRT objective, but it is the criterion actually used by the implemented menu-selection code.
+
+\paragraph{Exact-small/greedy-large menu solver.} In the main \texttt{menu\_optimization} policy, the home bundle is retained and the operator builds a menu of up to $k$ non-home offers. The solver is controlled by \texttt{menu\_selection\_solver}. In \texttt{exact} mode, candidate sets no larger than \texttt{menu\_exact\_threshold} are solved by enumerating all subsets and selecting the menu maximizing Eq.~\ref{eq:menu_value}. In \texttt{greedy} mode, the policy always uses forward selection. In \texttt{auto} mode, the implementation uses exact enumeration for small feasible sets and greedy forward selection otherwise:
+\begin{enumerate}
+  \item start from the home bundle;
+  \item select the single non-home offer $b$ that maximizes $\widehat{\Pi}(\{b^0,b\})$;
+  \item iteratively add the remaining offer that yields the largest increase in $\widehat{\Pi}(\mathcal{M}\cup\{b\})$;
+  \item stop when no candidate improves the current menu value or when the non-home cap $k$ is reached.
+\end{enumerate}
+The final displayed offers are repriced on the selected menu and logged together with diagnostic per-offer scores for interpretability. Those logged scores are \emph{not} the primary selection rule in the current implementation.
+
+\paragraph{Approximation quality.} Two approximations remain even after exact-subset evaluation. First, Eq.~\ref{eq:menu_value} itself is a surrogate because it relies on predicted costs and the common-offset pricing heuristic rather than an exact rerouting-and-pricing solve. Second, when greedy forward selection is used, the procedure is myopic because each addition is judged relative to the current menu rather than the full search tree. To make this approximation auditable, the implementation logs exact-vs-greedy diagnostics whenever the non-home candidate count is below \texttt{menu\_exact\_gap\_threshold}: exact menu value, greedy menu value, relative optimality gap, displayed-menu overlap, and exact/greedy build times. These diagnostics support the exact-vs-greedy study in Section~\ref{sec:results}.
+
+\paragraph{Heuristic nature and scope.} The resulting method is an implemented service-menu assortment solver with an exact benchmark on small candidate sets and a greedy approximation at scale. It is related to MNL assortment optimization, but it falls outside the exact settings studied by \citet{wang2012} because bundles carry heterogeneous operational costs, menu evaluation depends on predicted routing signals, and displayed prices are clipped after the common offset is computed. Capacity-constrained MNL assortment \citep{sumida2010capacity} provides additional theoretical context, though our setting differs because the ``products'' are dynamically generated bundles rather than a fixed catalog. The paper therefore treats exact enumeration as optimal only for the implemented surrogate on bounded candidate sets, not as an optimality certificate for the full dynamic DRT system.
+
+\subsection{ETA-Based Time-Window Filtering and No-Filter Variant}
+\label{sec:filtering}
+
+The strict-filter heuristic applies a pre-screening rule that removes any non-home bundle whose deployed ETA signal falls outside the passenger's acceptable pickup interval. The false-negative pruning rate referenced later in the paper uses the definition and non-home feasible-bundle denominator introduced in Section~\ref{sec:notation_entities}. The intent was to avoid showing clearly unpunctual offers. In practice, the filtering signal is noisy early in the episode because the deployed implementation thresholds a blended ETA proxy rather than realized pickup time. When that noisy signal is thresholded aggressively, potentially acceptable meeting-point bundles are removed before the menu-value surrogate in Eq.~\ref{eq:menu_value} is ever evaluated.
+
+The no-filter variant disables ETA pre-filtering (\texttt{menu\_time\_filtering=False}),
+allowing the menu solver to evaluate all feasible candidates under the same pricing
+and menu-value logic. It is not treated as the final algorithmic answer; rather, it is
+the extreme endpoint of a robust filtering comparison that also includes hard,
+calibrated, and interval-overlap filters. The forced home-retention flag
+(\texttt{menu\_keep\_home=True}) is retained for the pricing-stability reason
+established in Section~\ref{sec:mnl}.
+
+\subsection{Baseline Policies}
+\label{sec:baselines}
+
+Five empirical policies are evaluated alongside the full-display reference. \textbf{Full display} shows the entire feasible set $\mathcal{B}(r)$ and serves as a status-quo reference that maximizes the offered choice set. \textbf{Revenue-greedy} selects the $k$ non-home bundles with the highest pairwise expected revenue under the two-offer menu $\{b^0,b\}$, following the classical MNL assortment intuition of \citet{talluri2004revenue} and related greedy heuristics \citep{rusmevichientong2010dynamic}. \textbf{Nearest-heuristic} selects by smallest walking distance $d_b$. \textbf{Top-$k$ cheapest} selects by ascending predicted cost $\hat{c}(b)$. \textbf{Top-$k$ passenger utility} selects by descending non-price utility $u_b^0$. All limited-menu policies append the home bundle and use the same common-offset pricing heuristic after menu assembly.
+
+Three additional operational baselines provide dispatch-floor and greedy-policy reference points. Insertion-cost greedy selects the $k$ non-home bundles with the lowest predicted marginal cost $\hat{c}(b)$, representing a cost-aware dispatch heuristic. Minimum-lateness ranking selects by smallest predicted pickup-time deviation $\Delta_b$, representing a time-priority dispatch heuristic. Random-top-k floor samples $k$ non-home bundles uniformly at random from the feasible set, providing a non-optimized floor that quantifies the value of any informed selection rule. These operational baselines use the same common-offset pricing and home-retention rules as the menu-optimization policies, but they do not apply the menu-value surrogate or ETA-based filtering. They therefore benchmark menu optimization against dispatch-floor selection rather than against alternative optimization objectives.
+
+\subsection{Evidence Scope and Limitations}
+\label{sec:evidence_scope}
+
+The empirical results are organized by evidence tier so that no claim is stronger than its evidence category. Table~\ref{tab:evidence_hierarchy_main} defines the four tiers used throughout Section~\ref{sec:results}. Each results subsection carries a tier label in italics at its start; readers should interpret the findings of that subsection only within the scope described by the corresponding tier row.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Evidence hierarchy used to interpret the empirical results. The table separates evidence tiers so that no claim is stronger than its evidence category.}
+\label{tab:evidence_hierarchy_main}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.18\linewidth}p{0.22\linewidth}p{0.26\linewidth}p{0.26\linewidth}@{}}
+\hline
+Evidence tier & Source & Supports & Does not support \\
+\hline
+Mechanism diagnostic & RC outside-option benchmark and ETA-identification study & Candidate-set distortion, filter behavior, displayed-offer diagnostics & Strong operator-impact claims, demand-calibration predictions, or stable welfare rankings across parameter regimes \\
+Behavioral stress test & Higher-uptake RC calibration and pricing/welfare studies & Pricing and welfare tradeoffs when acceptance is behaviorally live & External validation of the true passenger demand model or calibrated welfare magnitudes \\
+Descriptive external check & Austin and Seattle two-pair city studies & Directional consistency across real-world-derived geographies & Stable interval estimates, broad geographic generalization, or city-specific operational recommendations \\
+Archival diagnostic & Earlier sensitivity and development sweeps & Implementation history and rough directional checks & Confirmatory robustness under the current pipeline or direct quantitative comparison with current results \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+Results are conditional on the MNL parameterization reported in Table~\ref{tab:mnl_params} and should not be interpreted as behaviorally validated predictions. The demand model encodes one stylized commuter-DRT preference regime; sensitivity to alternative parameterizations is discussed in Section~\ref{sec:results}.
