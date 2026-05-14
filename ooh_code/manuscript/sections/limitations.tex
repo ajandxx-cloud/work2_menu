@@ -1,4 +1,5 @@
 \section{Limitations}
+\label{sec:limitations}
 
 The current implementation uses approximate front-end pickup windows and does not enforce strict VRPTW guarantees at the menu-display stage. Final route costs are recovered through HGS-based re-optimization \citep{vidal2022hybrid}, which makes the system suitable for comparative policy analysis but not for claims about exact optimal routing. In the RC experiments, the fraction of accepted requests subsequently found infeasible by the back-end router (i.e., time-window violations after re-optimization) is below 3\% across all policies and evaluation pairs; this rate is consistent across the strict-filter and no-filter heuristics, confirming that the net-profit gap is not an artifact of differential infeasibility. Exact quantification per policy is reported in the supplementary output files.
 
