@@ -71,9 +71,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 02-01: Outside-option utility scan design and implementation plan.
-- [ ] 02-02: Run/extract outside-option sensitivity artifacts.
-- [ ] 02-03: Literature-bounded calibration text and demand-limitation rewrite.
+- [ ] 02-01-PLAN.md — Parameterize outside-option utility + create 5 YAML study manifests + suite (Wave 1)
+- [ ] 02-02-PLAN.md — Run outside-option scan suite + build artifact table (Wave 2, depends on 02-01)
+- [ ] 02-03-PLAN.md — Literature-bounded calibration text, Table 2 update, results.tex outside-option subsection (Wave 3, depends on 02-02)
 
 ### Phase 3: Filter Validity Diagnostics
 
@@ -159,8 +159,8 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Operational Baseline Integration | v1.1 | 0/2 | Planning complete | - |
-| 2. Demand Calibration and Outside-Option Sensitivity | v1.1 | 0/3 | Not started | - |
+| 1. Operational Baseline Integration | v1.1 | 0/2 | Complete | 2026-05-14 |
+| 2. Demand Calibration and Outside-Option Sensitivity | v1.1 | 0/3 | Planning complete | - |
 | 3. Filter Validity Diagnostics | v1.1 | 0/3 | Not started | - |
 | 4. Evidence Synthesis and Behavioral Interpretation | v1.1 | 0/2 | Not started | - |
 | 5. Polish, QA, and Round 2 Traceability | v1.1 | 0/2 | Not started | - |
