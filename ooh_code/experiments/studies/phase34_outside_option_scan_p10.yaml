@@ -1,0 +1,70 @@
+name: phase34_outside_option_scan_p10
+title: Outside-Option Utility Scan - u_0 = +1.0
+type: ablation
+study_role: support
+description: >
+  Outside-option utility sensitivity scan at u_0 = +1.0. Tests how varying
+  the outside-option attractiveness affects menu-optimization outcomes under
+  the primary RC calibration. Three policies: strict-filter, no-filter, flat-markdown.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+baseline_variant:
+  tag: strict_filter
+  label: strict-filter heuristic
+  policy: menu_optimization
+  menu_k: 3
+  args_overrides:
+    menu_time_filtering: true
+    menu_eta_filter_mode: hard
+    menu_eta_variant: deployed
+    menu_time_prediction_blend: 0.35
+    menu_pricing_mode: lambertw
+ablations:
+  - tag: no_filter
+    label: no-filter heuristic
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      menu_pricing_mode: lambertw
+  - tag: flat_markdown
+    label: flat markdown pricing
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: hard
+      menu_eta_variant: deployed
+      menu_time_prediction_blend: 0.35
+      menu_pricing_mode: flat_markdown
+      menu_pricing_constant: -3.0
+behavior_gate:
+  min_acceptance_rate: 0.02
+  max_acceptance_rate: 0.60
+  max_opt_out_rate: 0.98
+base_args:
+  experiment_name: phase34_outside_option_scan_p10
+  instance: RC
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 12
+  eval_episodes: 6
+  menu_k: 3
+  base_util: -2.0
+  home_pickup_utility: 3.2
+  pref_window_half_width: 600
+  incentive_sens: -0.25
+  menu_travel_time_weight: -0.002
+  menu_pickup_time_weight: -0.0015
+  outside_option_util: 1.0
+splits:
+  - id: rc_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: rc_1_to_0
+    train_split: 1
+    test_split: 0

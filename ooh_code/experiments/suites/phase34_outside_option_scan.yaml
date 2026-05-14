@@ -1,0 +1,12 @@
+name: phase34_outside_option_scan
+title: Outside-Option Utility Scan Suite
+type: suite
+description: >
+  Five-point outside-option utility scan (u_0 = -1.0, -0.5, 0.0, +0.5, +1.0)
+  on the primary RC calibration with three pricing/filtering policies each.
+members:
+  - phase34_outside_option_scan_m10
+  - phase34_outside_option_scan_m05
+  - phase34_outside_option_scan_00
+  - phase34_outside_option_scan_p05
+  - phase34_outside_option_scan_p10
