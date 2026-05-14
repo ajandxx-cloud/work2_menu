@@ -679,6 +679,63 @@ def build_uptake_menu_value_artifacts(rows, prefix="phase31_uptake_menu_value"):
     write_csv(ARTIFACTS_DIR / "tables" / f"{prefix}_summary.csv", rows)
 
 
+def outside_option_u0_from_study(study_name):
+    text = str(study_name)
+    if text.endswith("_m10"):
+        return "$-1.0$"
+    if text.endswith("_m05"):
+        return "$-0.5$"
+    if text.endswith("_00"):
+        return "$0.0$"
+    if text.endswith("_p05"):
+        return "$+0.5$"
+    if text.endswith("_p10"):
+        return "$+1.0$"
+    return "--"
+
+
+def build_outside_option_scan_artifacts(rows, prefix="outside_option_scan"):
+    u0_order = {"$-1.0$": 0, "$-0.5$": 1, "$0.0$": 2, "$+0.5$": 3, "$+1.0$": 4}
+    policy_order = {"full display": 0, "strict_filter": 1, "no_filter": 2, "flat_markdown": 3}
+    rows = sorted(
+        rows,
+        key=lambda row: (
+            u0_order.get(outside_option_u0_from_study(row.get("study_name", "")), 99),
+            policy_order.get(row.get("variant_tag", ""), 99),
+        ),
+    )
+    table_rows = [
+        [
+            outside_option_u0_from_study(row.get("study_name", "")),
+            row.get("variant_tag", "--"),
+            format_metric(row.get("mean_net_profit_gap_vs_reference")),
+            format_metric(row.get("acceptance_rate")),
+            format_metric(row.get("non_home_acceptance_rate")),
+            format_metric(row.get("consumer_surplus")),
+            format_metric(row.get("opt_out_rate")),
+            format_metric(row.get("price_at_floor_fraction")),
+        ]
+        for row in rows
+    ]
+    write_tex_table(
+        ARTIFACTS_DIR / "tables" / f"{prefix}_summary.tex",
+        caption="Outside-option utility sensitivity scan across five $u_0$ levels on the primary RC calibration. Gap vs full is the mean net-profit gap against exhaustive full display.",
+        label=f"tab:{prefix}_summary",
+        headers=[
+            "$u_0$",
+            "Policy",
+            "Gap vs full",
+            "Acceptance",
+            "Non-home acc.",
+            "Surplus",
+            "Opt-out rate",
+            "Floor hit",
+        ],
+        rows=table_rows,
+    )
+    write_csv(ARTIFACTS_DIR / "tables" / f"{prefix}_summary.csv", rows)
+
+
 def build_welfare_artifacts(
     rows,
     prefix="welfare",
@@ -1450,6 +1507,37 @@ def build_suite_artifacts(bundle):
         }
         save_json(ARTIFACTS_DIR / "results_snapshot" / "phase31_uptake_menu_value_summary.json", snapshot)
         write_csv(ARTIFACTS_DIR / "results_snapshot" / "phase31_uptake_menu_value_rows.csv", combined_rows)
+        return snapshot
+
+    if bundle["manifest"]["name"] == "phase34_outside_option_scan":
+        combined_rows = []
+        for study_name, summary, _ in bundle["member_summaries"]:
+            combined_rows.extend(
+                enrich_policy_rows(
+                    rows_from_summary(summary),
+                    study_name,
+                    study_meta=(summary.get("study", {}) if summary else {}),
+                    manifest=None,
+                )
+            )
+        build_outside_option_scan_artifacts(combined_rows, prefix="outside_option_scan")
+        snapshot = {
+            "schema_version": 1,
+            "built_at_utc": utc_now_iso(),
+            "requested_study": "phase34_outside_option_scan",
+            "kind": "suite",
+            "member_sources": [
+                {
+                    "study_name": study_name,
+                    "run_id": summary["run_metadata"]["run_id"],
+                    "study_type": summary["study"]["type"],
+                }
+                for study_name, summary, _ in bundle["member_summaries"]
+            ],
+            "outside_option_rows": combined_rows,
+        }
+        save_json(ARTIFACTS_DIR / "results_snapshot" / "outside_option_scan_summary.json", snapshot)
+        write_csv(ARTIFACTS_DIR / "results_snapshot" / "outside_option_scan_rows.csv", combined_rows)
         return snapshot
 
     member_map = study_map(bundle["member_summaries"])
