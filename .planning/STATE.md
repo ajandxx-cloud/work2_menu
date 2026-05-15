@@ -1,16 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: TR-E Submission Risk Closure
+milestone: v1.2
+milestone_name: Final Tightening for TR-E Submission
 current_phase: 02
-current_phase_name: demand calibration and outside option sensitivity
+current_phase_name: operational baseline uptake decision
 current_plan: Not started
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-05-14T14:49:15.228Z"
-last_activity: 2026-05-14
+stopped_at: Milestone v1.2 initialized; ready to discuss or plan Phase 1.
+last_updated: "2026-05-15T02:25:00.596Z"
+last_activity: 2026-05-15
 progress:
-  total_phases: 5
+  total_phases: 3
   completed_phases: 1
   total_plans: 2
   completed_plans: 2
@@ -21,22 +21,22 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-14)
+See: .planning/PROJECT.md (updated 2026-05-15)
 
-**Core value:** Produce a TR Part E-ready revision whose demand calibration, filter-validity evidence, operational-baseline integration, and manuscript polish are strong enough to withstand a critical transportation-operations review.
-**Current focus:** Phase 01 — operational-baseline-integration
+**Core value:** Produce a TR Part E-ready revision that is honest about remaining empirical limits while removing avoidable wording, filter-validity, baseline-scope, and PDF-polish risks before submission.
+**Current focus:** Phase 01 — Claim and Filter-Reliability Tightening
 
 ## Current Position
 
-Phase: 01 (operational-baseline-integration) — EXECUTING
-Plan: 2 of 2
+Phase: 01 (Claim and Filter-Reliability Tightening) — EXECUTING
+Plan: 1 of 2
 Current Phase: 02
-Current Phase Name: demand calibration and outside option sensitivity
-Total Phases: 5
+Current Phase Name: operational baseline uptake decision
+Total Phases: 3
 Current Plan: Not started
 Total Plans in Phase: 2
-Status: Ready to execute
-Last activity: 2026-05-14
+Status: Executing Phase 01
+Last activity: 2026-05-15
 
 Progress: [----------] 0%
 
@@ -53,18 +53,14 @@ Progress: [----------] 0%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 0/2 | - | - |
-| 2 | 0/3 | - | - |
-| 3 | 0/3 | - | - |
-| 4 | 0/2 | - | - |
-| 5 | 0/2 | - | - |
+| 2 | 0/2 | - | - |
+| 3 | 0/2 | - | - |
 | 01 | 2 | - | - |
 
 **Recent Trend:**
 
-- Last 5 plans: none in v1.1
+- Last 5 plans: none in v1.2
 - Trend: N/A
-
-| Phase 01 P02 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -73,29 +69,26 @@ Progress: [----------] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 
 - [Milestone v1.0]: Reset phase numbering to 1-5.
-- [Milestone v1.0]: Archive old empty 26-30 phase directories before creating new reset-numbered phases.
 - [Milestone v1.0]: Keep initialization planning-only; manuscript/code edits occur during phase execution.
-- [04-01]: Keep original phase-numbered labels alongside new reader-facing labels for backward compatibility.
 - [05-02]: Major 2 (predictor reliability) classified as partially addressed; bias diagnostics added, quantiles/confusion matrix deferred.
-- [05-02]: Overall readiness assessed as "Almost / major revision after changes can submit."
 - [Milestone v1.1]: Use Round 2 review score 6/10 as the source of truth for submission-risk closure.
 - [Milestone v1.1]: Prioritize operational-baseline integration before new evidence generation.
-- [Phase 01]: Placed operational-baseline table after RC Outside-Option Benchmark per D-08 narrative flow
-- [Phase 01]: Interpretation explicitly states baselines do not establish service-quality bounds per D-09
-- [Phase 01]: Limitations scope note appended to existing instance-coverage paragraph per D-12
+- [Milestone v1.2]: Use latest 6.5/10 review as final-tightening source of truth.
+- [Milestone v1.2]: Treat medium/high operational-baseline reruns as optional and decision-gated.
 
 ### Pending Todos
 
-- Plan Phase 1: Operational Baseline Integration.
-- Preserve the Round 2 review source at `review_ServiceMenuDRT_round2_202605142050.md`.
+- Plan Phase 1: Claim and Filter-Reliability Tightening.
+- Preserve the latest review source at `review_ServiceMenuDRT_round2b_202605151030.md`.
 
 ### Blockers/Concerns
 
-- Round 2 says direct TR-E submission remains risky until external demand calibration, filter validity, and operational-baseline integration are resolved.
-- Real revealed-preference or survey-data calibration is unavailable in this workspace; v1.1 must be explicit about literature-bounded sensitivity versus external validation.
+- External demand validation remains unresolved and must not be overclaimed.
+- Filter diagnostics reveal large ETA/IVT errors; final manuscript must make this risk explicit.
+- Medium/high operational-baseline reruns may be useful but could require nontrivial runtime.
 
 ## Session Continuity
 
-Last session: 2026-05-14T14:44:16.452Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-05-15
+Stopped at: Milestone v1.2 initialized; ready to discuss or plan Phase 1.
 Resume file: None

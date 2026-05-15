@@ -42,8 +42,8 @@ This roadmap converts the latest 6.5/10 review in `review_ServiceMenuDRT_round2b
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01: Outside-option claim softening.
-- [ ] 01-02: Large ETA/IVT error interpretation and limitation.
+- [x] 01-01: Outside-option claim softening.
+- [x] 01-02: Large ETA/IVT error interpretation and limitation.
 
 ### Phase 2: Operational-Baseline Uptake Decision
 
