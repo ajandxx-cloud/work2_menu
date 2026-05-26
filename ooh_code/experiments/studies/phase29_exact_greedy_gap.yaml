@@ -1,0 +1,93 @@
+name: phase29_exact_greedy_gap
+title: Phase 29 Exact-Greedy Assortment Gap
+type: ablation
+study_role: mechanism
+description: >
+  Compares exact subset enumeration, greedy forward selection, and the automatic
+  exact-small/greedy-large solver on the RC benchmark. Exact-vs-greedy diagnostics
+  are logged whenever the non-home candidate count is within menu_exact_gap_threshold.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+headline_variants:
+  - full_display
+  - exact
+  - greedy
+  - auto
+baseline_variant:
+  tag: exact
+  label: exact assortment benchmark
+  policy: menu_optimization
+  menu_k: 3
+  args_overrides:
+    menu_selection_solver: exact
+    menu_use_exact_eval: true
+    menu_exact_threshold: 8
+    menu_exact_gap_threshold: 24
+    menu_time_filtering: false
+    menu_eta_filter_mode: none
+ablations:
+  - tag: greedy
+    label: greedy forward selection
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_selection_solver: greedy
+      menu_exact_gap_threshold: 24
+      menu_time_filtering: false
+      menu_eta_filter_mode: none
+  - tag: auto
+    label: auto exact-small greedy-large
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_selection_solver: auto
+      menu_use_exact_eval: true
+      menu_exact_threshold: 8
+      menu_exact_gap_threshold: 24
+      menu_time_filtering: false
+      menu_eta_filter_mode: none
+behavior_gate:
+  min_acceptance_rate: 0.02
+  max_acceptance_rate: 0.60
+  max_opt_out_rate: 0.98
+base_args:
+  experiment_name: phase29_exact_greedy_gap
+  instance: RC
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 4
+  eval_episodes: 2
+  max_steps_r: 80
+  max_steps_p: 0.5
+  menu_k: 3
+  candidate_meeting_points: 6
+  menu_window_slots_each_side: 0
+  menu_time_prediction_blend: 0.35
+splits:
+  - id: rc_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: rc_1_to_0
+    train_split: 1
+    test_split: 0
+  - id: rc_0_to_1_seed2025
+    train_split: 0
+    test_split: 1
+    trace_seed: 2025
+    args_overrides:
+      seed: 2025
+  - id: rc_2_to_3
+    train_split: 2
+    test_split: 3
+  - id: rc_3_to_2
+    train_split: 3
+    test_split: 2
+  - id: rc_4_to_2
+    train_split: 4
+    test_split: 2
+    args_overrides:
+      seed: 4242

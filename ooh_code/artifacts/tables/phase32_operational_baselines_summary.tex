@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Operational baseline comparison on the RC low-uptake benchmark. Insertion-cost greedy, minimum-lateness ranking, and random-top-k provide dispatch-floor and greedy-policy context for the menu-optimization heuristic.}
+\label{tab:phase32_operational_baselines}
+\label{tab:operational_baselines_paired}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.21\linewidth}rrrrrr@{}}
+\hline
+Policy & Mean net profit & Gap vs full & Win rate vs full & Acceptance & Menu size & Meeting-point count \\
+\hline
+full display & -4348.507 & -- & -- & 0.004 & 2.160 & 1.160 \\
+strict-filter heuristic & -4349.601 & -1.094 & 0.306 & 0.005 & 1.577 & 0.577 \\
+insertion-cost greedy & -4353.023 & -4.516 & 0.306 & 0.004 & 2.017 & 1.017 \\
+minimum-lateness ranking & -4354.325 & -5.818 & 0.278 & 0.004 & 2.017 & 1.017 \\
+random-top-k floor & -4352.281 & -3.774 & 0.333 & 0.004 & 2.017 & 1.017 \\
+\hline
+\end{tabular}
+}
+\end{table}

@@ -1,0 +1,101 @@
+name: phase22_eta_compare
+title: Phase 22 ETA Contract Comparison
+type: policy_compare
+study_role: mechanism
+description: >
+  Official Phase 22 four-lane ETA comparison on the RC benchmark. Compares the
+  deployed blended ETA lane, heuristic-only ETA lane, stronger calibrated ETA lane,
+  and oracle-style filtering lane under the same paired-evaluation protocol and
+  shared request traces. Records pruning, menu composition, profit, acceptance,
+  and displayed/chosen ETA-IVT error diagnostics.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+headline_variants:
+  - full_display
+  - deployed
+  - heuristic
+  - stronger
+  - oracle
+base_args:
+  experiment_name: phase22_eta_compare
+  instance: RC
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 12
+  eval_episodes: 6
+  menu_k: 3
+  menu_time_filtering: true
+  menu_eta_filter_mode: hard
+  menu_time_prediction_blend: 0.35
+  menu_eta_variant: deployed
+  menu_stronger_eta_gamma: 0.2
+policies:
+  - tag: deployed
+    label: deployed blended ETA
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: hard
+      menu_eta_variant: deployed
+      menu_time_prediction_blend: 0.35
+      menu_use_oracle_eta: false
+  - tag: heuristic
+    label: heuristic ETA
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: hard
+      menu_eta_variant: heuristic
+      menu_time_prediction_blend: 0.35
+      menu_use_oracle_eta: false
+  - tag: stronger
+    label: stronger calibrated ETA
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: hard
+      menu_eta_variant: stronger
+      menu_time_prediction_blend: 0.35
+      menu_stronger_eta_gamma: 0.2
+      menu_use_oracle_eta: false
+  - tag: oracle
+    label: oracle ETA filter proxy
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: hard
+      menu_eta_variant: oracle
+      menu_time_prediction_blend: 0.35
+      menu_use_oracle_eta: true
+splits:
+  - id: rc_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: rc_1_to_0
+    train_split: 1
+    test_split: 0
+  - id: rc_0_to_1_seed2025
+    train_split: 0
+    test_split: 1
+    trace_seed: 2025
+    args_overrides:
+      seed: 2025
+  - id: rc_2_to_3
+    train_split: 2
+    test_split: 3
+  - id: rc_3_to_2
+    train_split: 3
+    test_split: 2
+  - id: rc_4_to_2
+    train_split: 4
+    test_split: 2
+    args_overrides:
+      seed: 4242

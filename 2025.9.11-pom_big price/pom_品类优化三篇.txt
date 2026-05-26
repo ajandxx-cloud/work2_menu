@@ -1,0 +1,11 @@
+Assortment Optimization in the Presence of Focal Effect: Operational Insights and Efficient Algorithms
+Bo Jiang, Zizhuo Wang, Chenyu Xue, Nanxi Zhang
+DOI:10.1177/10591478251368435
+
+Intra-Category Multi-Choice Preferences Learning and Assortment Recommendation in E-Commerce
+Hongyuan Lin, Xiaobo Li, Lixia Wu
+DOI:10.1177/10591478251350853
+
+Deep Reinforcement Learning for Online Assortment Customization: A Data-Driven Approach
+Tao Li, Chenhao Wang, Yao Wang, Shaojie Tang, Ningyuan Chen
+DOI:10.1177/10591478251351737

@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{MNL-regime sensitivity summary across low, medium, and higher-uptake RC regimes. Low-uptake rows diagnose mechanism behavior under near-degenerate demand; medium and higher rows stress-test the same menu and pricing rules under progressively richer behavioral variation.}
+\label{tab:mnl_sensitivity_summary}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llrrrrrr@{}}
+\hline
+Regime & Policy/pricing rule & Evidence status & Gap vs full & Acceptance & Non-home acc. & Surplus & Floor hit \\
+\hline
+low & strict-filter heuristic & current evidence & -4.591 & 0.003 & 0.001 & -1.149 & 0.778 \\
+low & no-filter heuristic & current evidence & -4.262 & 0.003 & 0.000 & -0.938 & 0.625 \\
+low & flat markdown pricing & current evidence & 0.645 & 0.001 & 0.000 & -0.375 & 0.000 \\
+medium & strict-filter heuristic & current evidence & 14.717 & 0.029 & 0.007 & -1.500 & 1.000 \\
+medium & no-filter heuristic & current evidence & 25.969 & 0.027 & 0.000 & -1.422 & 0.966 \\
+medium & flat markdown pricing & current evidence & 44.695 & 0.024 & 0.006 & -0.750 & 0.000 \\
+higher & strict-filter heuristic & current evidence & -17.822 & 0.147 & 0.032 & -1.378 & 0.940 \\
+higher & no-filter heuristic & current evidence & -0.999 & 0.135 & 0.017 & -1.394 & 0.941 \\
+higher & flat markdown pricing & current evidence & 133.270 & 0.126 & 0.031 & -0.750 & 0.000 \\
+\hline
+\end{tabular}
+}
+\end{table}

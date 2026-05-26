@@ -1,0 +1,50 @@
+name: seattle_main
+title: Seattle (Amazon Last Mile) Main Policy Comparison
+type: policy_compare
+study_role: impact
+description: >
+  Main experiment on the Seattle instance from the Amazon Last Mile Routing
+  Research Challenge dataset. Same policy set as rc_main, providing
+  cross-instance validation on real-world delivery demand data.
+  Splits 0/1 are the two bundled Seattle coordinate files.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+headline_variants:
+  - full_display
+  - menu_optimization
+  - menu_optimization_v2
+behavior_gate:
+  min_acceptance_rate: 0.05
+  max_acceptance_rate: 0.30
+  max_opt_out_rate: 0.90
+base_args:
+  experiment_name: seattle_main
+  instance: Seattle
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 12
+  eval_episodes: 6
+  menu_k: 3
+policies:
+  - menu_optimization
+  - tag: menu_optimization_v2
+    label: menu optimization v2
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+  - revenue_greedy
+  - nearest_heuristic
+  - top_k_cheapest
+  - top_k_passenger_utility
+splits:
+  - id: seattle_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: seattle_1_to_0
+    train_split: 1
+    test_split: 0

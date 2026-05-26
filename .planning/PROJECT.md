@@ -2,22 +2,22 @@
 
 ## What This Is
 
-This project manages the revision of the manuscript `ooh_code/manuscript/main.tex` for a Transportation Research Part E submission. The current milestone converts the Round 2 review findings in `review_ServiceMenuDRT_round2_202605142050.md` into targeted evidence and manuscript revisions intended to move the paper from borderline 6/10 to submission-ready.
+This project manages the revision of the manuscript `ooh_code/manuscript/main.tex` for a Transportation Research Part E submission. The current milestone converts the latest 6.5/10 review in `review_ServiceMenuDRT_round2b_202605151030.md` into a focused final-tightening roadmap.
 
 ## Core Value
 
-Produce a TR Part E-ready revision whose demand calibration, filter-validity evidence, operational-baseline integration, and manuscript polish are strong enough to withstand a critical transportation-operations review.
+Produce a TR Part E-ready revision that is honest about remaining empirical limits while removing avoidable wording, filter-validity, baseline-scope, and PDF-polish risks before submission.
 
-## Current Milestone: v1.1 TR-E Submission Risk Closure
+## Current Milestone: v1.2 Final Tightening for TR-E Submission
 
-**Goal:** Close the Round 2 blockers that keep the revised manuscript at 6/10: external demand calibration, filter validity, operational-baseline integration, behavioral interpretation, and final polish.
+**Goal:** Move the paper from "borderline major-revision-ready" toward submission-preparable by tightening claims, clarifying large filter errors, optionally strengthening operational baselines in behaviorally live regimes, and completing compiled-PDF polish.
 
 **Target features:**
-- Integrate the existing DRT operational baselines into the Method, Results, and evidence hierarchy so they function as review-facing evidence.
-- Add an explicit outside-option and MNL calibration/sensitivity layer anchored to plausible parameter ranges from DRT and travel-behavior literature.
-- Strengthen filter validity with ETA/IVT error quantiles, filtering-decision diagnostics, and false-negative breakdowns where the logged data supports them.
-- Reconcile high-uptake, pricing, welfare, and acceptance tradeoffs so profit improvements are not overread as service-quality improvements.
-- Remove remaining encoding/polish issues and finish a fresh compile, traceability, and Round 3 readiness check.
+- Soften outside-option sensitivity claims so they read as RC stress-test robustness, not external demand stability.
+- Add an explicit explanation or limitation for large ETA/IVT errors and their implications for filtering credibility.
+- Decide whether to run medium/high-uptake operational baselines; if feasible, add them as stronger review-facing evidence.
+- Verify final typography and encoding in the compiled PDF, especially dash characters and manuscript-facing polish.
+- Prepare a final response matrix that maps the 6.5/10 review comments to the final tightening changes.
 
 ## Requirements
 
@@ -25,55 +25,50 @@ Produce a TR Part E-ready revision whose demand calibration, filter-validity evi
 
 - [v1.0] CLAIM-01: Paper claims are reframed as diagnostic/exploratory unless evidence supports stronger language.
 - [v1.0] THEORY-01: Lambert-W pricing is rewritten as a bounded reference transform, not a core optimality contribution.
-- [v1.0] STAT-01: City and RC inference are presented with conservative split-level language.
-- [v1.0] WELF-01: Profit, acceptance, and passenger welfare tradeoffs are decomposed.
+- [v1.1] BASE-01: Operational baselines are integrated into method/results narrative.
+- [v1.1] CAL-01: Outside-option utility scan exists as a concrete artifact.
+- [v1.1] FILT-01: Filter validity reports quantile diagnostics and false-negative breakdowns.
+- [v1.1] SYN-01: Pricing, uptake, acceptance, and surplus are interpreted as tradeoffs.
 
 ### Active
 
-- [ ] BASE-01: Operational baselines are described in the empirical-policy taxonomy and interpreted in the main evidence narrative.
-- [ ] BASE-02: The operational-baseline table is placed where reviewers will see it and is explicitly connected to transportation-operations relevance.
-- [ ] CAL-01: Outside-option utility sensitivity is implemented or otherwise produced as a concrete table/figure, not only discussed as a limitation.
-- [ ] CAL-02: MNL parameter ranges are tied to cited DRT, stated-preference, or travel-behavior literature where possible.
-- [ ] CAL-03: Demand-calibration claims clearly distinguish literature-bounded stress testing from external validation.
-- [ ] FILT-01: Deployed ETA/IVT validation reports P50, P90, and P95 error diagnostics in addition to MAE and bias.
-- [ ] FILT-02: Filtering-decision diagnostics quantify how many filtered bundles appear feasible under the realized or best-available feasibility proxy.
-- [ ] FILT-03: False-negative pruning is broken down by meeting-point type, walking-distance band, or another logged operational dimension.
-- [ ] SYN-01: High-uptake, flat-markdown, Lambert-W, acceptance, and surplus results are interpreted as tradeoffs rather than policy dominance.
-- [ ] TEXT-01: Remaining mojibake, stale README/caption language, and internal project terminology are removed from manuscript-facing files.
-- [ ] QA-01: Final manuscript compiles, references and artifacts resolve, and a Round 2 response matrix maps every blocker to evidence or a documented limitation.
+- [ ] CLAIM-02: Outside-option scan language is softened to "not obviously brittle within this RC stress test" rather than "stable across demand assumptions."
+- [ ] FILT-04: Manuscript explains why large ETA/IVT errors do not fully invalidate the filtering diagnostic, or explicitly names them as a key limitation.
+- [ ] BASE-03: A feasibility decision is made for medium/high-uptake operational-baseline reruns, with either new evidence or a documented deferral.
+- [ ] BASE-04: If rerun evidence is feasible, operational-baseline results are extended beyond RC low uptake and integrated into the manuscript.
+- [ ] PDF-01: Compiled PDF is checked for dash/encoding/polish issues, not only raw LaTeX source.
+- [ ] QA-02: A final response matrix maps the 6.5/10 review to completed changes, remaining limits, and submission readiness.
 
 ### Out of Scope
 
-- Full city-scale external validation campaign with many new Austin/Seattle splits. Round 2 says this remains desirable, but the v1.1 milestone focuses on submission-risk closure using feasible targeted evidence.
-- Real revealed-preference or survey-data estimation. The milestone can cite plausible ranges and run sensitivity, but it cannot create new primary demand data.
-- Re-promoting Lambert-W as a theoretical contribution. The v1.0 demotion remains a settled decision.
+- Full external demand validation with new survey or revealed-preference estimation. The latest review accepts that this remains unresolved but asks for careful framing.
+- Large city-scale external validation expansion. Austin/Seattle remain descriptive unless a separate future milestone expands them.
+- Reworking the whole paper narrative again. v1.2 is a final tightening pass, not another broad revision.
 
 ## Context
 
 Primary manuscript entrypoint: `ooh_code/manuscript/main.tex`, with sections included from `ooh_code/manuscript/sections/`.
 
-Authoritative Round 2 review source: `review_ServiceMenuDRT_round2_202605142050.md`.
+Authoritative latest review source: `review_ServiceMenuDRT_round2b_202605151030.md`.
 
-Previous review source: `review_ServiceMenuDRT_202605141407.md`.
+Previous review source: `review_ServiceMenuDRT_round2_202605142050.md`.
 
-v1.0 moved the score from 5/10 to 6/10 by improving claim framing, Lambert-W positioning, conservative statistics, MNL stress tests, welfare interpretation, and QA. Round 2 still identifies three major blockers: external demand calibration, filter validity, and operational-baseline integration. It also flags behavioral fragility, limited city evidence, and possible remaining mojibake/polish issues.
+The latest review scored the manuscript 6.5/10. It acknowledged that v1.1 materially improved operational-baseline integration, outside-option scanning, filter diagnostics, and tradeoff framing. The remaining requested work is narrower: soften outside-option claims, handle large ETA/IVT errors explicitly, verify PDF polish, and optionally rerun operational baselines in medium/high uptake to make them more persuasive.
 
 ## Constraints
 
-- Do not undo v1.0's diagnostic/exploratory framing.
-- Treat Austin/Seattle as descriptive unless a later milestone adds substantially more splits.
-- Use existing code and logged artifacts where possible; add pipeline fields only where needed for Round 2 blockers.
-- Keep manuscript-facing source clean UTF-8 and avoid adding new mojibake.
-- Preserve user/unrelated workspace changes; do not reset or revert broad worktree state.
+- Keep the diagnostic/exploratory framing from v1.0 and v1.1.
+- Do not claim true external demand validation.
+- Treat medium/high operational-baseline reruns as optional and decision-gated because they may require nontrivial experiment time.
+- Preserve existing user and generated changes; do not reset the broad dirty worktree.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Use `review_ServiceMenuDRT_round2_202605142050.md` as the v1.1 source review | It is the latest structured reassessment and directly explains why the paper remains 6/10 | Active |
-| Keep v1.1 targeted rather than full external validation | Round 2 blockers can be substantially reduced by outside-option sensitivity, filter diagnostics, and better integration | Active |
-| Reset phase numbering to 1-5 after archiving v1.0 | The v1.0 phase directories were archived by `gsd milestone complete v1.0 --archive-phases` | Active |
-| Operational baseline integration comes before new experiments | Existing baseline evidence is already available but underused in the manuscript | Active |
+| Use `review_ServiceMenuDRT_round2b_202605151030.md` as the v1.2 source review | It is the newest structured reassessment and scored the latest manuscript 6.5/10 | Active |
+| Keep v1.2 to a final-tightening milestone | Latest review asks for targeted wording, limitation, optional evidence, and PDF checks rather than another broad rewrite | Active |
+| Make operational-baseline reruns decision-gated | The review says "if time permits"; the plan should first assess feasibility before committing to long runs | Active |
 
 ## Evolution
 
@@ -93,4 +88,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-14 after v1.1 milestone initialization*
+*Last updated: 2026-05-15 after v1.2 milestone initialization*

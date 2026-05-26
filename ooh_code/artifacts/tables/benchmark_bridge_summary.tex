@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\caption{Benchmark-role bridge summary separating the degenerate RC mechanism benchmark from the city impact benchmarks. Gate status is evaluated on the full-display reference and the no-filter heuristic; reference-pass-only means the benchmark itself is behaviorally non-degenerate even if the no-filter policy falls outside the gate.}
+\label{tab:benchmark_bridge_summary}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.16\linewidth}rrrrrrrr@{}}
+\hline
+Study & Role & Gate status & Full acceptance & No-filter acceptance & Full opt-out & No-filter gap & Gap as \% of |full| & Bridge use \\
+\hline
+RC outside-option & mechanism & degenerate & 0.001 & 0.000 & 0.994 & 6.61 & 0.15 & mechanism only \\
+Austin & impact & reference pass only & 0.161 & 0.044 & 0.694 & 32.12 & 1.07 & primary impact \\
+Seattle & impact & reference pass only & 0.060 & 0.013 & 0.850 & 51.96 & 1.65 & supporting check \\
+\hline
+\end{tabular}
+}
+\end{table}

@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{ETA Filter Variant Comparison}
+\label{tab:filtering_baselines}
+\begin{tabular}{lrrrrr}
+\hline
+Policy & Mean net profit & Gap vs full & Win rate vs full & Mean menu size & Avg meeting-point count \\
+\hline
+full display & -4388.120 & -- & -- & 2.157 & 1.157 \\
+v1 calibrated ETA filter & -4391.430 & -3.310 & 0.333 & 1.651 & 0.651 \\
+v1 hard ETA filter & -4387.098 & 1.022 & 0.389 & 1.575 & 0.575 \\
+v1 interval-overlap ETA filter & -4390.127 & -2.006 & 0.333 & 1.651 & 0.651 \\
+menu optimization v2 (no filter) & -4387.313 & 0.807 & 0.333 & 2.361 & 1.361 \\
+\hline
+\end{tabular}
+\end{table}

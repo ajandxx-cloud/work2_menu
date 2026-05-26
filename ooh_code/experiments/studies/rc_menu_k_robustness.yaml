@@ -1,0 +1,41 @@
+name: rc_menu_k_robustness
+title: RC Menu-k Robustness
+type: menu_k_robustness
+description: >
+  RC robustness sweep over menu size with a shared predictor reused across the evaluated
+  menu-optimization variants. The bundled RC data only ships split files 0 and 1, so the third
+  run reuses 0->1 with a different random seed and trace seed as a low-intensity replication.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+policy: menu_optimization
+menu_k_values:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+base_args:
+  experiment_name: rc_menu_k_robustness
+  instance: RC
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 12
+  eval_episodes: 6
+  menu_k: 3
+splits:
+  - id: rc_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: rc_1_to_0
+    train_split: 1
+    test_split: 0
+  - id: rc_0_to_1_seed2025
+    train_split: 0
+    test_split: 1
+    trace_seed: 2025
+    args_overrides:
+      seed: 2025

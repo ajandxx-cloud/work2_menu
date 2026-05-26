@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "built_at_utc": "2026-05-14T08:44:58Z",
+  "requested_study": "phase27_mnl_sensitivity",
+  "kind": "suite",
+  "member_sources": [
+    {
+      "study_name": "phase27_mnl_sensitivity_low",
+      "run_id": "20260514T075443Z_ef21f3bd",
+      "study_type": "ablation"
+    },
+    {
+      "study_name": "phase27_mnl_sensitivity_medium",
+      "run_id": "20260514T080553Z_1eb07bdd",
+      "study_type": "ablation"
+    },
+    {
+      "study_name": "phase27_mnl_sensitivity_high",
+      "run_id": "20260514T082628Z_4d1944bb",
+      "study_type": "ablation"
+    }
+  ],
+  "main_policy_rows": [],
+  "robustness_rows": [],
+  "ablation_rows": [],
+  "ablation_v2_rows": [],
+  "city_impact_rows": []
+}

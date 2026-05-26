@@ -1,0 +1,127 @@
+name: pricing_sensitivity
+title: Pricing Sensitivity Grid
+type: policy_compare
+description: >
+  3x3 grid of revenue target R in {25, 50, 75} and price floor p_min in {-3, -6, -9}.
+  Runs menu_optimization_v2 against full_display for each combination across all 6 RC
+  splits to assess pricing calibration sensitivity.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+base_args:
+  experiment_name: pricing_sensitivity
+  instance: RC
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 12
+  eval_episodes: 6
+  menu_k: 3
+policies:
+  - tag: R25_pmin-3
+    label: R=25 p_min=-3
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 25
+      min_charge_adjustment: -3
+      max_charge_adjustment: 5.0
+  - tag: R25_pmin-6
+    label: R=25 p_min=-6
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 25
+      min_charge_adjustment: -6
+      max_charge_adjustment: 5.0
+  - tag: R25_pmin-9
+    label: R=25 p_min=-9
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 25
+      min_charge_adjustment: -9
+      max_charge_adjustment: 5.0
+  - tag: R50_pmin-3
+    label: R=50 p_min=-3
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 50
+      min_charge_adjustment: -3
+      max_charge_adjustment: 5.0
+  - tag: R50_pmin-6
+    label: R=50 p_min=-6 (baseline)
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 50
+      min_charge_adjustment: -6
+      max_charge_adjustment: 5.0
+  - tag: R50_pmin-9
+    label: R=50 p_min=-9
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 50
+      min_charge_adjustment: -9
+      max_charge_adjustment: 5.0
+  - tag: R75_pmin-3
+    label: R=75 p_min=-3
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 75
+      min_charge_adjustment: -3
+      max_charge_adjustment: 5.0
+  - tag: R75_pmin-6
+    label: R=75 p_min=-6
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 75
+      min_charge_adjustment: -6
+      max_charge_adjustment: 5.0
+  - tag: R75_pmin-9
+    label: R=75 p_min=-9
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      revenue: 75
+      min_charge_adjustment: -9
+      max_charge_adjustment: 5.0
+splits:
+  - id: rc_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: rc_1_to_0
+    train_split: 1
+    test_split: 0
+  - id: rc_0_to_1_seed2025
+    train_split: 0
+    test_split: 1
+    trace_seed: 2025
+    args_overrides:
+      seed: 2025
+  - id: rc_2_to_3
+    train_split: 2
+    test_split: 3
+  - id: rc_3_to_2
+    train_split: 3
+    test_split: 2
+  - id: rc_4_to_2
+    train_split: 4
+    test_split: 2
+    args_overrides:
+      seed: 4242

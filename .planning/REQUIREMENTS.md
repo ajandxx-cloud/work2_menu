@@ -1,50 +1,44 @@
 # Requirements: ServiceMenuDRT Paper Revision
 
-**Defined:** 2026-05-14
-**Core Value:** Produce a TR Part E-ready revision whose demand calibration, filter-validity evidence, operational-baseline integration, and manuscript polish are strong enough to withstand a critical transportation-operations review.
+**Defined:** 2026-05-15
+**Core Value:** Produce a TR Part E-ready revision that is honest about remaining empirical limits while removing avoidable wording, filter-validity, baseline-scope, and PDF-polish risks before submission.
 
-## v1.1 Requirements
+## v1.2 Requirements
 
-Requirements for milestone v1.1. Each maps to exactly one roadmap phase.
+Requirements for milestone v1.2. Each maps to exactly one roadmap phase.
 
-### Operational Baseline Integration
+### Claim Tightening
 
-- [ ] **BASE-01**: Operational baselines are described in the empirical-policy taxonomy and interpreted in the main evidence narrative.
-- [x] **BASE-02**: The operational-baseline table is placed where reviewers will see it and is explicitly connected to transportation-operations relevance.
+- [ ] **CLAIM-02**: Outside-option scan language is softened to "not obviously brittle within this RC stress test" rather than "stable across demand assumptions."
 
-### Demand Calibration and MNL Sensitivity
+### Filter Reliability Framing
 
-- [ ] **CAL-01**: Outside-option utility sensitivity is implemented or otherwise produced as a concrete table/figure, not only discussed as a limitation.
-- [ ] **CAL-02**: MNL parameter ranges are tied to cited DRT, stated-preference, or travel-behavior literature where possible.
-- [ ] **CAL-03**: Demand-calibration claims clearly distinguish literature-bounded stress testing from external validation.
+- [ ] **FILT-04**: Manuscript explains why large ETA/IVT errors do not fully invalidate the filtering diagnostic, or explicitly names them as a key limitation.
 
-### Filter Validity Diagnostics
+### Optional Operational-Baseline Evidence
 
-- [ ] **FILT-01**: Deployed ETA/IVT validation reports P50, P90, and P95 error diagnostics in addition to MAE and bias.
-- [ ] **FILT-02**: Filtering-decision diagnostics quantify how many filtered bundles appear feasible under the realized or best-available feasibility proxy.
-- [ ] **FILT-03**: False-negative pruning is broken down by meeting-point type, walking-distance band, or another logged operational dimension.
+- [ ] **BASE-03**: A feasibility decision is made for medium/high-uptake operational-baseline reruns, with either new evidence or a documented deferral.
+- [ ] **BASE-04**: If rerun evidence is feasible, operational-baseline results are extended beyond RC low uptake and integrated into the manuscript.
 
-### Evidence Synthesis and Interpretation
+### PDF Polish and Final QA
 
-- [ ] **SYN-01**: High-uptake, flat-markdown, Lambert-W, acceptance, and surplus results are interpreted as tradeoffs rather than policy dominance.
+- [ ] **PDF-01**: Compiled PDF is checked for dash/encoding/polish issues, not only raw LaTeX source.
+- [ ] **QA-02**: A final response matrix maps the 6.5/10 review to completed changes, remaining limits, and submission readiness.
 
-### Polish and Submission QA
-
-- [ ] **TEXT-01**: Remaining mojibake, stale README/caption language, and internal project terminology are removed from manuscript-facing files.
-- [ ] **QA-01**: Final manuscript compiles, references and artifacts resolve, and a Round 2 response matrix maps every blocker to evidence or a documented limitation.
-
-## v1.0 Validated Requirements
+## Validated Prior Requirements
 
 - [x] **CLAIM-01**: Paper claims are reframed as diagnostic/exploratory unless evidence supports stronger language.
 - [x] **THEORY-01**: Lambert-W pricing is rewritten as a bounded reference transform, not a core optimality contribution.
-- [x] **STAT-01**: City and RC inference are presented with conservative split-level language.
-- [x] **WELF-01**: Profit, acceptance, and passenger welfare tradeoffs are decomposed.
+- [x] **BASE-01**: Operational baselines are described in the empirical-policy taxonomy and interpreted in the main evidence narrative.
+- [x] **CAL-01**: Outside-option utility sensitivity exists as a concrete table/figure.
+- [x] **FILT-01**: Deployed ETA/IVT validation reports P50, P90, and P95 error diagnostics in addition to MAE and bias.
+- [x] **SYN-01**: High-uptake, flat-markdown, Lambert-W, acceptance, and surplus results are interpreted as tradeoffs rather than policy dominance.
 
 ## Future Requirements
 
 ### External Validation
 
-- **EXT-01**: Additional city splits or demand seeds provide stronger external validation beyond the targeted v1.1 evidence plan.
+- **EXT-01**: Additional city splits or demand seeds provide stronger external validation beyond targeted revision work.
 - **EXT-02**: Real survey or revealed-preference calibration data support the MNL parameterization.
 - **EXT-03**: City-level inference is upgraded from descriptive checks to a larger external-validation design.
 
@@ -52,9 +46,9 @@ Requirements for milestone v1.1. Each maps to exactly one roadmap phase.
 
 | Feature | Reason |
 |---------|--------|
-| Full city-scale validation campaign | Deferred; v1.1 closes submission-risk blockers without a broad new city experiment campaign. |
-| Real revealed-preference or survey-data estimation | Not available in the current workspace; v1.1 can only cite plausible ranges and run sensitivity. |
-| Re-promoting Lambert-W as a core theorem | v1.0 intentionally demoted Lambert-W, and Round 2 agreed this reduced conceptual risk. |
+| Full external demand validation | Requires new real-world survey or revealed-preference data unavailable in this workspace. |
+| Large city-scale validation expansion | The latest review identifies this as a limitation but asks for final tightening, not a broad new campaign. |
+| Whole-paper narrative rewrite | v1.2 is a targeted final pass after v1.0/v1.1 already rewrote the main narrative. |
 
 ## Traceability
 
@@ -62,23 +56,18 @@ Which phases cover which requirements.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BASE-01 | Phase 1 | Pending |
-| BASE-02 | Phase 1 | Complete |
-| CAL-01 | Phase 2 | Pending |
-| CAL-02 | Phase 2 | Pending |
-| CAL-03 | Phase 2 | Pending |
-| FILT-01 | Phase 3 | Pending |
-| FILT-02 | Phase 3 | Pending |
-| FILT-03 | Phase 3 | Pending |
-| SYN-01 | Phase 4 | Pending |
-| TEXT-01 | Phase 5 | Pending |
-| QA-01 | Phase 5 | Pending |
+| CLAIM-02 | Phase 1 | Pending |
+| FILT-04 | Phase 1 | Pending |
+| BASE-03 | Phase 2 | Pending |
+| BASE-04 | Phase 2 | Pending |
+| PDF-01 | Phase 3 | Pending |
+| QA-02 | Phase 3 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 11 total
-- Mapped to phases: 11
+- v1.2 requirements: 6 total
+- Mapped to phases: 6
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-05-14*
-*Last updated: 2026-05-14 after v1.1 roadmap creation*
+*Requirements defined: 2026-05-15*
+*Last updated: 2026-05-15 after v1.2 roadmap creation*

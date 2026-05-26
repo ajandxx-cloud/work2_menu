@@ -16,8 +16,8 @@ This roadmap converts the latest 6.5/10 review in `review_ServiceMenuDRT_round2b
 - Decimal phases are reserved for urgent insertions if later needed.
 
 - [ ] **Phase 1: Claim and Filter-Reliability Tightening** - Soften outside-option claims and directly address large ETA/IVT errors.
-- [ ] **Phase 2: Operational-Baseline Uptake Decision** - Decide whether to rerun operational baselines in medium/high uptake and integrate or document the outcome.
-- [ ] **Phase 3: PDF Polish and Final Response** - Verify compiled PDF polish and prepare final traceability/readiness artifacts.
+- [x] **Phase 2: Operational-Baseline Uptake Decision** - Decide whether to rerun operational baselines in medium/high uptake and integrate or document the outcome. *(completed 2026-05-15)*
+- [x] **Phase 3: PDF Polish and Final Response** - Verify compiled PDF polish and prepare final traceability/readiness artifacts. *(completed 2026-05-15)*
 
 ## Phase Details
 
@@ -67,8 +67,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01: Medium/high operational-baseline feasibility and manifest plan.
-- [ ] 02-02: Execute feasible reruns or document deferral, then integrate evidence/limitation.
+- [x] 02-01: Medium/high operational-baseline feasibility and manifest plan.
+- [x] 02-02: Execute feasible reruns or document deferral, then integrate evidence/limitation.
 
 ### Phase 3: PDF Polish and Final Response
 
@@ -92,8 +92,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 03-01: Compiled PDF and LaTeX polish QA.
-- [ ] 03-02: Final response matrix and submission-readiness reassessment.
+- [x] 03-01: Compiled PDF and LaTeX polish QA.
+- [x] 03-02: Final response matrix and submission-readiness reassessment.
 
 ## Progress
 
@@ -101,6 +101,6 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Claim and Filter-Reliability Tightening | v1.2 | 0/2 | Not started | - |
-| 2. Operational-Baseline Uptake Decision | v1.2 | 0/2 | Not started | - |
-| 3. PDF Polish and Final Response | v1.2 | 0/2 | Not started | - |
+| 1. Claim and Filter-Reliability Tightening | v1.2 | 2/2 | Complete | 2026-05-15 |
+| 2. Operational-Baseline Uptake Decision | v1.2 | 2/2 | Complete | 2026-05-15 |
+| 3. PDF Polish and Final Response | v1.2 | 2/2 | Complete | 2026-05-15 |

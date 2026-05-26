@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Robust ETA-filtering comparison on the RC benchmark.}
+\label{tab:phase30_robust_filtering}
+\label{tab:robust_filtering}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.21\linewidth}rrrrrr@{}}
+\hline
+Filter & Gap vs full & FN pruning & Home-only share & Menu size & Acceptance & Non-home acc. \\
+\hline
+full display & -- & 0.992 & 0.918 & 1.085 & 0.000 & 0.000 \\
+hard ETA filter & 0.000 & 0.992 & 0.918 & 1.082 & 0.000 & 0.000 \\
+calibrated ETA filter & 0.000 & 0.992 & 0.918 & 1.082 & 0.000 & 0.000 \\
+interval-overlap filter & 0.000 & 0.992 & 0.918 & 1.082 & 0.000 & 0.000 \\
+no ETA filter & 0.000 & 0.000 & 0.000 & 2.094 & 0.000 & 0.000 \\
+\hline
+\end{tabular}
+}
+\end{table}

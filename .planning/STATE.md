@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Final Tightening for TR-E Submission
-current_phase: 02
-current_phase_name: operational baseline uptake decision
-current_plan: Not started
-status: executing
-stopped_at: Milestone v1.2 initialized; ready to discuss or plan Phase 1.
-last_updated: "2026-05-15T02:25:00.596Z"
+current_phase: 03
+current_phase_name: PDF Polish and Final Response
+current_plan: Complete
+status: complete
+stopped_at: Milestone v1.2 complete. All 3 phases done.
+last_updated: "2026-05-15T03:30:00.000Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 3
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 3
+  total_plans: 6
+  completed_plans: 6
   percent: 100
 ---
 
@@ -24,43 +24,36 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-15)
 
 **Core value:** Produce a TR Part E-ready revision that is honest about remaining empirical limits while removing avoidable wording, filter-validity, baseline-scope, and PDF-polish risks before submission.
-**Current focus:** Phase 01 — Claim and Filter-Reliability Tightening
+**Current focus:** Milestone v1.2 COMPLETE
 
 ## Current Position
 
-Phase: 01 (Claim and Filter-Reliability Tightening) — EXECUTING
-Plan: 1 of 2
-Current Phase: 02
-Current Phase Name: operational baseline uptake decision
-Total Phases: 3
-Current Plan: Not started
-Total Plans in Phase: 2
-Status: Executing Phase 01
+Phase: 03 (PDF Polish and Final Response) — COMPLETE
+Milestone: v1.2 COMPLETE (all 3 phases, 6/6 plans)
+Status: Complete
 Last activity: 2026-05-15
 
-Progress: [----------] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed in current milestone: 0
-- Average duration: N/A
-- Total execution time: 0 hours
+- Total plans completed in current milestone: 6
+- Total execution time: ~1 hour
 
 **By Phase:**
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1 | 0/2 | - | - |
-| 2 | 0/2 | - | - |
-| 3 | 0/2 | - | - |
-| 01 | 2 | - | - |
+| Phase | Plans | Total | Status |
+|-------|-------|-------|--------|
+| 1 | 2/2 | Complete | Claim softening + error framing |
+| 2 | 2/2 | Complete | Feasibility deferral |
+| 3 | 2/2 | Complete | Em-dash fix + response matrix |
 
 **Recent Trend:**
 
-- Last 5 plans: none in v1.2
-- Trend: N/A
+- Last 6 plans: all v1.2 milestone
+- Trend: Complete
 
 ## Accumulated Context
 
@@ -78,17 +71,16 @@ Decisions are logged in PROJECT.md Key Decisions table.
 
 ### Pending Todos
 
-- Plan Phase 1: Claim and Filter-Reliability Tightening.
-- Preserve the latest review source at `review_ServiceMenuDRT_round2b_202605151030.md`.
+None — milestone complete.
 
 ### Blockers/Concerns
 
-- External demand validation remains unresolved and must not be overclaimed.
-- Filter diagnostics reveal large ETA/IVT errors; final manuscript must make this risk explicit.
-- Medium/high operational-baseline reruns may be useful but could require nontrivial runtime.
+- External demand validation remains unresolved and must not be overclaimed. (Acknowledged in limitations)
+- Filter diagnostics reveal large ETA/IVT errors; manuscript now makes this explicit as "a key limitation."
+- Medium/high operational-baseline reruns deferred per runtime estimate; claim scoped to low-uptake RC.
 
 ## Session Continuity
 
 Last session: 2026-05-15
-Stopped at: Milestone v1.2 initialized; ready to discuss or plan Phase 1.
+Stopped at: Milestone v1.2 complete. All phases done.
 Resume file: None

@@ -1,0 +1,33 @@
+name: smoke_rc
+title: RC Smoke Verification Study
+type: policy_compare
+description: >
+  Minimal local verification study used to check the project pipeline end to end without
+  running the full paper program.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+base_args:
+  experiment_name: smoke_rc
+  instance: RC
+  load_data: false
+  fraction_capacity_limited_meeting_points: 0
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 1
+  eval_episodes: 1
+  max_steps_r: 1
+  max_steps_p: 0.5
+  n_vehicles: 2
+  veh_capacity: 2
+  menu_k: 3
+policies:
+  - menu_optimization
+  - nearest_heuristic
+  - top_k_cheapest
+splits:
+  - id: smoke_0_to_1
+    train_split: 0
+    test_split: 1

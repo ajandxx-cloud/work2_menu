@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(gsd-autonomous)",
+      "Skill(gsd-autonomous:*)",
+      "Read(//c/Users/39583/AppData/Roaming/**)",
+      "Read(//c/Users/39583/AppData/Local/**)",
+      "Read(//c/Users/39583/**)"
+    ]
+  }
+}

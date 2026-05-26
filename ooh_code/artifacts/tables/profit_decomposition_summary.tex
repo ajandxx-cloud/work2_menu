@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\caption{Profit decomposition by policy in the RC outside-option study. All values are split-level means over six evaluation pairs.}
+\label{tab:profit_decomposition}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.16\linewidth}rrrrrrr@{}}
+\hline
+Policy & Fare revenue & Discount cost & Travel cost & Service cost & Failure cost & Net profit & Accepted reqs \\
+\hline
+full display & 0.139 & 12.333 & 2218.103 & 1400.027 & 747.167 & -4377.492 & 374 \\
+strict-filter heuristic & 0.139 & 9.667 & 2216.120 & 1400.434 & 747.444 & -4373.527 & 374 \\
+no-filter heuristic & 0.000 & 8.500 & 2213.088 & 1401.292 & 748.000 & -4370.880 & 374 \\
+nearest heuristic & 0.000 & 8.833 & 2217.027 & 1400.406 & 747.389 & -4373.655 & 374 \\
+revenue greedy & 0.000 & 8.000 & 2214.675 & 1400.828 & 747.667 & -4371.170 & 374 \\
+top k cheapest & 0.000 & 9.000 & 2216.687 & 1400.321 & 747.333 & -4373.341 & 374 \\
+top k passenger utility & 0.000 & 8.333 & 2212.522 & 1400.663 & 747.556 & -4369.073 & 374 \\
+\hline
+\end{tabular}
+}
+\end{table}

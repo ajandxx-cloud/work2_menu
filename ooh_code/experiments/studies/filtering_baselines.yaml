@@ -1,0 +1,82 @@
+name: filtering_baselines
+title: ETA Filter Variant Comparison
+type: policy_compare
+study_role: mechanism
+description: >
+  Compares four ETA filter variants on the RC benchmark across all 6 evaluation splits:
+  v1 (hard threshold), v1_calibrated (quantile-based, P>0.9 with sigma=5703s),
+  v1_interval (interval-overlap with sigma=5703s), and v2 (no filter).
+  Records net-profit gap vs. full display and FN pruning rate for each variant.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+headline_variants:
+  - full_display
+  - v1_hard
+  - v1_calibrated
+  - v1_interval
+  - v2
+base_args:
+  experiment_name: filtering_baselines
+  instance: RC
+  load_data: true
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 12
+  eval_episodes: 6
+  menu_k: 3
+policies:
+  - tag: v1_hard
+    label: v1 hard ETA filter
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: hard
+  - tag: v1_calibrated
+    label: v1 calibrated ETA filter
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: calibrated
+  - tag: v1_interval
+    label: v1 interval-overlap ETA filter
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: true
+      menu_eta_filter_mode: interval
+  - tag: v2
+    label: menu optimization v2 (no filter)
+    policy: menu_optimization
+    menu_k: 3
+    args_overrides:
+      menu_time_filtering: false
+      menu_eta_filter_mode: none
+splits:
+  - id: rc_0_to_1
+    train_split: 0
+    test_split: 1
+  - id: rc_1_to_0
+    train_split: 1
+    test_split: 0
+  - id: rc_0_to_1_seed2025
+    train_split: 0
+    test_split: 1
+    trace_seed: 2025
+    args_overrides:
+      seed: 2025
+  - id: rc_2_to_3
+    train_split: 2
+    test_split: 3
+  - id: rc_3_to_2
+    train_split: 3
+    test_split: 2
+  - id: rc_4_to_2
+    train_split: 4
+    test_split: 2
+    args_overrides:
+      seed: 4242

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{City-level policy-conditioned displayed-offer diagnostics. Displayed ETA/IVT MAE and false-negative pruning are diagnostics on displayed offers rather than direct welfare outcomes; acceptance rate and consumer surplus are realized passenger-facing outcomes.}
+\label{tab:city_policy_diagnostic_summary}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.21\linewidth}rrrrrr@{}}
+\hline
+City & Policy & FN pruning & Displayed ETA MAE & Displayed IVT MAE & Acceptance rate & Consumer surplus \\
+\hline
+Austin & full display & 0.598 & 598.5 & 726.8 & 0.161 & -1.227 \\
+Austin & strict-filter heuristic & 0.598 & 570.8 & 707.2 & 0.043 & -1.102 \\
+Austin & no-filter heuristic & 0.000 & 802.5 & 951.0 & 0.044 & -1.003 \\
+Seattle & full display & 0.782 & 943.3 & 727.2 & 0.060 & -1.315 \\
+Seattle & strict-filter heuristic & 0.782 & 908.4 & 689.8 & 0.010 & -1.194 \\
+Seattle & no-filter heuristic & 0.000 & 3847.2 & 2502.7 & 0.013 & -1.183 \\
+\hline
+\end{tabular}
+}
+\end{table}

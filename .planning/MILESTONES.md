@@ -1,5 +1,16 @@
 # Milestones
 
+## v1.1 TR-E Submission Risk Closure (Shipped: 2026-05-15)
+
+**Phases completed:** 5 phases, 5 plans, 4 tasks
+
+**Key accomplishments:**
+
+- Added three operational baselines (insertion-cost greedy, minimum-lateness ranking, random-top-k) to method.tex baseline taxonomy and updated experiments.tex policy count from seven to ten with dispatch-floor framing
+- Placed operational-baseline table in main Results section with dispatch-floor interpretation paragraph and added evidence-scope limitation to limitations.tex
+
+---
+
 ## v1.0 ServiceMenuDRT TR-E Revision Readiness (Shipped: 2026-05-14)
 
 **Phases completed:** 5 phases, 11 plans, 28 tasks
