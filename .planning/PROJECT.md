@@ -1,91 +1,122 @@
-# ServiceMenuDRT Paper Revision
+# Work 2: CNN-SetMenuNet Experiment Suite
 
 ## What This Is
 
-This project manages the revision of the manuscript `ooh_code/manuscript/main.tex` for a Transportation Research Part E submission. The current milestone converts the latest 6.5/10 review in `review_ServiceMenuDRT_round2b_202605151030.md` into a focused final-tightening roadmap.
+DRT (Demand Responsive Transit) 服务菜单设计研究的第二部分。Work 1 完成了基于 DSPO 的动态定价与菜单选择，Work 2 将 CNN 单点成本预测升级为基于集合注意力的结构化表征学习框架 CNN-SetMenuNet，用于动态服务菜单设计。目标期刊为 TR Part E。
+
+核心转变：从"预测一个点的成本"升级为"理解一组候选服务选项之间的关系，并据此设计有限菜单"。
 
 ## Core Value
 
-Produce a TR Part E-ready revision that is honest about remaining empirical limits while removing avoidable wording, filter-validity, baseline-scope, and PDF-polish risks before submission.
-
-## Current Milestone: v1.2 Final Tightening for TR-E Submission
-
-**Goal:** Move the paper from "borderline major-revision-ready" toward submission-preparable by tightening claims, clarifying large filter errors, optionally strengthening operational baselines in behaviorally live regimes, and completing compiled-PDF polish.
-
-**Target features:**
-- Soften outside-option sensitivity claims so they read as RC stress-test robustness, not external demand stability.
-- Add an explicit explanation or limitation for large ETA/IVT errors and their implications for filtering credibility.
-- Decide whether to run medium/high-uptake operational baselines; if feasible, add them as stronger review-facing evidence.
-- Verify final typography and encoding in the compiled PDF, especially dash characters and manuscript-facing polish.
-- Prepare a final response matrix that maps the 6.5/10 review comments to the final tightening changes.
+证明面向菜单结构的 Set-Attention 表征模型比传统 CNN 单点成本预测模型更适合 DRT 服务菜单设计，在菜单质量、运营收益和乘客体验之间取得最好平衡。
 
 ## Requirements
 
 ### Validated
 
-- [v1.0] CLAIM-01: Paper claims are reframed as diagnostic/exploratory unless evidence supports stronger language.
-- [v1.0] THEORY-01: Lambert-W pricing is rewritten as a bounded reference transform, not a core optimality contribution.
-- [v1.1] BASE-01: Operational baselines are integrated into method/results narrative.
-- [v1.1] CAL-01: Outside-option utility scan exists as a concrete artifact.
-- [v1.1] FILT-01: Filter validity reports quantile diagnostics and false-negative breakdowns.
-- [v1.1] SYN-01: Pricing, uptake, acceptance, and surplus are interpreted as tradeoffs.
+- ✓ CNN-based cost prediction for DRT operations — Work 1 (CNN_2d in Predictors.py)
+- ✓ Lambert-W dynamic pricing mechanism — Work 1 (MathUtils.py)
+- ✓ MNL passenger choice model with outside option — Work 1 (customerchoice.py)
+- ✓ HGS/Hygese route evaluation — Work 1 (Utils.py)
+- ✓ Menu construction with 9 policy variants — Work 1 (DSPO_Menu.py)
+- ✓ YAML manifest experiment framework — Work 1 (research_pipeline.py)
+- ✓ State grid spatial feature encoding — Work 1 (Utils.get_matrix)
+- ✓ MemoryBuffer with Huber loss training — Work 1 (Utils.py)
+- ✓ Multiple instance support (RC, R, C) — Work 1 (HombergerGehring data)
 
 ### Active
 
-- [ ] CLAIM-02: Outside-option scan language is softened to "not obviously brittle within this RC stress test" rather than "stable across demand assumptions."
-- [ ] FILT-04: Manuscript explains why large ETA/IVT errors do not fully invalidate the filtering diagnostic, or explicitly names them as a key limitation.
-- [ ] BASE-03: A feasibility decision is made for medium/high-uptake operational-baseline reruns, with either new evidence or a documented deferral.
-- [ ] BASE-04: If rerun evidence is feasible, operational-baseline results are extended beyond RC low uptake and integrated into the manuscript.
-- [ ] PDF-01: Compiled PDF is checked for dash/encoding/polish issues, not only raw LaTeX source.
-- [ ] QA-02: A final response matrix maps the 6.5/10 review to completed changes, remaining limits, and submission readiness.
+- [ ] Option feature extractor: per-candidate feature vectors (walk_distance, predicted_ivt, remaining_capacity, distance_to_destination, option_type, arrival_time)
+- [ ] SetMenuNet model: self-attention over candidate sets, permutation-invariant, batch+mask support
+- [ ] CNN-SetMenuNet model: CNN global state encoder (reuse conv layers) + SetMenuNet hybrid
+- [ ] CNN_SetMenu algorithm class: subclass of DSPO_Menu, override prediction and training
+- [ ] 6 baselines for main comparison: Nearest-L, Cost-L, CNN-Menu, SetMenuNet, CNN-SetMenuNet, Oracle Menu
+- [ ] Prediction/ranking metrics: MAE, RMSE, Spearman, Top-L overlap, NDCG@L, Menu regret
+- [ ] Operational metrics: net profit, total cost, travel cost, service cost, discount cost, charge revenue, runtime
+- [ ] Passenger experience metrics: quit rate, acceptance rate, MP share, home share, avg walk, avg IVT, avg price
+- [ ] Main results experiment on RC instance (K=10, L=3, 3 seeds, 80 train / 20 test for MVP)
+- [ ] CSV output and paper-ready results table
 
 ### Out of Scope
 
-- Full external demand validation with new survey or revealed-preference estimation. The latest review accepts that this remains unresolved but asks for careful framing.
-- Large city-scale external validation expansion. Austin/Seattle remain descriptive unless a separate future milestone expands them.
-- Reworking the whole paper narrative again. v1.2 is a final tightening pass, not another broad revision.
+- SPO/decision-focused loss — Work 2 贡献在模型结构，不在 loss 函数
+- GNN models — 候选菜单是动态集合而非固定图结构，Set-based encoder 更自然
+- Beijing semi-real case — MVP 阶段只用 benchmark instances (RC, R, C)
+- Ranking loss auxiliary — 第二版再加，第一版只用 Huber
+- Menu size sensitivity / candidate pool sensitivity / demand sensitivity — 后续实验，不在 MVP 范围
+- Cross-instance generalization / ablation — 后续实验
 
 ## Context
 
-Primary manuscript entrypoint: `ooh_code/manuscript/main.tex`, with sections included from `ooh_code/manuscript/sections/`.
+**Research framing (TR Part E):**
+本文不是提出一个更复杂的神经网络，而是研究 DRT 平台如何进行 passenger-facing service menu design。CNN-SetMenuNet 是为这个运营决策问题服务的结构化表征工具。
 
-Authoritative latest review source: `review_ServiceMenuDRT_round2b_202605151030.md`.
+**Three-layer contributions:**
+1. 提出 choice-based dynamic service menu design 问题
+2. 提出 CNN-SetMenuNet 结构化表征模型 (permutation invariance + option interaction + hybrid representation)
+3. 闭环验证：menu design -> pricing -> passenger choice -> booking set -> routing cost
 
-Previous review source: `review_ServiceMenuDRT_round2_202605142050.md`.
+**Codebase state:**
+- Work 1 code is mature and stable in `ooh_code/`
+- DSPO_Menu.py (939 lines) handles menu construction, pricing, selection, training
+- CNN_2d in Predictors.py has 2 conv layers + FC layers (output_dim=3: cost, ETA, IVT)
+- CNN_2d's fc2 outputs 128-dim embedding before fc3 output head — this is what CNN_Encoder will reuse
+- Existing experiment framework uses YAML manifests under `experiments/studies/`
 
-The latest review scored the manuscript 6.5/10. It acknowledged that v1.1 materially improved operational-baseline integration, outside-option scanning, filter diagnostics, and tradeoff framing. The remaining requested work is narrower: soften outside-option claims, handle large ETA/IVT errors explicitly, verify PDF polish, and optionally rerun operational baselines in medium/high uptake to make them more persuasive.
+**Existing baselines in DSPO_Menu:**
+- offer_all_feasible_bundles, nearest_heuristic, top_k_cheapest, top_k_passenger_utility
+- revenue_greedy, menu_optimization, insertion_cost_greedy, min_lateness, random_top_k
+- Missing: home_only, oracle_menu (need to add)
+
+**Model architecture (CNN-SetMenuNet):**
+1. CNN global state encoder: reuse CNN_2d conv layers, remove fc3, output 128-dim z_t
+2. Option embedding layer: per-candidate 6-dim feature -> MLP -> concat with z_t
+3. Set-attention menu encoder: 2-layer, 4-head self-attention over candidate set
+4. Output head: per-candidate predicted marginal cost
+5. Training: Huber loss against true marginal insertion costs (no SPO)
+
+**Key insight from experiment discussion:**
+菜单不是越大越好。较小菜单限制乘客选择，较大菜单带来冗余和运营不稳定；L=3 或 L=4 通常取得最好利润-服务平衡。
 
 ## Constraints
 
-- Keep the diagnostic/exploratory framing from v1.0 and v1.1.
-- Do not claim true external demand validation.
-- Treat medium/high operational-baseline reruns as optional and decision-gated because they may require nontrivial experiment time.
-- Preserve existing user and generated changes; do not reset the broad dirty worktree.
+- **Preserve pricing**: Lambert-W pricing module must not be modified
+- **Preserve choice model**: MNL model in customerchoice.py must not be modified
+- **Preserve routing**: HGS/Hygese routing must not be modified
+- **Preserve data contracts**: MenuOffer and ServiceBundle dataclass structures must be maintained
+- **YAML manifest compatibility**: New experiments must work with existing run_study.py pipeline
+- **No SPO loss**: Training uses Huber loss only; contribution is model structure, not loss function
+- **Python 3.10+ / PyTorch**: Must use existing tech stack
+- **MVP scale**: 80 train episodes, 20 test episodes, 3 seeds (0,1,2) for initial validation
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Use `review_ServiceMenuDRT_round2b_202605151030.md` as the v1.2 source review | It is the newest structured reassessment and scored the latest manuscript 6.5/10 | Active |
-| Keep v1.2 to a final-tightening milestone | Latest review asks for targeted wording, limitation, optional evidence, and PDF checks rather than another broad rewrite | Active |
-| Make operational-baseline reruns decision-gated | The review says "if time permits"; the plan should first assess feasibility before committing to long runs | Active |
+| New model files (SetMenuNet.py, CNNSetMenuNet.py) | Separate concerns, easier to review/debug | — Pending |
+| Subclass DSPO_Menu for CNN_SetMenu | Reuse all menu construction, pricing, metadata; only override prediction/training | — Pending |
+| 6-dim option features for v1 | walk_dist, ivt, capacity, dist_to_dest, type, time — sufficient to start | — Pending |
+| Main table: 6 methods | Nearest-L, Cost-L, CNN-Menu, SetMenuNet, CNN-SetMenuNet, Oracle | — Pending |
+| MVP first, expand later | Run main results first (small scale), then add sensitivity/generalization/ablation | — Pending |
+| Huber loss only (no SPO) | Work 2 contribution is model structure, not loss function | — Pending |
+| CNN_Encoder reuses CNN_2d conv layers | Warm-start from Work 1 weights, only remove fc3 | — Pending |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
-**After each phase transition**:
-1. Requirements invalidated? Move to Out of Scope with reason.
-2. Requirements validated? Move to Validated with phase reference.
-3. New requirements emerged? Add to Active.
-4. Decisions to log? Add to Key Decisions.
-5. "What This Is" still accurate? Update if drifted.
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
 
-**After each milestone**:
-1. Full review of all sections.
-2. Core Value check - still the right priority?
-3. Audit Out of Scope - reasons still valid?
-4. Update Context with current state.
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
 
 ---
-*Last updated: 2026-05-15 after v1.2 milestone initialization*
+*Last updated: 2026-05-28 after initialization*
