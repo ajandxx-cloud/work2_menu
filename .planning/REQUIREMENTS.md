@@ -33,11 +33,11 @@
 
 ### CNN-SetMenuNet Model
 
-- [ ] **CSMNET-01**: Create `Src/Utils/CNNSetMenuNet.py` with CNNSetMenuNet(nn.Module)
-- [ ] **CSMNET-02**: CNN_Encoder reuses CNN_2d conv layers (conv1, conv2, avgpool, flatten, fc1, fc2), removes fc3, outputs 128-dim
-- [ ] **CSMNET-03**: Global state embedding z_t [B, 128] concatenated with each option's feature embedding
-- [ ] **CSMNET-04**: Combined embedding fed through SetMenuNet → output head → cost_pred [B, K]
-- [ ] **CSMNET-05**: Optional warm-start: load CNN_2d checkpoint weights (skip fc3 mismatch)
+- [x] **CSMNET-01**: Create `Src/Utils/CNNSetMenuNet.py` with CNNSetMenuNet(nn.Module)
+- [x] **CSMNET-02**: CNN_Encoder reuses CNN_2d conv layers (conv1, conv2, avgpool, flatten, fc1, fc2), removes fc3, outputs 128-dim
+- [x] **CSMNET-03**: Global state embedding z_t [B, 128] concatenated with each option's feature embedding
+- [x] **CSMNET-04**: Combined embedding fed through SetMenuNet → output head → cost_pred [B, K]
+- [x] **CSMNET-05**: Optional warm-start: load CNN_2d checkpoint weights (skip fc3 mismatch)
 - [ ] **CSMNET-06**: Smoke test: grid [B, 2, 11, 11] + options [B, 10, 6] → cost [B, 10]
 
 ### Algorithm Integration
@@ -115,11 +115,11 @@
 | SMNET-04 | Phase 03 | Pending |
 | SMNET-05 | Phase 03 | Complete |
 | SMNET-06 | Phase 03 | Pending |
-| CSMNET-01 | Phase 04 | Pending |
-| CSMNET-02 | Phase 04 | Pending |
-| CSMNET-03 | Phase 04 | Pending |
-| CSMNET-04 | Phase 04 | Pending |
-| CSMNET-05 | Phase 04 | Pending |
+| CSMNET-01 | Phase 04 | Complete |
+| CSMNET-02 | Phase 04 | Complete |
+| CSMNET-03 | Phase 04 | Complete |
+| CSMNET-04 | Phase 04 | Complete |
+| CSMNET-05 | Phase 04 | Complete |
 | CSMNET-06 | Phase 04 | Pending |
 | ALGO-01 | Phase 05 | Pending |
 | ALGO-02 | Phase 05 | Pending |

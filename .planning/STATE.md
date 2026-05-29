@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-05-29T04:43:19.378Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-05-29T05:21:31.113Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 8
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 4
-  percent: 80
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 6
+  percent: 86
 ---
 
 # Project State
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-29)
 
 **Core value:** Set-Attention representation model outperforms traditional CNN single-point cost prediction for DRT service menu design
-**Current focus:** Phase 03 — setmenunet-model
+**Current focus:** Phase 04 — CNN-SetMenuNet Model
 
 ## Current Position
 
-Phase: 03 (setmenunet-model) — EXECUTING
+Phase: 04 (CNN-SetMenuNet Model) — EXECUTING
 Plan: 2 of 2
 Status: Ready to execute
 Last activity: 2026-05-29
 
-Progress: [==........] 25%
+Progress: [████████████████████] 37%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 3
+- Total plans completed: 5
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -46,6 +46,7 @@ Progress: [==........] 25%
 |-------|-------|-------|----------|
 | 01 | 1 | - | - |
 | 02 | 2 | - | - |
+| 03 | 2 | - | - |
 
 **Recent Trend:**
 
@@ -53,6 +54,7 @@ Progress: [==........] 25%
 - Trend: -
 
 | Phase 03 P01 | 1min | 1 tasks | 1 files |
+| Phase 04 P01 | 2min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -69,6 +71,17 @@ Recent decisions affecting current work:
 - [Phase 03]: SetMenuNet uses batch_first=True for natural [B,K,D] tensor layout
 - [Phase 03]: All-masked guard prevents PyTorch nested-tensor crash on empty sets
 - [Phase 03]: weights_only=True in load() for safe checkpoint deserialization
+- [Phase 04]: CNN_Encoder as separate nn.Module (composition, not inheritance)
+- [Phase 04]: Concatenation fusion: z_t [B,128] + option [B,K,6] → [B,K,134] → project
+- [Phase 04]: Parallel TransformerEncoder (same config as SetMenuNet, not instantiated)
+- [Phase 04]: Single cost output [B,K], no multi-output head
+- [Phase 04]: Warm-start via filtered state_dict (load matching keys from CNN_2d checkpoint)
+- [Phase 04]: eval() called after load() (addressing Phase 03 review WR-02)
+- [Phase 04]: CNN_Encoder as separate nn.Module with composition pattern (not inheritance from CNN_2d)
+- [Phase 04]: Concatenation fusion: z_t [B,128] + option [B,K,6] -> [B,K,134] -> Linear(134,64)
+- [Phase 04]: Parallel TransformerEncoder (same config as SetMenuNet, not instantiated from it)
+- [Phase 04]: Single cost output head [B,K], multi-output deferred to algorithm level
+- [Phase 04]: Warm-start via filtered state_dict matching CNN_Encoder keys from CNN_2d checkpoint
 
 ### Pending Todos
 
@@ -80,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-29T04:43:19.376Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-05-29T05:21:31.110Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None

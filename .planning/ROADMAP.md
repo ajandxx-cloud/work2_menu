@@ -83,7 +83,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Implement CNN_Encoder and CNNSetMenuNet nn.Modules with warm-start
+- [x] 04-01-PLAN.md — Implement CNN_Encoder and CNNSetMenuNet nn.Modules with warm-start
 - [ ] 04-02-PLAN.md — Create test_cnnsetmenunet.py with 7 verification tests
 
 ### Phase 5: Algorithm Integration
