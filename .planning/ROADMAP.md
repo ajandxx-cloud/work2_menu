@@ -68,7 +68,7 @@ Plans:
 
 Plans:
 - [x] 03-01-PLAN.md — Implement SetMenuNet nn.Module with TransformerEncoder, masking, and reset/save/load interface
-- [ ] 03-02-PLAN.md — Create test_setmenunet.py with 6 verification tests (shape, architecture, permutation, masking, all-masked, save/load)
+- [x] 03-02-PLAN.md — Create test_setmenunet.py with 6 verification tests (shape, architecture, permutation, masking, all-masked, save/load)
 
 ### Phase 4: CNN-SetMenuNet Model
 **Goal**: The full hybrid model combining CNN global state encoding with SetMenuNet set-attention, producing per-candidate cost predictions from both grid state and option features
@@ -80,11 +80,11 @@ Plans:
   3. Global state embedding z_t [B, 128] concatenated with each option's feature embedding
   4. Optional warm-start works: loading a CNN_2d checkpoint populates conv+fc layers correctly (fc3 mismatch is handled gracefully)
   5. Smoke test passes: grid [B, 2, 11, 11] + options [B, 10, 6] produces cost predictions [B, 10]
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Implement CNN_Encoder and CNNSetMenuNet nn.Modules with warm-start
+- [ ] 04-02-PLAN.md — Create test_cnnsetmenunet.py with 7 verification tests
 
 ### Phase 5: Algorithm Integration
 **Goal**: CNN_SetMenu algorithm is fully integrated into the existing pipeline -- selectable via CLI flags, training with Huber loss, and producing menus through the model prediction + Lambert-W pricing flow
@@ -97,7 +97,7 @@ Plans:
   4. config.py routes --menu_model cnn_setmenu to the CNN_SetMenu algorithm class
   5. parser.py exposes --menu_model and updated policy choices via CLI
   6. End-to-end smoke test: CNN_SetMenu trains over multiple episodes and evaluates on RC with K=10, L=3, across 3 seeds without error
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 05-01: TBD
@@ -110,7 +110,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. MLP-Menu baseline exists: flattens option features and passes through MLP to predict per-candidate costs (no set-attention)
   2. MLP-Menu is selectable as a menu_model variant in parser.py and runs through the same training/evaluation pipeline as other methods
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 06-01: TBD
@@ -125,7 +125,7 @@ Plans:
   3. Operational metrics (net profit, total cost, travel cost, service cost, discount cost, charge revenue, runtime) are collected for all methods
   4. Passenger experience metrics (quit rate, acceptance rate, MP share, home share, avg walk, avg IVT, avg price) are collected for all methods
   5. build_artifacts.py generates a Work 2 results table aggregating all metrics by method
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 07-01: TBD
@@ -138,7 +138,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Main experiment completes on RC instance with K=10, L=3, 80 train episodes, 20 test episodes, 3 seeds (0, 1, 2) for all 6 methods
   2. Results CSV contains all prediction, operational, and passenger experience metrics for all 6 methods and 3 seeds, ready for paper table generation
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 - [ ] 08-01: TBD
@@ -159,7 +159,7 @@ Phases execute in numeric order. Parallelization: Phase 01 || Phase 02; Phase 06
 | 1. Baseline Consolidation | 1/1 | Complete | 2026-05-28 |
 | 2. Option Feature Extractor | 2/2 | Complete | 2026-05-29 |
 | 3. SetMenuNet Model | 0/2 | Planned | - |
-| 4. CNN-SetMenuNet Model | 0/? | Not started | - |
+| 4. CNN-SetMenuNet Model | 0/2 | Planned | - |
 | 5. Algorithm Integration | 0/? | Not started | - |
 | 6. MLP-Menu Baseline | 0/? | Not started | - |
 | 7. Experiment Pipeline | 0/? | Not started | - |
