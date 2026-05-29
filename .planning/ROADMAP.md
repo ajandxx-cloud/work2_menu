@@ -84,7 +84,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Implement CNN_Encoder and CNNSetMenuNet nn.Modules with warm-start
-- [ ] 04-02-PLAN.md — Create test_cnnsetmenunet.py with 7 verification tests
+- [x] 04-02-PLAN.md — Create test_cnnsetmenunet.py with 7 verification tests
 
 ### Phase 5: Algorithm Integration
 **Goal**: CNN_SetMenu algorithm is fully integrated into the existing pipeline -- selectable via CLI flags, training with Huber loss, and producing menus through the model prediction + Lambert-W pricing flow

@@ -38,7 +38,7 @@
 - [x] **CSMNET-03**: Global state embedding z_t [B, 128] concatenated with each option's feature embedding
 - [x] **CSMNET-04**: Combined embedding fed through SetMenuNet → output head → cost_pred [B, K]
 - [x] **CSMNET-05**: Optional warm-start: load CNN_2d checkpoint weights (skip fc3 mismatch)
-- [ ] **CSMNET-06**: Smoke test: grid [B, 2, 11, 11] + options [B, 10, 6] → cost [B, 10]
+- [x] **CSMNET-06**: Smoke test: grid [B, 2, 11, 11] + options [B, 10, 6] → cost [B, 10]
 
 ### Algorithm Integration
 
@@ -120,7 +120,7 @@
 | CSMNET-03 | Phase 04 | Complete |
 | CSMNET-04 | Phase 04 | Complete |
 | CSMNET-05 | Phase 04 | Complete |
-| CSMNET-06 | Phase 04 | Pending |
+| CSMNET-06 | Phase 04 | Complete |
 | ALGO-01 | Phase 05 | Pending |
 | ALGO-02 | Phase 05 | Pending |
 | ALGO-03 | Phase 05 | Pending |
