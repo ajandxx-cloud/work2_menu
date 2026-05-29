@@ -11,6 +11,7 @@ from Src.Algorithms.DSPO import DSPO
 from Src.Utils.MathUtils import lambertw
 from Src.Utils.Predictors import CNN_2d, CNN_3d, LinReg
 from Src.Utils.Utils import MemoryBuffer, get_dist_mat_HGS
+from Src.Utils.option_features import normalize_features, build_option_tensor
 
 
 class DSPO_Menu(DSPO):
@@ -24,6 +25,7 @@ class DSPO_Menu(DSPO):
         self.get_action = self.get_action_menu
         self.menu_policy = config.menu_policy
         self.menu_k = config.menu_k
+        self.max_candidates = int(getattr(config, "max_candidates", 10))
         self.menu_keep_home = config.menu_keep_home
         self.menu_use_exact_eval = config.menu_use_exact_eval
         self.menu_exact_threshold = config.menu_exact_threshold
@@ -609,6 +611,7 @@ class DSPO_Menu(DSPO):
                     walk_distance=float(walk_dist),
                     time_deviation=abs(float(eta_choice["predicted_eta"]) - float(customer.preferred_pickup_time)),
                     metadata={
+                        "insertion_cost": float(insertion_cost),
                         "eta_variant": eta_choice["variant"],
                         "filter_eta": float(eta_choice["filter_eta"]),
                         "deployed_eta": float(eta_choice["deployed_eta"]),
@@ -640,6 +643,75 @@ class DSPO_Menu(DSPO):
             offer.metadata.setdefault("fn_pruned_far", fn_pruned_far)
 
         return list(deduped.values())
+
+    def build_option_features(self, state, pps, customer):
+        """Build per-candidate 6-dim feature tensors for downstream models.
+
+        Feature vector per candidate [walk_distance, predicted_ivt,
+        remaining_capacity, distance_to_destination, option_type,
+        arrival_time].
+
+        Args:
+            state: [Customer, Fleet, ParcelPoints, steps]
+            pps:   list of candidate ParcelPoint objects (already filtered
+                   by adjacency and positive capacity).
+            customer: Customer object (convenience, same as state[0]).
+
+        Returns:
+            features: Tensor[K, 6]  K = 1 (home) + len(pps)
+            mask:     Tensor[K]     bool — True for valid candidates
+        """
+        self.derive_preferred_pickup_time(customer)
+
+        walk_distances = []
+        ivts = []
+        capacities = []
+        dest_distances = []
+        option_types = []
+        arrival_times = []
+
+        # --- Home candidate (index 0) ---
+        home_ivt = 0.0
+        home_dest = self._travel_time_to_depot(customer.home)
+        home_eta = self.menu_target_arrival_time - home_ivt - self.menu_pref_buffer_seconds
+        walk_distances.append(0.0)
+        ivts.append(home_ivt)
+        capacities.append(1000000.0)
+        dest_distances.append(home_dest)
+        option_types.append(1.0)
+        arrival_times.append(home_eta)
+
+        # --- Parcel point candidates ---
+        for pp in pps:
+            if pp.remainingCapacity <= 0:
+                continue
+            loc = pp.location
+            walk = self._distance_between(customer.home, loc)
+            ivt = self._travel_time_to_depot(loc)
+            eta = self.menu_target_arrival_time - ivt - self.menu_pref_buffer_seconds
+            walk_distances.append(walk)
+            ivts.append(ivt)
+            capacities.append(float(pp.remainingCapacity))
+            dest_distances.append(ivt)  # distance_to_depot == ivt for real data
+            option_types.append(0.0)
+            arrival_times.append(eta)
+
+        k = len(walk_distances)
+        if k == 0:
+            features = torch.zeros((self.max_candidates, 6), dtype=torch.float32, device=self.device)
+            mask = torch.zeros(self.max_candidates, dtype=torch.bool, device=self.device)
+            return features, mask
+
+        raw = {
+            "walk_distance": np.array(walk_distances),
+            "predicted_ivt": np.array(ivts),
+            "remaining_capacity": np.array(capacities),
+            "distance_to_destination": np.array(dest_distances),
+            "option_type": np.array(option_types),
+            "arrival_time": np.array(arrival_times),
+        }
+        normed = normalize_features(raw, self.menu_time_scale, self.menu_target_arrival_time)
+        return build_option_tensor(normed, max_k=self.max_candidates, device=self.device)
 
     def _split_menu_candidates(self, candidates):
         home_offer = None
@@ -808,6 +880,11 @@ class DSPO_Menu(DSPO):
             import random
             k = min(self.menu_k, len(ooh_candidates))
             selected = random.sample(ooh_candidates, k=k)
+            menu = ([home_offer] if home_offer is not None and self.menu_keep_home else []) + selected
+        elif self.menu_policy == "home_only":
+            menu = [home_offer] if home_offer is not None else []
+        elif self.menu_policy == "cost_l_heuristic":
+            selected = sorted(ooh_candidates, key=lambda offer: offer.metadata.get("insertion_cost", float("inf")))[:self.menu_k]
             menu = ([home_offer] if home_offer is not None and self.menu_keep_home else []) + selected
         else:
             self._maybe_log_exact_gap_diagnostic(customer, home_offer, ooh_candidates)
