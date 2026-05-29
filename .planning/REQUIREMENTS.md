@@ -1,73 +1,147 @@
-# Requirements: ServiceMenuDRT Paper Revision
+# Requirements: CNN-SetMenuNet Experiment Suite
 
-**Defined:** 2026-05-15
-**Core Value:** Produce a TR Part E-ready revision that is honest about remaining empirical limits while removing avoidable wording, filter-validity, baseline-scope, and PDF-polish risks before submission.
+**Defined:** 2026-05-28
+**Core Value:** 证明面向菜单结构的 Set-Attention 表征模型比传统 CNN 单点成本预测模型更适合 DRT 服务菜单设计
 
-## v1.2 Requirements
+## v1 Requirements (MVP)
 
-Requirements for milestone v1.2. Each maps to exactly one roadmap phase.
+### Baseline Infrastructure
 
-### Claim Tightening
+- [ ] **BASE-01**: Add `home_only` menu policy to DSPO_Menu (只展示 home pickup，下界 baseline)
+- [ ] **BASE-02**: ~~Add `oracle_menu` menu policy to DSPO_Menu~~ **MERGED into BASE-03** — oracle_menu and cost_l_heuristic are one policy using immediate insertion costs
+- [ ] **BASE-03**: Add `cost_l_heuristic` menu policy to DSPO_Menu (用即时插入成本选 L 个点; also serves as oracle baseline)
+- [ ] **BASE-04**: Verify `nearest_heuristic` policy works as B1 baseline
+- [ ] **BASE-05**: Verify `top_k_cheapest` with CNN prediction works as B5 (CNN-Menu)
+- [ ] **BASE-06**: All 4 baselines produce valid CSV output with standard metrics on RC instance
+- [ ] **BASE-07**: Smoke test: 3 seeds (0,1,2) × 4 baselines run without error
 
-- [ ] **CLAIM-02**: Outside-option scan language is softened to "not obviously brittle within this RC stress test" rather than "stable across demand assumptions."
+### Option Feature Engineering
 
-### Filter Reliability Framing
+- [ ] **FEAT-01**: Implement `build_option_features(state, pps, customer)` function
+- [ ] **FEAT-02**: Feature vector: [walk_distance, predicted_ivt, remaining_capacity, distance_to_destination, option_type, arrival_time] (6维)
+- [ ] **FEAT-03**: Returns `option_features: Tensor [K, 6]` and `option_mask: Tensor [K]`
+- [ ] **FEAT-04**: Unit test: K=10 produces correct shape [10, 6]
 
-- [ ] **FILT-04**: Manuscript explains why large ETA/IVT errors do not fully invalidate the filtering diagnostic, or explicitly names them as a key limitation.
+### SetMenuNet Model
 
-### Optional Operational-Baseline Evidence
+- [x] **SMNET-01**: Create `Src/Utils/SetMenuNet.py` with SetMenuNet(nn.Module)
+- [x] **SMNET-02**: Multi-head self-attention (2 layers, 4 heads) over candidate set
+- [ ] **SMNET-03**: Permutation-invariant: output does not depend on input order
+- [ ] **SMNET-04**: Supports variable-size candidate sets via masking
+- [x] **SMNET-05**: Output: per-candidate predicted marginal cost [B, K]
+- [ ] **SMNET-06**: Smoke test: synthetic [4, 10, 6] input produces [4, 10] output
 
-- [ ] **BASE-03**: A feasibility decision is made for medium/high-uptake operational-baseline reruns, with either new evidence or a documented deferral.
-- [ ] **BASE-04**: If rerun evidence is feasible, operational-baseline results are extended beyond RC low uptake and integrated into the manuscript.
+### CNN-SetMenuNet Model
 
-### PDF Polish and Final QA
+- [ ] **CSMNET-01**: Create `Src/Utils/CNNSetMenuNet.py` with CNNSetMenuNet(nn.Module)
+- [ ] **CSMNET-02**: CNN_Encoder reuses CNN_2d conv layers (conv1, conv2, avgpool, flatten, fc1, fc2), removes fc3, outputs 128-dim
+- [ ] **CSMNET-03**: Global state embedding z_t [B, 128] concatenated with each option's feature embedding
+- [ ] **CSMNET-04**: Combined embedding fed through SetMenuNet → output head → cost_pred [B, K]
+- [ ] **CSMNET-05**: Optional warm-start: load CNN_2d checkpoint weights (skip fc3 mismatch)
+- [ ] **CSMNET-06**: Smoke test: grid [B, 2, 11, 11] + options [B, 10, 6] → cost [B, 10]
 
-- [ ] **PDF-01**: Compiled PDF is checked for dash/encoding/polish issues, not only raw LaTeX source.
-- [ ] **QA-02**: A final response matrix maps the 6.5/10 review to completed changes, remaining limits, and submission readiness.
+### Algorithm Integration
 
-## Validated Prior Requirements
+- [ ] **ALGO-01**: Create `Src/Algorithms/CNN_SetMenu.py` with CNN_SetMenu(DSPO_Menu)
+- [ ] **ALGO-02**: Override `get_action_menu()`: build option features → model predict → top-L select → Lambert-W price
+- [ ] **ALGO-03**: Override `update()`: store (option_features, true_costs), train with Huber loss
+- [ ] **ALGO-04**: Update `config.py` to support `--menu_model cnn_setmenu` routing
+- [ ] **ALGO-05**: Update `parser.py` with new menu_model and policy choices
+- [ ] **ALGO-06**: End-to-end smoke test: CNN_SetMenu trains and evaluates on RC with K=10, L=3, 3 seeds
 
-- [x] **CLAIM-01**: Paper claims are reframed as diagnostic/exploratory unless evidence supports stronger language.
-- [x] **THEORY-01**: Lambert-W pricing is rewritten as a bounded reference transform, not a core optimality contribution.
-- [x] **BASE-01**: Operational baselines are described in the empirical-policy taxonomy and interpreted in the main evidence narrative.
-- [x] **CAL-01**: Outside-option utility sensitivity exists as a concrete table/figure.
-- [x] **FILT-01**: Deployed ETA/IVT validation reports P50, P90, and P95 error diagnostics in addition to MAE and bias.
-- [x] **SYN-01**: High-uptake, flat-markdown, Lambert-W, acceptance, and surplus results are interpreted as tradeoffs rather than policy dominance.
+### MLP-Menu Baseline
 
-## Future Requirements
+- [ ] **MLP-01**: Implement MLP-Menu baseline using option features without set-attention (flatten features → MLP → cost)
+- [ ] **MLP-02**: MLP-Menu integrated as menu_model variant in parser.py
 
-### External Validation
+### Experiment Pipeline
 
-- **EXT-01**: Additional city splits or demand seeds provide stronger external validation beyond targeted revision work.
-- **EXT-02**: Real survey or revealed-preference calibration data support the MNL parameterization.
-- **EXT-03**: City-level inference is upgraded from descriptive checks to a larger external-validation design.
+- [ ] **EXPR-01**: Create `experiments/studies/work2_main.yaml` manifest for 6-method comparison
+- [ ] **EXPR-02**: Add prediction/ranking metrics to research_pipeline.py: MAE, RMSE, Spearman correlation, Top-L overlap, NDCG@L, Menu regret
+- [ ] **EXPR-03**: Verify operational metrics collected: net profit, total cost, quit rate, MP share, avg walk, avg price, runtime
+- [ ] **EXPR-04**: Add passenger experience metrics: acceptance rate, home share, avg IVT, avg price/discount
+- [ ] **EXPR-05**: Update `build_artifacts.py` to generate Work 2 results table
+- [ ] **EXPR-06**: Run main experiment on RC (K=10, L=3, 3 seeds, 80 train / 20 test)
+- [ ] **EXPR-07**: Output results CSV with all metrics for all 6 methods
+
+## v2 Requirements (Post-MVP)
+
+### Extended Experiments
+
+- **SENS-01**: Menu size sensitivity (L in {1,2,3,4,5,6,8,10})
+- **SENS-02**: Candidate pool size sensitivity (K in {5,8,10,15,20})
+- **SENS-03**: Demand intensity sensitivity (N in {60,90,120,150})
+- **SENS-04**: Outside option competition sensitivity (low/medium/high)
+- **SENS-05**: Cross-instance generalization (train RC, test R/C)
+- **SENS-06**: Ablation study (CNN only, Set only, CNN+MLP, full model, +ranking loss)
+
+### Enhanced Features
+
+- **ENH-01**: 7-dim option features (add CNN_predicted_cost as hybrid input)
+- **ENH-02**: Ranking loss auxiliary (pairwise ranking loss with Huber)
+- **ENH-03**: Menu score output head (alternative to cost prediction)
+- **ENH-04**: Beijing semi-real case (Yanjiao-Guomao commuting corridor)
+- **ENH-05**: Formal scale experiments (150-300 train / 50 test / 5 seeds)
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Full external demand validation | Requires new real-world survey or revealed-preference data unavailable in this workspace. |
-| Large city-scale validation expansion | The latest review identifies this as a limitation but asks for final tightening, not a broad new campaign. |
-| Whole-paper narrative rewrite | v1.2 is a targeted final pass after v1.0/v1.1 already rewrote the main narrative. |
+| SPO/decision-focused loss | Work 2 贡献在模型结构，不在 loss 函数 |
+| GNN models | 候选菜单是动态集合而非固定图结构 |
+| Reinforcement learning training | Huber supervised loss sufficient for v1 |
+| Real-time serving system | Research prototype only |
+| Mobile/web UI | CLI-based experiment framework only |
+| Beijing case in MVP | Benchmark instances sufficient for validation |
 
 ## Traceability
 
-Which phases cover which requirements.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLAIM-02 | Phase 1 | Pending |
-| FILT-04 | Phase 1 | Pending |
-| BASE-03 | Phase 2 | Pending |
-| BASE-04 | Phase 2 | Pending |
-| PDF-01 | Phase 3 | Pending |
-| QA-02 | Phase 3 | Pending |
+| BASE-01 | Phase 01 | Pending |
+| BASE-02 | Phase 01 | Merged into BASE-03 |
+| BASE-03 | Phase 01 | Pending |
+| BASE-04 | Phase 01 | Pending |
+| BASE-05 | Phase 01 | Pending |
+| BASE-06 | Phase 01 | Pending |
+| BASE-07 | Phase 01 | Pending |
+| FEAT-01 | Phase 02 | Pending |
+| FEAT-02 | Phase 02 | Pending |
+| FEAT-03 | Phase 02 | Pending |
+| FEAT-04 | Phase 02 | Pending |
+| SMNET-01 | Phase 03 | Complete |
+| SMNET-02 | Phase 03 | Complete |
+| SMNET-03 | Phase 03 | Pending |
+| SMNET-04 | Phase 03 | Pending |
+| SMNET-05 | Phase 03 | Complete |
+| SMNET-06 | Phase 03 | Pending |
+| CSMNET-01 | Phase 04 | Pending |
+| CSMNET-02 | Phase 04 | Pending |
+| CSMNET-03 | Phase 04 | Pending |
+| CSMNET-04 | Phase 04 | Pending |
+| CSMNET-05 | Phase 04 | Pending |
+| CSMNET-06 | Phase 04 | Pending |
+| ALGO-01 | Phase 05 | Pending |
+| ALGO-02 | Phase 05 | Pending |
+| ALGO-03 | Phase 05 | Pending |
+| ALGO-04 | Phase 05 | Pending |
+| ALGO-05 | Phase 05 | Pending |
+| ALGO-06 | Phase 05 | Pending |
+| MLP-01 | Phase 06 | Pending |
+| MLP-02 | Phase 06 | Pending |
+| EXPR-01 | Phase 07 | Pending |
+| EXPR-02 | Phase 07 | Pending |
+| EXPR-03 | Phase 07 | Pending |
+| EXPR-04 | Phase 07 | Pending |
+| EXPR-05 | Phase 07 | Pending |
+| EXPR-06 | Phase 08 | Pending |
+| EXPR-07 | Phase 08 | Pending |
 
 **Coverage:**
-- v1.2 requirements: 6 total
-- Mapped to phases: 6
+- v1 requirements: 37 total
+- Mapped to phases: 37
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-05-15*
-*Last updated: 2026-05-15 after v1.2 roadmap creation*
+*Requirements defined: 2026-05-28*
+*Last updated: 2026-05-28 after initial definition*

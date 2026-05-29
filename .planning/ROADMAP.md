@@ -64,11 +64,11 @@ Plans:
   3. Permutation invariance verified: shuffling candidate order in the input produces identical cost predictions
   4. Variable-size masking works: candidates beyond set size receive zero/ignored output via option_mask
   5. Smoke test passes: synthetic input [4, 10, 6] produces output [4, 10] without error
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [x] 03-01-PLAN.md — Implement SetMenuNet nn.Module with TransformerEncoder, masking, and reset/save/load interface
+- [ ] 03-02-PLAN.md — Create test_setmenunet.py with 6 verification tests (shape, architecture, permutation, masking, all-masked, save/load)
 
 ### Phase 4: CNN-SetMenuNet Model
 **Goal**: The full hybrid model combining CNN global state encoding with SetMenuNet set-attention, producing per-candidate cost predictions from both grid state and option features
@@ -77,7 +77,7 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. CNNSetMenuNet exists as Src/Utils/CNNSetMenuNet.py with a valid nn.Module
   2. CNN_Encoder reuses CNN_2d's conv1, conv2, avgpool, flatten, fc1, fc2 (skips fc3), outputting 128-dim z_t from grid input [B, 2, 11, 11]
-  3. Global state embedding z_t [B, 128] is concatenated with each candidate's option embedding, and the combined representation flows through SetMenuNet to output head
+  3. Global state embedding z_t [B, 128] concatenated with each option's feature embedding
   4. Optional warm-start works: loading a CNN_2d checkpoint populates conv+fc layers correctly (fc3 mismatch is handled gracefully)
   5. Smoke test passes: grid [B, 2, 11, 11] + options [B, 10, 6] produces cost predictions [B, 10]
 **Plans**: TBD
@@ -157,8 +157,8 @@ Phases execute in numeric order. Parallelization: Phase 01 || Phase 02; Phase 06
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Baseline Consolidation | 1/1 | Complete | 2026-05-28 |
-| 2. Option Feature Extractor | 0/2 | Planned | - |
-| 3. SetMenuNet Model | 0/? | Not started | - |
+| 2. Option Feature Extractor | 2/2 | Complete | 2026-05-29 |
+| 3. SetMenuNet Model | 0/2 | Planned | - |
 | 4. CNN-SetMenuNet Model | 0/? | Not started | - |
 | 5. Algorithm Integration | 0/? | Not started | - |
 | 6. MLP-Menu Baseline | 0/? | Not started | - |
