@@ -37,7 +37,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md — Update run_baseline_smoke.py to native policy names and run 3x5 smoke verification
+- [x] 01-01-PLAN.md — Update run_baseline_smoke.py to native policy names and run 3x5 smoke verification
 
 ### Phase 2: Option Feature Extractor
 **Goal**: A reusable feature extractor produces per-candidate 6-dimensional feature tensors with proper masking, ready for consumption by any downstream model (SetMenuNet, MLP, etc.)
@@ -48,11 +48,11 @@ Plans:
   2. Variable-size candidate sets are handled via option_mask: Tensor[K] where valid candidates are True and padding is False
   3. Unit test confirms K=10 input produces output shape [10, 6] and mask shape [10]
   4. Feature values are numerically reasonable (no NaN/inf, bounded range) for typical RC instance states
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Verify and commit pure feature functions (normalize_features, build_option_tensor) plus 5 unit tests
+- [ ] 02-02-PLAN.md — Verify and commit DSPO_Menu integration (build_option_features method) and parser --max_candidates argument
 
 ### Phase 3: SetMenuNet Model
 **Goal**: A standalone set-attention model that processes candidate sets with permutation invariance, batch support, and variable-size masking -- the core architectural contribution
@@ -157,7 +157,7 @@ Phases execute in numeric order. Parallelization: Phase 01 || Phase 02; Phase 06
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Baseline Consolidation | 0/1 | Planned | - |
-| 2. Option Feature Extractor | 0/? | Not started | - |
+| 2. Option Feature Extractor | 0/2 | Planned | - |
 | 3. SetMenuNet Model | 0/? | Not started | - |
 | 4. CNN-SetMenuNet Model | 0/? | Not started | - |
 | 5. Algorithm Integration | 0/? | Not started | - |
