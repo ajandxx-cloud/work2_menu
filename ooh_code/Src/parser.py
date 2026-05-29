@@ -118,10 +118,13 @@ class Parser:
                 "insertion_cost_greedy",
                 "min_lateness",
                 "random_top_k",
+                "home_only",
+                "cost_l_heuristic",
             ],
             help="Menu construction policy used whenever a single policy must be instantiated.",
         )
         parser.add_argument("--menu_k", default=3, type=int, help="Maximum number of non-home (OOH) offers shown in menu. Total menu size = 1 (home) + menu_k (OOH).")
+        parser.add_argument("--max_candidates", default=10, type=int, help="Fixed padding size for option feature tensors (K in [B, K, 6]).")
         parser.add_argument(
             "--menu_keep_home",
             default=True,
