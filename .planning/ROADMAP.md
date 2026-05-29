@@ -51,8 +51,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Verify and commit pure feature functions (normalize_features, build_option_tensor) plus 5 unit tests
-- [ ] 02-02-PLAN.md — Verify and commit DSPO_Menu integration (build_option_features method) and parser --max_candidates argument
+- [x] 02-01-PLAN.md — Verify and commit pure feature functions (normalize_features, build_option_tensor) plus 5 unit tests
+- [x] 02-02-PLAN.md — Verify and commit DSPO_Menu integration (build_option_features method) and parser --max_candidates argument
 
 ### Phase 3: SetMenuNet Model
 **Goal**: A standalone set-attention model that processes candidate sets with permutation invariance, batch support, and variable-size masking -- the core architectural contribution
@@ -156,7 +156,7 @@ Phases execute in numeric order. Parallelization: Phase 01 || Phase 02; Phase 06
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Baseline Consolidation | 0/1 | Planned | - |
+| 1. Baseline Consolidation | 1/1 | Complete | 2026-05-28 |
 | 2. Option Feature Extractor | 0/2 | Planned | - |
 | 3. SetMenuNet Model | 0/? | Not started | - |
 | 4. CNN-SetMenuNet Model | 0/? | Not started | - |
