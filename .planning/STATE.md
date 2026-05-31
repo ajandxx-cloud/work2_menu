@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 5 context gathered
-last_updated: "2026-05-29T07:52:39.408Z"
+status: completed
+stopped_at: Phase 7 context gathered, smoke test passed
+last_updated: "2026-05-31T09:12:35.861Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 8
   completed_phases: 4
-  total_plans: 7
+  total_plans: 9
   completed_plans: 7
-  percent: 100
+  percent: 78
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-29)
 
 **Core value:** Set-Attention representation model outperforms traditional CNN single-point cost prediction for DRT service menu design
-**Current focus:** Phase 04 — CNN-SetMenuNet Model
+**Current focus:** Phase 07 — Experiment Pipeline (next)
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 6
+Plan: Complete
+Status: Phase 6 (MLP-Menu Baseline) complete — all 7 smoke tests pass
 Last activity: 2026-05-29
 
-Progress: [████████████████████] 37%
+Progress: [██████████████████░░░░] 75%
 
 ## Performance Metrics
 
@@ -48,6 +48,8 @@ Progress: [████████████████████] 37%
 | 02 | 2 | - | - |
 | 03 | 2 | - | - |
 | 04 | 2 | - | - |
+| 05 | 2 | - | - |
+| 06 | 1 | - | - |
 
 **Recent Trend:**
 
@@ -96,6 +98,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-29T07:52:39.405Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-algorithm-integration/05-CONTEXT.md
+Last session: 2026-05-31T09:12:35.843Z
+Stopped at: Phase 7 context gathered, smoke test passed
+Resume file: .planning/phases/07-experiment-pipeline/07-CONTEXT.md

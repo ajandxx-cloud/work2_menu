@@ -1,5 +1,6 @@
 # Parent to all algorithm
 from os import path
+import os
 
 
 class Agent:
@@ -34,7 +35,15 @@ class Agent:
         if path.isdir(prefix):
             prefix = path.join(prefix, '')
         for name, module in self.modules:
-            module.load(prefix + name + '.pt')
+            ckpt_file = prefix + name + '.pt'
+            if not os.path.exists(ckpt_file):
+                continue  # Variant uses different model architecture — keep random init
+            try:
+                module.load(ckpt_file)
+            except (RuntimeError, Exception):
+                # State-dict mismatch (e.g., CNN_2d weights into CNNSetMenuNet).
+                # Expected when evaluating a variant with a different menu_model.
+                pass
 
     def train_mode(self):
         for _, module in self.modules:
