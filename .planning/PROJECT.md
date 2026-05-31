@@ -23,12 +23,11 @@ DRT (Demand Responsive Transit) 服务菜单设计研究的第二部分。Work 1
 - ✓ State grid spatial feature encoding — Work 1 (Utils.get_matrix)
 - ✓ MemoryBuffer with Huber loss training — Work 1 (Utils.py)
 - ✓ Multiple instance support (RC, R, C) — Work 1 (HombergerGehring data)
+- ✓ Option feature extractor: per-candidate 6-dim feature vectors — Phase 02 (option_features.py)
+- ✓ SetMenuNet model: self-attention, permutation-invariant, batch+mask — Phase 03 (SetMenuNet.py)
+- ✓ CNN-SetMenuNet model: CNN global state encoder + SetMenuNet hybrid, warm-start, 7/7 tests — Phase 04 (CNNSetMenuNet.py)
 
 ### Active
-
-- [ ] Option feature extractor: per-candidate feature vectors (walk_distance, predicted_ivt, remaining_capacity, distance_to_destination, option_type, arrival_time)
-- [ ] SetMenuNet model: self-attention over candidate sets, permutation-invariant, batch+mask support
-- [ ] CNN-SetMenuNet model: CNN global state encoder (reuse conv layers) + SetMenuNet hybrid
 - [ ] CNN_SetMenu algorithm class: subclass of DSPO_Menu, override prediction and training
 - [ ] 6 baselines for main comparison: Nearest-L, Cost-L, CNN-Menu, SetMenuNet, CNN-SetMenuNet, Oracle Menu
 - [ ] Prediction/ranking metrics: MAE, RMSE, Spearman, Top-L overlap, NDCG@L, Menu regret
@@ -119,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-28 after initialization*
+*Last updated: 2026-05-29 after Phase 04*

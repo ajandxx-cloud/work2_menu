@@ -69,6 +69,47 @@ def restore_stdout():
             pass
 
 
+def _spearman_rank_correlation(x, y):
+    """Pure-numpy Spearman rank correlation (no scipy dependency)."""
+    x_arr = np.asarray(x, dtype=float)
+    y_arr = np.asarray(y, dtype=float)
+    if len(x_arr) < 2:
+        return 0.0
+    order_x = np.argsort(x_arr)
+    order_y = np.argsort(y_arr)
+    rank_x = np.empty_like(order_x, dtype=float)
+    rank_y = np.empty_like(order_y, dtype=float)
+    rank_x[order_x] = np.arange(1, len(x_arr) + 1, dtype=float)
+    rank_y[order_y] = np.arange(1, len(y_arr) + 1, dtype=float)
+    mx = np.mean(rank_x)
+    my = np.mean(rank_y)
+    num = np.sum((rank_x - mx) * (rank_y - my))
+    den = np.sqrt(np.sum((rank_x - mx) ** 2) * np.sum((rank_y - my) ** 2))
+    if den < 1e-12:
+        return 0.0
+    return float(num / den)
+
+
+def _dcg_at_k(relevances, k):
+    """Compute DCG@k from an ordered list of relevance scores."""
+    relevances = np.asarray(relevances, dtype=float)
+    k = min(k, len(relevances))
+    if k == 0:
+        return 0.0
+    positions = np.arange(1, k + 1, dtype=float)
+    discounts = np.log2(positions + 1.0)
+    return float(np.sum(relevances[:k] / discounts))
+
+
+def _ndcg_at_k(predicted_order_relevances, ideal_relevances, k):
+    """Compute NDCG@k given predicted-order relevances and ideal relevances."""
+    dcg = _dcg_at_k(predicted_order_relevances, k)
+    idcg = _dcg_at_k(sorted(ideal_relevances, reverse=True), k)
+    if idcg < 1e-12:
+        return 0.0
+    return float(dcg / idcg)
+
+
 def build_eval_solver(args, checkpoint_path):
     eval_args = clone_args(
         args,
@@ -121,6 +162,12 @@ def extract_menu_metrics(menu_logs):
     displayed_ivt_abs_errors = []
     displayed_eta_signed_errors = []
     displayed_ivt_signed_errors = []
+    cost_pred_abs_errors = []
+    cost_pred_sq_errors = []
+    spearman_correlations = []
+    top_L_overlaps = []
+    ndcg_at_L_values = []
+    menu_regrets = []
     exact_menu_values = []
     greedy_menu_values = []
     relative_optimality_gaps = []
@@ -185,6 +232,53 @@ def extract_menu_metrics(menu_logs):
                 signed_error_ivt = float(pred_ivt) - float(true_ivt)
                 displayed_ivt_abs_errors.append(abs(signed_error_ivt))
                 displayed_ivt_signed_errors.append(signed_error_ivt)
+        # --- Prediction/ranking metrics per step ---
+        non_home_offers = [o for o in displayed_offers if not o.get("is_home", False)]
+        step_pred_costs = []
+        step_true_costs = []
+        step_menu_eval_costs = []
+        for offer in non_home_offers:
+            md = offer.get("metadata") or {}
+            insertion_cost = md.get("insertion_cost")
+            pred_cost = offer.get("predicted_cost")
+            if insertion_cost is not None and pred_cost is not None:
+                err = float(pred_cost) - float(insertion_cost)
+                cost_pred_abs_errors.append(abs(err))
+                cost_pred_sq_errors.append(err * err)
+                step_pred_costs.append(float(pred_cost))
+                step_true_costs.append(float(insertion_cost))
+            menu_eval_c = md.get("menu_eval_cost")
+            if menu_eval_c is not None:
+                step_menu_eval_costs.append(float(menu_eval_c))
+        # Spearman rank correlation (need >= 3 non-home offers with paired data)
+        if len(step_pred_costs) >= 3:
+            spearman_correlations.append(_spearman_rank_correlation(step_pred_costs, step_true_costs))
+        # Top-L overlap: intersection of top-L by predicted cost vs top-L by true cost
+        if len(step_pred_costs) >= 2:
+            menu_k_val = 3  # default; cannot recover per-step, use standard
+            pred_order = np.argsort(step_pred_costs)
+            true_order = np.argsort(step_true_costs)
+            k = min(menu_k_val, len(step_pred_costs))
+            top_pred = set(pred_order[:k].tolist())
+            top_true = set(true_order[:k].tolist())
+            if k > 0:
+                top_L_overlaps.append(float(len(top_pred & top_true)) / k)
+        # NDCG@L: relevance = 1/insertion_cost, predicted order by pred_cost ascending
+        if len(step_pred_costs) >= 2:
+            pred_indices = np.argsort(step_pred_costs)
+            relevances = [1.0 / max(c, 1e-6) for c in step_true_costs]
+            ordered_rels = [relevances[i] for i in pred_indices]
+            k = min(3, len(relevances))
+            ndcg_at_L_values.append(_ndcg_at_k(ordered_rels, relevances, k))
+        # Menu regret: chosen cost - min displayed cost (skip if opted out)
+        if not log.get("opted_out", False) and len(step_menu_eval_costs) > 0:
+            chosen_offer_data = log.get("chosen_offer")
+            if chosen_offer_data is not None:
+                chosen_md = chosen_offer_data.get("metadata") or {}
+                chosen_eval = chosen_md.get("menu_eval_cost")
+                if chosen_eval is not None:
+                    regret = max(0.0, float(chosen_eval) - min(step_menu_eval_costs))
+                    menu_regrets.append(regret)
         feasible_meeting_point_counts.append(int(feasible_meeting_point_count))
         if displayed_meeting_point_count == 0:
             home_only_steps += 1
@@ -271,6 +365,13 @@ def extract_menu_metrics(menu_logs):
         "avg_exact_build_time": mean_or_zero(exact_build_times),
         "avg_greedy_build_time": mean_or_zero(greedy_build_times),
         "avg_exact_gap_candidate_count": mean_or_zero(exact_gap_candidate_counts),
+        "cost_pred_mae": mean_or_zero(cost_pred_abs_errors),
+        "cost_pred_rmse": float(np.sqrt(mean_or_zero(cost_pred_sq_errors))),
+        "spearman_cost_ranking": mean_or_zero(spearman_correlations),
+        "top_L_overlap": mean_or_zero(top_L_overlaps),
+        "ndcg_at_L": mean_or_zero(ndcg_at_L_values),
+        "menu_regret": mean_or_zero(menu_regrets),
+        "cost_pred_n_samples": len(cost_pred_abs_errors),
     }
 
 
@@ -357,6 +458,13 @@ def aggregate_episode_metrics(episodes):
         "avg_exact_build_time",
         "avg_greedy_build_time",
         "avg_exact_gap_candidate_count",
+        "cost_pred_mae",
+        "cost_pred_rmse",
+        "spearman_cost_ranking",
+        "top_L_overlap",
+        "ndcg_at_L",
+        "menu_regret",
+        "cost_pred_n_samples",
     ]
     summary = {"episodes": int(len(episodes))}
     for key in metric_keys:

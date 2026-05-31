@@ -1,28 +1,29 @@
-name: work2_main
-title: Work 2 Main Experiment — 5-Method Comparison
+name: smoke_work2_main
+title: Work 2 Main Experiment Smoke Test
 type: policy_compare
 description: >
-  Compares Nearest-L, Cost-L, CNN-Menu, CNN-SetMenuNet,
-  and Oracle Menu on RC instance with K=10, L=3.
-  All methods share a single CNNSetMenuNet model trained with
-  offer_all_feasible_bundles, differing only in menu selection policy.
+  Smoke test for the 6-method comparison pipeline on reduced RC instance.
+  Verifies manifest routing, metric collection, and build_artifacts generation.
 reference_tag: full_display
 reference_label: full display
 reference_policy: offer_all_feasible_bundles
 base_args:
-  experiment_name: work2_main
+  experiment_name: smoke_work2_main
   instance: RC
-  load_data: true
+  load_data: false
   fraction_capacity_limited_meeting_points: 0
   save_model: true
   log_output: file
   debug: true
   seed: 1234
-  max_episodes: 80
-  eval_episodes: 20
+  max_episodes: 1
+  eval_episodes: 1
+  max_steps_r: 1
+  max_steps_p: 0.5
+  n_vehicles: 2
+  veh_capacity: 2
   menu_k: 3
   max_candidates: 10
-  menu_model: cnn_setmenu
   menu_selection_solver: auto
   menu_use_exact_eval: true
 policies:
@@ -35,13 +36,21 @@ policies:
   - tag: cnn_menu
     label: CNN-Menu
     policy: top_k_cheapest
+  - tag: setmenu_net
+    label: SetMenuNet
+    policy: menu_optimization
+    args_overrides:
+      menu_model: mlp_menu
   - tag: cnn_setmenu_net
     label: CNN-SetMenuNet
     policy: menu_optimization
+    args_overrides:
+      menu_model: cnn_setmenu
   - tag: oracle_menu
     label: Oracle Menu
     policy: menu_optimization
     args_overrides:
+      menu_model: cnn_setmenu
       init_theta_cnn: 0.0
       cool_theta_cnn: 0.0
       menu_use_oracle_eta: true
@@ -51,13 +60,3 @@ splits:
     test_split: 1
     args_overrides:
       seed: 0
-  - id: seed1
-    train_split: 0
-    test_split: 1
-    args_overrides:
-      seed: 1
-  - id: seed2
-    train_split: 0
-    test_split: 1
-    args_overrides:
-      seed: 2

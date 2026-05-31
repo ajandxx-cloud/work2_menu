@@ -68,18 +68,18 @@ def build_option_tensor(normalized: dict, max_k: int, device) -> tuple:
         mask:     Tensor[max_k]     bool — True for real candidates
     """
     actual_k = len(normalized[_FEATURE_KEYS[0]])
-    k = max(actual_k, max_k)
+    k = min(actual_k, max_k)
 
-    features = np.zeros((k, len(_FEATURE_KEYS)), dtype=np.float32)
+    features = np.zeros((max_k, len(_FEATURE_KEYS)), dtype=np.float32)
     for col, key in enumerate(_FEATURE_KEYS):
-        features[:actual_k, col] = normalized[key]
+        features[:k, col] = normalized[key][:k]
 
     # Numerical safety: replace NaN/inf with 0
     bad = ~np.isfinite(features)
     features[bad] = 0.0
 
-    mask = np.zeros(k, dtype=bool)
-    mask[:actual_k] = True
+    mask = np.zeros(max_k, dtype=bool)
+    mask[:k] = True
     # Also mask out rows where ALL features are zero beyond actual_k
     # (already handled by the slice above)
 

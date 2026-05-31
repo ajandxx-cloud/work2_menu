@@ -94,6 +94,13 @@ SUMMARY_NUMERIC_KEYS = [
     "avg_exact_build_time",
     "avg_greedy_build_time",
     "avg_exact_gap_candidate_count",
+    "cost_pred_mae",
+    "cost_pred_rmse",
+    "spearman_cost_ranking",
+    "top_L_overlap",
+    "ndcg_at_L",
+    "menu_regret",
+    "cost_pred_n_samples",
 ]
 
 CSV_FIELD_ORDER = [

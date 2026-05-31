@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: phase_complete
-stopped_at: Phase 7 complete — smoke test passed, artifacts generated
-last_updated: "2026-05-31T09:12:35.861Z"
+stopped_at: Phase 8 complete — main experiment run, artifacts generated
+last_updated: "2026-05-31T15:02:00.000Z"
 last_activity: 2026-05-31
 progress:
   total_phases: 8
-  completed_phases: 7
-  total_plans: 9
-  completed_plans: 9
-  percent: 88
+  completed_phases: 8
+  total_plans: 10
+  completed_plans: 10
+  percent: 100
 ---
 
 # Project State
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-29)
 
 **Core value:** Set-Attention representation model outperforms traditional CNN single-point cost prediction for DRT service menu design
-**Current focus:** Phase 08 — Run Main Experiment (next)
+**Current focus:** All phases complete — project ready for manuscript writing
 
 ## Current Position
 
-Phase: 7
+Phase: 8 (final)
 Plan: Complete
-Status: Phase 7 (Experiment Pipeline) complete — smoke test passed, artifacts verified
+Status: Phase 8 (Run Main Experiment) complete — 5-method × 3-seed comparison on RC benchmark, paper artifacts generated
 Last activity: 2026-05-31
 
-Progress: [███████████████████░░░] 88%
+Progress: [████████████████████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -51,6 +51,7 @@ Progress: [███████████████████░░░] 8
 | 05 | 2 | - | - |
 | 06 | 1 | - | - |
 | 07 | 2 | - | - |
+| 08 | 1 | - | - |
 
 **Recent Trend:**
 
@@ -82,23 +83,20 @@ Recent decisions affecting current work:
 - [Phase 04]: Single cost output [B,K], no multi-output head
 - [Phase 04]: Warm-start via filtered state_dict (load matching keys from CNN_2d checkpoint)
 - [Phase 04]: eval() called after load() (addressing Phase 03 review WR-02)
-- [Phase 04]: CNN_Encoder as separate nn.Module with composition pattern (not inheritance from CNN_2d)
-- [Phase 04]: Concatenation fusion: z_t [B,128] + option [B,K,6] -> [B,K,134] -> Linear(134,64)
-- [Phase 04]: Parallel TransformerEncoder (same config as SetMenuNet, not instantiated from it)
-- [Phase 04]: Single cost output head [B,K], multi-output deferred to algorithm level
-- [Phase 04]: Warm-start via filtered state_dict matching CNN_Encoder keys from CNN_2d checkpoint
-- [Phase 04]: Test follows exact same standalone pass/fail pattern as test_setmenunet.py for consistency
+- [Phase 08]: Unified CNNSetMenuNet model for all variants (shared training, different menu policies)
+- [Phase 08]: cnn_aux (CNN_2d for ETA/IVT) trained alongside CNNSetMenuNet to prevent random ETA predictions
+- [Phase 08]: PP candidates capped at max_candidates-1 to prevent tensor index overflow
 
 ### Pending Todos
 
-None yet.
+None — all phases complete.
 
 ### Blockers/Concerns
 
-- ROADMAP.md lists 6 baselines but user confirmed 4. ROADMAP/REQUIREMENTS may need update to reflect oracle_menu/cost_l_heuristic merge.
+None — experiment completed successfully with non-degenerate results.
 
 ## Session Continuity
 
-Last session: 2026-05-31T09:12:35.843Z
-Stopped at: Phase 7 complete — smoke test passed, artifacts generated
-Resume file: .planning/phases/07-experiment-pipeline/07-CONTEXT.md
+Last session: 2026-05-31T15:02:00.000Z
+Stopped at: Phase 8 complete — main experiment run, artifacts generated
+Resume file: .planning/phases/08-run-main-experiment/08-CONTEXT.md

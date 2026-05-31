@@ -97,7 +97,15 @@ class Config:
         self.test_env = self.build_environment(use_test_data=True)
         self.test_env.seed(seed)
 
-        self.algo = DSPO_Menu
+        menu_model = getattr(self, "menu_model", "cnn_2d")
+        if menu_model == "cnn_setmenu":
+            from Src.Algorithms.CNN_SetMenu import CNN_SetMenu
+            self.algo = CNN_SetMenu
+        elif menu_model == "mlp_menu":
+            from Src.Algorithms.MLP_SetMenu import MLP_SetMenu
+            self.algo = MLP_SetMenu
+        else:
+            self.algo = DSPO_Menu
 
         if args.gpu:
             self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

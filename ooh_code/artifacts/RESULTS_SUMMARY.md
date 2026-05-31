@@ -1,12 +1,12 @@
 # Results Summary
 
-Built at: `2026-05-14T10:39:27Z`
+Built at: `2026-05-31T15:02:26Z`
 
-Requested artifact scope: `phase32_operational_baselines`
+Requested artifact scope: `work2_main`
 
 ## Main Policy Comparison
 
-- Best mean net profit currently comes from `full_display` with `-4348.507`.
+- Best mean net profit currently comes from `full_display` with `-4466.685`.
 
 ## Menu-k Robustness
 

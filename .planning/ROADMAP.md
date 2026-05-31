@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Algorithm Integration** - CNN_SetMenu algorithm class subclassing DSPO_Menu with config and parser wiring
 - [ ] **Phase 6: MLP-Menu Baseline** - Feature-only MLP baseline (no set-attention) as ablation comparison point
 - [ ] **Phase 7: Experiment Pipeline** - YAML manifest, metrics collection (prediction/ranking/operational/passenger), and results table generation
-- [ ] **Phase 8: Run Main Experiment** - Execute 6-method comparison on RC with K=10, L=3, 3 seeds, output paper-ready CSV
+- [x] **Phase 8: Run Main Experiment** - Execute 5-method comparison on RC with K=10, L=3, 3 seeds, output paper-ready CSV
 
 ## Phase Details
 
@@ -136,12 +136,12 @@ Plans:
 **Depends on**: Phase 7 (needs complete experiment pipeline)
 **Requirements**: EXPR-06, EXPR-07
 **Success Criteria** (what must be TRUE):
-  1. Main experiment completes on RC instance with K=10, L=3, 80 train episodes, 20 test episodes, 3 seeds (0, 1, 2) for all 6 methods
-  2. Results CSV contains all prediction, operational, and passenger experience metrics for all 6 methods and 3 seeds, ready for paper table generation
-**Plans**: 2 plans
+  1. Main experiment completes on RC instance with K=10, L=3, 80 train episodes, 20 test episodes, 3 seeds (0, 1, 2) for all 5 methods + reference
+  2. Results CSV contains all prediction, operational, and passenger experience metrics for all methods and 3 seeds, ready for paper table generation
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01: TBD
+- [x] 08-01: Run work2_main experiment via run_study.py, fix runtime bugs, generate artifacts
 
 ## Progress
 
@@ -163,4 +163,4 @@ Phases execute in numeric order. Parallelization: Phase 01 || Phase 02; Phase 06
 | 5. Algorithm Integration | 2/2 | Complete | 2026-05-29 |
 | 6. MLP-Menu Baseline | 1/1 | Complete | 2026-05-29 |
 | 7. Experiment Pipeline | 2/2 | Complete | 2026-05-31 |
-| 8. Run Main Experiment | 0/? | Not started | - |
+| 8. Run Main Experiment | 1/1 | Complete | 2026-05-31 |

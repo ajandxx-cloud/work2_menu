@@ -126,6 +126,17 @@ class Parser:
         parser.add_argument("--menu_k", default=3, type=int, help="Maximum number of non-home (OOH) offers shown in menu. Total menu size = 1 (home) + menu_k (OOH).")
         parser.add_argument("--max_candidates", default=10, type=int, help="Fixed padding size for option feature tensors (K in [B, K, 6]).")
         parser.add_argument(
+            "--menu_model",
+            default="cnn_2d",
+            choices=["cnn_2d", "cnn_setmenu", "mlp_menu"],
+            help="Menu cost prediction model. cnn_2d=DSPO_Menu, cnn_setmenu=CNN_SetMenu with set-attention, mlp_menu=MLP_SetMenu ablation baseline.",
+        )
+        parser.add_argument(
+            "--cnn_aux_checkpoint",
+            default="",
+            help="Path to Work 1 CNN_2d checkpoint for frozen ETA/IVT predictor initialization.",
+        )
+        parser.add_argument(
             "--menu_keep_home",
             default=True,
             type=self.str2bool,
@@ -491,7 +502,13 @@ class Parser:
         args.failure_cost = args.home_pickup_failure_cost
         args.max_price = args.max_charge_adjustment
         args.min_price = args.min_charge_adjustment
-        args.algo_name = "DSPO_Menu"
+        menu_model = getattr(args, "menu_model", "cnn_2d")
+        if menu_model == "cnn_setmenu":
+            args.algo_name = "CNN_SetMenu"
+        elif menu_model == "mlp_menu":
+            args.algo_name = "MLP_SetMenu"
+        else:
+            args.algo_name = "DSPO_Menu"
         args.env_name = "Parcelpoint_py"
         args.menu_mode = True
         args.pricing = False

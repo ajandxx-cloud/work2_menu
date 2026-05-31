@@ -226,6 +226,18 @@ def variant_display_label(row):
         return "strict-filter heuristic"
     if tag == "menu_optimization_v2":
         return "no-filter heuristic"
+    if tag == "nearest_L":
+        return "Nearest-L"
+    if tag == "cost_L":
+        return "Cost-L"
+    if tag == "cnn_menu":
+        return "CNN-Menu"
+    if tag == "setmenu_net":
+        return "SetMenuNet"
+    if tag == "cnn_setmenu_net":
+        return "CNN-SetMenuNet"
+    if tag == "oracle_menu":
+        return "Oracle Menu"
 
     lowered = label.lower()
     normalized = {
@@ -1435,6 +1447,134 @@ def build_results_summary(snapshot):
     write_text(ARTIFACTS_DIR / "RESULTS_SUMMARY.md", "\n".join(lines))
 
 
+_WORK2_METHOD_ORDER = [
+    "oracle_menu",
+    "cnn_setmenu_net",
+    "cnn_menu",
+    "cost_L",
+    "nearest_L",
+]
+
+_WORK2_LEARNING_METHODS = {"cnn_menu", "cnn_setmenu_net", "oracle_menu"}
+
+
+def _sort_work2_rows(rows):
+    preferred = {tag: idx for idx, tag in enumerate(_WORK2_METHOD_ORDER)}
+    return sorted(rows, key=lambda row: (preferred.get(row.get("variant_tag"), 99), row.get("variant_tag", "")))
+
+
+def build_work2_results_artifacts(rows, prefix="work2_main"):
+    """Generate Work 2 prediction accuracy, operational, and menu regret tables."""
+    rows = _sort_work2_rows([row for row in rows if not row.get("is_reference")])
+    if not rows:
+        for name in ["prediction_accuracy", "operational", "menu_regret"]:
+            render_placeholder_figure(
+                ARTIFACTS_DIR / "figures" / f"{prefix}_{name}.png",
+                f"Work 2 {name.replace('_', ' ')}",
+                "Run the work2_main study to populate this figure.",
+            )
+        return
+
+    # --- Prediction accuracy table ---
+    pred_table_rows = []
+    for row in rows:
+        tag = row.get("variant_tag", "")
+        if tag in _WORK2_LEARNING_METHODS:
+            pred_table_rows.append([
+                row["display_label"],
+                format_metric(row.get("cost_pred_mae")),
+                format_metric(row.get("cost_pred_rmse")),
+                format_metric(row.get("spearman_cost_ranking")),
+                format_metric(row.get("top_L_overlap")),
+                format_metric(row.get("ndcg_at_L")),
+            ])
+        else:
+            pred_table_rows.append([
+                row["display_label"],
+                "--", "--", "--", "--", "--",
+            ])
+    write_tex_table(
+        ARTIFACTS_DIR / "tables" / f"{prefix}_prediction_accuracy.tex",
+        caption="Cost prediction accuracy across methods on the RC benchmark.",
+        label=f"tab:{prefix}_prediction_accuracy",
+        headers=[
+            "Method",
+            "Cost MAE",
+            "Cost RMSE",
+            "Spearman $\\rho$",
+            "Top-L Overlap",
+            "NDCG@L",
+        ],
+        rows=pred_table_rows,
+    )
+
+    # --- Operational + passenger experience table ---
+    op_table_rows = []
+    for row in rows:
+        op_table_rows.append([
+            row["display_label"],
+            format_metric(row.get("net_profit")),
+            format_metric(row.get("total_cost")),
+            format_metric(row.get("acceptance_rate")),
+            format_metric(row.get("opt_out_rate")),
+            format_metric(row.get("home_pickup_share")),
+            format_metric(row.get("avg_walk_distance")),
+            format_metric(row.get("avg_in_vehicle_time")),
+            format_metric(row.get("avg_chosen_price")),
+        ])
+    write_tex_table(
+        ARTIFACTS_DIR / "tables" / f"{prefix}_operational.tex",
+        caption="Operational and passenger experience metrics across methods on the RC benchmark.",
+        label=f"tab:{prefix}_operational",
+        headers=[
+            "Method",
+            "Net Profit",
+            "Total Cost",
+            "Accept. Rate",
+            "Opt-out Rate",
+            "Home Share",
+            "Avg Walk",
+            "Avg IVT",
+            "Avg Price",
+        ],
+        rows=op_table_rows,
+    )
+
+    # --- Menu regret table ---
+    regret_table_rows = []
+    for row in rows:
+        regret_table_rows.append([
+            row["display_label"],
+            format_metric(row.get("menu_regret")),
+            format_metric(row.get("average_menu_size")),
+            format_metric(row.get("avg_meeting_point_count_per_menu")),
+        ])
+    write_tex_table(
+        ARTIFACTS_DIR / "tables" / f"{prefix}_menu_regret.tex",
+        caption="Menu selection quality across methods on the RC benchmark.",
+        label=f"tab:{prefix}_menu_regret",
+        headers=[
+            "Method",
+            "Menu Regret",
+            "Avg Menu Size",
+            "MP Count",
+        ],
+        rows=regret_table_rows,
+    )
+
+    # --- Net profit comparison figure ---
+    labels = [row["display_label"] for row in rows]
+    profits = [float(row.get("net_profit", 0.0) or 0.0) for row in rows]
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.bar(labels, profits, color="#4C78A8")
+    ax.set_ylabel("Mean net profit")
+    ax.set_title("Work 2: 6-Method Net Profit Comparison")
+    ax.tick_params(axis="x", rotation=20)
+    fig.tight_layout()
+    fig.savefig(ARTIFACTS_DIR / "figures" / f"{prefix}_net_profit.png", dpi=200)
+    plt.close(fig)
+
+
 def build_single_study_artifacts(study_summary, study_name, manifest=None):
     rows = enrich_policy_rows(
         rows_from_summary(study_summary),
@@ -1452,6 +1592,8 @@ def build_single_study_artifacts(study_summary, study_name, manifest=None):
     elif study_name == "phase32_operational_baselines":
         build_operational_baselines_artifacts(rows, prefix=study_name)
         build_operational_baselines_artifacts(rows, prefix="operational_baselines")
+    elif study_name in {"work2_main", "smoke_work2_main"}:
+        build_work2_results_artifacts(rows, prefix=study_name)
     elif study_summary["study"]["type"] == "policy_compare":
         title = study_summary["study"].get("title", study_name.replace("_", " "))
         caption = title if "comparison" in title.lower() else f"{title} policy comparison."
