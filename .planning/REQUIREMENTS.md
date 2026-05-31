@@ -56,11 +56,11 @@
 
 ### Experiment Pipeline
 
-- [ ] **EXPR-01**: Create `experiments/studies/work2_main.yaml` manifest for 6-method comparison
-- [ ] **EXPR-02**: Add prediction/ranking metrics to research_pipeline.py: MAE, RMSE, Spearman correlation, Top-L overlap, NDCG@L, Menu regret
-- [ ] **EXPR-03**: Verify operational metrics collected: net profit, total cost, quit rate, MP share, avg walk, avg price, runtime
-- [ ] **EXPR-04**: Add passenger experience metrics: acceptance rate, home share, avg IVT, avg price/discount
-- [ ] **EXPR-05**: Update `build_artifacts.py` to generate Work 2 results table
+- [x] **EXPR-01**: Create `experiments/studies/work2_main.yaml` manifest for 6-method comparison
+- [x] **EXPR-02**: Add prediction/ranking metrics to research_pipeline.py: MAE, RMSE, Spearman correlation, Top-L overlap, NDCG@L, Menu regret
+- [x] **EXPR-03**: Verify operational metrics collected: net profit, total cost, quit rate, MP share, avg walk, avg price, runtime
+- [x] **EXPR-04**: Add passenger experience metrics: acceptance rate, home share, avg IVT, avg price/discount
+- [x] **EXPR-05**: Update `build_artifacts.py` to generate Work 2 results table
 - [ ] **EXPR-06**: Run main experiment on RC (K=10, L=3, 3 seeds, 80 train / 20 test)
 - [ ] **EXPR-07**: Output results CSV with all metrics for all 6 methods
 
@@ -129,11 +129,11 @@
 | ALGO-06 | Phase 05 | Pending |
 | MLP-01 | Phase 06 | Pending |
 | MLP-02 | Phase 06 | Pending |
-| EXPR-01 | Phase 07 | Pending |
-| EXPR-02 | Phase 07 | Pending |
-| EXPR-03 | Phase 07 | Pending |
-| EXPR-04 | Phase 07 | Pending |
-| EXPR-05 | Phase 07 | Pending |
+| EXPR-01 | Phase 07 | Complete |
+| EXPR-02 | Phase 07 | Complete |
+| EXPR-03 | Phase 07 | Complete |
+| EXPR-04 | Phase 07 | Complete |
+| EXPR-05 | Phase 07 | Complete |
 | EXPR-06 | Phase 08 | Pending |
 | EXPR-07 | Phase 08 | Pending |
 
@@ -144,4 +144,4 @@
 
 ---
 *Requirements defined: 2026-05-28*
-*Last updated: 2026-05-28 after initial definition*
+*Last updated: 2026-05-31 after Phase 07 completion*

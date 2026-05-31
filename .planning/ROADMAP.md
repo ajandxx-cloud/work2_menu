@@ -100,8 +100,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [x] 05-01-PLAN.md — CNN_SetMenu algorithm class with SetMenuMemoryBuffer
+- [x] 05-02-PLAN.md — Config/parser integration + smoke test
 
 ### Phase 6: MLP-Menu Baseline
 **Goal**: MLP-Menu provides an ablation baseline that uses option features but no set-attention, showing the contribution of attention over simple feature concatenation
@@ -113,7 +113,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: TBD
+- [x] 06-VERIFICATION.md — MLPMenuNet model + MLP_SetMenu algorithm + parser/config routing, all 7 smoke tests pass
 
 ### Phase 7: Experiment Pipeline
 **Goal**: A complete experiment pipeline collects prediction, ranking, operational, and passenger experience metrics across all methods, producing paper-ready results tables
@@ -128,8 +128,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [x] 07-01: Run smoke_work2_main end-to-end, fix Agent.load for multi-model variants
+- [x] 07-02: Verify metrics population + build_artifacts generation (3 tables + 1 figure)
 
 ### Phase 8: Run Main Experiment
 **Goal**: The main experiment produces paper-ready results: 6 methods x 3 seeds on RC instance with K=10, L=3, outputting a comprehensive CSV for the results table
@@ -158,9 +158,9 @@ Phases execute in numeric order. Parallelization: Phase 01 || Phase 02; Phase 06
 |-------|----------------|--------|-----------|
 | 1. Baseline Consolidation | 1/1 | Complete | 2026-05-28 |
 | 2. Option Feature Extractor | 2/2 | Complete | 2026-05-29 |
-| 3. SetMenuNet Model | 0/2 | Planned | - |
-| 4. CNN-SetMenuNet Model | 0/2 | Planned | - |
-| 5. Algorithm Integration | 0/? | Not started | - |
-| 6. MLP-Menu Baseline | 0/? | Not started | - |
-| 7. Experiment Pipeline | 0/? | Not started | - |
+| 3. SetMenuNet Model | 2/2 | Complete | 2026-05-29 |
+| 4. CNN-SetMenuNet Model | 2/2 | Complete | 2026-05-29 |
+| 5. Algorithm Integration | 2/2 | Complete | 2026-05-29 |
+| 6. MLP-Menu Baseline | 1/1 | Complete | 2026-05-29 |
+| 7. Experiment Pipeline | 2/2 | Complete | 2026-05-31 |
 | 8. Run Main Experiment | 0/? | Not started | - |
