@@ -58,14 +58,15 @@ Plans:
 
 **Goal:** 检�?CNN-SetMenuNet 在关键实验维度下是否稳定，而不是只在单一 RC 设置上有效�? 
 **Requirements:** EXP-07
-**Status:** Planned
+**Status:** Blocked - verification gaps found 2026-06-02
+**Verification:** `.planning/phases/05-robustness-experiments/VERIFICATION.md`
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
-- [ ] `05-01-PLAN.md` - Wave 1: Define Work2 robustness manifests and fast contract checks.
-- [ ] `05-02-PLAN.md` - Wave 2, blocked on 05-01: Build robustness artifact summaries and diagnostic gates.
-- [ ] `05-03-PLAN.md` - Wave 3, blocked on 05-01 and 05-02: Run or resume robustness suite and verify Phase 5 readiness.
+- [x] `05-01-PLAN.md` - Wave 1: Define Work2 robustness manifests and fast contract checks. (completed 2026-06-02)
+- [x] `05-02-PLAN.md` - Wave 2, blocked on 05-01: Build robustness artifact summaries and diagnostic gates. (completed 2026-06-02)
+- [x] `05-03-PLAN.md` - Wave 3, blocked on 05-01 and 05-02: Run or resume robustness suite and verify Phase 5 readiness. (completed 2026-06-02)
 
 **Success Criteria:**
 1. Menu size 实验覆盖多个 `L` 值，至少包含默认 `L=3`�?2. Candidate pool size 实验覆盖多个 `K` 值，至少包含默认 `K=10`�?3. Demand intensity 实验覆盖低、中、高需求或等价实例设置�?4. Outside option utility 实验覆盖不同竞争强度�?5. Cross-instance generalization 至少覆盖 RC 外的一个实例或数据切分�?
