@@ -1,0 +1,1 @@
+study,robustness_dimension,robustness_setting,method,seed,instance,K,L,demand_setting,outside_option_util,net_profit,total_cost,quit_rate,avg_walk,menu_regret,top_L_overlap,spearman_cost_ranking,runtime_per_decision,train_episodes,test_episodes,candidate_pool_size,displayed_meeting_points,home_always_shown,status,notes

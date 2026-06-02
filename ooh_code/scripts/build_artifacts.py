@@ -1510,11 +1510,15 @@ _WORK2_OBVIOUS_GUARDRAIL_REL_WORSENING = 0.10
 
 _WORK2_STANDARD_COLUMNS = [
     "study",
+    "robustness_dimension",
+    "robustness_setting",
     "method",
     "seed",
     "instance",
     "K",
     "L",
+    "demand_setting",
+    "outside_option_util",
     "net_profit",
     "total_cost",
     "quit_rate",
@@ -1530,6 +1534,42 @@ _WORK2_STANDARD_COLUMNS = [
     "home_always_shown",
     "status",
     "notes",
+]
+
+_WORK2_ROBUSTNESS_DIMENSIONS = {
+    "work2_menu_size_robustness": {
+        "dimension": "menu_size",
+        "setting_key": "L",
+        "cause": "menu selection error",
+    },
+    "work2_candidate_pool_robustness": {
+        "dimension": "candidate_pool",
+        "setting_key": "K",
+        "cause": "candidate-pool scaling",
+    },
+    "work2_demand_robustness": {
+        "dimension": "demand",
+        "setting_key": "demand_setting",
+        "cause": "demand sensitivity",
+    },
+    "work2_outside_option_robustness": {
+        "dimension": "outside_option",
+        "setting_key": "outside_option_util",
+        "cause": "outside-option/MNL sensitivity",
+    },
+    "work2_cross_instance_robustness": {
+        "dimension": "cross_instance",
+        "setting_key": "instance",
+        "cause": "instance instability",
+    },
+}
+
+_WORK2_ROBUSTNESS_REQUIRED_DIMENSIONS = [
+    "menu_size",
+    "candidate_pool",
+    "demand",
+    "outside_option",
+    "cross_instance",
 ]
 
 
@@ -1564,6 +1604,51 @@ def _work2_standard_method(row):
     return _WORK2_STANDARD_METHODS.get(tag, variant_display_label(row))
 
 
+def _work2_robustness_method(row):
+    label = str(row.get("variant_label") or row.get("display_label") or row.get("method") or "")
+    for prefix in [
+        "Cost-L heuristic",
+        "CNN-Menu",
+        "MLP-Menu",
+        "CNN-SetMenuNet",
+        "Oracle Menu",
+        "Nearest-L",
+    ]:
+        if label.startswith(prefix):
+            return prefix
+    tag = str(row.get("variant_tag", ""))
+    for prefix, method in [
+        ("cost_L", "Cost-L heuristic"),
+        ("cnn_menu", "CNN-Menu"),
+        ("mlp_menu", "MLP-Menu"),
+        ("cnn_setmenu_net", "CNN-SetMenuNet"),
+        ("oracle_menu", "Oracle Menu"),
+        ("nearest_L", "Nearest-L"),
+    ]:
+        if tag.startswith(prefix):
+            return method
+    return _work2_standard_method(row)
+
+
+def _work2_robustness_dimension(study_name):
+    return _WORK2_ROBUSTNESS_DIMENSIONS.get(study_name, {}).get("dimension", "")
+
+
+def _work2_robustness_setting(standard_row, source_row, study_name):
+    setting_key = _WORK2_ROBUSTNESS_DIMENSIONS.get(study_name, {}).get("setting_key", "")
+    if setting_key == "L":
+        return standard_row.get("L")
+    if setting_key == "K":
+        return standard_row.get("K")
+    if setting_key == "demand_setting":
+        return _first_present(source_row.get("max_steps_r"), standard_row.get("demand_setting"))
+    if setting_key == "outside_option_util":
+        return _first_present(source_row.get("outside_option_util"), standard_row.get("outside_option_util"))
+    if setting_key == "instance":
+        return standard_row.get("instance")
+    return ""
+
+
 def _write_standard_csv(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
     fieldnames = list(_WORK2_STANDARD_COLUMNS)
@@ -1589,11 +1674,15 @@ def _work2_standard_row(row, manifest):
     )
     return {
         "study": row.get("study_name") or (manifest or {}).get("name"),
+        "robustness_dimension": "",
+        "robustness_setting": "",
         "method": method,
         "seed": _numeric_seed(row.get("seed"), row.get("split_id")),
         "instance": _first_present(row.get("instance"), base_args.get("instance")),
         "K": k_value,
         "L": l_value,
+        "demand_setting": _first_present(row.get("max_steps_r"), base_args.get("max_steps_r")),
+        "outside_option_util": _first_present(row.get("outside_option_util"), base_args.get("outside_option_util")),
         "net_profit": row.get("net_profit"),
         "total_cost": row.get("total_cost"),
         "quit_rate": row.get("opt_out_rate"),
@@ -1610,6 +1699,19 @@ def _work2_standard_row(row, manifest):
         "status": "ok",
         "notes": "Phase 3 contract row: K counts meeting-point candidates, L counts displayed meeting points, home is always shown.",
     }
+
+
+def _work2_robustness_standard_row(row, manifest, study_name):
+    standard = _work2_standard_row(row, manifest)
+    standard["study"] = study_name
+    standard["method"] = _work2_robustness_method(row)
+    standard["robustness_dimension"] = _work2_robustness_dimension(study_name)
+    standard["robustness_setting"] = _work2_robustness_setting(standard, row, study_name)
+    standard["notes"] = (
+        "Phase 5 robustness row: K counts meeting-point candidates, L counts displayed "
+        "meeting points, home is always shown, and evidence is classified conservatively."
+    )
+    return standard
 
 
 def _best_row_by_method(rows):
@@ -1633,6 +1735,13 @@ def _format_seed_list(rows):
     if not seeds:
         return "--"
     return ", ".join(f"seed{seed}" if isinstance(seed, int) else str(seed) for seed in seeds)
+
+
+def _project_relative(path):
+    try:
+        return path.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def _mean(values):
@@ -2309,6 +2418,307 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
     write_text(path, "\n".join(lines) + "\n")
 
 
+def _learned_baseline_aggregate(aggregate_by_method):
+    return aggregate_by_method.get("CNN-Menu") or aggregate_by_method.get("MLP-Menu")
+
+
+def classify_work2_robustness_dimension(dimension, rows, missing_source=False):
+    if missing_source:
+        return _classification_payload(
+            "not_run",
+            "Not run",
+            f"{dimension} robustness has no member study summary yet.",
+            True,
+            caveats=["Run or resume the missing Phase 5 member study before making a robustness claim."],
+        )
+    if not rows:
+        return _classification_payload(
+            "not_run",
+            "Not run",
+            f"{dimension} robustness has no normalized rows yet.",
+            True,
+            caveats=["No rows were available for this dimension."],
+        )
+
+    aggregates = _aggregate_work2_methods(rows)
+    aggregate_by_method = {row["method"]: row for row in aggregates}
+    methods = set(aggregate_by_method)
+    missing = _work2_minimum_missing(methods)
+    if missing:
+        return _classification_payload(
+            "incomplete",
+            "Incomplete",
+            f"{dimension} robustness is missing required methods: {', '.join(missing)}.",
+            True,
+            caveats=["At minimum, include CNN-SetMenuNet, Cost-L heuristic, a learned baseline, and Oracle Menu."],
+        )
+
+    cnn = aggregate_by_method.get("CNN-SetMenuNet")
+    cost = aggregate_by_method.get("Cost-L heuristic")
+    learned = _learned_baseline_aggregate(aggregate_by_method)
+    if cnn is None or cost is None or learned is None:
+        return _classification_payload(
+            "incomplete",
+            "Incomplete",
+            f"{dimension} robustness lacks the required comparator aggregates.",
+            True,
+        )
+
+    profit_vs_cost = _metric_delta(cnn, cost, "net_profit_mean")
+    profit_vs_learned = _metric_delta(cnn, learned, "net_profit_mean")
+    if profit_vs_cost is None or profit_vs_learned is None:
+        return _classification_payload(
+            "incomplete",
+            "Incomplete",
+            f"{dimension} robustness has unavailable net_profit metrics.",
+            True,
+            comparator="Cost-L heuristic",
+            caveats=["Missing metrics are unavailable, not imputed."],
+        )
+
+    guardrail_worsening = _obvious_guardrail_worsening(cnn, cost)
+    menu_quality_supports = _menu_quality_improves(cnn, cost)
+    if guardrail_worsening or (profit_vs_cost < -_WORK2_PROFIT_EPSILON and profit_vs_learned < -_WORK2_PROFIT_EPSILON):
+        caveats = []
+        for item in guardrail_worsening:
+            caveats.append(
+                f"Obvious {item['metric']} worsening: delta {item['delta']:.3f} exceeds threshold {item['threshold']:.3f}."
+            )
+        return _classification_payload(
+            "degraded",
+            "Degraded",
+            f"{dimension} robustness degrades against core comparators or guardrails.",
+            True,
+            comparator="Cost-L heuristic",
+            caveats=caveats,
+        )
+
+    if profit_vs_cost >= -_WORK2_PROFIT_EPSILON and profit_vs_learned >= -_WORK2_PROFIT_EPSILON:
+        if menu_quality_supports or cnn.get("menu_regret_mean") is None or cnn.get("top_L_overlap_mean") is None:
+            return _classification_payload(
+                "stable_support",
+                "Stable support",
+                f"{dimension} robustness is stable against Cost-L and the learned baseline.",
+                False,
+                comparator="Cost-L heuristic",
+            )
+
+    return _classification_payload(
+        "conditional_mixed",
+        "Conditional/mixed",
+        f"{dimension} robustness has mixed primary or menu-quality evidence.",
+        True,
+        comparator="Cost-L heuristic",
+        caveats=["Mixed or weak dimensions cannot be converted into supportive wording."],
+    )
+
+
+def _work2_robustness_overall_claim(dimension_results):
+    statuses = {result["classification"]["status"] for result in dimension_results}
+    if statuses <= {"stable_support"}:
+        return "positive claim eligible"
+    if statuses & {"degraded", "incomplete", "not_run"}:
+        return "diagnostic-only claim"
+    return "conditional claim"
+
+
+def _write_work2_robustness_summary(path, rows, csv_path, dimension_results, diagnostic_path=None):
+    relative_csv = _project_relative(csv_path)
+    overall_claim = _work2_robustness_overall_claim(dimension_results)
+    diagnostic_required = any(result["classification"]["diagnostic_required"] for result in dimension_results)
+    diagnostic_line = "- Diagnostic report: not required."
+    if diagnostic_required:
+        if diagnostic_path is None:
+            diagnostic_line = "- Diagnostic report: required but no diagnostic path was provided."
+        else:
+            diagnostic_line = f"- Diagnostic report: `{_project_relative(diagnostic_path)}`."
+
+    lines = [
+        "# Work2 Robustness Summary",
+        "",
+        f"**Generated:** {utc_now_iso()}",
+        "",
+        "## Evidence Contract",
+        "",
+        "- EXP-07 dimensions: menu size, candidate pool size, demand intensity, outside option utility, and cross-instance generalization.",
+        "- Public K is meeting-point candidates; public L is displayed meeting points; home is always shown outside L.",
+        "- Phase 4 evidence was mixed/inconclusive, so this summary uses conservative conclusion language.",
+        "",
+        "## Outputs",
+        "",
+        f"- Standard robustness CSV: `{relative_csv}`",
+        diagnostic_line,
+        "",
+        "## Dimension Evidence",
+        "",
+        "| Dimension | Status | Rows | Settings | CNN net profit | Cost-L net profit | CNN-Menu net profit | Menu regret | Top-L overlap | Quit rate | Avg walk |",
+        "|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+
+    for result in dimension_results:
+        dimension = result["dimension"]
+        dimension_rows = [row for row in rows if row.get("robustness_dimension") == dimension]
+        aggregates = _aggregate_work2_methods(dimension_rows)
+        aggregate_by_method = {row["method"]: row for row in aggregates}
+        cnn = aggregate_by_method.get("CNN-SetMenuNet", {})
+        cost = aggregate_by_method.get("Cost-L heuristic", {})
+        learned = _learned_baseline_aggregate(aggregate_by_method) or {}
+        settings = sorted({str(row.get("robustness_setting")) for row in dimension_rows if row.get("robustness_setting") not in {None, ""}})
+        lines.append(
+            "| {dimension} | {status} | {rows} | {settings} | {cnn_profit} | {cost_profit} | {learned_profit} | {regret} | {top_l} | {quit} | {walk} |".format(
+                dimension=dimension,
+                status=result["classification"]["label"],
+                rows=len(dimension_rows),
+                settings=", ".join(settings) if settings else "--",
+                cnn_profit=format_metric(cnn.get("net_profit_mean")),
+                cost_profit=format_metric(cost.get("net_profit_mean")),
+                learned_profit=format_metric(learned.get("net_profit_mean")),
+                regret=format_metric(cnn.get("menu_regret_mean")),
+                top_l=format_metric(cnn.get("top_L_overlap_mean")),
+                quit=format_metric(cnn.get("quit_rate_mean")),
+                walk=format_metric(cnn.get("avg_walk_mean")),
+            )
+        )
+
+    lines.extend([
+        "",
+        "## Conservative Conclusion",
+        "",
+        f"- Phase 6 claim posture: **{overall_claim}**.",
+        "- Overall wording is no stronger than the weakest material robustness dimension.",
+        "- Missing or negative dimensions remain diagnostic evidence; they are not edited into supportive findings.",
+        "",
+        "## Dimension Notes",
+        "",
+    ])
+    for result in dimension_results:
+        classification = result["classification"]
+        lines.append(f"- **{result['dimension']}**: {classification['summary']}")
+        for caveat in classification.get("caveats", []):
+            lines.append(f"  - {caveat}")
+
+    write_text(path, "\n".join(lines) + "\n")
+
+
+def _write_work2_robustness_diagnostic(path, dimension_results):
+    weak_results = [
+        result
+        for result in dimension_results
+        if result["classification"]["status"] in {"conditional_mixed", "degraded", "incomplete", "not_run"}
+    ]
+    lines = [
+        "# Work2 Robustness Diagnostic",
+        "",
+        f"**Generated:** {utc_now_iso()}",
+        "",
+        "## Incomplete/Degraded/Mixed Dimensions",
+        "",
+    ]
+    if not weak_results:
+        lines.append("- None.")
+    for result in weak_results:
+        classification = result["classification"]
+        cause = result.get("likely_cause", "training budget")
+        lines.append(f"- **{result['dimension']}**: {classification['label']} - {classification['summary']} Likely cause: {cause}.")
+        for caveat in classification.get("caveats", []):
+            lines.append(f"  - {caveat}")
+
+    cause_sections = [
+        ("Prediction Error", "prediction error"),
+        ("Ranking/Menu Selection Error", "menu selection error"),
+        ("Demand Sensitivity", "demand sensitivity"),
+        ("Outside-Option/MNL Sensitivity", "outside-option/MNL sensitivity"),
+        ("Instance Instability", "instance instability"),
+        ("Training Budget", "training budget"),
+        ("Candidate-Pool Scaling", "candidate-pool scaling"),
+    ]
+    for heading, cause in cause_sections:
+        matches = [result for result in weak_results if result.get("likely_cause") == cause]
+        lines.extend(["", f"## {heading}", ""])
+        if matches:
+            for result in matches:
+                lines.append(f"- {result['dimension']}: {result['classification']['label']}.")
+        else:
+            lines.append("- unavailable or not implicated by current robustness evidence.")
+
+    lines.extend([
+        "",
+        "## Recommended Next Actions",
+        "",
+        "- Do not manually edit result rows or summary language.",
+        "- If missing, run or resume the corresponding robustness member study.",
+        "- If degraded or mixed, inspect prediction accuracy, ranking/menu selection, MNL sensitivity, demand setting, instance transfer, and training budget before Phase 6 claims are written.",
+    ])
+    write_text(path, "\n".join(lines) + "\n")
+
+
+def build_work2_robustness_artifacts(bundle):
+    manifest = bundle["manifest"]
+    member_lookup = {study_name: summary for study_name, summary, _ in bundle["member_summaries"]}
+    combined_rows = []
+    dimension_results = []
+
+    for member_name in manifest.get("members", []):
+        member_manifest = load_manifest(member_name)
+        summary = member_lookup.get(member_name)
+        missing_source = summary is None
+        source_rows = []
+        if summary is not None:
+            source_rows = enrich_policy_rows(
+                summary.get("normalized_rows", []),
+                member_name,
+                study_meta=summary.get("study", {}),
+                manifest=member_manifest,
+            )
+        standard_rows = [
+            _work2_robustness_standard_row(row, member_manifest, member_name)
+            for row in _sort_work2_rows(source_rows)
+        ]
+        combined_rows.extend(standard_rows)
+        dimension = _work2_robustness_dimension(member_name)
+        classification = classify_work2_robustness_dimension(dimension, standard_rows, missing_source=missing_source)
+        dimension_results.append(
+            {
+                "study_name": member_name,
+                "dimension": dimension,
+                "classification": classification,
+                "likely_cause": _WORK2_ROBUSTNESS_DIMENSIONS.get(member_name, {}).get("cause", "training budget"),
+            }
+        )
+
+    csv_path = WORK2_STANDARD_ARTIFACTS_DIR / "results_snapshot" / "work2_robustness_rows.csv"
+    summary_path = WORK2_STANDARD_ARTIFACTS_DIR / "work2_robustness_summary.md"
+    diagnostic_path = WORK2_STANDARD_ARTIFACTS_DIR / "diagnostics" / "work2_robustness_diagnostic.md"
+    _write_standard_csv(csv_path, combined_rows)
+    if any(result["classification"]["diagnostic_required"] for result in dimension_results):
+        _write_work2_robustness_diagnostic(diagnostic_path, dimension_results)
+    elif diagnostic_path.exists():
+        diagnostic_path.unlink()
+    _write_work2_robustness_summary(summary_path, combined_rows, csv_path, dimension_results, diagnostic_path)
+    snapshot = {
+        "schema_version": 1,
+        "built_at_utc": utc_now_iso(),
+        "requested_study": manifest["name"],
+        "kind": "suite",
+        "member_sources": [
+            {
+                "study_name": study_name,
+                "run_id": summary.get("run_metadata", {}).get("run_id") if summary else None,
+                "study_type": summary.get("study", {}).get("type") if summary else None,
+                "status": "ok" if summary else "missing",
+            }
+            for study_name in manifest.get("members", [])
+            for summary in [member_lookup.get(study_name)]
+        ],
+        "robustness_rows": combined_rows,
+        "dimension_results": dimension_results,
+        "overall_claim": _work2_robustness_overall_claim(dimension_results),
+    }
+    save_json(ARTIFACTS_DIR / "results_snapshot" / "work2_robustness_summary.json", snapshot)
+    write_csv(ARTIFACTS_DIR / "results_snapshot" / "work2_robustness_rows.csv", combined_rows)
+    return snapshot
+
+
 def build_work2_standard_artifacts(study_summary, manifest):
     """Write Work2 standard CSV and markdown summaries."""
     if study_summary is None:
@@ -2520,6 +2930,9 @@ def build_single_study_artifacts(study_summary, study_name, manifest=None):
 
 
 def build_suite_artifacts(bundle):
+    if bundle["manifest"]["name"] == "work2_robustness":
+        return build_work2_robustness_artifacts(bundle)
+
     if bundle["manifest"]["name"] == "phase31_uptake_menu_value":
         combined_rows = []
         for study_name, summary, _ in bundle["member_summaries"]:
