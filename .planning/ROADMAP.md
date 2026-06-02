@@ -60,7 +60,7 @@ Plans:
 **Requirements:** EXP-07
 **Status:** Planned
 
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [ ] `05-01-PLAN.md` - Wave 1: Define Work2 robustness manifests and fast contract checks.
