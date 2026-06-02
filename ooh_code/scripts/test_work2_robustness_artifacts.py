@@ -163,8 +163,20 @@ def test_missing_member_outputs_generate_incomplete_artifacts():
         / "diagnostics"
         / "work2_robustness_diagnostic.md"
     )
+    table_path = (
+        build_artifacts.WORK2_STANDARD_ARTIFACTS_DIR
+        / "tables"
+        / "work2_robustness_by_dimension.tex"
+    )
+    figure_path = (
+        build_artifacts.WORK2_STANDARD_ARTIFACTS_DIR
+        / "figures"
+        / "work2_robustness_net_profit.png"
+    )
     assert summary_path.exists()
     assert diagnostic_path.exists()
+    assert table_path.exists()
+    assert figure_path.exists()
     assert "not run" in summary_path.read_text(encoding="utf-8").lower()
 
 

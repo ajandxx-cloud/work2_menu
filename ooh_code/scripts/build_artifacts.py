@@ -2652,6 +2652,54 @@ def _write_work2_robustness_diagnostic(path, dimension_results):
     write_text(path, "\n".join(lines) + "\n")
 
 
+def _write_work2_robustness_dimension_table(path, dimension_results):
+    rows = []
+    for result in dimension_results:
+        classification = result["classification"]
+        rows.append(
+            [
+                result["dimension"],
+                classification["label"],
+                result.get("likely_cause", "--"),
+                "yes" if classification["diagnostic_required"] else "no",
+                classification["summary"],
+            ]
+        )
+    write_tex_table(
+        path,
+        caption="Work2 robustness evidence by EXP-07 dimension.",
+        label="tab:work2_robustness_by_dimension",
+        headers=["Dimension", "Status", "Likely cause", "Diagnostic", "Summary"],
+        rows=rows,
+    )
+
+
+def _write_work2_robustness_net_profit_figure(path, rows):
+    cnn_rows = [row for row in rows if row.get("method") == "CNN-SetMenuNet"]
+    if not cnn_rows:
+        render_placeholder_figure(
+            path,
+            "Work2 robustness net profit",
+            "Run the work2_robustness suite to populate this figure.",
+        )
+        return
+
+    grouped = {}
+    for row in cnn_rows:
+        grouped.setdefault(row.get("robustness_dimension", "--"), []).append(row.get("net_profit"))
+    labels = sorted(grouped)
+    values = [_mean(grouped[label]) or 0.0 for label in labels]
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.bar(labels, values, color="#4C78A8")
+    ax.set_ylabel("CNN-SetMenuNet mean net profit")
+    ax.set_title("Work2 robustness net profit by dimension")
+    ax.tick_params(axis="x", rotation=20)
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=200)
+    plt.close(fig)
+
+
 def build_work2_robustness_artifacts(bundle):
     manifest = bundle["manifest"]
     member_lookup = {study_name: summary for study_name, summary, _ in bundle["member_summaries"]}
@@ -2689,7 +2737,11 @@ def build_work2_robustness_artifacts(bundle):
     csv_path = WORK2_STANDARD_ARTIFACTS_DIR / "results_snapshot" / "work2_robustness_rows.csv"
     summary_path = WORK2_STANDARD_ARTIFACTS_DIR / "work2_robustness_summary.md"
     diagnostic_path = WORK2_STANDARD_ARTIFACTS_DIR / "diagnostics" / "work2_robustness_diagnostic.md"
+    table_path = WORK2_STANDARD_ARTIFACTS_DIR / "tables" / "work2_robustness_by_dimension.tex"
+    figure_path = WORK2_STANDARD_ARTIFACTS_DIR / "figures" / "work2_robustness_net_profit.png"
     _write_standard_csv(csv_path, combined_rows)
+    _write_work2_robustness_dimension_table(table_path, dimension_results)
+    _write_work2_robustness_net_profit_figure(figure_path, combined_rows)
     if any(result["classification"]["diagnostic_required"] for result in dimension_results):
         _write_work2_robustness_diagnostic(diagnostic_path, dimension_results)
     elif diagnostic_path.exists():
