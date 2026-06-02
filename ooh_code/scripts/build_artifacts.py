@@ -2352,14 +2352,23 @@ def build_work2_standard_artifacts(study_summary, manifest):
 
 def build_work2_results_artifacts(rows, prefix="work2_main"):
     """Generate Work 2 prediction accuracy, operational, and menu regret tables."""
+    work2_tables_dirs = [
+        ARTIFACTS_DIR / "tables",
+        WORK2_STANDARD_ARTIFACTS_DIR / "tables",
+    ]
+    work2_figures_dirs = [
+        ARTIFACTS_DIR / "figures",
+        WORK2_STANDARD_ARTIFACTS_DIR / "figures",
+    ]
     rows = _sort_work2_rows([row for row in rows if not row.get("is_reference")])
     if not rows:
         for name in ["prediction_accuracy", "operational", "menu_regret"]:
-            render_placeholder_figure(
-                ARTIFACTS_DIR / "figures" / f"{prefix}_{name}.png",
-                f"Work 2 {name.replace('_', ' ')}",
-                "Run the work2_main study to populate this figure.",
-            )
+            for figures_dir in work2_figures_dirs:
+                render_placeholder_figure(
+                    figures_dir / f"{prefix}_{name}.png",
+                    f"Work 2 {name.replace('_', ' ')}",
+                    "Run the work2_main study to populate this figure.",
+                )
         return
 
     # --- Prediction accuracy table ---
@@ -2380,20 +2389,21 @@ def build_work2_results_artifacts(rows, prefix="work2_main"):
                 row["display_label"],
                 "--", "--", "--", "--", "--",
             ])
-    write_tex_table(
-        ARTIFACTS_DIR / "tables" / f"{prefix}_prediction_accuracy.tex",
-        caption="Cost prediction accuracy across methods on the RC benchmark.",
-        label=f"tab:{prefix}_prediction_accuracy",
-        headers=[
-            "Method",
-            "Cost MAE",
-            "Cost RMSE",
-            "Spearman $\\rho$",
-            "Top-L Overlap",
-            "NDCG@L",
-        ],
-        rows=pred_table_rows,
-    )
+    for tables_dir in work2_tables_dirs:
+        write_tex_table(
+            tables_dir / f"{prefix}_prediction_accuracy.tex",
+            caption="Cost prediction accuracy across methods on the RC benchmark.",
+            label=f"tab:{prefix}_prediction_accuracy",
+            headers=[
+                "Method",
+                "Cost MAE",
+                "Cost RMSE",
+                "Spearman $\\rho$",
+                "Top-L Overlap",
+                "NDCG@L",
+            ],
+            rows=pred_table_rows,
+        )
 
     # --- Operational + passenger experience table ---
     op_table_rows = []
@@ -2409,23 +2419,24 @@ def build_work2_results_artifacts(rows, prefix="work2_main"):
             format_metric(row.get("avg_in_vehicle_time")),
             format_metric(row.get("avg_chosen_price")),
         ])
-    write_tex_table(
-        ARTIFACTS_DIR / "tables" / f"{prefix}_operational.tex",
-        caption="Operational and passenger experience metrics across methods on the RC benchmark.",
-        label=f"tab:{prefix}_operational",
-        headers=[
-            "Method",
-            "Net Profit",
-            "Total Cost",
-            "Accept. Rate",
-            "Opt-out Rate",
-            "Home Share",
-            "Avg Walk",
-            "Avg IVT",
-            "Avg Price",
-        ],
-        rows=op_table_rows,
-    )
+    for tables_dir in work2_tables_dirs:
+        write_tex_table(
+            tables_dir / f"{prefix}_operational.tex",
+            caption="Operational and passenger experience metrics across methods on the RC benchmark.",
+            label=f"tab:{prefix}_operational",
+            headers=[
+                "Method",
+                "Net Profit",
+                "Total Cost",
+                "Accept. Rate",
+                "Opt-out Rate",
+                "Home Share",
+                "Avg Walk",
+                "Avg IVT",
+                "Avg Price",
+            ],
+            rows=op_table_rows,
+        )
 
     # --- Menu regret table ---
     regret_table_rows = []
@@ -2436,18 +2447,19 @@ def build_work2_results_artifacts(rows, prefix="work2_main"):
             format_metric(row.get("average_menu_size")),
             format_metric(row.get("avg_meeting_point_count_per_menu")),
         ])
-    write_tex_table(
-        ARTIFACTS_DIR / "tables" / f"{prefix}_menu_regret.tex",
-        caption="Menu selection quality across methods on the RC benchmark.",
-        label=f"tab:{prefix}_menu_regret",
-        headers=[
-            "Method",
-            "Menu Regret",
-            "Avg Menu Size",
-            "MP Count",
-        ],
-        rows=regret_table_rows,
-    )
+    for tables_dir in work2_tables_dirs:
+        write_tex_table(
+            tables_dir / f"{prefix}_menu_regret.tex",
+            caption="Menu selection quality across methods on the RC benchmark.",
+            label=f"tab:{prefix}_menu_regret",
+            headers=[
+                "Method",
+                "Menu Regret",
+                "Avg Menu Size",
+                "MP Count",
+            ],
+            rows=regret_table_rows,
+        )
 
     # --- Net profit comparison figure ---
     labels = [row["display_label"] for row in rows]
@@ -2458,7 +2470,8 @@ def build_work2_results_artifacts(rows, prefix="work2_main"):
     ax.set_title("Work 2: 6-Method Net Profit Comparison")
     ax.tick_params(axis="x", rotation=20)
     fig.tight_layout()
-    fig.savefig(ARTIFACTS_DIR / "figures" / f"{prefix}_net_profit.png", dpi=200)
+    for figures_dir in work2_figures_dirs:
+        fig.savefig(figures_dir / f"{prefix}_net_profit.png", dpi=200)
     plt.close(fig)
 
 

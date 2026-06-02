@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Cost prediction accuracy across methods on the RC benchmark.}
+\label{tab:work2_main_prediction_accuracy}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}p{0.21\linewidth}rrrrr@{}}
+\hline
+Method & Cost MAE & Cost RMSE & Spearman \$\rho\$ & Top-L Overlap & NDCG@L \\
+\hline
+Oracle Menu & 222.895 & 791.083 & 1.000 & 1.000 & 1.000 \\
+CNN-SetMenuNet & 210.143 & 776.886 & 0.500 & 1.000 & 1.000 \\
+MLP-Menu & 743.361 & 1596.915 & 0.835 & 1.000 & 0.992 \\
+CNN-Menu & 133.547 & 533.763 & 0.660 & 1.000 & 1.000 \\
+Cost-L & -- & -- & -- & -- & -- \\
+Nearest-L & -- & -- & -- & -- & -- \\
+\hline
+\end{tabular}
+}
+\end{table}
