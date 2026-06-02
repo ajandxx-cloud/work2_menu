@@ -1,4 +1,6 @@
 from copy import deepcopy
+from tempfile import TemporaryDirectory
+from pathlib import Path
 
 import build_artifacts
 
@@ -101,6 +103,35 @@ def test_incomplete_minimum_methods():
     assert_status("incomplete", rows, "incomplete")
 
 
+def test_supportive_evidence_does_not_require_diagnostic():
+    result = build_artifacts.classify_work2_pilot_evidence(make_rows())
+    assert result["diagnostic_required"] is False
+
+
+def test_diagnostic_report_contains_required_headings():
+    rows = make_rows({"CNN-SetMenuNet": {"quit_rate": 0.20}})
+    classification = build_artifacts.classify_work2_pilot_evidence(rows)
+    with TemporaryDirectory() as tmp:
+        path = Path(tmp) / "work2_main_diagnostic.md"
+        build_artifacts._write_work2_diagnostic_report(
+            path,
+            "work2_main",
+            rows,
+            rows,
+            {"base_args": {"max_episodes": 80, "eval_episodes": 20}},
+            classification,
+        )
+        text = path.read_text(encoding="utf-8")
+    for heading in [
+        "## Cost Prediction Error",
+        "## Ranking/Menu Selection Error",
+        "## Training Budget",
+        "## Seed Instability",
+    ]:
+        assert heading in text, heading
+    assert "unavailable" in text
+
+
 def main():
     tests = [
         test_stronger_support,
@@ -108,6 +139,8 @@ def main():
         test_tradeoff_mixed_guardrail,
         test_mixed_inconclusive_seed_trend,
         test_incomplete_minimum_methods,
+        test_supportive_evidence_does_not_require_diagnostic,
+        test_diagnostic_report_contains_required_headings,
     ]
     for test in tests:
         test()

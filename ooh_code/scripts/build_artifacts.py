@@ -1677,6 +1677,26 @@ def _aggregate_work2_methods(rows):
     return sorted(aggregates, key=lambda row: (method_order.get(row["method"], 99), row["method"]))
 
 
+def _aggregate_work2_source_methods(rows):
+    grouped = {}
+    for row in rows:
+        grouped.setdefault(_work2_standard_method(row), []).append(row)
+    aggregates = {}
+    for method, items in grouped.items():
+        aggregates[method] = {
+            "cost_pred_mae_mean": _mean([item.get("cost_pred_mae") for item in items]),
+            "cost_pred_rmse_mean": _mean([item.get("cost_pred_rmse") for item in items]),
+            "spearman_cost_ranking_mean": _mean([item.get("spearman_cost_ranking") for item in items]),
+            "top_L_overlap_mean": _mean([item.get("top_L_overlap") for item in items]),
+            "ndcg_at_L_mean": _mean([item.get("ndcg_at_L") for item in items]),
+            "menu_regret_mean": _mean([item.get("menu_regret") for item in items]),
+            "net_profit_mean": _mean([item.get("net_profit") for item in items]),
+            "net_profit_std": _std([item.get("net_profit") for item in items]),
+            "rows": items,
+        }
+    return aggregates
+
+
 def _work2_minimum_missing(methods):
     missing = [method for method in _WORK2_PHASE4_MINIMUM_METHODS if method not in methods]
     if "CNN-Menu" not in methods and "MLP-Menu" not in methods:
@@ -2020,6 +2040,120 @@ def _method_explanation(method, aggregate, cnn_aggregate):
     )
 
 
+def _diagnostic_metric_sentence(aggregate, labels):
+    if aggregate is None:
+        return "No rows are available for this method."
+    parts = []
+    for label, key in labels:
+        value = aggregate.get(key)
+        if value is None:
+            parts.append(f"{label} unavailable")
+        else:
+            parts.append(f"{label} {format_metric(value)}")
+    return ", ".join(parts) + "."
+
+
+def _write_work2_diagnostic_report(path, study_name, standard_rows, source_rows, manifest, classification):
+    base_args = manifest.get("base_args", {}) if manifest is not None else {}
+    standard_aggregates = {row["method"]: row for row in _aggregate_work2_methods(standard_rows)}
+    source_aggregates = _aggregate_work2_source_methods(source_rows)
+    cnn_source = source_aggregates.get("CNN-SetMenuNet")
+    cnn_standard = standard_aggregates.get("CNN-SetMenuNet")
+    comparator = classification.get("comparator")
+    comparator_source = source_aggregates.get(comparator) if comparator else None
+    comparator_standard = standard_aggregates.get(comparator) if comparator else None
+
+    lines = [
+        f"# {study_name} Diagnostic Report",
+        "",
+        f"**Generated:** {utc_now_iso()}",
+        "",
+        f"- Evidence gate: {classification['label']}",
+        f"- Gate detail: {classification['summary']}",
+        f"- Comparator: `{comparator or '--'}`",
+        "",
+        "## Cost Prediction Error",
+        "",
+        "- CNN-SetMenuNet: "
+        + _diagnostic_metric_sentence(
+            cnn_source,
+            [
+                ("cost MAE", "cost_pred_mae_mean"),
+                ("cost RMSE", "cost_pred_rmse_mean"),
+                ("Spearman ranking", "spearman_cost_ranking_mean"),
+            ],
+        ),
+    ]
+    if comparator:
+        lines.append(
+            f"- {comparator}: "
+            + _diagnostic_metric_sentence(
+                comparator_source,
+                [
+                    ("cost MAE", "cost_pred_mae_mean"),
+                    ("cost RMSE", "cost_pred_rmse_mean"),
+                    ("Spearman ranking", "spearman_cost_ranking_mean"),
+                ],
+            )
+        )
+    lines.extend([
+        "- If cost MAE/RMSE are unavailable for a method, the current normalized rows cannot isolate prediction error from menu-selection error.",
+        "",
+        "## Ranking/Menu Selection Error",
+        "",
+        "- CNN-SetMenuNet: "
+        + _diagnostic_metric_sentence(
+            cnn_source,
+            [
+                ("menu regret", "menu_regret_mean"),
+                ("Top-L overlap", "top_L_overlap_mean"),
+                ("NDCG@L", "ndcg_at_L_mean"),
+            ],
+        ),
+    ])
+    if comparator:
+        lines.append(
+            f"- {comparator}: "
+            + _diagnostic_metric_sentence(
+                comparator_source,
+                [
+                    ("menu regret", "menu_regret_mean"),
+                    ("Top-L overlap", "top_L_overlap_mean"),
+                    ("NDCG@L", "ndcg_at_L_mean"),
+                ],
+            )
+        )
+    lines.extend([
+        "- Needs follow-up if CNN-SetMenuNet improves ranking metrics but still loses net_profit, because pricing or realized route-cost interactions may dominate menu quality.",
+        "",
+        "## Training Budget",
+        "",
+        f"- Pilot training episodes: `{base_args.get('max_episodes', '--')}`.",
+        f"- Pilot test episodes per seed: `{base_args.get('eval_episodes', '--')}`.",
+        f"- Observed seeds: `{_format_seed_list(standard_rows)}`.",
+        "- Formal evidence remains later-phase scope; Phase 4 should not expand seeds automatically unless diagnostics identify a fixable training-budget issue.",
+        "",
+        "## Seed Instability",
+        "",
+        f"- {_seed_variation_note(standard_rows)}",
+    ])
+    if cnn_standard is None:
+        lines.append("- CNN-SetMenuNet net_profit standard deviation unavailable because the method row is missing.")
+    else:
+        lines.append(f"- CNN-SetMenuNet net_profit sd: {format_metric(cnn_standard.get('net_profit_std'))}.")
+    if comparator_standard is not None:
+        lines.append(f"- {comparator} net_profit sd: {format_metric(comparator_standard.get('net_profit_std'))}.")
+
+    lines.extend([
+        "",
+        "## Recommended Next Step",
+        "",
+        "- Do not alter result rows manually. If diagnostics point to prediction or ranking error, tune that component and rerun the same manifest; if instability dominates, report Phase 4 as mixed and reserve stronger claims for later robustness/formal phases.",
+        "",
+    ])
+    write_text(path, "\n".join(lines))
+
+
 def _seed_variation_note(rows):
     by_seed = {}
     for row in rows:
@@ -2049,7 +2183,7 @@ def _seed_variation_note(rows):
     return "Seed-to-seed trend summary: " + "; ".join(comparisons) + "."
 
 
-def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest):
+def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagnostic_path=None):
     base_args = manifest.get("base_args", {}) if manifest is not None else {}
     relative_csv = csv_path.relative_to(PROJECT_ROOT).as_posix()
     aggregates = _aggregate_work2_methods(rows)
@@ -2127,7 +2261,11 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest):
 
     diagnostic_line = "- Diagnostic report: not required for supportive evidence."
     if classification["diagnostic_required"]:
-        diagnostic_line = "- Diagnostic report: required for this evidence state; generated in the diagnostic reporting step when enabled."
+        if diagnostic_path is None:
+            diagnostic_line = "- Diagnostic report: required for this evidence state; no diagnostic path was provided."
+        else:
+            relative_diagnostic = diagnostic_path.relative_to(PROJECT_ROOT).as_posix()
+            diagnostic_line = f"- Diagnostic report: `{relative_diagnostic}`."
 
     if classification["status"] in {"stronger_support", "preliminary_support"}:
         phase5_readiness = "Ready to proceed to Phase 5 robustness, while keeping pilot limitations explicit."
@@ -2191,9 +2329,22 @@ def build_work2_standard_artifacts(study_summary, manifest):
 
     csv_path = WORK2_STANDARD_ARTIFACTS_DIR / "results_snapshot" / f"{study_name}_rows.csv"
     summary_path = WORK2_STANDARD_ARTIFACTS_DIR / f"{study_name}_summary.md"
+    diagnostic_path = WORK2_STANDARD_ARTIFACTS_DIR / "diagnostics" / f"{study_name}_diagnostic.md"
     _write_standard_csv(csv_path, method_rows)
     if study_name == "work2_main":
-        _write_work2_pilot_summary(summary_path, study_name, method_rows, csv_path, manifest)
+        classification = classify_work2_pilot_evidence(method_rows)
+        if classification["diagnostic_required"]:
+            _write_work2_diagnostic_report(
+                diagnostic_path,
+                study_name,
+                method_rows,
+                source_rows,
+                manifest,
+                classification,
+            )
+        elif diagnostic_path.exists():
+            diagnostic_path.unlink()
+        _write_work2_pilot_summary(summary_path, study_name, method_rows, csv_path, manifest, diagnostic_path)
     else:
         _write_work2_smoke_summary(summary_path, study_name, method_rows, csv_path, manifest)
     return method_rows

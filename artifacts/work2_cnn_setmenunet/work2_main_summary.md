@@ -1,6 +1,6 @@
 # work2_main Phase 4 Pilot Summary
 
-**Generated:** 2026-06-02T04:18:43Z
+**Generated:** 2026-06-02T04:20:23Z
 
 ## Settings
 
@@ -58,7 +58,7 @@
 - Comparator used by gate: `--`
 - Net profit is primary; menu regret and Top-L overlap are supporting menu-quality metrics.
 - Guardrail thresholds: obvious worsening is quit_rate increase > 0.05 or avg_walk increase > 300, with a 10% relative worsening floor.
-- Diagnostic report: required for this evidence state; generated in the diagnostic reporting step when enabled.
+- Diagnostic report: `artifacts/work2_cnn_setmenunet/diagnostics/work2_main_diagnostic.md`.
 
 ## Caveats
 
