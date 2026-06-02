@@ -2,101 +2,78 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: phase_complete
-stopped_at: Phase 8 complete — main experiment run, artifacts generated
-last_updated: "2026-05-31T15:02:00.000Z"
-last_activity: 2026-05-31
+current_phase: 5
+status: ready_to_plan
+last_updated: 2026-06-02T07:04:15.344Z
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 6
+  completed_phases: 4
+  total_plans: 8
+  completed_plans: 8
+  percent: 67
+stopped_at: Phase 04 complete (3/3) — ready to discuss Phase 5
 ---
 
-# Project State
+# Project State: Work2_CNN_SetMenuNet_DRT_Menu_Experiments
+
+**Last Updated:** 2026-06-02  
+**Status:** Ready to plan
+**Current Phase:** 5
+**Next Command:** `$gsd-plan-phase 5`
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-05-29)
+See: `.planning/PROJECT.md`
 
-**Core value:** Set-Attention representation model outperforms traditional CNN single-point cost prediction for DRT service menu design
-**Current focus:** All phases complete — project ready for manuscript writing
+**Core value:** 证明或诚实诊断 CNN-SetMenuNet 是否比传统 CNN-Menu、MLP-Menu、Nearest-L、Cost-L heuristic 等方法更适合 DRT 动态服务菜单设计。
 
-## Current Position
+## Current Focus
 
-Phase: 8 (final)
-Plan: Complete
-Status: Phase 8 (Run Main Experiment) complete — 5-method × 3-seed comparison on RC benchmark, paper artifacts generated
-Last activity: 2026-05-31
+Phase 5 should use the completed Phase 4 pilot as a robustness and remediation input:
 
-Progress: [████████████████████████] 100%
+- Keep `K=10` as meeting-point candidates and `L=3` as displayed meeting points
+- Treat Phase 4 evidence as mixed/inconclusive rather than supportive of a positive net-profit claim
+- Use `artifacts/work2_cnn_setmenunet/diagnostics/work2_main_diagnostic.md` to choose remediation and robustness checks
+- Preserve shared request traces, candidate pools, masks, labels, and train/test split semantics where applicable
+- Do not manually edit results to create supportive evidence
 
-## Performance Metrics
+Phase 4 closeout evidence is captured in `.planning/phases/04-model-comparison-suite/VERIFICATION.md`.
 
-**Velocity:**
+## Active Defaults
 
-- Total plans completed: 8
-- Average duration: -
-- Total execution time: 0 hours
+- `instance = RC`
+- `K = 10`
+- `L = 3`
+- `home option = always shown`
+- `pilot training episodes = 80`
+- `pilot test episodes = 20`
+- `formal training episodes = 150-300`
+- `formal test episodes = 50`
+- `seeds = 0,1,2,3,4`
 
-**By Phase:**
+## Guardrails
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 01 | 1 | - | - |
-| 02 | 2 | - | - |
-| 03 | 2 | - | - |
-| 04 | 2 | - | - |
-| 05 | 2 | - | - |
-| 06 | 1 | - | - |
-| 07 | 2 | - | - |
-| 08 | 1 | - | - |
+- Do not modify Work 1 pricing logic without explicit approval.
+- Do not modify MNL passenger choice core logic without explicit approval.
+- Do not modify HGS/Hygese route-cost evaluation core logic without explicit approval.
+- Do not use SPO/SPO+ as the Work 2 main contribution.
+- Do not manually alter results to match expected conclusions.
 
-**Recent Trend:**
+## Verification Status
 
-- Last 5 plans: -
-- Trend: -
+| Phase | Status | Verification Report |
+|-------|--------|---------------------|
+| Phase 1 | Passed | `.planning/phases/01-project-baseline-and-boundaries/VERIFICATION.md` |
+| Phase 2 | Passed | `.planning/phases/02-smoke-experiment-pipeline/VERIFICATION.md` |
+| Phase 3 | Passed | `.planning/phases/03-candidate-feature-and-label-contract/VERIFICATION.md` |
+| Phase 4 | Passed with risks | `.planning/phases/04-model-comparison-suite/VERIFICATION.md` |
+| Phase 5 | Pending | `.planning/phases/05-robustness-experiments/VERIFICATION.md` |
+| Phase 6 | Pending | `.planning/phases/06-formal-results-and-diagnostics/VERIFICATION.md` |
 
-| Phase 03 P01 | 1min | 1 tasks | 1 files |
-| Phase 04 P01 | 2min | 1 tasks | 1 files |
-| Phase 04 P02 | 1min | 1 tasks | 1 files |
+## Notes
 
-## Accumulated Context
-
-### Decisions
-
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- [Init]: New model files (SetMenuNet.py, CNNSetMenuNet.py) for separation of concerns
-- [Init]: Subclass DSPO_Menu for CNN_SetMenu to maximize reuse
-- [Init]: 6-dim option features (walk_dist, ivt, capacity, dist_to_dest, type, time)
-- [Init]: Huber loss only -- contribution is model structure, not loss function
-- [Init]: CNN_Encoder reuses CNN_2d conv layers for warm-start capability
-- [Phase 03]: SetMenuNet uses batch_first=True for natural [B,K,D] tensor layout
-- [Phase 03]: All-masked guard prevents PyTorch nested-tensor crash on empty sets
-- [Phase 03]: weights_only=True in load() for safe checkpoint deserialization
-- [Phase 04]: CNN_Encoder as separate nn.Module (composition, not inheritance)
-- [Phase 04]: Concatenation fusion: z_t [B,128] + option [B,K,6] → [B,K,134] → project
-- [Phase 04]: Parallel TransformerEncoder (same config as SetMenuNet, not instantiated)
-- [Phase 04]: Single cost output [B,K], no multi-output head
-- [Phase 04]: Warm-start via filtered state_dict (load matching keys from CNN_2d checkpoint)
-- [Phase 04]: eval() called after load() (addressing Phase 03 review WR-02)
-- [Phase 08]: Unified CNNSetMenuNet model for all variants (shared training, different menu policies)
-- [Phase 08]: cnn_aux (CNN_2d for ETA/IVT) trained alongside CNNSetMenuNet to prevent random ETA predictions
-- [Phase 08]: PP candidates capped at max_candidates-1 to prevent tensor index overflow
-
-### Pending Todos
-
-None — all phases complete.
-
-### Blockers/Concerns
-
-None — experiment completed successfully with non-degenerate results.
-
-## Session Continuity
-
-Last session: 2026-05-31T15:02:00.000Z
-Stopped at: Phase 8 complete — main experiment run, artifacts generated
-Resume file: .planning/phases/08-run-main-experiment/08-CONTEXT.md
+- Existing `ooh_code` may contain useful implementations of `CNNSetMenuNet`, `SetMenuNet`, `MLPMenuNet`, menu policies, and study runners.
+- Existing `ooh_code` also contains older Work2 candidate-filtering/full-display framing; that framing is not the source of truth for this project.
+- Phase 1 completed on 2026-06-01 with `.planning/phases/01-project-baseline-and-boundaries/01-01-SUMMARY.md`.
+- Phase 2 completed on 2026-06-01 with `.planning/phases/02-smoke-experiment-pipeline/02-01-SUMMARY.md`.
+- Phase 4 completed on 2026-06-02 with mixed/inconclusive pilot evidence and conditional Phase 5 readiness.
