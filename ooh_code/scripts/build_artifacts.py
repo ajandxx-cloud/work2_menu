@@ -1503,6 +1503,11 @@ _WORK2_PHASE4_MINIMUM_METHODS = [
     "Oracle Menu",
 ]
 
+_WORK2_PROFIT_EPSILON = 1e-9
+_WORK2_OBVIOUS_QUIT_RATE_ABS_WORSENING = 0.05
+_WORK2_OBVIOUS_AVG_WALK_ABS_WORSENING = 300.0
+_WORK2_OBVIOUS_GUARDRAIL_REL_WORSENING = 0.10
+
 _WORK2_STANDARD_COLUMNS = [
     "study",
     "method",
@@ -1672,6 +1677,220 @@ def _aggregate_work2_methods(rows):
     return sorted(aggregates, key=lambda row: (method_order.get(row["method"], 99), row["method"]))
 
 
+def _work2_minimum_missing(methods):
+    missing = [method for method in _WORK2_PHASE4_MINIMUM_METHODS if method not in methods]
+    if "CNN-Menu" not in methods and "MLP-Menu" not in methods:
+        missing.append("CNN-Menu or MLP-Menu")
+    return missing
+
+
+def _metric_delta(left, right, key):
+    left_value = _float_or_none(left.get(key))
+    right_value = _float_or_none(right.get(key))
+    if left_value is None or right_value is None:
+        return None
+    return left_value - right_value
+
+
+def _obvious_guardrail_worsening(cnn_aggregate, comparator_aggregate):
+    worsening = []
+    checks = [
+        (
+            "quit_rate",
+            "quit_rate_mean",
+            _WORK2_OBVIOUS_QUIT_RATE_ABS_WORSENING,
+        ),
+        (
+            "avg_walk",
+            "avg_walk_mean",
+            _WORK2_OBVIOUS_AVG_WALK_ABS_WORSENING,
+        ),
+    ]
+    for label, key, abs_threshold in checks:
+        delta = _metric_delta(cnn_aggregate, comparator_aggregate, key)
+        comparator_value = _float_or_none(comparator_aggregate.get(key))
+        if delta is None or comparator_value is None:
+            continue
+        relative_threshold = abs(comparator_value) * _WORK2_OBVIOUS_GUARDRAIL_REL_WORSENING
+        threshold = max(abs_threshold, relative_threshold)
+        if delta > threshold:
+            worsening.append(
+                {
+                    "metric": label,
+                    "delta": delta,
+                    "threshold": threshold,
+                }
+            )
+    return worsening
+
+
+def _menu_quality_improves(cnn_aggregate, comparator_aggregate):
+    regret_delta = _metric_delta(cnn_aggregate, comparator_aggregate, "menu_regret_mean")
+    overlap_delta = _metric_delta(cnn_aggregate, comparator_aggregate, "top_L_overlap_mean")
+    return (
+        regret_delta is not None
+        and overlap_delta is not None
+        and regret_delta < 0.0
+        and overlap_delta > 0.0
+    )
+
+
+def _profit_seed_trend(rows, comparator_method):
+    by_seed = {}
+    for row in rows:
+        by_seed.setdefault(row.get("seed"), {})[row.get("method")] = row
+    deltas = []
+    for seed_rows in by_seed.values():
+        cnn = seed_rows.get("CNN-SetMenuNet")
+        comparator = seed_rows.get(comparator_method)
+        if cnn is None or comparator is None:
+            continue
+        delta = _metric_delta(cnn, comparator, "net_profit")
+        if delta is not None:
+            deltas.append(delta)
+    if not deltas:
+        return "unavailable", []
+    positive = sum(1 for delta in deltas if delta > _WORK2_PROFIT_EPSILON)
+    if positive == len(deltas):
+        return "consistent_positive", deltas
+    if positive == 0:
+        return "consistent_nonpositive", deltas
+    return "mixed", deltas
+
+
+def _classification_payload(status, label, summary, diagnostic_required, comparator=None, caveats=None):
+    return {
+        "status": status,
+        "label": label,
+        "summary": summary,
+        "comparator": comparator,
+        "diagnostic_required": diagnostic_required,
+        "caveats": caveats or [],
+        "thresholds": {
+            "obvious_quit_rate_abs_worsening": _WORK2_OBVIOUS_QUIT_RATE_ABS_WORSENING,
+            "obvious_avg_walk_abs_worsening": _WORK2_OBVIOUS_AVG_WALK_ABS_WORSENING,
+            "obvious_guardrail_rel_worsening": _WORK2_OBVIOUS_GUARDRAIL_REL_WORSENING,
+        },
+    }
+
+
+def classify_work2_pilot_evidence(rows):
+    aggregates = _aggregate_work2_methods(rows)
+    aggregate_by_method = {row["method"]: row for row in aggregates}
+    methods = set(aggregate_by_method)
+    missing_minimum = _work2_minimum_missing(methods)
+    if missing_minimum:
+        return _classification_payload(
+            "incomplete",
+            "Incomplete pilot evidence",
+            "Minimum runnable Phase 4 methods are missing, so the pilot cannot support a conclusion.",
+            True,
+            caveats=[f"Missing minimum methods: {', '.join(missing_minimum)}."],
+        )
+
+    cnn_aggregate = aggregate_by_method["CNN-SetMenuNet"]
+    comparators = [
+        method
+        for method in ["Cost-L heuristic", "CNN-Menu", "MLP-Menu"]
+        if method in aggregate_by_method
+    ]
+    if not comparators:
+        return _classification_payload(
+            "incomplete",
+            "Incomplete pilot evidence",
+            "No Cost-L or core learned comparator is available for the CNN-SetMenuNet gate.",
+            True,
+        )
+
+    mixed_candidates = []
+    tradeoff_candidates = []
+    preliminary_candidates = []
+    stronger_candidates = []
+    for comparator in comparators:
+        comparator_aggregate = aggregate_by_method[comparator]
+        profit_delta = _metric_delta(cnn_aggregate, comparator_aggregate, "net_profit_mean")
+        if profit_delta is None or profit_delta <= _WORK2_PROFIT_EPSILON:
+            continue
+
+        seed_trend, seed_deltas = _profit_seed_trend(rows, comparator)
+        if seed_trend == "mixed":
+            mixed_candidates.append((comparator, profit_delta, seed_deltas))
+            continue
+
+        worsening = _obvious_guardrail_worsening(cnn_aggregate, comparator_aggregate)
+        if worsening:
+            tradeoff_candidates.append((comparator, profit_delta, worsening))
+            continue
+
+        if _menu_quality_improves(cnn_aggregate, comparator_aggregate):
+            stronger_candidates.append((comparator, profit_delta))
+        else:
+            preliminary_candidates.append((comparator, profit_delta))
+
+    if stronger_candidates:
+        comparator, profit_delta = max(stronger_candidates, key=lambda item: item[1])
+        return _classification_payload(
+            "stronger_support",
+            "Stronger support",
+            (
+                "CNN-SetMenuNet improves mean net_profit versus "
+                f"{comparator}, keeps passenger guardrails stable, and improves both menu_regret and Top-L overlap."
+            ),
+            False,
+            comparator=comparator,
+        )
+
+    if preliminary_candidates:
+        comparator, profit_delta = max(preliminary_candidates, key=lambda item: item[1])
+        return _classification_payload(
+            "preliminary_support",
+            "Preliminary support",
+            (
+                "CNN-SetMenuNet improves mean net_profit versus "
+                f"{comparator} without obvious quit_rate or avg_walk worsening."
+            ),
+            False,
+            comparator=comparator,
+        )
+
+    if tradeoff_candidates:
+        comparator, profit_delta, worsening = max(tradeoff_candidates, key=lambda item: item[1])
+        metrics = ", ".join(item["metric"] for item in worsening)
+        return _classification_payload(
+            "tradeoff_mixed",
+            "Trade-off / mixed evidence",
+            (
+                "CNN-SetMenuNet improves mean net_profit versus "
+                f"{comparator}, but obvious guardrail worsening appears in {metrics}."
+            ),
+            True,
+            comparator=comparator,
+            caveats=["Improved net_profit alone is not treated as support when passenger guardrails obviously worsen."],
+        )
+
+    if mixed_candidates:
+        comparator, profit_delta, seed_deltas = max(mixed_candidates, key=lambda item: item[1])
+        return _classification_payload(
+            "mixed_inconclusive",
+            "Mixed/inconclusive pilot evidence",
+            (
+                "CNN-SetMenuNet has a positive mean net_profit delta versus "
+                f"{comparator}, but the three-seed trend is inconsistent."
+            ),
+            True,
+            comparator=comparator,
+            caveats=["Inconsistent seed trends must be reported as mixed or inconclusive pilot evidence."],
+        )
+
+    return _classification_payload(
+        "mixed_inconclusive",
+        "Mixed/inconclusive pilot evidence",
+        "CNN-SetMenuNet does not improve mean net_profit versus Cost-L or a core learned baseline in this pilot.",
+        True,
+        caveats=["Negative or weak Phase 4 pilot evidence does not invalidate the method; it triggers diagnostics."],
+    )
+
+
 def _phase2_readiness(method_rows):
     methods = {row["method"] for row in method_rows}
     missing = [method for method in _WORK2_REQUIRED_SMOKE_METHODS if method not in methods]
@@ -1837,6 +2056,7 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest):
     aggregate_by_method = {row["method"]: row for row in aggregates}
     cnn_aggregate = aggregate_by_method.get("CNN-SetMenuNet")
     missing_core = [method for method in _WORK2_PHASE4_CORE_METHODS if method not in aggregate_by_method]
+    classification = classify_work2_pilot_evidence(rows)
 
     lines = [
         f"# {study_name} Phase 4 Pilot Summary",
@@ -1905,23 +2125,47 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest):
     else:
         caveat = "All configured Phase 4 core methods are represented in the standard CSV."
 
+    diagnostic_line = "- Diagnostic report: not required for supportive evidence."
+    if classification["diagnostic_required"]:
+        diagnostic_line = "- Diagnostic report: required for this evidence state; generated in the diagnostic reporting step when enabled."
+
+    if classification["status"] in {"stronger_support", "preliminary_support"}:
+        phase5_readiness = "Ready to proceed to Phase 5 robustness, while keeping pilot limitations explicit."
+    elif classification["status"] == "incomplete":
+        phase5_readiness = "Not ready for Phase 5 until the minimum runnable method set is complete."
+    else:
+        phase5_readiness = "Conditionally ready only if diagnostics identify a fixable issue or a clear remedial experiment."
+
     lines.extend([
         "",
         "## Paper Conclusion Support",
         "",
-        "- Conclusion gate: pending graded Phase 4 evidence classification.",
+        f"- Conclusion gate: {classification['label']}.",
+        f"- Gate detail: {classification['summary']}",
+        f"- Comparator used by gate: `{classification.get('comparator') or '--'}`",
         "- Net profit is primary; menu regret and Top-L overlap are supporting menu-quality metrics.",
-        "- Quit rate and average walk are guardrails; obvious worsening must be treated as a trade-off.",
+        (
+            "- Guardrail thresholds: obvious worsening is quit_rate increase > "
+            f"{_WORK2_OBVIOUS_QUIT_RATE_ABS_WORSENING:.2f} or avg_walk increase > "
+            f"{_WORK2_OBVIOUS_AVG_WALK_ABS_WORSENING:.0f}, with a "
+            f"{_WORK2_OBVIOUS_GUARDRAIL_REL_WORSENING:.0%} relative worsening floor."
+        ),
+        diagnostic_line,
         "",
         "## Caveats",
         "",
         f"- {caveat}",
         "- Phase 4 is a three-seed pilot, not formal robustness evidence.",
         "- Weak or negative evidence should trigger diagnostics rather than manual result editing.",
+    ])
+    for item in classification.get("caveats", []):
+        lines.append(f"- {item}")
+
+    lines.extend([
         "",
         "## Phase 5 Readiness",
         "",
-        "- Pending graded conclusion gate.",
+        f"- {phase5_readiness}",
     ])
 
     write_text(path, "\n".join(lines) + "\n")

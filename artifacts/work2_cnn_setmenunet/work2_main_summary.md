@@ -1,6 +1,6 @@
 # work2_main Phase 4 Pilot Summary
 
-**Generated:** 2026-06-02T04:14:39Z
+**Generated:** 2026-06-02T04:18:43Z
 
 ## Settings
 
@@ -53,16 +53,20 @@
 
 ## Paper Conclusion Support
 
-- Conclusion gate: pending graded Phase 4 evidence classification.
+- Conclusion gate: Mixed/inconclusive pilot evidence.
+- Gate detail: CNN-SetMenuNet does not improve mean net_profit versus Cost-L or a core learned baseline in this pilot.
+- Comparator used by gate: `--`
 - Net profit is primary; menu regret and Top-L overlap are supporting menu-quality metrics.
-- Quit rate and average walk are guardrails; obvious worsening must be treated as a trade-off.
+- Guardrail thresholds: obvious worsening is quit_rate increase > 0.05 or avg_walk increase > 300, with a 10% relative worsening floor.
+- Diagnostic report: required for this evidence state; generated in the diagnostic reporting step when enabled.
 
 ## Caveats
 
 - Missing core methods: MLP-Menu.
 - Phase 4 is a three-seed pilot, not formal robustness evidence.
 - Weak or negative evidence should trigger diagnostics rather than manual result editing.
+- Negative or weak Phase 4 pilot evidence does not invalidate the method; it triggers diagnostics.
 
 ## Phase 5 Readiness
 
-- Pending graded conclusion gate.
+- Conditionally ready only if diagnostics identify a fixable issue or a clear remedial experiment.
