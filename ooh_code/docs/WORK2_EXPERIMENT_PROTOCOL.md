@@ -24,6 +24,77 @@ The protocol now separates:
 
 ## Fair-Comparison Design
 
+## Candidate, Menu, And Label Contract
+
+Work 2 uses explicit public and internal naming so model comparisons do not
+mix candidate availability with model quality:
+
+- Public `K` / `--max_candidates` is the maximum number of meeting-point
+  candidates retained for a request. It does not count the home option.
+- Public `L` / `--menu_k` is the number of displayed meeting-point offers.
+  The home option is always shown outside `L`, so the displayed choice set has
+  `1 + L` options when enough meeting points are feasible.
+- Internal neural tensors use `candidate_slots = K + 1`, with home at row 0
+  and meeting-point candidates at rows 1..K.
+- The centralized option feature schema is six columns in this order:
+  `walk_distance`, `predicted_ivt`, `remaining_capacity`,
+  `distance_to_destination`, `option_type`, `arrival_time`.
+- `option_type = 1.0` only marks the home row. Meeting-point rows use
+  `option_type = 0.0`.
+- Requests with fewer than `K` feasible meeting points pad the remaining rows.
+  Padding is excluded by `option_mask`; it must not be inferred from all-zero
+  feature values.
+- Requests with zero feasible meeting points remain valid home-only examples:
+  row 0 is mask-true and all meeting-point rows are mask-false.
+- Supervised learned menu models train on candidate-specific true insertion-cost
+  labels aligned to the same rows. Padding labels are harmless fillers and are
+  excluded from Huber/MSE losses by `option_mask`.
+
+Guardrail: this contract does not rewrite Work 1 pricing, MNL passenger choice,
+or HGS/Hygese route-cost core logic. Those components are only called through
+their existing evaluation paths.
+
+## Phase 4 Pilot Model-Comparison Contract
+
+Phase 4 is a focused pilot for whether CNN-SetMenuNet has useful effect under
+the locked Phase 3 menu semantics. It is not formal evidence, not a robustness
+sweep, and not an exhaustive baseline census.
+
+The core Phase 4 pilot methods are:
+
+- `Nearest-L`
+- `Cost-L heuristic`
+- `CNN-Menu`
+- `MLP-Menu`
+- `CNN-SetMenuNet`
+- `Oracle Menu`
+
+Optional supplementary baselines are `Home only`, `Full-candidate CNN`, and
+`SetMenuNet`. They may be added when already stable, but they must not block the
+core six-method pilot.
+
+The default pilot budget is exactly `seed0`, `seed1`, and `seed2`, with
+`max_episodes = 80` for training and `eval_episodes = 20` for frozen
+evaluation. Later formal evidence may use the project default
+`150-300/50` episode budget and additional seeds; those formal settings are not
+silently folded into this pilot.
+
+All core methods must share the same split ids, `train_split`, `test_split`,
+request traces, candidate pool, candidate order, option masks, and
+candidate-specific insertion-cost labels. Public `K=10` remains the number of
+meeting-point candidates. Public `L=3` remains the number of displayed
+meeting-point offers, with home always shown outside `L`.
+
+If one core method fails, Phase 4 may continue only as a documented partial
+pilot when `CNN-SetMenuNet`, `Cost-L heuristic`, `Oracle Menu`, and at least one
+of `CNN-Menu` or `MLP-Menu` run successfully. Missing core methods must be
+listed as caveats in the study summary and verification report.
+
+This pilot continues to treat Work 1 pricing, MNL passenger choice, and
+HGS/Hygese route-cost evaluation as fixed dependencies. The comparison changes
+menu policy/model inputs and selection logic only; it does not rewrite those
+core dependent modules.
+
 ### Phase A: shared predictor training
 
 Train one shared bundle predictor with:
