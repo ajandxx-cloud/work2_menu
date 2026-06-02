@@ -1,4 +1,5 @@
 import argparse
+import csv
 import json
 import sys
 from pathlib import Path
@@ -11,6 +12,9 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+PROJECT_ROOT = ROOT.parent
+WORK2_STANDARD_ARTIFACTS_DIR = PROJECT_ROOT / "artifacts" / "work2_cnn_setmenunet"
 
 from Src.research_pipeline import (
     ARTIFACTS_DIR,
@@ -51,6 +55,11 @@ def ensure_artifact_dirs():
         ARTIFACTS_DIR / "results_snapshot",
         ARTIFACTS_DIR / "tables",
         ARTIFACTS_DIR / "figures",
+        WORK2_STANDARD_ARTIFACTS_DIR,
+        WORK2_STANDARD_ARTIFACTS_DIR / "results_snapshot",
+        WORK2_STANDARD_ARTIFACTS_DIR / "tables",
+        WORK2_STANDARD_ARTIFACTS_DIR / "figures",
+        WORK2_STANDARD_ARTIFACTS_DIR / "diagnostics",
     ]:
         path.mkdir(parents=True, exist_ok=True)
 
@@ -1450,17 +1459,500 @@ def build_results_summary(snapshot):
 _WORK2_METHOD_ORDER = [
     "oracle_menu",
     "cnn_setmenu_net",
+    "setmenu_net",
+    "mlp_menu",
     "cnn_menu",
     "cost_L",
+    "cost_L_heuristic",
     "nearest_L",
 ]
 
-_WORK2_LEARNING_METHODS = {"cnn_menu", "cnn_setmenu_net", "oracle_menu"}
+_WORK2_LEARNING_METHODS = {"cnn_menu", "mlp_menu", "cnn_setmenu_net", "oracle_menu"}
+
+_WORK2_STANDARD_METHODS = {
+    "nearest_L": "Nearest-L",
+    "cost_L": "Cost-L heuristic",
+    "cost_L_heuristic": "Cost-L heuristic",
+    "cnn_menu": "CNN-Menu",
+    "mlp_menu": "MLP-Menu",
+    "setmenu_net": "SetMenuNet",
+    "cnn_setmenu_net": "CNN-SetMenuNet",
+    "oracle_menu": "Oracle Menu",
+}
+
+_WORK2_REQUIRED_SMOKE_METHODS = [
+    "Nearest-L",
+    "Cost-L heuristic",
+    "CNN-Menu",
+    "CNN-SetMenuNet",
+    "Oracle Menu",
+]
+
+_WORK2_PHASE4_CORE_METHODS = [
+    "Nearest-L",
+    "Cost-L heuristic",
+    "CNN-Menu",
+    "MLP-Menu",
+    "CNN-SetMenuNet",
+    "Oracle Menu",
+]
+
+_WORK2_PHASE4_MINIMUM_METHODS = [
+    "CNN-SetMenuNet",
+    "Cost-L heuristic",
+    "Oracle Menu",
+]
+
+_WORK2_STANDARD_COLUMNS = [
+    "study",
+    "method",
+    "seed",
+    "instance",
+    "K",
+    "L",
+    "net_profit",
+    "total_cost",
+    "quit_rate",
+    "avg_walk",
+    "menu_regret",
+    "top_L_overlap",
+    "spearman_cost_ranking",
+    "runtime_per_decision",
+    "train_episodes",
+    "test_episodes",
+    "candidate_pool_size",
+    "displayed_meeting_points",
+    "home_always_shown",
+    "status",
+    "notes",
+]
 
 
 def _sort_work2_rows(rows):
     preferred = {tag: idx for idx, tag in enumerate(_WORK2_METHOD_ORDER)}
     return sorted(rows, key=lambda row: (preferred.get(row.get("variant_tag"), 99), row.get("variant_tag", "")))
+
+
+def _first_present(*values):
+    for value in values:
+        if value is not None and value != "":
+            return value
+    return None
+
+
+def _numeric_seed(value, split_id=None):
+    if value is not None and value != "":
+        try:
+            return int(float(value))
+        except (TypeError, ValueError):
+            pass
+    text = str(split_id or "")
+    if text.startswith("seed"):
+        suffix = text.replace("seed", "", 1)
+        if suffix.isdigit():
+            return int(suffix)
+    return value
+
+
+def _work2_standard_method(row):
+    tag = row.get("variant_tag", "")
+    return _WORK2_STANDARD_METHODS.get(tag, variant_display_label(row))
+
+
+def _write_standard_csv(path, rows):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = list(_WORK2_STANDARD_COLUMNS)
+    with open(path, "w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def _work2_standard_row(row, manifest):
+    base_args = manifest.get("base_args", {}) if manifest is not None else {}
+    method = _work2_standard_method(row)
+    k_value = _first_present(
+        row.get("candidate_pool_size"),
+        base_args.get("max_candidates"),
+        base_args.get("menu_k"),
+    )
+    l_value = _first_present(
+        row.get("displayed_meeting_points"),
+        row.get("menu_k"),
+        base_args.get("menu_k"),
+    )
+    return {
+        "study": row.get("study_name") or (manifest or {}).get("name"),
+        "method": method,
+        "seed": _numeric_seed(row.get("seed"), row.get("split_id")),
+        "instance": _first_present(row.get("instance"), base_args.get("instance")),
+        "K": k_value,
+        "L": l_value,
+        "net_profit": row.get("net_profit"),
+        "total_cost": row.get("total_cost"),
+        "quit_rate": row.get("opt_out_rate"),
+        "avg_walk": row.get("avg_walk_distance"),
+        "menu_regret": row.get("menu_regret"),
+        "top_L_overlap": row.get("top_L_overlap"),
+        "spearman_cost_ranking": row.get("spearman_cost_ranking"),
+        "runtime_per_decision": _first_present(row.get("avg_step_time"), row.get("avg_menu_build_time")),
+        "train_episodes": base_args.get("max_episodes"),
+        "test_episodes": _first_present(row.get("episodes"), base_args.get("eval_episodes")),
+        "candidate_pool_size": k_value,
+        "displayed_meeting_points": l_value,
+        "home_always_shown": True,
+        "status": "ok",
+        "notes": "Phase 3 contract row: K counts meeting-point candidates, L counts displayed meeting points, home is always shown.",
+    }
+
+
+def _best_row_by_method(rows):
+    mapping = {}
+    for row in rows:
+        mapping[row["method"]] = row
+    return mapping
+
+
+def _float_or_none(value):
+    if value is None or value == "":
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _format_seed_list(rows):
+    seeds = sorted({_numeric_seed(row.get("seed")) for row in rows if row.get("seed") not in {None, ""}})
+    if not seeds:
+        return "--"
+    return ", ".join(f"seed{seed}" if isinstance(seed, int) else str(seed) for seed in seeds)
+
+
+def _mean(values):
+    numeric = [_float_or_none(value) for value in values]
+    numeric = [value for value in numeric if value is not None]
+    if not numeric:
+        return None
+    return float(np.mean(numeric))
+
+
+def _std(values):
+    numeric = [_float_or_none(value) for value in values]
+    numeric = [value for value in numeric if value is not None]
+    if len(numeric) <= 1:
+        return 0.0 if numeric else None
+    return float(np.std(numeric, ddof=1))
+
+
+def _aggregate_work2_methods(rows):
+    grouped = {}
+    for row in rows:
+        grouped.setdefault(row["method"], []).append(row)
+    aggregates = []
+    for method, items in grouped.items():
+        aggregates.append(
+            {
+                "method": method,
+                "seed_count": len({item.get("seed") for item in items}),
+                "net_profit_mean": _mean([item.get("net_profit") for item in items]),
+                "net_profit_std": _std([item.get("net_profit") for item in items]),
+                "total_cost_mean": _mean([item.get("total_cost") for item in items]),
+                "quit_rate_mean": _mean([item.get("quit_rate") for item in items]),
+                "avg_walk_mean": _mean([item.get("avg_walk") for item in items]),
+                "menu_regret_mean": _mean([item.get("menu_regret") for item in items]),
+                "top_L_overlap_mean": _mean([item.get("top_L_overlap") for item in items]),
+                "spearman_cost_ranking_mean": _mean([item.get("spearman_cost_ranking") for item in items]),
+                "runtime_per_decision_mean": _mean([item.get("runtime_per_decision") for item in items]),
+                "rows": items,
+            }
+        )
+    method_order = {method: idx for idx, method in enumerate(_WORK2_PHASE4_CORE_METHODS)}
+    return sorted(aggregates, key=lambda row: (method_order.get(row["method"], 99), row["method"]))
+
+
+def _phase2_readiness(method_rows):
+    methods = {row["method"] for row in method_rows}
+    missing = [method for method in _WORK2_REQUIRED_SMOKE_METHODS if method not in methods]
+    required_columns_present = all(
+        all(column in row for column in _WORK2_STANDARD_COLUMNS[:14])
+        for row in method_rows
+    )
+    if missing or not required_columns_present:
+        return "No", missing
+    return "Yes", missing
+
+
+def _write_work2_smoke_summary(path, study_name, rows, csv_path, manifest):
+    method_rows = _best_row_by_method(rows)
+    readiness, missing = _phase2_readiness(rows)
+    base_args = manifest.get("base_args", {}) if manifest is not None else {}
+    relative_csv = csv_path.relative_to(PROJECT_ROOT).as_posix()
+
+    lines = [
+        f"# {study_name} Smoke Summary",
+        "",
+        f"**Generated:** {utc_now_iso()}",
+        "",
+        "## Settings",
+        "",
+        f"- Study: `{study_name}`",
+        f"- Instance: `{base_args.get('instance', 'RC')}`",
+        f"- K: `{base_args.get('max_candidates', '')}`",
+        f"- L: `{base_args.get('menu_k', '')}`",
+        "- Home option: always shown",
+        f"- Internal candidate slots: `{int(base_args.get('max_candidates', 0)) + 1 if base_args.get('max_candidates') is not None else ''}`",
+        f"- Training episodes: `{base_args.get('max_episodes', '')}`",
+        f"- Test episodes: `{base_args.get('eval_episodes', '')}`",
+        "- Seeds: `seed0`",
+        "",
+        "## Compared Methods",
+        "",
+    ]
+    for method in sorted(method_rows):
+        lines.append(f"- {method}")
+
+    lines.extend([
+        "",
+        "## Outputs",
+        "",
+        f"- Standard CSV: `{relative_csv}`",
+        "- Legacy study outputs remain under `ooh_code/outputs/studies/`.",
+        "- Legacy generated paper artifacts remain under `ooh_code/artifacts/`.",
+        "",
+        "## Comparability Contract",
+        "",
+        "- K reports meeting-point candidate count and excludes home.",
+        "- L reports displayed meeting-point count and excludes home.",
+        "- Home is always shown outside L for learned, heuristic, and oracle rows.",
+        "- Oracle Menu is an upper/reference benchmark using true candidate costs, not deployable evidence.",
+        "- Nearest-L and Cost-L use their own ranking rules but share the same candidate pool and menu semantics.",
+        "",
+        "## Smoke Metrics",
+        "",
+        "| Method | Net profit | Total cost | Quit rate | Avg walk | Menu regret | Top-L overlap |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ])
+    for row in rows:
+        lines.append(
+            "| {method} | {net_profit} | {total_cost} | {quit_rate} | {avg_walk} | {menu_regret} | {top_l} |".format(
+                method=row["method"],
+                net_profit=format_metric(row.get("net_profit")),
+                total_cost=format_metric(row.get("total_cost")),
+                quit_rate=format_metric(row.get("quit_rate")),
+                avg_walk=format_metric(row.get("avg_walk")),
+                menu_regret=format_metric(row.get("menu_regret")),
+                top_l=format_metric(row.get("top_L_overlap")),
+            )
+        )
+
+    conclusion = "Inconclusive"
+    if "CNN-SetMenuNet" in method_rows and "Oracle Menu" in method_rows:
+        conclusion = "Inconclusive - smoke confirms comparability, not statistical dominance"
+
+    lines.extend([
+        "",
+        "## Paper Conclusion Support",
+        "",
+        f"- CNN-SetMenuNet net profit claim: {conclusion}",
+        f"- Lower menu regret claim: {conclusion}",
+        f"- Higher Top-L overlap claim: {conclusion}",
+        "- Quit rate and walking distance guardrail: Inconclusive in a one-seed smoke run.",
+        "",
+        "## Caveats",
+        "",
+        "- This is a one-seed, tiny-episode smoke run intended to validate the pipeline and schema.",
+        "- Negative or weak smoke evidence should trigger diagnostics in later formal phases, not manual result editing.",
+        "",
+        "## Next Recommended Action",
+        "",
+        f"- Can Phase 3 proceed? {readiness}",
+    ])
+    if missing:
+        lines.append(f"- Missing required methods: {', '.join(missing)}")
+    else:
+        lines.append("- Required smoke methods and standard CSV columns are present.")
+
+    write_text(path, "\n".join(lines) + "\n")
+
+
+def _method_explanation(method, aggregate, cnn_aggregate):
+    if aggregate is None:
+        return f"{method}: not present in the current pilot rows; treat the comparison as incomplete."
+    if cnn_aggregate is None or method == "CNN-SetMenuNet":
+        return (
+            f"{method}: net profit mean {format_metric(aggregate.get('net_profit_mean'))}, "
+            f"menu regret {format_metric(aggregate.get('menu_regret_mean'))}, "
+            f"Top-L overlap {format_metric(aggregate.get('top_L_overlap_mean'))}."
+        )
+
+    cnn_profit = _float_or_none(cnn_aggregate.get("net_profit_mean"))
+    method_profit = _float_or_none(aggregate.get("net_profit_mean"))
+    if cnn_profit is None or method_profit is None:
+        relation = "net-profit difference is unavailable"
+    else:
+        delta = cnn_profit - method_profit
+        relation = f"CNN-SetMenuNet minus this method net profit is {format_metric(delta)}"
+    return (
+        f"{method}: {relation}; this method's quit rate is "
+        f"{format_metric(aggregate.get('quit_rate_mean'))} and average walk is "
+        f"{format_metric(aggregate.get('avg_walk_mean'))}."
+    )
+
+
+def _seed_variation_note(rows):
+    by_seed = {}
+    for row in rows:
+        by_seed.setdefault(row.get("seed"), {})[row.get("method")] = row
+    comparisons = []
+    has_mixed_trend = False
+    for comparator in ["Cost-L heuristic", "CNN-Menu", "MLP-Menu"]:
+        signs = []
+        for seed, seed_rows in sorted(by_seed.items()):
+            cnn = seed_rows.get("CNN-SetMenuNet")
+            other = seed_rows.get(comparator)
+            if cnn is None or other is None:
+                continue
+            cnn_profit = _float_or_none(cnn.get("net_profit"))
+            other_profit = _float_or_none(other.get("net_profit"))
+            if cnn_profit is None or other_profit is None:
+                continue
+            signs.append(cnn_profit - other_profit)
+        if signs:
+            wins = sum(1 for value in signs if value > 0)
+            has_mixed_trend = has_mixed_trend or (0 < wins < len(signs))
+            comparisons.append(f"{comparator}: {wins}/{len(signs)} seeds with higher CNN-SetMenuNet net profit")
+    if not comparisons:
+        return "Seed-level variation could not be evaluated because paired core method rows are unavailable."
+    if has_mixed_trend:
+        return "Seed-to-seed trend is mixed across at least one core comparator: " + "; ".join(comparisons) + "."
+    return "Seed-to-seed trend summary: " + "; ".join(comparisons) + "."
+
+
+def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest):
+    base_args = manifest.get("base_args", {}) if manifest is not None else {}
+    relative_csv = csv_path.relative_to(PROJECT_ROOT).as_posix()
+    aggregates = _aggregate_work2_methods(rows)
+    aggregate_by_method = {row["method"]: row for row in aggregates}
+    cnn_aggregate = aggregate_by_method.get("CNN-SetMenuNet")
+    missing_core = [method for method in _WORK2_PHASE4_CORE_METHODS if method not in aggregate_by_method]
+
+    lines = [
+        f"# {study_name} Phase 4 Pilot Summary",
+        "",
+        f"**Generated:** {utc_now_iso()}",
+        "",
+        "## Settings",
+        "",
+        f"- Study: `{study_name}`",
+        f"- Instance: `{base_args.get('instance', 'RC')}`",
+        f"- K: `{base_args.get('max_candidates', '')}`",
+        f"- L: `{base_args.get('menu_k', '')}`",
+        "- Home option: always shown",
+        f"- Training episodes: `{base_args.get('max_episodes', '')}`",
+        f"- Test episodes: `{base_args.get('eval_episodes', '')}`",
+        f"- Seeds: `{_format_seed_list(rows)}`",
+        "",
+        "## Core Methods",
+        "",
+    ]
+    for method in _WORK2_PHASE4_CORE_METHODS:
+        suffix = "" if method in aggregate_by_method else " (missing)"
+        lines.append(f"- {method}{suffix}")
+
+    lines.extend([
+        "",
+        "## Outputs",
+        "",
+        f"- Standard CSV: `{relative_csv}`",
+        "- Legacy study outputs remain under `ooh_code/outputs/studies/`.",
+        "- Legacy generated paper artifacts remain under `ooh_code/artifacts/`.",
+        "",
+        "## Aggregate Mean Table",
+        "",
+        "| Method | Seeds | Net profit mean | Net profit sd | Menu regret | Top-L overlap | Quit rate | Avg walk |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for aggregate in aggregates:
+        lines.append(
+            "| {method} | {seeds} | {profit} | {profit_sd} | {regret} | {top_l} | {quit} | {walk} |".format(
+                method=aggregate["method"],
+                seeds=aggregate["seed_count"],
+                profit=format_metric(aggregate.get("net_profit_mean")),
+                profit_sd=format_metric(aggregate.get("net_profit_std")),
+                regret=format_metric(aggregate.get("menu_regret_mean")),
+                top_l=format_metric(aggregate.get("top_L_overlap_mean")),
+                quit=format_metric(aggregate.get("quit_rate_mean")),
+                walk=format_metric(aggregate.get("avg_walk_mean")),
+            )
+        )
+
+    lines.extend([
+        "",
+        "## Seed Variation",
+        "",
+        f"- {_seed_variation_note(rows)}",
+        "",
+        "## Method-Level Explanations",
+        "",
+    ])
+    for method in _WORK2_PHASE4_CORE_METHODS:
+        lines.append(f"- {_method_explanation(method, aggregate_by_method.get(method), cnn_aggregate)}")
+
+    if missing_core:
+        caveat = f"Missing core methods: {', '.join(missing_core)}."
+    else:
+        caveat = "All configured Phase 4 core methods are represented in the standard CSV."
+
+    lines.extend([
+        "",
+        "## Paper Conclusion Support",
+        "",
+        "- Conclusion gate: pending graded Phase 4 evidence classification.",
+        "- Net profit is primary; menu regret and Top-L overlap are supporting menu-quality metrics.",
+        "- Quit rate and average walk are guardrails; obvious worsening must be treated as a trade-off.",
+        "",
+        "## Caveats",
+        "",
+        f"- {caveat}",
+        "- Phase 4 is a three-seed pilot, not formal robustness evidence.",
+        "- Weak or negative evidence should trigger diagnostics rather than manual result editing.",
+        "",
+        "## Phase 5 Readiness",
+        "",
+        "- Pending graded conclusion gate.",
+    ])
+
+    write_text(path, "\n".join(lines) + "\n")
+
+
+def build_work2_standard_artifacts(study_summary, manifest):
+    """Write Work2 standard CSV and markdown summaries."""
+    if study_summary is None:
+        return []
+
+    study_name = study_summary["study"]["name"]
+    source_rows = enrich_policy_rows(
+        study_summary.get("normalized_rows", []),
+        study_name,
+        study_meta=study_summary.get("study", {}),
+        manifest=manifest,
+    )
+    method_rows = [
+        _work2_standard_row(row, manifest)
+        for row in _sort_work2_rows(source_rows)
+        if row.get("variant_tag") in _WORK2_STANDARD_METHODS
+    ]
+
+    csv_path = WORK2_STANDARD_ARTIFACTS_DIR / "results_snapshot" / f"{study_name}_rows.csv"
+    summary_path = WORK2_STANDARD_ARTIFACTS_DIR / f"{study_name}_summary.md"
+    _write_standard_csv(csv_path, method_rows)
+    if study_name == "work2_main":
+        _write_work2_pilot_summary(summary_path, study_name, method_rows, csv_path, manifest)
+    else:
+        _write_work2_smoke_summary(summary_path, study_name, method_rows, csv_path, manifest)
+    return method_rows
 
 
 def build_work2_results_artifacts(rows, prefix="work2_main"):
@@ -1751,6 +2243,8 @@ def build_generic_artifacts(bundle):
     rows = []
     if summary is not None:
         rows = build_single_study_artifacts(summary, study_name, manifest=bundle["manifest"])
+        if study_name in {"smoke_work2_main", "work2_main"}:
+            build_work2_standard_artifacts(summary, manifest=bundle["manifest"])
     elif study_name == "phase29_exact_greedy_gap":
         build_exact_greedy_artifacts([], prefix=study_name)
     elif study_name == "phase30_robust_filtering":
