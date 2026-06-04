@@ -144,6 +144,13 @@ def coerce_bool(row, key):
     raise GateError(f"unparseable boolean metric {key} for {row_identity(row)}")
 
 
+def coerce_rate(row, key):
+    value = coerce_number(row, key)
+    if value < -1e-12 or value > 1.0 + 1e-12:
+        raise GateError(f"rate metric {key} is outside [0, 1] for {row_identity(row)}")
+    return min(max(value, 0.0), 1.0)
+
+
 def row_identity(row):
     return f"seed={row.get('seed')} tag={row.get('variant_tag')}"
 
@@ -200,18 +207,17 @@ def validate_rows(rows):
     for row in seen.values():
         guardrail = coerce_number(row, "service_quit_rate_guardrail")
         opt_out = coerce_number(row, "opt_out_rate")
-        pass_flag = coerce_bool(row, "service_guardrail_pass")
-        violation_flag = coerce_bool(row, "service_guardrail_violation")
-        expected_pass = opt_out <= guardrail + 1e-12
-        if pass_flag != expected_pass:
-            raise GateError(f"service_guardrail_pass disagrees with opt_out_rate for {row_identity(row)}")
-        if violation_flag == pass_flag:
-            raise GateError(f"service_guardrail_violation disagrees with pass flag for {row_identity(row)}")
+        pass_rate = coerce_rate(row, "service_guardrail_pass")
+        violation_rate = coerce_rate(row, "service_guardrail_violation")
+        if abs((pass_rate + violation_rate) - 1.0) > 1e-9:
+            raise GateError(f"service guardrail pass/violation rates must sum to 1 for {row_identity(row)}")
+        if opt_out > guardrail + 1e-12 and violation_rate <= 0:
+            raise GateError(f"service_guardrail_violation disagrees with opt_out_rate for {row_identity(row)}")
         for metric in REQUIRED_METRICS:
             if metric == "service_constrained_net_profit":
-                coerce_number(row, metric, allow_null=violation_flag)
+                coerce_number(row, metric, allow_null=violation_rate > 0)
             elif metric in {"service_guardrail_pass", "service_guardrail_violation"}:
-                coerce_bool(row, metric)
+                coerce_rate(row, metric)
             else:
                 coerce_number(row, metric)
 
@@ -243,10 +249,11 @@ def summarize_by_tag(rows):
             "mean_opt_out_rate": mean(coerce_number(row, "opt_out_rate") for row in tag_rows),
             "max_opt_out_rate": max(coerce_number(row, "opt_out_rate") for row in tag_rows),
             "guardrail": max(coerce_number(row, "service_quit_rate_guardrail") for row in tag_rows),
-            "guardrail_violations": sum(1 for row in tag_rows if coerce_bool(row, "service_guardrail_violation")),
+            "guardrail_violations": sum(1 for row in tag_rows if coerce_rate(row, "service_guardrail_violation") > 0),
+            "max_guardrail_violation_rate": max(coerce_rate(row, "service_guardrail_violation") for row in tag_rows),
             "max_fallback_rate": max(coerce_number(row, "service_constrained_fallback_rate") for row in tag_rows),
             "mean_exact_enumerated_menu_count": mean(coerce_number(row, "avg_exact_enumerated_menu_count") for row in tag_rows),
-            "eligible": all(not coerce_bool(row, "service_guardrail_violation") for row in tag_rows)
+            "eligible": all(coerce_rate(row, "service_guardrail_violation") <= 0 for row in tag_rows)
             and len(service_values) == len(tag_rows),
         }
     return summaries
@@ -272,12 +279,22 @@ def classify_decision(rows):
     if all_high_opt_out:
         scenario_evidence.append("All Phase08 policies have mean opt-out above the quit-rate guardrail.")
 
-    profit_oracle = summaries["profit_oracle"]
-    comparator_best = max(
+    comparator_values = [
         summaries["cost_L"]["mean_service_constrained_net_profit"],
         summaries["cnn_menu"]["mean_service_constrained_net_profit"],
-    )
-    if not profit_oracle["eligible"] or profit_oracle["mean_service_constrained_net_profit"] <= comparator_best:
+    ]
+    comparators_available = all(value is not None for value in comparator_values)
+    comparator_best = max(comparator_values) if comparators_available else None
+    if not comparators_available:
+        scenario_evidence.append("Cost-L or CNN-Menu has unavailable service-constrained profit, so the hard comparison gate cannot proceed.")
+
+    profit_oracle = summaries["profit_oracle"]
+    profit_oracle_mean = profit_oracle["mean_service_constrained_net_profit"]
+    if (
+        not profit_oracle["eligible"]
+        or profit_oracle_mean is None
+        or (comparators_available and profit_oracle_mean <= comparator_best)
+    ):
         scenario_evidence.append("Profit Oracle did not provide a clear service-constrained reference above Cost-L and CNN-Menu.")
 
     candidate_results = []
@@ -285,6 +302,7 @@ def classify_decision(rows):
         summary = summaries[tag]
         beats = (
             summary["eligible"]
+            and comparators_available
             and summary["mean_service_constrained_net_profit"] > summaries["cost_L"]["mean_service_constrained_net_profit"]
             and summary["mean_service_constrained_net_profit"] > summaries["cnn_menu"]["mean_service_constrained_net_profit"]
         )
