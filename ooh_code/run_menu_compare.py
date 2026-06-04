@@ -28,6 +28,12 @@ def mean_or_zero(values):
     return float(np.mean(values))
 
 
+def mean_or_none_if_unavailable(values):
+    if len(values) == 0 or any(value is None for value in values):
+        return None
+    return float(np.mean(values))
+
+
 def percentile_or_zero(values, q):
     if len(values) == 0:
         return 0.0
@@ -175,7 +181,20 @@ def extract_menu_metrics(menu_logs):
     exact_build_times = []
     greedy_build_times = []
     exact_gap_candidate_counts = []
+    exact_enumerated_menu_counts = []
     exact_gap_logged_count = 0
+    service_constrained_fallback_flags = []
+    service_constrained_predicted_opt_outs = []
+    service_constrained_adjusted_profits = []
+    offer_predicted_costs = []
+    offer_menu_eval_costs = []
+    offer_system_eval_costs = []
+    offer_system_minus_menu_costs = []
+    offer_prices = []
+    offer_choice_probabilities = []
+    offer_expected_profits = []
+    selected_offer_expected_profits = []
+    unselected_offer_expected_profits = []
 
     for log in menu_logs:
         displayed_offers = log.get("displayed_offers", [])
@@ -216,6 +235,18 @@ def extract_menu_metrics(menu_logs):
                     greedy_build_times.append(float(metadata.get("greedy_build_time")))
                 if metadata.get("exact_gap_candidate_count") is not None:
                     exact_gap_candidate_counts.append(float(metadata.get("exact_gap_candidate_count")))
+            if metadata.get("exact_enumerated_menu_count") is not None:
+                exact_enumerated_menu_counts.append(float(metadata.get("exact_enumerated_menu_count")))
+            if metadata.get("service_constrained_fallback_used") is not None:
+                service_constrained_fallback_flags.append(float(bool(metadata.get("service_constrained_fallback_used"))))
+            if metadata.get("service_constrained_predicted_opt_out") is not None:
+                service_constrained_predicted_opt_outs.append(
+                    float(metadata.get("service_constrained_predicted_opt_out"))
+                )
+            if metadata.get("service_constrained_adjusted_profit") is not None:
+                service_constrained_adjusted_profits.append(
+                    float(metadata.get("service_constrained_adjusted_profit"))
+                )
         for offer in displayed_offers:
             if offer.get("is_home", False):
                 continue
@@ -234,9 +265,40 @@ def extract_menu_metrics(menu_logs):
                 displayed_ivt_signed_errors.append(signed_error_ivt)
         # --- Prediction/ranking metrics per step ---
         non_home_offers = [o for o in displayed_offers if not o.get("is_home", False)]
+        chosen_offer_data = log.get("chosen_offer")
+        chosen_bundle_id = None if chosen_offer_data is None else chosen_offer_data.get("bundle_id")
         step_pred_costs = []
         step_true_costs = []
         step_menu_eval_costs = []
+        for offer in displayed_offers:
+            md = offer.get("metadata") or {}
+            predicted_cost = offer.get("predicted_cost")
+            menu_eval_cost = md.get("menu_eval_cost")
+            system_eval_cost = md.get("system_eval_cost")
+            price = offer.get("price")
+            choice_probability = md.get("choice_probability")
+            expected_profit = md.get("expected_profit", offer.get("expected_profit"))
+
+            if predicted_cost is not None:
+                offer_predicted_costs.append(float(predicted_cost))
+            if menu_eval_cost is not None:
+                offer_menu_eval_costs.append(float(menu_eval_cost))
+            if system_eval_cost is not None:
+                offer_system_eval_costs.append(float(system_eval_cost))
+            if menu_eval_cost is not None and system_eval_cost is not None:
+                offer_system_minus_menu_costs.append(float(system_eval_cost) - float(menu_eval_cost))
+            if price is not None:
+                offer_prices.append(float(price))
+            if choice_probability is not None:
+                offer_choice_probabilities.append(float(choice_probability))
+            if expected_profit is not None:
+                expected_profit = float(expected_profit)
+                offer_expected_profits.append(expected_profit)
+                if chosen_bundle_id is not None and offer.get("bundle_id") == chosen_bundle_id:
+                    selected_offer_expected_profits.append(expected_profit)
+                else:
+                    unselected_offer_expected_profits.append(expected_profit)
+
         for offer in non_home_offers:
             md = offer.get("metadata") or {}
             insertion_cost = md.get("insertion_cost")
@@ -272,7 +334,6 @@ def extract_menu_metrics(menu_logs):
             ndcg_at_L_values.append(_ndcg_at_k(ordered_rels, relevances, k))
         # Menu regret: chosen cost - min displayed cost (skip if opted out)
         if not log.get("opted_out", False) and len(step_menu_eval_costs) > 0:
-            chosen_offer_data = log.get("chosen_offer")
             if chosen_offer_data is not None:
                 chosen_md = chosen_offer_data.get("metadata") or {}
                 chosen_eval = chosen_md.get("menu_eval_cost")
@@ -320,6 +381,8 @@ def extract_menu_metrics(menu_logs):
             accepted_count += 1
 
     return {
+        "menu_request_count": int(len(menu_logs)),
+        "opt_out_count": int(opt_out_count),
         "displayed_bundle_count_sequence": displayed_counts,
         "feasible_meeting_point_count_sequence": feasible_meeting_point_counts,
         "avg_meeting_point_count_per_menu": mean_or_zero(displayed_meeting_point_counts),
@@ -365,6 +428,10 @@ def extract_menu_metrics(menu_logs):
         "avg_exact_build_time": mean_or_zero(exact_build_times),
         "avg_greedy_build_time": mean_or_zero(greedy_build_times),
         "avg_exact_gap_candidate_count": mean_or_zero(exact_gap_candidate_counts),
+        "avg_exact_enumerated_menu_count": mean_or_zero(exact_enumerated_menu_counts),
+        "service_constrained_fallback_rate": mean_or_zero(service_constrained_fallback_flags),
+        "avg_service_constrained_predicted_opt_out": mean_or_zero(service_constrained_predicted_opt_outs),
+        "avg_service_constrained_adjusted_profit": mean_or_zero(service_constrained_adjusted_profits),
         "cost_pred_mae": mean_or_zero(cost_pred_abs_errors),
         "cost_pred_rmse": float(np.sqrt(mean_or_zero(cost_pred_sq_errors))),
         "spearman_cost_ranking": mean_or_zero(spearman_correlations),
@@ -372,6 +439,16 @@ def extract_menu_metrics(menu_logs):
         "ndcg_at_L": mean_or_zero(ndcg_at_L_values),
         "menu_regret": mean_or_zero(menu_regrets),
         "cost_pred_n_samples": len(cost_pred_abs_errors),
+        "offer_trace_count": len(offer_expected_profits),
+        "avg_offer_predicted_cost": mean_or_zero(offer_predicted_costs),
+        "avg_offer_menu_eval_cost": mean_or_zero(offer_menu_eval_costs),
+        "avg_offer_system_eval_cost": mean_or_zero(offer_system_eval_costs),
+        "avg_offer_system_minus_menu_cost": mean_or_zero(offer_system_minus_menu_costs),
+        "avg_offer_price": mean_or_zero(offer_prices),
+        "avg_offer_choice_probability": mean_or_zero(offer_choice_probabilities),
+        "avg_offer_expected_profit": mean_or_zero(offer_expected_profits),
+        "avg_selected_offer_expected_profit": mean_or_zero(selected_offer_expected_profits),
+        "avg_unselected_offer_expected_profit": mean_or_zero(unselected_offer_expected_profits),
     }
 
 
@@ -387,6 +464,14 @@ def summarize_episode(config, stats, route_data, travel_time, step_times):
 
     menu_logs = route_data.get("menu_logs", [])
     menu_metrics = extract_menu_metrics(menu_logs)
+    opt_out_count = float(menu_metrics.get("opt_out_count", 0.0))
+    opt_out_rate = float(menu_metrics.get("opt_out_rate", 0.0))
+    quit_penalty = float(getattr(config, "service_quit_penalty", 100.0))
+    quit_guardrail = float(getattr(config, "service_quit_rate_guardrail", 0.4))
+    quit_penalty_total = quit_penalty * opt_out_count
+    adjusted_profit = net_profit - quit_penalty_total
+    service_guardrail_pass = opt_out_rate <= quit_guardrail + 1e-12
+    service_constrained_net_profit = float(net_profit) if service_guardrail_pass else None
 
     return {
         "served_customers": int(len(route_data["id"]) - 1),
@@ -398,6 +483,12 @@ def summarize_episode(config, stats, route_data, travel_time, step_times):
         "charge_revenue": float(charge_revenue),
         "total_cost": float(total_cost),
         "net_profit": float(net_profit),
+        "adjusted_profit": float(adjusted_profit),
+        "quit_penalty_total": float(quit_penalty_total),
+        "service_quit_rate_guardrail": float(quit_guardrail),
+        "service_guardrail_pass": bool(service_guardrail_pass),
+        "service_guardrail_violation": bool(not service_guardrail_pass),
+        "service_constrained_net_profit": service_constrained_net_profit,
         "home_pickup_count": int(stats[1]),
         "avg_step_time": mean_or_zero(step_times),
         **menu_metrics,
@@ -415,7 +506,15 @@ def aggregate_episode_metrics(episodes):
         "charge_revenue",
         "total_cost",
         "net_profit",
+        "adjusted_profit",
+        "quit_penalty_total",
+        "service_quit_rate_guardrail",
+        "service_guardrail_pass",
+        "service_guardrail_violation",
+        "service_constrained_net_profit",
         "home_pickup_count",
+        "menu_request_count",
+        "opt_out_count",
         "average_menu_size",
         "avg_meeting_point_count_per_menu",
         "home_pickup_only_share",
@@ -458,6 +557,10 @@ def aggregate_episode_metrics(episodes):
         "avg_exact_build_time",
         "avg_greedy_build_time",
         "avg_exact_gap_candidate_count",
+        "avg_exact_enumerated_menu_count",
+        "service_constrained_fallback_rate",
+        "avg_service_constrained_predicted_opt_out",
+        "avg_service_constrained_adjusted_profit",
         "cost_pred_mae",
         "cost_pred_rmse",
         "spearman_cost_ranking",
@@ -465,10 +568,24 @@ def aggregate_episode_metrics(episodes):
         "ndcg_at_L",
         "menu_regret",
         "cost_pred_n_samples",
+        "offer_trace_count",
+        "avg_offer_predicted_cost",
+        "avg_offer_menu_eval_cost",
+        "avg_offer_system_eval_cost",
+        "avg_offer_system_minus_menu_cost",
+        "avg_offer_price",
+        "avg_offer_choice_probability",
+        "avg_offer_expected_profit",
+        "avg_selected_offer_expected_profit",
+        "avg_unselected_offer_expected_profit",
     ]
     summary = {"episodes": int(len(episodes))}
     for key in metric_keys:
-        summary[key] = mean_or_zero([episode[key] for episode in episodes])
+        values = [episode[key] for episode in episodes]
+        if key == "service_constrained_net_profit":
+            summary[key] = mean_or_none_if_unavailable(values)
+        else:
+            summary[key] = mean_or_zero(values)
     return summary
 
 
