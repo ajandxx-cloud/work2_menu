@@ -1,102 +1,106 @@
-# Requirements: Work2_CNN_SetMenuNet_DRT_Menu_Experiments
+# Requirements: Work2_ChoiceAware_DRT_Menu_Optimization
 
-**Defined:** 2026-06-01  
-**Core Value:** 证明或诚实诊断 CNN-SetMenuNet 是否比传统 CNN-Menu、MLP-Menu、Nearest-L、Cost-L heuristic 等方法更适合 DRT 动态服务菜单设计。
+**Defined:** 2026-06-04
+**Core Value:** Complete reproducible experiments that support or falsify the claim that choice-aware expected-profit menu optimization gives a stronger profit-service tradeoff than insertion-cost-only menu selection.
 
 ## v1 Requirements
 
-### Planning
+### Project Framing
 
-- [x] **PLAN-01**: 项目包含独立的 `.planning/PROJECT.md`，明确 Work 2 的研究问题、贡献边界和默认实验设定。
-- [x] **PLAN-02**: 项目包含 `.planning/ROADMAP.md`，从 smoke validation 到 formal experiments 拆分清晰 phases。
-- [x] **PLAN-03**: 项目包含 `.planning/STATE.md`，记录当前 phase、下一步和验证状态。
-- [x] **PLAN-04**: 项目包含 `.planning/research/SUMMARY.md`，总结 `实验讨论5.26.md` 中的研究定位、实验设计和 TR-E 风险。
-- [x] **PLAN-05**: 项目包含 `.planning/RESULTS_CONVENTIONS.md`，定义结果目录、CSV schema、seed 命名和 summary markdown 规则。
-- [x] **PLAN-06**: 项目包含 `.planning/verification/PHASE_VERIFICATION_TEMPLATE.md`，每个 phase 都能按统一模板出 verification report。
+- [x] **FRAME-01**: Project documents state that CNN-SetMenuNet is now a baseline / diagnostic method, not the main positive contribution.
+- [x] **FRAME-02**: Project documents define the new research question around passenger choice, finite menus, dynamic pricing, route-cost feedback, and opt-out risk.
+- [x] **FRAME-03**: The rewritten 6.4 discussion file explains why insertion-cost ranking metrics can detach from realized net profit.
+- [x] **FRAME-04**: The rewritten 6.4 discussion file defines the new paper contribution in terms of choice-aware dynamic service menu optimization.
 
-### Boundaries
+### Objective And Metrics
 
-- [x] **BND-01**: 实施阶段不得修改 Work 1 定价模块核心逻辑，除非用户明确批准。
-- [x] **BND-02**: 实施阶段不得修改 MNL 乘客选择模型核心逻辑，除非用户明确批准。
-- [x] **BND-03**: 实施阶段不得修改 HGS/Hygese 路径成本评估核心逻辑，除非用户明确批准。
-- [x] **BND-04**: Work 2 改动范围限定在候选点评分、菜单选择、候选集合表征和候选特征构造。
-- [x] **BND-05**: SPO 或 SPO+ 不作为 Work 2 主贡献和第一版训练目标。
+- [x] **OBJ-01**: The experiment pipeline exposes `adjusted_profit` or an equivalent quit-penalized metric.
+- [x] **OBJ-02**: The experiment pipeline exposes service-constrained evaluation for policies whose `quit_rate` exceeds a configured guardrail.
+- [x] **OBJ-03**: Metric summaries separate raw `net_profit`, adjusted/service-constrained profit, `quit_rate`, `avg_walk`, route cost, and menu regret.
+- [x] **OBJ-04**: Diagnostic reports explicitly flag high-quit policies that appear profitable only because they avoid service.
 
-### Model Contract
+### Oracle Contract
 
-- [x] **MOD-01**: 候选集合输入支持 `K` 个 meeting points，默认 `K=10`。
-- [x] **MOD-02**: 菜单选择输出展示 `L` 个 meeting points，默认 `L=3`，且 `home option` 始终展示。
-- [x] **MOD-03**: 第一版监督标签为每个候选点真实边际插入成本。
-- [x] **MOD-04**: 第一版训练 loss 为 Huber 或 MSE，不依赖 SPO/SPO+。
-- [x] **MOD-05**: CNN-Menu、MLP-Menu、SetMenuNet、CNN-SetMenuNet 使用可比较的候选集合和菜单语义。
-- [x] **MOD-06**: CNN-SetMenuNet 的贡献解释为全局状态编码与候选集合关系建模结合，而不是单纯参数量增加。
+- [x] **ORCL-01**: Cost Oracle is defined as selecting menus by true insertion cost.
+- [x] **ORCL-02**: Profit Oracle is defined as selecting menus by expected profit under the choice/pricing/route-cost objective.
+- [x] **ORCL-03**: Realized Oracle is either implemented as an ex-post diagnostic upper bound or explicitly marked infeasible for v1 with reason.
+- [x] **ORCL-04**: Tables and prose avoid calling Cost Oracle a profit upper bound.
 
-### Experiments
+### Methods
 
-- [x] **EXP-01**: 提供 RC smoke suite，至少能运行 Nearest-L、Cost-L、CNN-Menu、CNN-SetMenuNet 和 Oracle Menu。
-- [ ] **EXP-02**: 主实验比较 Home only、Nearest-L、Cost-L heuristic、Full-candidate CNN、MLP-Menu、CNN-Menu、SetMenuNet、CNN-SetMenuNet、Oracle Menu。
-- [ ] **EXP-03**: 主实验使用多 seed，正式默认 seeds 为 `0,1,2,3,4`。
-- [ ] **EXP-04**: 主实验默认 `instance=RC`、`K=10`、`L=3`。
-- [ ] **EXP-05**: pilot 实验默认 train/test episodes 为 `80/20`。
-- [ ] **EXP-06**: formal 实验默认 train/test episodes 为 `150-300/50`。
-- [x] **EXP-07**: Robustness 实验覆盖 menu size、candidate pool size、demand intensity、outside option utility 和 cross-instance generalization。
+- [x] **METH-01**: Expected-Profit Enumeration enumerates all `C(10,3)=120` meeting-point menus for `K=10`, `L=3`.
+- [x] **METH-02**: Expected-Profit Enumeration includes the home option as always shown outside public `L`.
+- [x] **METH-03**: Each enumerated menu computes MNL choice probability, expected revenue, expected route cost, and opt-out penalty or service cost.
+- [x] **METH-04**: Service-Constrained Expected-Profit selects the best expected-profit menu satisfying a quit-rate guardrail, or falls back with an explicit diagnostic.
+- [x] **METH-05**: Existing baselines remain comparable: Nearest-L, Cost-L heuristic, CNN-Menu, old CNN-SetMenuNet, and Cost Oracle.
+- [x] **METH-06**: New policy names are wired through parser choices, manifests, normalized rows, and artifact summaries.
 
-### Metrics And Outputs
+### Pilot Experiments
 
-- [x] **OUT-01**: 每个实验输出统一 CSV，至少包含 `study`, `method`, `seed`, `instance`, `K`, `L`, `net_profit`, `total_cost`, `quit_rate`, `avg_walk`, `menu_regret`, `top_L_overlap`, `spearman_cost_ranking`, `runtime_per_decision`。
-- [ ] **OUT-02**: 每个 study 生成统一 summary markdown，总结设置、指标、主要结果、结论支持度和风险。
-- [ ] **OUT-03**: 输出 prediction/ranking metrics，包括 MAE、RMSE、Spearman、Top-L overlap、NDCG@L、menu regret。
-- [ ] **OUT-04**: 输出 operational metrics，包括 net profit、total operating cost、travel cost、service cost、discount cost、charge revenue、base revenue、runtime per decision。
-- [ ] **OUT-05**: 输出 passenger-experience metrics，包括 quit rate、acceptance rate、meeting-point share、home pickup share、average walking distance、average in-vehicle time、average price/discount。
-- [ ] **OUT-06**: Result root 使用 `outputs/work2_cnn_setmenunet/<study>/<run_id>/`，committed summaries 使用 `artifacts/work2_cnn_setmenunet/`。
+- [x] **PILOT-01**: A smoke study runs the new methods on a minimal RC setting without a formal budget.
+- [x] **PILOT-02**: A 3-seed pilot runs `instance=RC`, `K=10`, `L=3`, home always shown, seeds `0,1,2`.
+- [x] **PILOT-03**: Pilot outputs include `pilot_rows.csv`, `pilot_summary.md`, `oracle_diagnostics.md`, `profit_vs_quit_tradeoff.md`, and `phase08_decision.md`.
+- [x] **PILOT-04**: Pilot decision classifies whether to proceed to formal evidence, recalibrate objective parameters, or diagnose simulation/scenario issues.
+
+### Formal Evidence
+
+- [ ] **FORM-01**: If pilot passes, formal evidence runs at least five seeds on RC with the approved train/test budget.
+- [ ] **FORM-02**: Formal evidence compares old insertion-cost policies against Expected-Profit and Service-Constrained Expected-Profit methods.
+- [ ] **FORM-03**: Formal artifact generation creates paper-ready tables/figures without manual row editing.
+- [ ] **FORM-04**: Formal conclusion wording distinguishes RC evidence, robustness evidence, and diagnostic evidence.
+
+### Learning Extension
+
+- [ ] **LEARN-01**: If enumeration supports the new objective, define a ProfitAware option-level or menu-level learning target.
+- [ ] **LEARN-02**: ProfitAware learning is compared against exact expected-profit enumeration as a teacher / upper reference.
+- [ ] **LEARN-03**: Menu-level learning is deferred until the non-learning expected-profit objective produces a stable positive signal.
 
 ### Verification
 
-- [x] **VER-01**: 每个 phase 完成后生成 verification report。
-- [x] **VER-02**: Verification report 必须说明修改了哪些文件。
-- [x] **VER-03**: Verification report 必须说明是否影响 Work 1。
-- [x] **VER-04**: Verification report 必须说明是否能运行 smoke test。
-- [x] **VER-05**: Verification report 必须说明是否生成预期 CSV。
-- [x] **VER-06**: Verification report 必须说明当前结果是否支持论文结论。
-- [x] **VER-07**: Verification report 必须说明下一 phase 是否可以推进。
-- [ ] **VER-08**: 若结果不支持预期结论，必须生成诊断报告和下一轮调参建议。
+- [x] **VER-01**: Each phase produces a verification note listing changed files, tests/commands run, generated outputs, and whether conclusions are supported.
+- [x] **VER-02**: Verification confirms Work 1 pricing, choice, and routing cores were not changed unless explicitly approved.
+- [x] **VER-03**: Verification checks that generated artifacts trace back to real study outputs.
+- [x] **VER-04**: Verification reports failed or skipped commands with concrete reason.
 
 ## v2 Requirements
 
 ### Extended Evidence
 
-- **V2-01**: 加入半真实或真实通勤案例，增强 TR-E 投稿竞争力。
-- **V2-02**: 加入 attention 可解释性或候选点替代关系可视化。
-- **V2-03**: 加入参数量控制实验，进一步排除“模型更复杂所以更好”的解释。
-- **V2-04**: 加入更细的 MNL 参数敏感性实验，包括价格、步行、车内时间敏感度。
+- **V2-01**: Add MNL parameter sensitivity for price, walk, IVT, and outside-option utility.
+- **V2-02**: Add cross-instance evidence beyond RC after RC formal evidence is stable.
+- **V2-03**: Add ProfitAware-MLP / ProfitAware-SetMenu / ProfitAware-CNNSetMenu learning variants.
+- **V2-04**: Add contextual bandit or offline policy learning only after objective alignment is established.
+- **V2-05**: Add visualization of profit-quit Pareto fronts and menu diversity effects for manuscript explanation.
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| SPO/SPO+ main contribution | Work 2 贡献点是 service menu design + set representation learning |
-| Routing solver rewrite | HGS/Hygese 是稳定后端评估依赖，本项目不做路径求解器创新 |
-| Pricing model rewrite | 动态定价模块保持不动，以隔离菜单表征贡献 |
-| Manual result editing | 违反多 seed 可复现研究原则 |
-| Candidate filtering / full-display as main narrative | 用户要求按 CNN-SetMenuNet 表征比较全新规划 |
+| Forcing CNN-SetMenuNet as the main method | Existing formal evidence does not support that as the central claim |
+| Rewriting pricing | Would confound whether menu objective alignment solves the problem |
+| Rewriting MNL choice behavior | The first goal is to operate within the existing behavioral model |
+| Rewriting HGS routing | Route-cost feedback should remain the stable evaluation backend |
+| Immediate contextual bandit implementation | Too complex before expected-profit enumeration proves value |
+| Manual artifact editing | Breaks reproducibility and scientific traceability |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLAN-01..PLAN-06 | Phase 1 | Complete |
-| BND-01..BND-05 | Phase 1 | Complete |
-| EXP-01, OUT-01, VER-01..VER-07 | Phase 2 | Complete |
-| MOD-01..MOD-06 | Phase 3 | Complete |
-| EXP-02..EXP-06, OUT-02..OUT-05 | Phase 4 | Pending |
-| EXP-07 | Phase 5 | Complete |
-| OUT-06, VER-08 | Phase 6 | Pending |
+| FRAME-01..FRAME-04 | Phase 1 | Complete |
+| OBJ-01..OBJ-04 | Phase 2 | Complete |
+| ORCL-01..ORCL-04 | Phase 2 | Complete |
+| METH-01..METH-06 | Phase 3 | Complete |
+| PILOT-01..PILOT-04 | Phase 4 | Pending |
+| FORM-01..FORM-04 | Phase 5 | Pending |
+| LEARN-01..LEARN-03 | Phase 6 | Pending |
+| VER-01..VER-04 | Phase 1-2 | Complete |
 
 **Coverage:**
-- v1 requirements: 40 total
-- Mapped to phases: 40
+- v1 requirements: 32 total
+- Mapped to phases: 32
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-06-01*  
-*Last updated: 2026-06-01 after Phase 3 execution*
+*Requirements defined: 2026-06-04*
+*Last updated: 2026-06-04 after Phase 3 verification*

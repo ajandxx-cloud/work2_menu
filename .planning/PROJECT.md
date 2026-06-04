@@ -1,121 +1,94 @@
-# Work 2: CNN-SetMenuNet Experiment Suite
+# Work 2: Choice-Aware DRT Service Menu Optimization
 
 ## What This Is
 
-DRT (Demand Responsive Transit) 服务菜单设计研究的第二部分。Work 1 完成了基于 DSPO 的动态定价与菜单选择，Work 2 将 CNN 单点成本预测升级为基于集合注意力的结构化表征学习框架 CNN-SetMenuNet，用于动态服务菜单设计。目标期刊为 TR Part E。
+This project rebuilds Work 2 from insertion-cost representation learning into choice-aware, profit-aware dynamic service menu optimization for demand-responsive transit. The immediate purpose is to complete an experiment program that can support a defensible TR Part E conclusion: DRT menu design should explicitly account for passenger choice, opt-out risk, pricing, and route-cost feedback rather than only ranking meeting points by predicted insertion cost.
 
-核心转变：从"预测一个点的成本"升级为"理解一组候选服务选项之间的关系，并据此设计有限菜单"。
+CNN-SetMenuNet is no longer treated as the main positive contribution. It remains valuable as a learned baseline and diagnostic result showing where insertion-cost-based menu design can become misaligned with realized system profit.
 
 ## Core Value
 
-证明面向菜单结构的 Set-Attention 表征模型比传统 CNN 单点成本预测模型更适合 DRT 服务菜单设计，在菜单质量、运营收益和乘客体验之间取得最好平衡。
+Produce complete, reproducible experimental evidence that either supports or falsifies the new conclusion: choice-aware expected-profit menu optimization provides a more robust profit-service tradeoff than insertion-cost-only menu selection.
 
 ## Requirements
 
 ### Validated
 
-- ✓ CNN-based cost prediction for DRT operations — Work 1 (CNN_2d in Predictors.py)
-- ✓ Lambert-W dynamic pricing mechanism — Work 1 (MathUtils.py)
-- ✓ MNL passenger choice model with outside option — Work 1 (customerchoice.py)
-- ✓ HGS/Hygese route evaluation — Work 1 (Utils.py)
-- ✓ Menu construction with 9 policy variants — Work 1 (DSPO_Menu.py)
-- ✓ YAML manifest experiment framework — Work 1 (research_pipeline.py)
-- ✓ State grid spatial feature encoding — Work 1 (Utils.get_matrix)
-- ✓ MemoryBuffer with Huber loss training — Work 1 (Utils.py)
-- ✓ Multiple instance support (RC, R, C) — Work 1 (HombergerGehring data)
-- ✓ Option feature extractor: per-candidate 6-dim feature vectors — Phase 02 (option_features.py)
-- ✓ SetMenuNet model: self-attention, permutation-invariant, batch+mask — Phase 03 (SetMenuNet.py)
-- ✓ CNN-SetMenuNet model: CNN global state encoder + SetMenuNet hybrid, warm-start, 7/7 tests — Phase 04 (CNNSetMenuNet.py)
+- Existing Work 1 pricing, MNL passenger choice, HGS route-cost feedback, YAML study execution, artifact generation, and manuscript workflow are implemented in `ooh_code/`.
+- Existing Work 2 CNN-SetMenuNet formal evidence is available and shows mixed/inconclusive support for the old claim.
+- Formal RC diagnostics show CNN-SetMenuNet does not improve mean net profit over Cost-L or CNN-Menu under the current insertion-cost objective.
+- The codebase has a mapped architecture and known experiment entry points: `ooh_code/Src/Algorithms/DSPO_Menu.py`, `ooh_code/Src/research_pipeline.py`, `ooh_code/scripts/run_study.py`, and `ooh_code/scripts/build_artifacts.py`.
+- Phase 1 reframed Work 2 around choice-aware / profit-aware service menu optimization.
+- Phase 2 added adjusted profit, service-constrained profit, and oracle taxonomy diagnostics.
+- Phase 3 implemented explicit Expected-Profit Enumeration, Service-Constrained Expected-Profit, Cost Oracle, and Profit Oracle policy contracts.
+- Phase 4 ran Phase08 smoke and the 3-seed pilot; the decision gate completed and routed to `recalibrate_objective`.
 
 ### Active
-- [ ] CNN_SetMenu algorithm class: subclass of DSPO_Menu, override prediction and training
-- [ ] 6 baselines for main comparison: Nearest-L, Cost-L, CNN-Menu, SetMenuNet, CNN-SetMenuNet, Oracle Menu
-- [ ] Prediction/ranking metrics: MAE, RMSE, Spearman, Top-L overlap, NDCG@L, Menu regret
-- [ ] Operational metrics: net profit, total cost, travel cost, service cost, discount cost, charge revenue, runtime
-- [ ] Passenger experience metrics: quit rate, acceptance rate, MP share, home share, avg walk, avg IVT, avg price
-- [ ] Main results experiment on RC instance (K=10, L=3, 3 seeds, 80 train / 20 test for MVP)
-- [ ] CSV output and paper-ready results table
+
+- [ ] Review Phase08 recalibration evidence before any formal rerun.
+- [ ] Diagnose whether objective/service parameters, fallback behavior, MNL outside option, price range, candidate generation, or scenario design caused the Phase08 guardrail failures.
+- [ ] Run formal multi-seed experiments and rebuild manuscript-facing artifacts only after the recalibration/scenario-design decision is resolved.
 
 ### Out of Scope
 
-- SPO/decision-focused loss — Work 2 贡献在模型结构，不在 loss 函数
-- GNN models — 候选菜单是动态集合而非固定图结构，Set-based encoder 更自然
-- Beijing semi-real case — MVP 阶段只用 benchmark instances (RC, R, C)
-- Ranking loss auxiliary — 第二版再加，第一版只用 Huber
-- Menu size sensitivity / candidate pool sensitivity / demand sensitivity — 后续实验，不在 MVP 范围
-- Cross-instance generalization / ablation — 后续实验
+- Continuing to force CNN-SetMenuNet as the main positive method -- current formal evidence does not support that narrative.
+- Changing the core Lambert-W pricing model -- keep pricing stable so the menu objective is isolated.
+- Changing the core MNL passenger choice model -- use the existing choice model as the behavioral environment.
+- Changing HGS/Hygese route-cost evaluation -- route feedback remains the evaluation backend, not the contribution.
+- Running a large formal experiment before smoke and 3-seed pilot diagnostics pass.
+- Contextual bandit / offline policy learning as the first refactor -- defer until expected-profit enumeration proves the objective is meaningful.
 
 ## Context
 
-**Research framing (TR Part E):**
-本文不是提出一个更复杂的神经网络，而是研究 DRT 平台如何进行 passenger-facing service menu design。CNN-SetMenuNet 是为这个运营决策问题服务的结构化表征工具。
+The previous Work 2 project attempted to prove that CNN-SetMenuNet's set-attention representation improves DRT service menu design by better predicting candidate insertion costs and selecting Top-L meeting points. Formal RC results do not support that as the primary claim: CNN-SetMenuNet underperforms Cost-L and CNN-Menu in mean net profit, while some learned methods show degenerate high quit rates that can make raw net profit misleading.
 
-**Three-layer contributions:**
-1. 提出 choice-based dynamic service menu design 问题
-2. 提出 CNN-SetMenuNet 结构化表征模型 (permutation invariance + option interaction + hybrid representation)
-3. 闭环验证：menu design -> pricing -> passenger choice -> booking set -> routing cost
+The key scientific pivot is not "make CNN-SetMenuNet win." The stronger question is: why does low insertion cost fail to imply high realized system profit, and how should menu value be defined when passenger choice, pricing, opt-out behavior, and route costs interact?
 
-**Codebase state:**
-- Work 1 code is mature and stable in `ooh_code/`
-- DSPO_Menu.py (939 lines) handles menu construction, pricing, selection, training
-- CNN_2d in Predictors.py has 2 conv layers + FC layers (output_dim=3: cost, ETA, IVT)
-- CNN_2d's fc2 outputs 128-dim embedding before fc3 output head — this is what CNN_Encoder will reuse
-- Existing experiment framework uses YAML manifests under `experiments/studies/`
+The recommended experiment path is:
 
-**Existing baselines in DSPO_Menu:**
-- offer_all_feasible_bundles, nearest_heuristic, top_k_cheapest, top_k_passenger_utility
-- revenue_greedy, menu_optimization, insertion_cost_greedy, min_lateness, random_top_k
-- Missing: home_only, oracle_menu (need to add)
-
-**Model architecture (CNN-SetMenuNet):**
-1. CNN global state encoder: reuse CNN_2d conv layers, remove fc3, output 128-dim z_t
-2. Option embedding layer: per-candidate 6-dim feature -> MLP -> concat with z_t
-3. Set-attention menu encoder: 2-layer, 4-head self-attention over candidate set
-4. Output head: per-candidate predicted marginal cost
-5. Training: Huber loss against true marginal insertion costs (no SPO)
-
-**Key insight from experiment discussion:**
-菜单不是越大越好。较小菜单限制乘客选择，较大菜单带来冗余和运营不稳定；L=3 或 L=4 通常取得最好利润-服务平衡。
+1. Establish objective alignment with Expected-Profit Enumeration.
+2. Add service constraints or quit penalties to prevent high-opt-out false positives.
+3. Split cost oracle from profit oracle so "oracle" claims match the actual target.
+4. Only after the non-learning objective works, learn a ProfitAware scoring or menu-level value model.
 
 ## Constraints
 
-- **Preserve pricing**: Lambert-W pricing module must not be modified
-- **Preserve choice model**: MNL model in customerchoice.py must not be modified
-- **Preserve routing**: HGS/Hygese routing must not be modified
-- **Preserve data contracts**: MenuOffer and ServiceBundle dataclass structures must be maintained
-- **YAML manifest compatibility**: New experiments must work with existing run_study.py pipeline
-- **No SPO loss**: Training uses Huber loss only; contribution is model structure, not loss function
-- **Python 3.10+ / PyTorch**: Must use existing tech stack
-- **MVP scale**: 80 train episodes, 20 test episodes, 3 seeds (0,1,2) for initial validation
+- **Existing worktree**: The repository currently contains many uncommitted code and artifact changes. Do not revert unrelated user work.
+- **Scientific traceability**: Do not manually edit generated result rows toward a desired conclusion. Experiments must flow from manifests to outputs to artifacts.
+- **Stable behavioral model**: MNL choice and outside-option behavior remain unchanged during the first refactor.
+- **Stable routing backend**: HGS/Hygese route-cost evaluation remains unchanged during the first refactor.
+- **Stable pricing backend**: Lambert-W pricing remains unchanged during the first refactor.
+- **Pilot first**: New objective methods must pass smoke and 3-seed pilot diagnostics before formal evidence is claimed.
+- **Conclusion honesty**: If Expected-Profit / Service-Constrained methods do not beat Cost-L or CNN-Menu on adjusted/service-constrained metrics, the output must diagnose simulation objective, MNL parameters, price range, candidate generation, or scenario design rather than inventing a positive result.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| New model files (SetMenuNet.py, CNNSetMenuNet.py) | Separate concerns, easier to review/debug | — Pending |
-| Subclass DSPO_Menu for CNN_SetMenu | Reuse all menu construction, pricing, metadata; only override prediction/training | — Pending |
-| 6-dim option features for v1 | walk_dist, ivt, capacity, dist_to_dest, type, time — sufficient to start | — Pending |
-| Main table: 6 methods | Nearest-L, Cost-L, CNN-Menu, SetMenuNet, CNN-SetMenuNet, Oracle | — Pending |
-| MVP first, expand later | Run main results first (small scale), then add sensitivity/generalization/ablation | — Pending |
-| Huber loss only (no SPO) | Work 2 contribution is model structure, not loss function | — Pending |
-| CNN_Encoder reuses CNN_2d conv layers | Warm-start from Work 1 weights, only remove fc3 | — Pending |
+| Reframe Work 2 around choice-aware expected profit | Formal evidence does not support insertion-cost representation learning as the main contribution | Complete in Phase 1 |
+| Keep CNN-SetMenuNet as baseline / diagnostic | It remains useful evidence of objective mismatch | Complete in Phase 1 |
+| Add adjusted profit and service guardrails | Raw net profit can be polluted by high quit-rate policies | Complete in Phase 2 diagnostics and Phase 3 service-constrained policy |
+| Split Cost Oracle and Profit Oracle | A true-cost Top-L oracle is not a profit upper bound | Complete in Phase 3 policy/artifact semantics |
+| Start with exact enumeration before new learning models | `K=10`, `L=3` yields only 120 menus, so the objective can be tested without neural instability | Complete in Phase 3 smoke |
+| Stop formal evidence after Phase08 recalibration decision | Phase08 pilot completed but expected-profit methods violated service guardrails and Service-Constrained Expected-Profit used fallback | Complete in Phase 4 |
+| Defer contextual bandits | Stronger but unnecessary before validating the objective | Pending |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
-**After each phase transition** (via `/gsd-transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
+**After each phase transition**:
+1. Requirements invalidated? Move to Out of Scope with reason.
+2. Requirements validated? Move to Validated with phase reference.
+3. New requirements emerged? Add to Active.
+4. Decisions to log? Add to Key Decisions.
+5. "What This Is" still accurate? Update if drifted.
 
-**After each milestone** (via `/gsd-complete-milestone`):
-1. Full review of all sections
-2. Core Value check — still the right priority?
-3. Audit Out of Scope — reasons still valid?
-4. Update Context with current state
+**After each milestone**:
+1. Full review of all sections.
+2. Core Value check -- still the right priority?
+3. Audit Out of Scope -- reasons still valid?
+4. Update Context with current evidence.
 
 ---
-*Last updated: 2026-05-29 after Phase 04*
+*Last updated: 2026-06-05 after Phase 4 verification*

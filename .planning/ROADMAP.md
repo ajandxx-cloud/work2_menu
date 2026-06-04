@@ -1,91 +1,113 @@
-# Roadmap: Work2_CNN_SetMenuNet_DRT_Menu_Experiments
+# Roadmap: Work2_ChoiceAware_DRT_Menu_Optimization
 
-**Created:** 2026-06-01  
-**Mode:** standard research phases  
-**Default command after initialization:** `$gsd-plan-phase 1`
+**Created:** 2026-06-04
+**Mode:** standard research phases
+**Default next command:** `$gsd-plan-phase 1`
 
-## Phase 1: Project Baseline And Boundaries
+## Phase 1: Reframe Project And 6.4 Discussion
 
-**Goal:** 建立 Work 2 独立规划基线，明确研究问题、贡献边界、结果规范和验证模板�? 
-**Requirements:** PLAN-01..PLAN-06, BND-01..BND-05
-**Status:** Complete - 2026-06-01
-**Verification:** `.planning/phases/01-project-baseline-and-boundaries/VERIFICATION.md`
-
-**Success Criteria:**
-1. `.planning/PROJECT.md`、`.planning/REQUIREMENTS.md`、`.planning/ROADMAP.md`、`.planning/STATE.md` 均存在并与本项目新叙事一致�?2. `.planning/research/SUMMARY.md` 总结 `实验讨论5.26.md` 的核心研究定位、模型路线、实验设计和 TR-E 风险�?3. `.planning/RESULTS_CONVENTIONS.md` 定义 result root、artifact root、CSV columns、seed naming �?summary markdown�?4. `.planning/verification/PHASE_VERIFICATION_TEMPLATE.md` 定义每个 phase �?verification report 必填项�?5. Work 1 保护规则被明确写入规划文档�?
-## Phase 2: Smoke Experiment Pipeline
-
-**Goal:** 建立最�?RC smoke suite，确认实验入口、统一 CSV �?summary markdown 能跑通�? 
-**Requirements:** EXP-01, OUT-01, VER-01..VER-07
-**Status:** Complete - 2026-06-01
-**Verification:** `.planning/phases/02-smoke-experiment-pipeline/VERIFICATION.md`
+**Goal:** Replace the old CNN-SetMenuNet-first narrative with a choice-aware / profit-aware Work 2 project framing and a clean 6.4 experimental redesign document.
+**Requirements:** FRAME-01..FRAME-04, VER-01..VER-04
+**Status:** Complete - 2026-06-04
+**Verification:** `.planning/phases/01-reframe-project-and-6-4-discussion/VERIFICATION.md`
 
 **Success Criteria:**
-1. Smoke suite 使用 `instance=RC`、小 episode 数、至少一�?seed�?2. Smoke suite 至少覆盖 Nearest-L、Cost-L、CNN-Menu、CNN-SetMenuNet、Oracle Menu；若 SetMenuNet 可用则一并纳入�?3. 每个 method 都输出统一 CSV 行，包含 required columns�?4. 生成 smoke summary markdown，明确是否支持进�?Phase 3�?5. Phase 2 verification report 说明改动文件、Work 1 影响、smoke test、CSV 生成和下一步状态�?
-## Phase 3: Candidate Feature And Label Contract
+1. `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`, `.planning/ROADMAP.md`, and `.planning/STATE.md` exist and reflect the new objective.
+2. `实验讨论重构6.4.md` is rewritten as a structured action plan, not just a raw discussion transcript.
+3. The document states that CNN-SetMenuNet is retained as a baseline / diagnostic method.
+4. The document defines the main claim around expected profit, service guardrails, and oracle alignment.
+5. Verification records that no Work 1 pricing, choice, or routing core was changed.
 
-**Goal:** 锁定候选集合输入、mask、home-option 语义、真实边际插入成本标签和第一版训练目标�? 
-**Requirements:** MOD-01..MOD-06
-**Status:** Complete - 2026-06-01
-**Verification:** `.planning/phases/03-candidate-feature-and-label-contract/VERIFICATION.md`
+## Phase 2: Objective Metrics And Oracle Diagnostics
 
-**Success Criteria:**
-1. 明确 `K` �?meeting point candidates �?always-shown home option 的数据流�?2. 明确 `L` 只表�?displayed meeting points，不包含 home�?3. 明确 option feature schema、mask 语义、padding 规则和候选无序集合处理方式�?4. 明确真实边际插入成本标签计算方式，且不改�?HGS/Hygese 核心评估逻辑�?5. 明确 Huber/MSE loss 为第一版目标，SPO/SPO+ 不进入主线�?
-**Plans:** 3/3 plans complete
-
-Plans:
-- [x] `03-01-PLAN.md` - Wave 1: Lock public K/L/home semantics and home-first option feature tensors. (completed 2026-06-01)
-- [x] `03-02-PLAN.md` - Wave 2, blocked on 03-01: Implement candidate-specific labels and mask-aware Huber/MSE losses. (completed 2026-06-01)
-- [x] `03-03-PLAN.md` - Wave 3, blocked on 03-01 and 03-02: Verify cross-method comparability, artifact metadata, and Phase 3 closeout. (completed 2026-06-01)
-
-## Phase 4: Model Comparison Suite
-
-**Goal:** 运行 pilot �?seed 模型比较，验�?CNN-SetMenuNet 相对 baseline 的菜单质量、运营绩效和乘客体验�? 
-**Requirements:** EXP-02..EXP-06, OUT-02..OUT-05
-**Status:** Complete - 2026-06-02
-**Verification:** `.planning/phases/04-model-comparison-suite/VERIFICATION.md`
-
-**Plans:** 3/3 plans complete
-
-Plans:
-- [x] `04-01-PLAN.md` - Wave 1: Align the Phase 4 pilot manifest and comparability checks. (completed 2026-06-02)
-- [x] `04-02-PLAN.md` - Wave 2: Implement Phase 4 pilot summary and diagnostic reporting. (completed 2026-06-02)
-- [x] `04-03-PLAN.md` - Wave 3: Run the three-seed pilot, build artifacts, and verify readiness. (completed 2026-06-02)
+**Goal:** Add objective-aligned metrics and oracle taxonomy so profit, service quality, and menu-quality claims no longer point to different targets.
+**Requirements:** OBJ-01..OBJ-04, ORCL-01..ORCL-04, VER-01..VER-04
+**Status:** Complete - 2026-06-04
+**Verification:** `.planning/phases/02-objective-metrics-and-oracle-diagnostics/VERIFICATION.md`
+**Plans:** 1/1 plans complete
 
 **Success Criteria:**
-1. 主比较覆�?Home only、Nearest-L、Cost-L heuristic、Full-candidate CNN、MLP-Menu、CNN-Menu、SetMenuNet、CNN-SetMenuNet、Oracle Menu�?2. Pilot 使用 `training episodes=80`、`test episodes=20`，并至少覆盖多个 seeds�?3. 输出 prediction/ranking、operational、passenger-experience 三类指标�?4. Summary markdown 判断 CNN-SetMenuNet 是否�?`net_profit`、`menu_regret`、`top_L_overlap`、`quit_rate`、`avg_walk` 上支持论文结论�?5. Phase 4 verification report 明确是否可以进入 formal robustness�?
-## Phase 5: Robustness Experiments
+1. Normalized rows include raw `net_profit` plus adjusted or service-constrained profit.
+2. Diagnostic reports identify high-quit false-positive outcomes.
+3. Cost Oracle and Profit Oracle are named and computed or clearly separated in artifact prose.
+4. Existing formal results can be reinterpreted without claiming Cost Oracle is a profit upper bound.
+5. Smoke checks confirm existing artifact generation still works.
 
-**Goal:** 检�?CNN-SetMenuNet 在关键实验维度下是否稳定，而不是只在单一 RC 设置上有效�? 
-**Requirements:** EXP-07
-**Status:** Blocked - verification gaps found 2026-06-02
-**Verification:** `.planning/phases/05-robustness-experiments/VERIFICATION.md`
+## Phase 3: Expected-Profit Enumeration Policies
 
-**Plans:** 3/3 plans complete
-
-Plans:
-- [x] `05-01-PLAN.md` - Wave 1: Define Work2 robustness manifests and fast contract checks. (completed 2026-06-02)
-- [x] `05-02-PLAN.md` - Wave 2, blocked on 05-01: Build robustness artifact summaries and diagnostic gates. (completed 2026-06-02)
-- [x] `05-03-PLAN.md` - Wave 3, blocked on 05-01 and 05-02: Run or resume robustness suite and verify Phase 5 readiness. (completed 2026-06-02)
-
-**Success Criteria:**
-1. Menu size 实验覆盖多个 `L` 值，至少包含默认 `L=3`�?2. Candidate pool size 实验覆盖多个 `K` 值，至少包含默认 `K=10`�?3. Demand intensity 实验覆盖低、中、高需求或等价实例设置�?4. Outside option utility 实验覆盖不同竞争强度�?5. Cross-instance generalization 至少覆盖 RC 外的一个实例或数据切分�?
-## Phase 6: Formal Results And Diagnostics
-
-**Goal:** 生成正式�?seed 结果、论文表图、summary markdown 和负结果诊断机制�? 
-**Requirements:** OUT-06, VER-08
+**Goal:** Implement exact choice-aware menu enumeration and service-constrained selection for the default Work 2 setting.
+**Requirements:** METH-01..METH-06, VER-01..VER-04
+**Status:** Complete - 2026-06-04
+**Context:** `.planning/phases/03-expected-profit-enumeration-policies/03-CONTEXT.md`
+**Verification:** `.planning/phases/03-expected-profit-enumeration-policies/VERIFICATION.md`
+**Plans:** 1/1 plans complete
 
 **Success Criteria:**
-1. Formal 默认使用 seeds `0,1,2,3,4`，test episodes `50`，training episodes `150-300`�?2. Raw outputs 位于 `outputs/work2_cnn_setmenunet/<study>/<run_id>/`�?3. Committed summaries 位于 `artifacts/work2_cnn_setmenunet/`�?4. 生成主表：Method、Net profit、Total cost、Quit rate、MP share、Avg walk、Menu regret、Top-L overlap、Runtime�?5. �?CNN-SetMenuNet 不支持预期结论，输出 diagnostic report 和下一轮调参建议�?
+1. A new Expected-Profit Enumeration policy enumerates all `C(10,3)=120` menus when `K=10`, `L=3`.
+2. Home is always shown outside `L`, preserving existing public menu semantics.
+3. Each menu is scored using MNL choice probability, expected revenue, expected route cost, and opt-out penalty/guardrail.
+4. A Service-Constrained Expected-Profit policy selects a feasible high-profit menu or emits a diagnostic fallback.
+5. New policies are available through CLI/parser, study manifests, normalized rows, and artifact summaries.
+
+## Phase 4: Phase08 Pilot And Decision Gate
+
+**Goal:** Run smoke and 3-seed pilot evidence before committing to formal experiments.
+**Requirements:** PILOT-01..PILOT-04, VER-01..VER-04
+**Status:** Next
+**Context:** `.planning/phases/04-phase08-pilot-and-decision-gate/04-CONTEXT.md`
+**Research:** `.planning/phases/04-phase08-pilot-and-decision-gate/04-RESEARCH.md`
+**Validation:** `.planning/phases/04-phase08-pilot-and-decision-gate/04-VALIDATION.md`
+**Plans:** 1/1 plans complete
+
+**Success Criteria:**
+1. Smoke study completes on a minimal RC setting.
+2. Pilot study runs RC, `K=10`, `L=3`, home always shown, seeds `0,1,2`.
+3. Outputs are written to `results/work2_phase08_redesign/` or an equivalent committed artifact path:
+   - `pilot_rows.csv`
+   - `pilot_summary.md`
+   - `oracle_diagnostics.md`
+   - `profit_vs_quit_tradeoff.md`
+   - `phase08_decision.md`
+4. `phase08_decision.md` decides whether to proceed to formal, recalibrate objective parameters, or diagnose scenario design.
+5. No formal claim is made before the pilot decision is positive.
+
+## Phase 5: Formal Evidence And Manuscript Artifacts
+
+**Goal:** Produce formal multi-seed evidence and paper-ready artifacts if the pilot supports the new objective.
+**Requirements:** FORM-01..FORM-04, VER-01..VER-04
+
+**Success Criteria:**
+1. Formal study runs at least five seeds with approved RC settings.
+2. Tables compare Nearest-L, Cost-L, CNN-Menu, old CNN-SetMenuNet, Expected-Profit Enumeration, Service-Constrained Expected-Profit, Cost Oracle, and Profit Oracle.
+3. Main tables include raw net profit, adjusted/service-constrained profit, quit rate, average walk, route cost, menu regret, and runtime.
+4. Artifact builder creates committed snapshots, tables, figures, and summary markdown.
+5. Manuscript-facing conclusion wording states the evidence level precisely.
+
+## Phase 6: ProfitAware Learning Extension
+
+**Goal:** If exact expected-profit optimization works, convert the objective into a learnable policy and compare against enumeration.
+**Requirements:** LEARN-01..LEARN-03, VER-01..VER-04
+
+**Success Criteria:**
+1. ProfitAware learning target is defined from expected menu contribution rather than insertion cost alone.
+2. At least one ProfitAware option-level or menu-level model is implemented as a controlled extension.
+3. ProfitAware learning is compared against Exact Expected-Profit Enumeration, Cost-L, CNN-Menu, and old CNN-SetMenuNet.
+4. The result either supports a learning contribution or cleanly keeps enumeration as the primary contribution.
+
 ## Phase Verification Rule
 
-每个 phase 完成后必须生�?verification report，至少回答：
+Every phase must produce a verification note answering:
 
-1. 修改了哪些文件？
-2. 是否影响 Work 1�?3. 是否能运�?smoke test�?4. 是否生成预期 CSV�?5. 当前结果是否支持论文结论�?6. 下一 phase 是否可以推进�?
+1. Which files changed?
+2. Did pricing, MNL choice, or HGS routing core change?
+3. Which smoke or study command was run?
+4. Which CSV/markdown artifacts were generated?
+5. Does the current result support the paper conclusion?
+6. What is the next phase decision?
+
 ## Requirement Coverage
 
 All v1 requirements in `.planning/REQUIREMENTS.md` are mapped to exactly one phase.
 
 ---
-*Roadmap created: 2026-06-01*
+*Roadmap created: 2026-06-04*
