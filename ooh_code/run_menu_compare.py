@@ -186,6 +186,10 @@ def extract_menu_metrics(menu_logs):
     service_constrained_fallback_flags = []
     service_constrained_predicted_opt_outs = []
     service_constrained_adjusted_profits = []
+    redesign_fallback_flags = []
+    redesign_predicted_outsides = []
+    redesign_predicted_profits = []
+    redesign_scores = []
     offer_predicted_costs = []
     offer_menu_eval_costs = []
     offer_system_eval_costs = []
@@ -247,6 +251,14 @@ def extract_menu_metrics(menu_logs):
                 service_constrained_adjusted_profits.append(
                     float(metadata.get("service_constrained_adjusted_profit"))
                 )
+            if metadata.get("redesign_fallback_used") is not None:
+                redesign_fallback_flags.append(float(bool(metadata.get("redesign_fallback_used"))))
+            if metadata.get("selected_predicted_outside_probability") is not None:
+                redesign_predicted_outsides.append(float(metadata.get("selected_predicted_outside_probability")))
+            if metadata.get("selected_predicted_expected_system_profit") is not None:
+                redesign_predicted_profits.append(float(metadata.get("selected_predicted_expected_system_profit")))
+            if metadata.get("risk_adjusted_score") is not None:
+                redesign_scores.append(float(metadata.get("risk_adjusted_score")))
         for offer in displayed_offers:
             if offer.get("is_home", False):
                 continue
@@ -432,6 +444,10 @@ def extract_menu_metrics(menu_logs):
         "service_constrained_fallback_rate": mean_or_zero(service_constrained_fallback_flags),
         "avg_service_constrained_predicted_opt_out": mean_or_zero(service_constrained_predicted_opt_outs),
         "avg_service_constrained_adjusted_profit": mean_or_zero(service_constrained_adjusted_profits),
+        "redesign_fallback_rate": mean_or_zero(redesign_fallback_flags),
+        "avg_redesign_predicted_outside_probability": mean_or_zero(redesign_predicted_outsides),
+        "avg_redesign_predicted_expected_system_profit": mean_or_zero(redesign_predicted_profits),
+        "avg_redesign_score": mean_or_zero(redesign_scores),
         "cost_pred_mae": mean_or_zero(cost_pred_abs_errors),
         "cost_pred_rmse": float(np.sqrt(mean_or_zero(cost_pred_sq_errors))),
         "spearman_cost_ranking": mean_or_zero(spearman_correlations),
@@ -561,6 +577,10 @@ def aggregate_episode_metrics(episodes):
         "service_constrained_fallback_rate",
         "avg_service_constrained_predicted_opt_out",
         "avg_service_constrained_adjusted_profit",
+        "redesign_fallback_rate",
+        "avg_redesign_predicted_outside_probability",
+        "avg_redesign_predicted_expected_system_profit",
+        "avg_redesign_score",
         "cost_pred_mae",
         "cost_pred_rmse",
         "spearman_cost_ranking",

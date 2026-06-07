@@ -2,40 +2,46 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 04
-status: ready_to_plan
-last_updated: 2026-06-04T17:14:11.041Z
+current_phase: 6
+status: in_progress
+last_updated: "2026-06-07T18:00:00Z"
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 3
-  completed_plans: 2
-  percent: 33
-stopped_at: Phase 04 complete (1/1) — ready to discuss Phase 5
+  completed_plans: 3
+  percent: 50
 ---
 
 # State: Work2_ChoiceAware_DRT_Menu_Optimization
 
 **Project reference:** `.planning/PROJECT.md`
 **Core value:** Complete reproducible experiments that support or falsify the choice-aware expected-profit menu optimization claim.
-**Current phase:** 5
-**Status:** Ready to plan
-**Last updated:** 2026-06-04
+**Current phase:** 6
+**Status:** Phase 6B local redesign gate passed; formal contract alignment in progress
+**Last updated:** 2026-06-07
 
 ## Current Focus
 
-Phase 4 Phase08 Pilot And Decision Gate is complete:
+Phase 6 is a local pivot from ProfitAware Learning to Objective / Service-Constraint Redesign:
 
-- Phase08 smoke passed with run id `20260604T124314Z_847e54ae`.
-- Phase08 pilot completed with run id `20260604T124624Z_bf03b88d`.
-- Five phase-local artifacts were generated under `.planning/phases/04-phase08-pilot-and-decision-gate/artifacts/`.
-- `phase08_decision.md` records `decision_state: recalibrate_objective`, not `proceed_to_formal`.
+- Phase 5 gap-closure smoke passed with run id `20260605T095440Z_768e9588`.
+- Phase 5 gap-closure full diagnostic completed with run id `20260605T101204Z_c19b7963`.
+- Phase 5 `gate_decision.md` records `decision_state: recalibrate_objective`, not `proceed_to_formal`.
+- ProfitAware Learning is deferred until a redesigned non-learning objective passes a gate.
+- Formal manuscript-facing evidence remains blocked.
+- Phase 6B now uses explicit local behavior gates and small risk/min-quit parameter sweeps.
+- Phase 6B diagnostic completed with run id `20260606T104339Z_401deed1`.
+- Phase 6B local gate result is `proceed_to_formal`.
+- Human confirmation to move past the local gate has been provided in-thread.
+- Phase 1-5 remain diagnostic background and must not be deleted or overwritten.
 
 ## Next Actions
 
-1. Review the Phase08 recalibration memo before starting Phase 5 formal evidence work.
-2. Decide whether to recalibrate objective/service parameters, inspect Service-Constrained fallback behavior, or diagnose scenario design.
-3. If the recalibration decision is accepted, plan Phase 5 around the selected follow-up rather than assuming formal evidence can proceed unchanged.
+1. Keep Phase 6 outputs phase-local and preserve the passed gate result.
+2. Define redesign-aligned formal RC study contracts instead of reusing old formal manifests unchanged.
+3. Run formal multi-seed evidence only on the redesign-aligned manifest set.
+4. Rebuild manuscript-facing artifacts only after the redesign-aligned formal run completes.
 
 ## Known Risks
 
@@ -58,7 +64,16 @@ Phase 4 Phase08 Pilot And Decision Gate is complete:
 - Phase 4 smoke command: passed with run id `20260604T124314Z_847e54ae`.
 - Phase 4 pilot command: passed with run id `20260604T124624Z_bf03b88d`.
 - Phase 4 decision: `recalibrate_objective`.
-- Next implementation phase: Phase 5 formal evidence and manuscript artifacts, pending human review of recalibration decision.
+- Phase 5 gap-closure smoke command: passed with run id `20260605T095440Z_768e9588`.
+- Phase 5 gap-closure full diagnostic: passed with run id `20260605T101204Z_c19b7963`.
+- Phase 5 decision: `recalibrate_objective`.
+- Phase 6 pivot: Objective / Service-Constraint Redesign replaces ProfitAware Learning for now.
+- Phase 6B manifest/test redesign: complete.
+- Phase 6B smoke command: passed with run id `20260606T103332Z_f6d4bc06`.
+- Phase 6B diagnostic command: passed with run id `20260606T104339Z_401deed1`.
+- Phase 6B artifact gate: `proceed_to_formal` with `human_confirmation_required: true`.
+- Phase 6B verification: `.planning/phases/06-objective-service-constraint-redesign/VERIFICATION.md`.
+- Next implementation phase: redesign-aligned formal evidence contract and multi-seed RC execution.
 
 ---
-*State updated: 2026-06-05 after Phase 4 verification*
+*State updated: 2026-06-07 after the Phase 6B local gate passed*

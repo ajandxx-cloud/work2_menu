@@ -1,0 +1,73 @@
+name: work2_cnn2d_baseline
+title: Work 2 CNN-2d Baseline — Single-Point Cost Prediction
+type: policy_compare
+description: >
+  Baseline study using the traditional CNN_2d (DSPO_Menu) single-point
+  cost prediction model. Compares Nearest-L, Cost-L, CNN-Menu (top_k_cheapest),
+  and Oracle Menu on RC instance with K=10, L=3.
+  This provides the model-architecture baseline for the Work 2 contribution:
+  CNN-SetMenuNet (set-attention) vs CNN-2d (single-point).
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+base_args:
+  experiment_name: work2_cnn2d_baseline
+  instance: RC
+  load_data: true
+  fraction_capacity_limited_meeting_points: 0
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 80
+  eval_episodes: 20
+  menu_k: 3
+  max_candidates: 10
+  menu_model: cnn_2d
+  menu_selection_solver: auto
+  menu_use_exact_eval: true
+  # --- MNL / ETA parameters: identical to work2_main for fair comparison ---
+  base_util: 1.0
+  home_pickup_utility: 1.0
+  outside_option_util: 0.0
+  incentive_sens: -0.08
+  menu_travel_time_weight: -0.0004
+  menu_pickup_time_weight: -0.00025
+  pref_window_half_width: 5000
+  menu_eta_filter_mode: none
+  menu_time_prediction_blend: 0.35
+  menu_route_delay_lambda: 0.0
+  menu_capacity_risk_lambda: 0.0
+policies:
+  - tag: nearest_L
+    label: Nearest-L
+    policy: nearest_heuristic
+  - tag: cost_L
+    label: Cost-L
+    policy: cost_l_heuristic
+  - tag: cnn_menu
+    label: CNN-Menu
+    policy: top_k_cheapest
+  - tag: oracle_menu
+    label: Oracle Menu
+    policy: menu_optimization
+    args_overrides:
+      init_theta_cnn: 0.0
+      cool_theta_cnn: 0.0
+      menu_use_oracle_eta: true
+splits:
+  - id: seed0
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 0
+  - id: seed1
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 1
+  - id: seed2
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 2

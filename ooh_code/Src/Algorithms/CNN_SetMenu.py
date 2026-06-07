@@ -166,7 +166,7 @@ class CNN_SetMenu(DSPO_Menu):
         # --- Replace memory buffer with K-candidate buffer ---
         self.memory = SetMenuMemoryBuffer(
             max_len=config.buffer_size,
-            K=self.max_candidates,
+            K=self.candidate_slots,
             grid_shape=(self.n_layers, self.grid_dim),
             aux_dim=self.aux_dim,
             device=config.device,
@@ -180,11 +180,13 @@ class CNN_SetMenu(DSPO_Menu):
         self.episode_aux_cost_targets = []  # per-customer cost for cnn_aux training
         self.episode_option_features = []
         self.episode_option_mask = []
+        self.episode_candidate_costs = []  # per-candidate insertion costs for training
 
         # --- Per-step storage (set during build_menu_candidates, consumed in update) ---
         self._current_grid_feature = None
         self._current_option_features = None
         self._current_option_mask = None
+        self._current_candidate_costs = None  # per-candidate heuristic insertion costs
 
         # --- Optional warm-start from Work 1 CNN_2d checkpoint ---
         ckpt_path = str(getattr(config, "cnn_aux_checkpoint", "")).strip()
@@ -256,8 +258,8 @@ class CNN_SetMenu(DSPO_Menu):
         theta = self._theta(state[3])
         mltplr = self.cost_multiplier
         pps = self._candidate_parcelpoints(state)
-        # Cap PP candidates so total (home + PPs) fits within max_candidates
-        pps = pps[: self.max_candidates - 1]
+        # Public max_candidates is meeting-point K; tensors add one home slot.
+        pps = pps[: self.max_candidates]
         cur_feat = self.get_feature_rep_infer(state[1]["fleet"])
 
         # --- ETA/IVT from frozen CNN_2d ---
@@ -288,6 +290,8 @@ class CNN_SetMenu(DSPO_Menu):
             self._current_grid_feature = cur_feat.clone()
             self._current_option_features = option_features.clone()
             self._current_option_mask = option_mask.clone()
+            # Aligned row labels: home at 0, meeting points at 1..K, padding masked out.
+            self._current_candidate_costs = self.build_candidate_cost_labels(state, pps, customer)
 
         # --- Build home candidate ---
         home_insertion = self.cheapestInsertionCosts(customer.home, state[1])
@@ -484,13 +488,19 @@ class CNN_SetMenu(DSPO_Menu):
             if self._current_option_features is not None:
                 self.episode_option_features.append(self._current_option_features)
                 self.episode_option_mask.append(self._current_option_mask)
+                # Store per-candidate insertion costs for training targets
+                if self._current_candidate_costs is not None:
+                    self.episode_candidate_costs.append(self._current_candidate_costs)
+                else:
+                    self.episode_candidate_costs.append(None)
             else:
                 # Guard: build fresh option features if none were stored
                 pps = self._candidate_parcelpoints(state)
-                pps = pps[: self.max_candidates - 1]
+                pps = pps[: self.max_candidates]
                 opt_feat, opt_mask = self.build_option_features(state, pps, state[0])
                 self.episode_option_features.append(opt_feat)
                 self.episode_option_mask.append(opt_mask)
+                self.episode_candidate_costs.append(self.build_candidate_cost_labels(state, pps, state[0]))
 
             # Maintain time_targets for compatibility with parent's time normalization
             eta_label = selected_offer.metadata.get("heuristic_eta", selected_offer.predicted_eta)
@@ -518,12 +528,15 @@ class CNN_SetMenu(DSPO_Menu):
                 true_cost_val = float(target[idx][1]) + float(penalties[idx])
 
                 # Create K-length true_costs tensor.
-                # MVP: assign the same true cost to all valid candidates.
-                # The model differentiates candidates through option features,
-                # and Huber loss drives predictions toward the true cost level.
-                true_costs = torch.full(
-                    (self.max_candidates,), float(true_cost_val), dtype=float32,
-                )
+                # Use per-candidate heuristic insertion costs when available,
+                # enabling the model to learn cost differences between candidates.
+                # Falls back to uniform HGS cost if per-candidate costs unavailable.
+                if idx < len(self.episode_candidate_costs) and self.episode_candidate_costs[idx] is not None:
+                    true_costs = self.episode_candidate_costs[idx].clone()
+                else:
+                    true_costs = torch.full(
+                        (self.candidate_slots,), float(true_cost_val), dtype=float32, device=self.device,
+                    )
 
                 self.memory.add(
                     grid=self.episode_grid_features[idx],
@@ -547,6 +560,7 @@ class CNN_SetMenu(DSPO_Menu):
         self.episode_aux_cost_targets = []
         self.episode_option_features = []
         self.episode_option_mask = []
+        self.episode_candidate_costs = []
         self.time_targets = np.empty((0, 2))
 
         # Training
@@ -563,10 +577,13 @@ class CNN_SetMenu(DSPO_Menu):
     # ------------------------------------------------------------------
 
     def _cnnsetmenu_update(self, grid, aux, opt_feat, opt_mask, costs):
-        """Single training step: forward CNNSetMenuNet + Huber loss + backward."""
+        """Single training step: forward CNNSetMenuNet + mask-aware Huber loss + backward."""
         self.optimizer.zero_grad()
         predicted = self.supervised_ml(grid, aux, opt_feat, opt_mask)  # [B, K]
-        loss = self.criterion(predicted, costs)
+        per_row = torch.nn.functional.smooth_l1_loss(predicted, costs, reduction="none")
+        mask_float = opt_mask.float()
+        n_valid = mask_float.sum().clamp(min=1.0)
+        loss = (per_row * mask_float).sum() / n_valid
         loss.backward()
         self.optimizer.step()
         return loss.item()
@@ -611,21 +628,23 @@ class CNN_SetMenu(DSPO_Menu):
                 loss = self._cnnsetmenu_update(grid, aux, opt_feat, opt_mask, costs)
                 losses.append(loss)
 
-                # Train cnn_aux (CNN_2d for ETA/IVT) on the same batch.
-                # Use the per-batch cost column (mean across K) as cost target
-                # and zeros for ETA/IVT (placeholder — cnn_aux will learn
-                # meaningful ETA/IVT from episode-level time_targets below).
-                batch_size = grid.shape[0]
-                cost_targets = costs.mean(dim=1, keepdim=True)  # [B, 1]
-                # Pad to 3-dim: [cost, 0, 0] — ETA/IVT targets come from time_targets
-                aux_target = torch.zeros(batch_size, 3, dtype=float32, device=grid.device)
-                aux_target[:, 0] = cost_targets.squeeze(1)
-                self.aux_optimizer.zero_grad()
-                aux_output = self.cnn_aux(grid, aux)  # [B, 3]
-                aux_loss = self.criterion(aux_output, aux_target)
-                aux_loss.backward()
-                self.aux_optimizer.step()
-                aux_losses.append(aux_loss.item())
+                # Train cnn_aux only when it has trainable parameters.
+                # When warm-started from a pre-trained checkpoint (cnn_aux_checkpoint),
+                # the auxiliary is frozen and skips training — its ETA/IVT predictions
+                # are already good.  When not warm-started, train on cost targets
+                # (ETA/IVT targets remain zeros until per-step time_targets are plumbed).
+                aux_trainable = any(p.requires_grad for p in self.cnn_aux.parameters())
+                if aux_trainable:
+                    batch_size = grid.shape[0]
+                    cost_targets = costs.mean(dim=1, keepdim=True)  # [B, 1]
+                    aux_target = torch.zeros(batch_size, 3, dtype=float32, device=grid.device)
+                    aux_target[:, 0] = cost_targets.squeeze(1)
+                    self.aux_optimizer.zero_grad()
+                    aux_output = self.cnn_aux(grid, aux)  # [B, 3]
+                    aux_loss = self.criterion(aux_output, aux_target)
+                    aux_loss.backward()
+                    self.aux_optimizer.step()
+                    aux_losses.append(aux_loss.item())
             initial_losses.append(np.mean(losses))
             if counter % 1 == 0:
                 print("Epoch {} SetMenu loss: {:.4f}  Aux loss: {:.4f}".format(
@@ -653,9 +672,11 @@ class CNN_SetMenu(DSPO_Menu):
         self.episode_aux_cost_targets = []
         self.episode_option_features = []
         self.episode_option_mask = []
+        self.episode_candidate_costs = []
         self._current_grid_feature = None
         self._current_option_features = None
         self._current_option_mask = None
+        self._current_candidate_costs = None
 
     # ------------------------------------------------------------------
     # Internal helpers

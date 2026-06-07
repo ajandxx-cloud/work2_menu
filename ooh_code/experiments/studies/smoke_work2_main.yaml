@@ -22,8 +22,8 @@ base_args:
   max_steps_p: 0.5
   n_vehicles: 2
   veh_capacity: 2
-  menu_k: 3
-  max_candidates: 10
+  menu_k: 3          # L: displayed meeting-point offers; home is always shown outside L
+  max_candidates: 10 # K: meeting-point candidates; tensors use candidate_slots = K + 1
   menu_selection_solver: auto
   menu_use_exact_eval: true
 policies:

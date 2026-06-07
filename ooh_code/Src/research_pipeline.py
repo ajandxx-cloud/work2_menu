@@ -43,7 +43,15 @@ SUMMARY_NUMERIC_KEYS = [
     "charge_revenue",
     "total_cost",
     "net_profit",
+    "adjusted_profit",
+    "quit_penalty_total",
+    "service_quit_rate_guardrail",
+    "service_guardrail_pass",
+    "service_guardrail_violation",
+    "service_constrained_net_profit",
     "home_pickup_count",
+    "menu_request_count",
+    "opt_out_count",
     "average_menu_size",
     "avg_meeting_point_count_per_menu",
     "home_pickup_only_share",
@@ -94,6 +102,10 @@ SUMMARY_NUMERIC_KEYS = [
     "avg_exact_build_time",
     "avg_greedy_build_time",
     "avg_exact_gap_candidate_count",
+    "avg_exact_enumerated_menu_count",
+    "service_constrained_fallback_rate",
+    "avg_service_constrained_predicted_opt_out",
+    "avg_service_constrained_adjusted_profit",
     "cost_pred_mae",
     "cost_pred_rmse",
     "spearman_cost_ranking",
@@ -101,6 +113,24 @@ SUMMARY_NUMERIC_KEYS = [
     "ndcg_at_L",
     "menu_regret",
     "cost_pred_n_samples",
+    "offer_trace_count",
+    "avg_offer_predicted_cost",
+    "avg_offer_menu_eval_cost",
+    "avg_offer_system_eval_cost",
+    "avg_offer_system_minus_menu_cost",
+    "avg_offer_price",
+    "avg_offer_choice_probability",
+    "avg_offer_expected_profit",
+    "avg_selected_offer_expected_profit",
+    "avg_unselected_offer_expected_profit",
+    "menu_outside_penalty_lambda",
+    "menu_quit_tolerance",
+    "menu_profit_tolerance_fraction",
+    "menu_optout_guardrail",
+    "redesign_fallback_rate",
+    "avg_redesign_predicted_outside_probability",
+    "avg_redesign_predicted_expected_system_profit",
+    "avg_redesign_score",
 ]
 
 CSV_FIELD_ORDER = [
@@ -122,6 +152,9 @@ CSV_FIELD_ORDER = [
     "variant_label",
     "policy",
     "menu_k",
+    "candidate_pool_size",
+    "displayed_meeting_points",
+    "home_always_shown",
     "ablation_tag",
     "is_reference",
     "reference_tag",
@@ -429,12 +462,13 @@ def variant_specs_for_manifest(manifest):
             if isinstance(item, str):
                 spec = {"tag": item, "label": item.replace("_", " "), "policy": item}
             else:
+                args_overrides = item.get("args_overrides", {})
                 spec = {
                     "tag": item["tag"],
                     "label": item.get("label", item["tag"].replace("_", " ")),
                     "policy": item.get("policy", item["tag"]),
-                    "menu_k": item.get("menu_k"),
-                    "args_overrides": item.get("args_overrides", {}),
+                    "menu_k": item.get("menu_k", args_overrides.get("menu_k")),
+                    "args_overrides": args_overrides,
                 }
             if spec["tag"] in seen:
                 continue
@@ -789,6 +823,8 @@ def execute_study_manifest(manifest, reuse_existing=True, suite_name="", suite_r
             summary = aggregate_episode_metrics(episodes)
             variant_results[variant["tag"]] = {
                 "variant": variant,
+                "args": public_args_dict(variant_args),
+                "resolved_menu_k": int(resolved_menu_k),
                 "episodes": episodes,
                 "summary": summary,
             }
@@ -801,6 +837,8 @@ def execute_study_manifest(manifest, reuse_existing=True, suite_name="", suite_r
 
         split_rows = []
         for tag, result in variant_results.items():
+            result_args = result.get("args", {})
+            result_menu_k = result.get("resolved_menu_k") or result_args.get("menu_k") or base_args.menu_k
             paired_vs_reference = None
             if tag != reference_variant["tag"]:
                 paired_vs_reference = paired_summary(reference_result["episodes"], result["episodes"])
@@ -829,7 +867,32 @@ def execute_study_manifest(manifest, reuse_existing=True, suite_name="", suite_r
                 "variant_tag": tag,
                 "variant_label": result["variant"].get("label", tag),
                 "policy": result["variant"]["policy"],
-                "menu_k": int(result["variant"].get("menu_k") or base_args.menu_k),
+                "instance": result_args.get("instance", getattr(base_args, "instance", "")),
+                "menu_k": int(result_menu_k),
+                "candidate_pool_size": int(result_args.get("max_candidates", getattr(base_args, "max_candidates", 0))),
+                "displayed_meeting_points": int(result_menu_k),
+                "max_steps_r": result_args.get("max_steps_r", getattr(base_args, "max_steps_r", None)),
+                "outside_option_util": result_args.get(
+                    "outside_option_util",
+                    getattr(base_args, "outside_option_util", None),
+                ),
+                "menu_outside_penalty_lambda": result_args.get(
+                    "menu_outside_penalty_lambda",
+                    getattr(base_args, "menu_outside_penalty_lambda", None),
+                ),
+                "menu_quit_tolerance": result_args.get(
+                    "menu_quit_tolerance",
+                    getattr(base_args, "menu_quit_tolerance", None),
+                ),
+                "menu_profit_tolerance_fraction": result_args.get(
+                    "menu_profit_tolerance_fraction",
+                    getattr(base_args, "menu_profit_tolerance_fraction", None),
+                ),
+                "menu_optout_guardrail": result_args.get(
+                    "menu_optout_guardrail",
+                    getattr(base_args, "menu_optout_guardrail", None),
+                ),
+                "home_always_shown": True,
                 "ablation_tag": result["variant"].get("ablation_tag", ""),
                 "is_reference": bool(tag == reference_variant["tag"]),
                 "reference_tag": reference_variant["tag"],

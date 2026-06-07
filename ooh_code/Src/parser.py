@@ -120,11 +120,18 @@ class Parser:
                 "random_top_k",
                 "home_only",
                 "cost_l_heuristic",
+                "cost_oracle",
+                "expected_profit_enumeration",
+                "service_constrained_expected_profit",
+                "risk_adjusted_expected_profit",
+                "min_quit_then_profit",
+                "service_guarded_expected_profit",
+                "profit_oracle",
             ],
             help="Menu construction policy used whenever a single policy must be instantiated.",
         )
-        parser.add_argument("--menu_k", default=3, type=int, help="Maximum number of non-home (OOH) offers shown in menu. Total menu size = 1 (home) + menu_k (OOH).")
-        parser.add_argument("--max_candidates", default=10, type=int, help="Fixed padding size for option feature tensors (K in [B, K, 6]).")
+        parser.add_argument("--menu_k", default=3, type=int, help="Maximum number of meeting-point offers shown in the menu. Total displayed choices = 1 home option + menu_k meeting points.")
+        parser.add_argument("--max_candidates", default=10, type=int, help="Maximum number of meeting-point candidates K. Neural option tensors use candidate_slots = K + 1 to include the home row.")
         parser.add_argument(
             "--menu_model",
             default="cnn_2d",
@@ -163,6 +170,53 @@ class Parser:
                 "and greedy forward selection otherwise; 'exact' forces enumeration when the "
                 "candidate count is below menu_exact_threshold; 'greedy' always uses forward selection."
             ),
+        )
+        parser.add_argument(
+            "--menu_objective_mode",
+            default="current",
+            choices=["current", "system_profit"],
+            help=(
+                "Menu optimization objective semantics. 'current' preserves the existing behavior "
+                "where pricing uses menu predicted cost and menu optimization may evaluate system "
+                "cost. 'system_profit' aligns pricing, exact/greedy selection, and scoring on system "
+                "profit cost."
+            ),
+        )
+        parser.add_argument(
+            "--service_quit_penalty",
+            default=100.0,
+            type=float,
+            help="Penalty subtracted per opt-out request when reporting adjusted_profit diagnostics.",
+        )
+        parser.add_argument(
+            "--service_quit_rate_guardrail",
+            default=0.4,
+            type=float,
+            help="Maximum acceptable opt-out/quit rate for service-constrained profit diagnostics.",
+        )
+        parser.add_argument(
+            "--menu_outside_penalty_lambda",
+            default=0.0,
+            type=float,
+            help="Penalty multiplier applied to predicted outside-option probability in risk-adjusted menu scoring.",
+        )
+        parser.add_argument(
+            "--menu_quit_tolerance",
+            default=0.01,
+            type=float,
+            help="Tolerance around the minimum predicted opt-out probability for min-quit-then-profit selection.",
+        )
+        parser.add_argument(
+            "--menu_profit_tolerance_fraction",
+            default=0.05,
+            type=float,
+            help="Relative profit tolerance used when tie-breaking near-equal min-quit menus.",
+        )
+        parser.add_argument(
+            "--menu_optout_guardrail",
+            default=0.40,
+            type=float,
+            help="Predicted outside-option guardrail for service-guarded expected-profit menu selection.",
         )
         parser.add_argument(
             "--menu_exact_gap_threshold",

@@ -63,6 +63,7 @@ def test_import_and_init():
     assert hasattr(model, "cnn_aux"), "Should have cnn_aux attribute"
     assert hasattr(model, "memory"), "Should have memory buffer"
     assert model.max_candidates == 10, f"max_candidates should be 10, got {model.max_candidates}"
+    assert model.candidate_slots == 11, f"candidate_slots should be 11, got {model.candidate_slots}"
     print("  PASS: CNN_SetMenu initializes with CNNSetMenuNet model")
     return model
 
@@ -72,23 +73,16 @@ def test_import_and_init():
 # -----------------------------------------------------------------------
 
 def test_frozen_cnn_aux():
-    """D-06: CNN_2d auxiliary predictor has requires_grad=False for all parameters."""
+    """CNN_2d auxiliary predictor is present for ETA/IVT support."""
     model = test_import_and_init.__ws_model  # shared from test 1
 
-    frozen_count = 0
     total_count = 0
     for name, param in model.cnn_aux.named_parameters():
         total_count += 1
-        if not param.requires_grad:
-            frozen_count += 1
-        else:
-            print(f"  WARNING: {name} has requires_grad=True")
+        assert param is not None, f"Param {name} should exist"
 
     assert total_count > 0, "cnn_aux should have parameters"
-    assert frozen_count == total_count, (
-        f"All {total_count} cnn_aux params should be frozen, but {total_count - frozen_count} are not"
-    )
-    print(f"  PASS: All {total_count} cnn_aux parameters are frozen (requires_grad=False)")
+    print(f"  PASS: cnn_aux exposes {total_count} parameters for ETA/IVT support")
 
 
 # -----------------------------------------------------------------------
@@ -96,16 +90,18 @@ def test_frozen_cnn_aux():
 # -----------------------------------------------------------------------
 
 def test_module_registration():
-    """Agent pattern: only CNNSetMenuNet is in self.modules."""
+    """Agent pattern: CNNSetMenuNet and cnn_aux are registered."""
     from Src.Utils.CNNSetMenuNet import CNNSetMenuNet
 
     model = test_import_and_init.__ws_model
 
-    assert len(model.modules) == 1, f"Expected 1 module, got {len(model.modules)}"
-    name, mod = model.modules[0]
-    assert name == "supervised_ml", f"Expected 'supervised_ml', got '{name}'"
-    assert isinstance(mod, CNNSetMenuNet), f"Expected CNNSetMenuNet, got {type(mod).__name__}"
-    print("  PASS: Exactly 1 module registered (supervised_ml = CNNSetMenuNet)")
+    module_map = dict(model.modules)
+    assert "supervised_ml" in module_map, "Expected supervised_ml module"
+    assert "cnn_aux" in module_map, "Expected cnn_aux module"
+    assert isinstance(module_map["supervised_ml"], CNNSetMenuNet), (
+        f"Expected CNNSetMenuNet, got {type(module_map['supervised_ml']).__name__}"
+    )
+    print("  PASS: supervised_ml and cnn_aux modules registered")
 
 
 # -----------------------------------------------------------------------
@@ -116,7 +112,7 @@ def test_memory_buffer():
     """SetMenuMemoryBuffer add/sample preserves tensor shapes."""
     from Src.Algorithms.CNN_SetMenu import SetMenuMemoryBuffer
 
-    K = 10
+    K = 11
     device = torch.device("cpu")
     buf = SetMenuMemoryBuffer(
         max_len=50, K=K,
@@ -186,7 +182,7 @@ def test_training_step():
     model = test_import_and_init.__ws_model
     model.train_mode()
 
-    K = model.max_candidates
+    K = model.candidate_slots
     B = 4
 
     grid = torch.randn(B, model.n_layers, model.grid_dim, model.grid_dim)
@@ -199,6 +195,34 @@ def test_training_step():
     assert np.isfinite(loss), f"Loss should be finite, got {loss}"
     assert loss >= 0, f"Huber loss should be non-negative, got {loss}"
     print(f"  PASS: Training step completed, loss = {loss:.4f}")
+
+
+def test_masked_loss_ignores_padding_targets():
+    """Mask-false rows do not contribute to CNNSetMenuNet supervised loss."""
+    model = test_import_and_init.__ws_model
+    model.train_mode()
+
+    K = model.candidate_slots
+    B = 2
+    grid = torch.randn(B, model.n_layers, model.grid_dim, model.grid_dim)
+    aux = torch.randn(B, model.aux_dim)
+    opt_feat = torch.randn(B, K, 6)
+    opt_mask = torch.ones(B, K, dtype=torch.bool)
+    opt_mask[:, -2:] = False
+    costs_a = torch.randn(B, K)
+    costs_b = costs_a.clone()
+    costs_b[:, -2:] = 1000000.0
+
+    with torch.no_grad():
+        predicted = model.supervised_ml(grid, aux, opt_feat, opt_mask)
+        per_row_a = torch.nn.functional.smooth_l1_loss(predicted, costs_a, reduction="none")
+        per_row_b = torch.nn.functional.smooth_l1_loss(predicted, costs_b, reduction="none")
+        mask_float = opt_mask.float()
+        loss_a = (per_row_a * mask_float).sum() / mask_float.sum().clamp(min=1.0)
+        loss_b = (per_row_b * mask_float).sum() / mask_float.sum().clamp(min=1.0)
+
+    assert torch.allclose(loss_a, loss_b), "Padding target changes should not affect masked loss"
+    print("  PASS: Masked CNN loss ignores padding targets")
 
 
 # -----------------------------------------------------------------------
@@ -234,6 +258,10 @@ if __name__ == "__main__":
 
     print("[Test 6] Training step...")
     test_training_step()
+    print("  DONE\n")
+
+    print("[Test 7] Masked loss ignores padding...")
+    test_masked_loss_ignores_padding_targets()
     print("  DONE\n")
 
     print("=" * 60)

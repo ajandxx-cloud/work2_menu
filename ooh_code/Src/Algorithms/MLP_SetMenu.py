@@ -119,17 +119,19 @@ class MLP_SetMenu(DSPO_Menu):
         # --- Replace memory buffer with simpler version ---
         self.memory = MLPMemoryBuffer(
             max_len=config.buffer_size,
-            K=self.max_candidates,
+            K=self.candidate_slots,
             device=config.device,
         )
 
         # --- Episode accumulation buffers ---
         self.episode_option_features = []
         self.episode_option_mask = []
+        self.episode_candidate_costs = []
 
         # --- Per-step storage (set in build_menu_candidates, consumed in update) ---
         self._current_option_features = None
         self._current_option_mask = None
+        self._current_candidate_costs = None
 
         # --- Move MLP to device ---
         self.init()
@@ -152,8 +154,8 @@ class MLP_SetMenu(DSPO_Menu):
         theta = self._theta(state[3])
         mltplr = self.cost_multiplier
         pps = self._candidate_parcelpoints(state)
-        # Cap PP candidates so total (home + PPs) fits within max_candidates
-        pps = pps[: self.max_candidates - 1]
+        # Public max_candidates is meeting-point K; tensors add one home slot.
+        pps = pps[: self.max_candidates]
         cur_feat = self.get_feature_rep_infer(state[1]["fleet"])
 
         # --- ETA/IVT from inherited CNN_2d ---
@@ -176,6 +178,7 @@ class MLP_SetMenu(DSPO_Menu):
         if training:
             self._current_option_features = option_features.clone()
             self._current_option_mask = option_mask.clone()
+            self._current_candidate_costs = self.build_candidate_cost_labels(state, pps, customer)
 
         # --- Build home candidate ---
         home_insertion = self.cheapestInsertionCosts(customer.home, state[1])
@@ -352,12 +355,14 @@ class MLP_SetMenu(DSPO_Menu):
             if self._current_option_features is not None:
                 self.episode_option_features.append(self._current_option_features)
                 self.episode_option_mask.append(self._current_option_mask)
+                self.episode_candidate_costs.append(self._current_candidate_costs)
             else:
                 pps = self._candidate_parcelpoints(state)
-                pps = pps[: self.max_candidates - 1]
+                pps = pps[: self.max_candidates]
                 opt_feat, opt_mask = self.build_option_features(state, pps, state[0])
                 self.episode_option_features.append(opt_feat)
                 self.episode_option_mask.append(opt_mask)
+                self.episode_candidate_costs.append(self.build_candidate_cost_labels(state, pps, state[0]))
 
             # Maintain time_targets and parent's feature accumulation for CNN_2d
             selected_offer = getattr(self.config.env, "last_selected_offer", None)
@@ -388,9 +393,12 @@ class MLP_SetMenu(DSPO_Menu):
 
             for idx in range(max_count):
                 true_cost_val = float(target[idx][1]) + float(penalties[idx])
-                true_costs = torch.full(
-                    (self.max_candidates,), float(true_cost_val), dtype=float32,
-                )
+                if idx < len(self.episode_candidate_costs) and self.episode_candidate_costs[idx] is not None:
+                    true_costs = self.episode_candidate_costs[idx].clone()
+                else:
+                    true_costs = torch.full(
+                        (self.candidate_slots,), float(true_cost_val), dtype=float32, device=self.device,
+                    )
                 self.memory.add(
                     opt_feat=self.episode_option_features[idx],
                     opt_mask=self.episode_option_mask[idx],
@@ -400,6 +408,7 @@ class MLP_SetMenu(DSPO_Menu):
         # Reset episode buffers
         self.episode_option_features = []
         self.episode_option_mask = []
+        self.episode_candidate_costs = []
         self.features = np.empty((0, self.n_layers * self.grid_dim * self.grid_dim))
         self.cap_features = np.empty((0, self.aux_dim))
         self.time_targets = np.empty((0, 2))
@@ -418,10 +427,13 @@ class MLP_SetMenu(DSPO_Menu):
     # ------------------------------------------------------------------
 
     def _mlp_update(self, opt_feat, opt_mask, costs):
-        """Single training step: forward MLPMenuNet + Huber loss + backward."""
+        """Single training step: forward MLPMenuNet + mask-aware Huber loss + backward."""
         self.optimizer.zero_grad()
         predicted = self.mlp_model(opt_feat, opt_mask)  # [B, K]
-        loss = self.criterion(predicted, costs)
+        per_row = torch.nn.functional.smooth_l1_loss(predicted, costs, reduction="none")
+        mask_float = opt_mask.float()
+        n_valid = mask_float.sum().clamp(min=1.0)
+        loss = (per_row * mask_float).sum() / n_valid
         loss.backward()
         self.optimizer.step()
         return loss.item()
@@ -464,8 +476,10 @@ class MLP_SetMenu(DSPO_Menu):
         super().reset()
         self.episode_option_features = []
         self.episode_option_mask = []
+        self.episode_candidate_costs = []
         self._current_option_features = None
         self._current_option_mask = None
+        self._current_candidate_costs = None
 
     # ------------------------------------------------------------------
     # Internal helpers

@@ -2,6 +2,7 @@ name: work2_outside_option_robustness
 title: Work 2 Outside-Option Robustness
 type: policy_compare
 study_role: support
+runtime_profile: diagnostic_gap_closure
 robustness_dimension: outside_option_utility
 dimension_parameter: outside_option_util
 dimension_default: 0.0
@@ -10,9 +11,10 @@ dimension_values:
   - 0.0
   - 0.5
 description: >
-  Phase 5 sweep over outside-option utility around the Phase 4 baseline. K=10,
+  Phase 5 diagnostic gap-closure sweep over outside-option utility around the Phase 4 baseline. K=10,
   L=3, calibrated MNL/ETA parameters, and home-outside-L semantics are held
-  fixed so this isolates opt-out pressure.
+  fixed so this isolates opt-out pressure. This closure evidence is diagnostic
+  only and cannot support a positive robustness claim by itself.
 reference_tag: oracle_menu_u0
 reference_label: Oracle Menu u0=0.0
 reference_policy: menu_optimization
@@ -25,8 +27,8 @@ base_args:
   log_output: file
   debug: true
   seed: 1234
-  max_episodes: 80
-  eval_episodes: 20
+  max_episodes: 1
+  eval_episodes: 1
   menu_k: 3
   max_candidates: 10
   menu_model: cnn_setmenu
@@ -50,26 +52,6 @@ policies:
     policy: cost_l_heuristic
     args_overrides:
       outside_option_util: -0.5
-  - tag: cnn_menu_um05
-    label: CNN-Menu u0=-0.5
-    policy: top_k_cheapest
-    args_overrides:
-      outside_option_util: -0.5
-  - tag: cnn_setmenu_net_um05
-    label: CNN-SetMenuNet u0=-0.5
-    policy: menu_optimization
-    args_overrides:
-      outside_option_util: -0.5
-      menu_model: cnn_setmenu
-  - tag: oracle_menu_um05
-    label: Oracle Menu u0=-0.5
-    policy: menu_optimization
-    args_overrides:
-      outside_option_util: -0.5
-      menu_model: cnn_setmenu
-      init_theta_cnn: 0.0
-      cool_theta_cnn: 0.0
-      menu_use_oracle_eta: true
   - tag: cost_L_u0
     label: Cost-L heuristic u0=0.0
     policy: cost_l_heuristic
@@ -86,36 +68,16 @@ policies:
     args_overrides:
       outside_option_util: 0.0
       menu_model: cnn_setmenu
-  - tag: oracle_menu_u0
-    label: Oracle Menu u0=0.0
-    policy: menu_optimization
-    args_overrides:
-      outside_option_util: 0.0
-      menu_model: cnn_setmenu
-      init_theta_cnn: 0.0
-      cool_theta_cnn: 0.0
-      menu_use_oracle_eta: true
   - tag: cost_L_up05
     label: Cost-L heuristic u0=0.5
     policy: cost_l_heuristic
     args_overrides:
       outside_option_util: 0.5
-  - tag: cnn_menu_up05
-    label: CNN-Menu u0=0.5
-    policy: top_k_cheapest
-    args_overrides:
-      outside_option_util: 0.5
-  - tag: cnn_setmenu_net_up05
-    label: CNN-SetMenuNet u0=0.5
+  - tag: oracle_menu_u0
+    label: Oracle Menu u0=0.0
     policy: menu_optimization
     args_overrides:
-      outside_option_util: 0.5
-      menu_model: cnn_setmenu
-  - tag: oracle_menu_up05
-    label: Oracle Menu u0=0.5
-    policy: menu_optimization
-    args_overrides:
-      outside_option_util: 0.5
+      outside_option_util: 0.0
       menu_model: cnn_setmenu
       init_theta_cnn: 0.0
       cool_theta_cnn: 0.0

@@ -34,6 +34,8 @@ REQUIRED_LABEL_PREFIXES = [
     "Oracle Menu",
 ]
 
+EXPECTED_RUNTIME_PROFILE = "diagnostic_gap_closure"
+
 
 def _assert(condition, message):
     if not condition:
@@ -84,9 +86,13 @@ def test_study_contracts():
         else:
             _assert(len(dimension_values) >= 3, f"{name} must include at least two non-default values")
 
+        _assert(raw.get("runtime_profile") == EXPECTED_RUNTIME_PROFILE, f"{name} must declare diagnostic gap-closure profile")
+        _assert("diagnostic" in raw.get("description", "").lower(), f"{name} must label closure evidence as diagnostic")
+        _assert("positive" in raw.get("description", "").lower(), f"{name} must reject positive-claim evidence by itself")
+
         base_args = raw.get("base_args", {})
-        _assert(base_args.get("max_episodes") == 80, f"{name} must keep 80 training episodes")
-        _assert(base_args.get("eval_episodes") == 20, f"{name} must keep 20 eval episodes")
+        _assert(0 < base_args.get("max_episodes", 0) <= 4, f"{name} must use a small nonzero training budget")
+        _assert(0 < base_args.get("eval_episodes", 0) <= 2, f"{name} must use a small nonzero eval budget")
         _assert(base_args.get("menu_k") == 3, f"{name} must keep default L=3 in base args")
         _assert(base_args.get("max_candidates") == 10, f"{name} must keep default K=10 in base args")
         _assert(base_args.get("outside_option_util") == 0.0, f"{name} must keep outside option baseline 0.0")
@@ -119,7 +125,7 @@ def main():
     test_required_dimension_values()
     print(
         "PASS work2 robustness manifests: suite + five EXP-07 studies, "
-        "K=10, L=3, outside-option 0.0, Austin cross-instance, 80/20 pilot."
+        "K=10, L=3, outside-option 0.0, Austin cross-instance, diagnostic gap-closure budget."
     )
 
 

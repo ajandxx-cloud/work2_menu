@@ -1,4 +1,5 @@
 from copy import deepcopy
+from copy import deepcopy
 from tempfile import TemporaryDirectory
 from pathlib import Path
 
@@ -86,6 +87,22 @@ def test_tradeoff_mixed_guardrail():
     assert_status("tradeoff", rows, "tradeoff_mixed")
 
 
+def test_high_opt_out_cannot_be_supportive():
+    rows = make_rows(
+        {
+            "CNN-SetMenuNet": {
+                "net_profit": 200.0,
+                "quit_rate": 0.99,
+                "avg_walk": 10.0,
+            }
+        }
+    )
+    result = build_artifacts.classify_work2_pilot_evidence(rows)
+    assert result["status"] == "mixed_inconclusive"
+    assert result["diagnostic_required"] is True
+    assert "opt-out" in result["summary"]
+
+
 def test_mixed_inconclusive_seed_trend():
     rows = make_rows(
         {
@@ -125,6 +142,7 @@ def test_diagnostic_report_contains_required_headings():
     for heading in [
         "## Cost Prediction Error",
         "## Ranking/Menu Selection Error",
+        "## Offer-Level Objective Trace",
         "## Training Budget",
         "## Seed Instability",
     ]:
@@ -137,6 +155,7 @@ def main():
         test_stronger_support,
         test_preliminary_support,
         test_tradeoff_mixed_guardrail,
+        test_high_opt_out_cannot_be_supportive,
         test_mixed_inconclusive_seed_trend,
         test_incomplete_minimum_methods,
         test_supportive_evidence_does_not_require_diagnostic,

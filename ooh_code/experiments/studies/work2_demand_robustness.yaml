@@ -2,6 +2,7 @@ name: work2_demand_robustness
 title: Work 2 Demand Robustness
 type: policy_compare
 study_role: support
+runtime_profile: diagnostic_gap_closure
 robustness_dimension: demand_intensity
 dimension_parameter: max_steps_r
 dimension_default: 700
@@ -10,9 +11,10 @@ dimension_values:
   - 700
   - 910
 description: >
-  Phase 5 sweep over low, baseline, and high demand intensity using max_steps_r.
+  Phase 5 diagnostic gap-closure sweep over low, baseline, and high demand intensity using max_steps_r.
   K=10, L=3, and home-outside-L semantics match the Phase 4 Work2 pilot. Results
-  should be read conservatively because Phase 4 evidence was mixed.
+  should be read conservatively because Phase 4 evidence was mixed. This closure
+  evidence is diagnostic only and cannot support a positive robustness claim by itself.
 reference_tag: oracle_menu_demand10
 reference_label: Oracle Menu demand=1.0x
 reference_policy: menu_optimization
@@ -25,8 +27,8 @@ base_args:
   log_output: file
   debug: true
   seed: 1234
-  max_episodes: 80
-  eval_episodes: 20
+  max_episodes: 1
+  eval_episodes: 1
   menu_k: 3
   max_candidates: 10
   max_steps_r: 700
@@ -51,26 +53,6 @@ policies:
     policy: cost_l_heuristic
     args_overrides:
       max_steps_r: 490
-  - tag: cnn_menu_demand07
-    label: CNN-Menu demand=0.7x
-    policy: top_k_cheapest
-    args_overrides:
-      max_steps_r: 490
-  - tag: cnn_setmenu_net_demand07
-    label: CNN-SetMenuNet demand=0.7x
-    policy: menu_optimization
-    args_overrides:
-      max_steps_r: 490
-      menu_model: cnn_setmenu
-  - tag: oracle_menu_demand07
-    label: Oracle Menu demand=0.7x
-    policy: menu_optimization
-    args_overrides:
-      max_steps_r: 490
-      menu_model: cnn_setmenu
-      init_theta_cnn: 0.0
-      cool_theta_cnn: 0.0
-      menu_use_oracle_eta: true
   - tag: cost_L_demand10
     label: Cost-L heuristic demand=1.0x
     policy: cost_l_heuristic
@@ -87,36 +69,16 @@ policies:
     args_overrides:
       max_steps_r: 700
       menu_model: cnn_setmenu
-  - tag: oracle_menu_demand10
-    label: Oracle Menu demand=1.0x
-    policy: menu_optimization
-    args_overrides:
-      max_steps_r: 700
-      menu_model: cnn_setmenu
-      init_theta_cnn: 0.0
-      cool_theta_cnn: 0.0
-      menu_use_oracle_eta: true
   - tag: cost_L_demand13
     label: Cost-L heuristic demand=1.3x
     policy: cost_l_heuristic
     args_overrides:
       max_steps_r: 910
-  - tag: cnn_menu_demand13
-    label: CNN-Menu demand=1.3x
-    policy: top_k_cheapest
-    args_overrides:
-      max_steps_r: 910
-  - tag: cnn_setmenu_net_demand13
-    label: CNN-SetMenuNet demand=1.3x
+  - tag: oracle_menu_demand10
+    label: Oracle Menu demand=1.0x
     policy: menu_optimization
     args_overrides:
-      max_steps_r: 910
-      menu_model: cnn_setmenu
-  - tag: oracle_menu_demand13
-    label: Oracle Menu demand=1.3x
-    policy: menu_optimization
-    args_overrides:
-      max_steps_r: 910
+      max_steps_r: 700
       menu_model: cnn_setmenu
       init_theta_cnn: 0.0
       cool_theta_cnn: 0.0

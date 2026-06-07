@@ -16,28 +16,30 @@ from Src.Utils.option_features import normalize_features, build_option_tensor
 
 
 def test_shape_k10():
-    """K=10 candidates produce tensor [10, 6] and mask [10]."""
+    """Public K=10 meeting points plus home produce tensor [11, 6]."""
     raw = {
-        "walk_distance": np.random.rand(10) * 1000,
-        "predicted_ivt": np.random.rand(10) * 600,
-        "remaining_capacity": np.random.randint(1, 25, size=10).astype(float),
-        "distance_to_destination": np.random.rand(10) * 600,
-        "option_type": np.array([1.0] + [0.0] * 9),
-        "arrival_time": np.random.rand(10) * 3600 + 27000,
+        "walk_distance": np.random.rand(11) * 1000,
+        "predicted_ivt": np.random.rand(11) * 600,
+        "remaining_capacity": np.random.randint(1, 25, size=11).astype(float),
+        "distance_to_destination": np.random.rand(11) * 600,
+        "option_type": np.array([1.0] + [0.0] * 10),
+        "arrival_time": np.random.rand(11) * 3600 + 27000,
     }
     normed = normalize_features(raw, time_scale=3600.0, target_time=30600.0)
-    features, mask = build_option_tensor(normed, max_k=10, device=torch.device("cpu"))
+    features, mask = build_option_tensor(normed, max_k=11, device=torch.device("cpu"))
 
-    assert features.shape == (10, 6), f"Expected (10, 6), got {features.shape}"
-    assert mask.shape == (10,), f"Expected (10,), got {mask.shape}"
-    assert mask.all(), "All 10 candidates should be masked True"
+    assert features.shape == (11, 6), f"Expected (11, 6), got {features.shape}"
+    assert mask.shape == (11,), f"Expected (11,), got {mask.shape}"
+    assert mask.all(), "Home plus all 10 meeting points should be masked True"
+    assert features[0, 4].item() == 1.0, "Home row should be index 0"
+    assert torch.all(features[1:, 4] == 0.0), "Meeting-point rows should have option_type 0"
     assert features.dtype == torch.float32
     assert mask.dtype == torch.bool
     return True
 
 
 def test_padding():
-    """K=5 padded to max_k=10 has correct mask."""
+    """Home plus four meeting points padded to candidate_slots=11 has correct mask."""
     raw = {
         "walk_distance": np.random.rand(5) * 1000,
         "predicted_ivt": np.random.rand(5) * 600,
@@ -47,9 +49,9 @@ def test_padding():
         "arrival_time": np.random.rand(5) * 3600 + 27000,
     }
     normed = normalize_features(raw, time_scale=3600.0, target_time=30600.0)
-    features, mask = build_option_tensor(normed, max_k=10, device=torch.device("cpu"))
+    features, mask = build_option_tensor(normed, max_k=11, device=torch.device("cpu"))
 
-    assert features.shape == (10, 6), f"Expected (10, 6), got {features.shape}"
+    assert features.shape == (11, 6), f"Expected (11, 6), got {features.shape}"
     assert mask[:5].all(), "First 5 should be True"
     assert not mask[5:].any(), "Last 5 should be False (padding)"
     assert (features[5:] == 0).all(), "Padding rows should be zero"
@@ -123,13 +125,35 @@ def test_home_first():
     return True
 
 
+def test_home_only_candidate_slots():
+    """No feasible meeting points still yields valid home-only [K+1, 6] tensor."""
+    raw = {
+        "walk_distance": np.array([0.0]),
+        "predicted_ivt": np.array([0.0]),
+        "remaining_capacity": np.array([1000000.0]),
+        "distance_to_destination": np.array([400.0]),
+        "option_type": np.array([1.0]),
+        "arrival_time": np.array([30300.0]),
+    }
+    normed = normalize_features(raw, time_scale=3600.0, target_time=30600.0)
+    features, mask = build_option_tensor(normed, max_k=11, device=torch.device("cpu"))
+
+    assert features.shape == (11, 6), f"Expected (11, 6), got {features.shape}"
+    assert mask[0].item() is True, "Home row should be valid"
+    assert not mask[1:].any(), "Meeting-point/padding rows should be masked False"
+    assert features[0, 4].item() == 1.0, "Home row should have option_type 1"
+    assert torch.all(features[1:] == 0), "Padding rows should remain zero"
+    return True
+
+
 if __name__ == "__main__":
     tests = [
-        ("Shape K=10", test_shape_k10),
+        ("Shape K=10 plus home", test_shape_k10),
         ("Padding K=5→10", test_padding),
         ("Normalization", test_normalization),
         ("NaN handling", test_nan_handling),
         ("Home first", test_home_first),
+        ("Home-only K=10", test_home_only_candidate_slots),
     ]
 
     passed = 0

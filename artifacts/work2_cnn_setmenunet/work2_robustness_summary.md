@@ -1,6 +1,6 @@
 # Work2 Robustness Summary
 
-**Generated:** 2026-06-02T21:01:55Z
+**Generated:** 2026-06-04T07:18:25Z
 
 ## Evidence Contract
 
@@ -17,11 +17,11 @@
 
 | Dimension | Status | Rows | Settings | CNN net profit | Cost-L net profit | CNN-Menu net profit | Menu regret | Top-L overlap | Quit rate | Avg walk |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
-| menu_size | Not run | 0 | -- | -- | -- | -- | -- | -- | -- | -- |
-| candidate_pool | Not run | 0 | -- | -- | -- | -- | -- | -- | -- | -- |
-| demand | Not run | 0 | -- | -- | -- | -- | -- | -- | -- | -- |
-| outside_option | Not run | 0 | -- | -- | -- | -- | -- | -- | -- | -- |
-| cross_instance | Not run | 0 | -- | -- | -- | -- | -- | -- | -- | -- |
+| menu_size | Degraded | 7 | 2, 3, 5 | -5197.413 | -5063.042 | -5093.929 | 36.036 | 1.000 | 0.380 | 1662.674 |
+| candidate_pool | Degraded | 6 | 10, 15, 6 | -5197.413 | -5163.568 | -5092.909 | 36.036 | 1.000 | 0.380 | 1662.674 |
+| demand | Degraded | 6 | 490, 700, 910 | -5197.413 | -5123.067 | -5093.929 | 36.036 | 1.000 | 0.380 | 1662.674 |
+| outside_option | Degraded | 6 | -0.5, 0.0, 0.5 | -5197.413 | -5084.846 | -5092.909 | 36.036 | 1.000 | 0.380 | 1662.674 |
+| cross_instance | Conditional/mixed | 4 | Austin | -1635.683 | -1673.845 | -1645.343 | 34.100 | 1.000 | 0.118 | 366.013 |
 
 ## Conservative Conclusion
 
@@ -31,13 +31,9 @@
 
 ## Dimension Notes
 
-- **menu_size**: menu_size robustness has no member study summary yet.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **candidate_pool**: candidate_pool robustness has no member study summary yet.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **demand**: demand robustness has no member study summary yet.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **outside_option**: outside_option robustness has no member study summary yet.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **cross_instance**: cross_instance robustness has no member study summary yet.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
+- **menu_size**: menu_size robustness degrades against core comparators or guardrails.
+- **candidate_pool**: candidate_pool robustness degrades against core comparators or guardrails.
+- **demand**: demand robustness degrades against core comparators or guardrails.
+- **outside_option**: outside_option robustness degrades against core comparators or guardrails.
+- **cross_instance**: cross_instance robustness has mixed primary or menu-quality evidence.
+  - Mixed or weak dimensions cannot be converted into supportive wording.

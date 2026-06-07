@@ -247,6 +247,14 @@ def variant_display_label(row):
         return "CNN-SetMenuNet"
     if tag == "oracle_menu":
         return "Oracle Menu"
+    if tag == "cost_oracle":
+        return "Cost Oracle"
+    if tag == "expected_profit_enumeration":
+        return "Expected-Profit Enumeration"
+    if tag == "service_constrained_expected_profit":
+        return "Service-Constrained Expected-Profit"
+    if tag == "profit_oracle":
+        return "Profit Oracle"
 
     lowered = label.lower()
     normalized = {
@@ -1457,7 +1465,11 @@ def build_results_summary(snapshot):
 
 
 _WORK2_METHOD_ORDER = [
+    "profit_oracle",
+    "expected_profit_enumeration",
+    "service_constrained_expected_profit",
     "oracle_menu",
+    "cost_oracle",
     "cnn_setmenu_net",
     "setmenu_net",
     "mlp_menu",
@@ -1477,7 +1489,14 @@ _WORK2_STANDARD_METHODS = {
     "mlp_menu": "MLP-Menu",
     "setmenu_net": "SetMenuNet",
     "cnn_setmenu_net": "CNN-SetMenuNet",
+    "cnn_setmenu_net_current": "CNN-SetMenuNet current",
+    "cnn_setmenu_net_system_profit": "CNN-SetMenuNet",
+    "cnn_setmenu_net_system_profit_route025": "CNN-SetMenuNet system route=0.25",
     "oracle_menu": "Oracle Menu",
+    "cost_oracle": "Cost Oracle",
+    "expected_profit_enumeration": "Expected-Profit Enumeration",
+    "service_constrained_expected_profit": "Service-Constrained Expected-Profit",
+    "profit_oracle": "Profit Oracle",
 }
 
 _WORK2_REQUIRED_SMOKE_METHODS = [
@@ -1486,6 +1505,9 @@ _WORK2_REQUIRED_SMOKE_METHODS = [
     "CNN-Menu",
     "CNN-SetMenuNet",
     "Oracle Menu",
+    "Expected-Profit Enumeration",
+    "Service-Constrained Expected-Profit",
+    "Profit Oracle",
 ]
 
 _WORK2_PHASE4_CORE_METHODS = [
@@ -1497,9 +1519,26 @@ _WORK2_PHASE4_CORE_METHODS = [
     "Oracle Menu",
 ]
 
+_WORK2_FORMAL_CORE_METHODS = [
+    "Nearest-L",
+    "Cost-L heuristic",
+    "CNN-Menu",
+    "MLP-Menu",
+    "SetMenuNet",
+    "CNN-SetMenuNet",
+    "Oracle Menu",
+]
+
 _WORK2_PHASE4_MINIMUM_METHODS = [
     "CNN-SetMenuNet",
     "Cost-L heuristic",
+    "Oracle Menu",
+]
+
+_WORK2_FORMAL_MINIMUM_METHODS = [
+    "CNN-SetMenuNet",
+    "Cost-L heuristic",
+    "SetMenuNet",
     "Oracle Menu",
 ]
 
@@ -1520,13 +1559,25 @@ _WORK2_STANDARD_COLUMNS = [
     "demand_setting",
     "outside_option_util",
     "net_profit",
+    "adjusted_profit",
+    "service_constrained_net_profit",
+    "service_guardrail_pass",
+    "service_guardrail_violation",
+    "service_quit_rate_guardrail",
+    "quit_penalty_total",
     "total_cost",
     "quit_rate",
+    "opt_out_count",
+    "meeting_point_share",
     "avg_walk",
     "menu_regret",
     "top_L_overlap",
     "spearman_cost_ranking",
     "runtime_per_decision",
+    "exact_enumerated_menu_count",
+    "service_constrained_fallback_rate",
+    "service_constrained_predicted_opt_out",
+    "service_constrained_adjusted_profit",
     "train_episodes",
     "test_episodes",
     "candidate_pool_size",
@@ -1684,20 +1735,32 @@ def _work2_standard_row(row, manifest):
         "demand_setting": _first_present(row.get("max_steps_r"), base_args.get("max_steps_r")),
         "outside_option_util": _first_present(row.get("outside_option_util"), base_args.get("outside_option_util")),
         "net_profit": row.get("net_profit"),
+        "adjusted_profit": row.get("adjusted_profit"),
+        "service_constrained_net_profit": row.get("service_constrained_net_profit"),
+        "service_guardrail_pass": row.get("service_guardrail_pass"),
+        "service_guardrail_violation": row.get("service_guardrail_violation"),
+        "service_quit_rate_guardrail": row.get("service_quit_rate_guardrail"),
+        "quit_penalty_total": row.get("quit_penalty_total"),
         "total_cost": row.get("total_cost"),
         "quit_rate": row.get("opt_out_rate"),
+        "opt_out_count": row.get("opt_out_count"),
+        "meeting_point_share": _first_present(row.get("meeting_point_share"), row.get("mp_share")),
         "avg_walk": row.get("avg_walk_distance"),
         "menu_regret": row.get("menu_regret"),
         "top_L_overlap": row.get("top_L_overlap"),
         "spearman_cost_ranking": row.get("spearman_cost_ranking"),
         "runtime_per_decision": _first_present(row.get("avg_step_time"), row.get("avg_menu_build_time")),
+        "exact_enumerated_menu_count": row.get("avg_exact_enumerated_menu_count"),
+        "service_constrained_fallback_rate": row.get("service_constrained_fallback_rate"),
+        "service_constrained_predicted_opt_out": row.get("avg_service_constrained_predicted_opt_out"),
+        "service_constrained_adjusted_profit": row.get("avg_service_constrained_adjusted_profit"),
         "train_episodes": base_args.get("max_episodes"),
         "test_episodes": _first_present(row.get("episodes"), base_args.get("eval_episodes")),
         "candidate_pool_size": k_value,
         "displayed_meeting_points": l_value,
         "home_always_shown": True,
-        "status": "ok",
-        "notes": "Phase 3 contract row: K counts meeting-point candidates, L counts displayed meeting points, home is always shown.",
+        "status": "guardrail_violation" if row.get("service_guardrail_violation") else "ok",
+        "notes": "Phase 2 objective row: raw profit is separated from adjusted and service-constrained profit; K/L/home semantics preserved.",
     }
 
 
@@ -1772,17 +1835,29 @@ def _aggregate_work2_methods(rows):
                 "seed_count": len({item.get("seed") for item in items}),
                 "net_profit_mean": _mean([item.get("net_profit") for item in items]),
                 "net_profit_std": _std([item.get("net_profit") for item in items]),
+                "adjusted_profit_mean": _mean([item.get("adjusted_profit") for item in items]),
+                "service_constrained_net_profit_mean": _mean([item.get("service_constrained_net_profit") for item in items]),
+                "service_guardrail_pass_mean": _mean([item.get("service_guardrail_pass") for item in items]),
+                "service_guardrail_violation_mean": _mean([item.get("service_guardrail_violation") for item in items]),
+                "service_quit_rate_guardrail_mean": _mean([item.get("service_quit_rate_guardrail") for item in items]),
+                "quit_penalty_total_mean": _mean([item.get("quit_penalty_total") for item in items]),
                 "total_cost_mean": _mean([item.get("total_cost") for item in items]),
                 "quit_rate_mean": _mean([item.get("quit_rate") for item in items]),
+                "opt_out_count_mean": _mean([item.get("opt_out_count") for item in items]),
+                "meeting_point_share_mean": _mean([item.get("meeting_point_share") for item in items]),
                 "avg_walk_mean": _mean([item.get("avg_walk") for item in items]),
-                "menu_regret_mean": _mean([item.get("menu_regret") for item in items]),
-                "top_L_overlap_mean": _mean([item.get("top_L_overlap") for item in items]),
-                "spearman_cost_ranking_mean": _mean([item.get("spearman_cost_ranking") for item in items]),
-                "runtime_per_decision_mean": _mean([item.get("runtime_per_decision") for item in items]),
-                "rows": items,
-            }
+            "menu_regret_mean": _mean([item.get("menu_regret") for item in items]),
+            "top_L_overlap_mean": _mean([item.get("top_L_overlap") for item in items]),
+            "spearman_cost_ranking_mean": _mean([item.get("spearman_cost_ranking") for item in items]),
+            "runtime_per_decision_mean": _mean([item.get("runtime_per_decision") for item in items]),
+            "offer_trace_count_mean": _mean([item.get("offer_trace_count") for item in items]),
+            "avg_offer_system_minus_menu_cost_mean": _mean([item.get("avg_offer_system_minus_menu_cost") for item in items]),
+            "avg_offer_choice_probability_mean": _mean([item.get("avg_offer_choice_probability") for item in items]),
+            "avg_selected_offer_expected_profit_mean": _mean([item.get("avg_selected_offer_expected_profit") for item in items]),
+            "rows": items,
+        }
         )
-    method_order = {method: idx for idx, method in enumerate(_WORK2_PHASE4_CORE_METHODS)}
+    method_order = {method: idx for idx, method in enumerate(_WORK2_FORMAL_CORE_METHODS)}
     return sorted(aggregates, key=lambda row: (method_order.get(row["method"], 99), row["method"]))
 
 
@@ -1801,6 +1876,24 @@ def _aggregate_work2_source_methods(rows):
             "menu_regret_mean": _mean([item.get("menu_regret") for item in items]),
             "net_profit_mean": _mean([item.get("net_profit") for item in items]),
             "net_profit_std": _std([item.get("net_profit") for item in items]),
+            "quit_rate_mean": _mean([item.get("opt_out_rate") for item in items]),
+            "adjusted_profit_mean": _mean([item.get("adjusted_profit") for item in items]),
+            "service_constrained_net_profit_mean": _mean([item.get("service_constrained_net_profit") for item in items]),
+            "service_guardrail_pass_mean": _mean([item.get("service_guardrail_pass") for item in items]),
+            "service_guardrail_violation_mean": _mean([item.get("service_guardrail_violation") for item in items]),
+            "service_quit_rate_guardrail_mean": _mean([item.get("service_quit_rate_guardrail") for item in items]),
+            "quit_penalty_total_mean": _mean([item.get("quit_penalty_total") for item in items]),
+            "opt_out_count_mean": _mean([item.get("opt_out_count") for item in items]),
+            "offer_trace_count_mean": _mean([item.get("offer_trace_count") for item in items]),
+            "avg_offer_predicted_cost_mean": _mean([item.get("avg_offer_predicted_cost") for item in items]),
+            "avg_offer_menu_eval_cost_mean": _mean([item.get("avg_offer_menu_eval_cost") for item in items]),
+            "avg_offer_system_eval_cost_mean": _mean([item.get("avg_offer_system_eval_cost") for item in items]),
+            "avg_offer_system_minus_menu_cost_mean": _mean([item.get("avg_offer_system_minus_menu_cost") for item in items]),
+            "avg_offer_price_mean": _mean([item.get("avg_offer_price") for item in items]),
+            "avg_offer_choice_probability_mean": _mean([item.get("avg_offer_choice_probability") for item in items]),
+            "avg_offer_expected_profit_mean": _mean([item.get("avg_offer_expected_profit") for item in items]),
+            "avg_selected_offer_expected_profit_mean": _mean([item.get("avg_selected_offer_expected_profit") for item in items]),
+            "avg_unselected_offer_expected_profit_mean": _mean([item.get("avg_unselected_offer_expected_profit") for item in items]),
             "rows": items,
         }
     return aggregates
@@ -1810,6 +1903,11 @@ def _work2_minimum_missing(methods):
     missing = [method for method in _WORK2_PHASE4_MINIMUM_METHODS if method not in methods]
     if "CNN-Menu" not in methods and "MLP-Menu" not in methods:
         missing.append("CNN-Menu or MLP-Menu")
+    return missing
+
+
+def _work2_formal_missing(methods):
+    missing = [method for method in _WORK2_FORMAL_CORE_METHODS if method not in methods]
     return missing
 
 
@@ -1918,6 +2016,15 @@ def classify_work2_pilot_evidence(rows):
         )
 
     cnn_aggregate = aggregate_by_method["CNN-SetMenuNet"]
+    cnn_quit_rate = _float_or_none(cnn_aggregate.get("quit_rate_mean"))
+    if cnn_quit_rate is not None and cnn_quit_rate >= 0.95:
+        return _classification_payload(
+            "mixed_inconclusive",
+            "Mixed/inconclusive pilot evidence",
+            "CNN-SetMenuNet net_profit is not supportive because opt-out/quit rate is degenerate.",
+            True,
+            caveats=["High opt-out evidence cannot be converted into supportive paper wording."],
+        )
     comparators = [
         method
         for method in ["Cost-L heuristic", "CNN-Menu", "MLP-Menu"]
@@ -2020,6 +2127,49 @@ def classify_work2_pilot_evidence(rows):
     )
 
 
+def classify_work2_formal_evidence(rows):
+    aggregates = _aggregate_work2_methods(rows)
+    methods = {row["method"] for row in aggregates}
+    missing = _work2_formal_missing(methods)
+    if missing:
+        return _classification_payload(
+            "incomplete",
+            "Incomplete formal evidence",
+            "Required Phase 6 formal methods are missing, so formal evidence cannot support a conclusion.",
+            True,
+            caveats=[f"Missing formal methods: {', '.join(missing)}."],
+        )
+    classification = classify_work2_pilot_evidence(rows)
+    if classification["status"] == "mixed_inconclusive":
+        classification = dict(classification)
+        classification["label"] = "Mixed/inconclusive formal evidence"
+        classification["summary"] = classification["summary"].replace("in this pilot", "in the formal RC evidence")
+        classification["caveats"] = [
+            item.replace("Phase 4 pilot", "Phase 6 formal")
+            for item in classification.get("caveats", [])
+        ]
+    return classification
+
+
+def _is_work2_formal_study(study_name):
+    return study_name in {"work2_formal_main", "work2_remediation_formal"}
+
+
+def _is_work2_pilot_study(study_name):
+    return study_name in {"work2_main", "work2_remediation_pilot"}
+
+
+def _is_work2_standard_study(study_name):
+    return study_name in {
+        "smoke_work2_main",
+        "work2_main",
+        "work2_formal_main",
+        "work2_remediation_smoke",
+        "work2_remediation_pilot",
+        "work2_remediation_formal",
+    }
+
+
 def _phase2_readiness(method_rows):
     methods = {row["method"] for row in method_rows}
     missing = [method for method in _WORK2_REQUIRED_SMOKE_METHODS if method not in methods]
@@ -2074,21 +2224,23 @@ def _write_work2_smoke_summary(path, study_name, rows, csv_path, manifest):
         "- K reports meeting-point candidate count and excludes home.",
         "- L reports displayed meeting-point count and excludes home.",
         "- Home is always shown outside L for learned, heuristic, and oracle rows.",
-        "- Oracle Menu is an upper/reference benchmark using true candidate costs, not deployable evidence.",
+        "- The existing Oracle Menu row is a diagnostic reference; Phase 2 separates Cost Oracle from Profit Oracle before any upper-bound wording.",
         "- Nearest-L and Cost-L use their own ranking rules but share the same candidate pool and menu semantics.",
         "",
         "## Smoke Metrics",
         "",
-        "| Method | Net profit | Total cost | Quit rate | Avg walk | Menu regret | Top-L overlap |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Method | Net profit | Adjusted profit | Service profit | Quit rate | Guardrail | Avg walk | Menu regret | Top-L overlap |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ])
     for row in rows:
         lines.append(
-            "| {method} | {net_profit} | {total_cost} | {quit_rate} | {avg_walk} | {menu_regret} | {top_l} |".format(
+            "| {method} | {net_profit} | {adjusted_profit} | {service_profit} | {quit_rate} | {guardrail} | {avg_walk} | {menu_regret} | {top_l} |".format(
                 method=row["method"],
                 net_profit=format_metric(row.get("net_profit")),
-                total_cost=format_metric(row.get("total_cost")),
+                adjusted_profit=format_metric(row.get("adjusted_profit")),
+                service_profit=format_metric(row.get("service_constrained_net_profit")),
                 quit_rate=format_metric(row.get("quit_rate")),
+                guardrail="pass" if row.get("service_guardrail_pass") else "fail",
                 avg_walk=format_metric(row.get("avg_walk")),
                 menu_regret=format_metric(row.get("menu_regret")),
                 top_l=format_metric(row.get("top_L_overlap")),
@@ -2164,6 +2316,14 @@ def _diagnostic_metric_sentence(aggregate, labels):
 
 def _write_work2_diagnostic_report(path, study_name, standard_rows, source_rows, manifest, classification):
     base_args = manifest.get("base_args", {}) if manifest is not None else {}
+    is_formal = _is_work2_formal_study(study_name)
+    is_smoke = "smoke" in study_name
+    if is_formal:
+        evidence_label = "Formal"
+    elif is_smoke:
+        evidence_label = "Smoke"
+    else:
+        evidence_label = "Pilot"
     standard_aggregates = {row["method"]: row for row in _aggregate_work2_methods(standard_rows)}
     source_aggregates = _aggregate_work2_source_methods(source_rows)
     cnn_source = source_aggregates.get("CNN-SetMenuNet")
@@ -2180,6 +2340,32 @@ def _write_work2_diagnostic_report(path, study_name, standard_rows, source_rows,
         f"- Evidence gate: {classification['label']}",
         f"- Gate detail: {classification['summary']}",
         f"- Comparator: `{comparator or '--'}`",
+        f"- Evidence scope: {evidence_label} RC evidence; robustness evidence is reported separately.",
+        f"- Service guardrail: quit_rate <= `{base_args.get('service_quit_rate_guardrail', 0.4)}`.",
+        f"- Quit penalty for adjusted profit: `{base_args.get('service_quit_penalty', 100.0)}` per opt-out request.",
+        "",
+        "## Service-Constrained Objective Diagnostics",
+        "",
+        "- CNN-SetMenuNet: "
+        + _diagnostic_metric_sentence(
+            cnn_source,
+            [
+                ("raw net profit", "net_profit_mean"),
+                ("adjusted profit", "adjusted_profit_mean"),
+                ("service-constrained profit", "service_constrained_net_profit_mean"),
+                ("quit rate", "quit_rate_mean"),
+                ("guardrail violation rate", "service_guardrail_violation_mean"),
+            ],
+        ),
+        "- A row with empty service-constrained profit violated the quit-rate guardrail and should not be treated as supportive profit evidence.",
+        "- High-quit policies that improve raw net_profit must be discussed as diagnostic failures unless adjusted/service-constrained profit remains competitive.",
+        "",
+        "## Oracle Taxonomy",
+        "",
+        "- Cost Oracle: selects low true insertion-cost menus; useful for cost-ranking diagnostics only.",
+        "- Profit Oracle: should select high expected-profit menus under choice, pricing, route-cost, and opt-out objective; this remains Phase 3 scope unless explicitly implemented in the current manifest.",
+        "- Realized Oracle: ex-post upper bound using realized choices/routes; not implemented in v1 unless a later phase adds it.",
+        "- Do not describe the existing `Oracle Menu` row as a profit upper bound unless the manifest explicitly maps it to Profit Oracle semantics.",
         "",
         "## Cost Prediction Error",
         "",
@@ -2235,12 +2421,55 @@ def _write_work2_diagnostic_report(path, study_name, standard_rows, source_rows,
     lines.extend([
         "- Needs follow-up if CNN-SetMenuNet improves ranking metrics but still loses net_profit, because pricing or realized route-cost interactions may dominate menu quality.",
         "",
+        "## Offer-Level Objective Trace",
+        "",
+        "- CNN-SetMenuNet: "
+        + _diagnostic_metric_sentence(
+            cnn_source,
+            [
+                ("offer trace rows", "offer_trace_count_mean"),
+                ("system-minus-menu cost", "avg_offer_system_minus_menu_cost_mean"),
+                ("choice probability", "avg_offer_choice_probability_mean"),
+                ("selected expected profit", "avg_selected_offer_expected_profit_mean"),
+            ],
+        ),
+        "- If system-minus-menu cost is material while selected expected profit is weak, the menu objective may be misaligned with realized net_profit.",
+        "- Remediation runs should compare `menu_objective_mode=current` with `menu_objective_mode=system_profit` using unchanged seeds and comparators.",
+        "",
+        "## Candidate Feature Insufficiency",
+        "",
+        "- Candidate feature sufficiency cannot be proven from aggregate rows alone.",
+        "- Needs follow-up if Top-L overlap and menu regret remain weak despite stable training budget and paired candidate pools.",
+        "- Phase 3 feature contracts must remain intact: K counts meeting-point candidates, L counts displayed meeting points, and home is always shown outside L.",
+        "",
         "## Training Budget",
         "",
-        f"- Pilot training episodes: `{base_args.get('max_episodes', '--')}`.",
-        f"- Pilot test episodes per seed: `{base_args.get('eval_episodes', '--')}`.",
+        f"- {evidence_label} training episodes: `{base_args.get('max_episodes', '--')}`.",
+        f"- {evidence_label} test episodes per seed: `{base_args.get('eval_episodes', '--')}`.",
         f"- Observed seeds: `{_format_seed_list(standard_rows)}`.",
-        "- Formal evidence remains later-phase scope; Phase 4 should not expand seeds automatically unless diagnostics identify a fixable training-budget issue.",
+        (
+            "- A later 300/50 rerun is justified only if this diagnostic implicates training budget "
+            "or seed instability; negative results alone do not trigger automatic escalation."
+            if is_formal
+            else (
+                "- Smoke evidence validates the remediation path only; pilot remains the next preregistered gate."
+                if is_smoke
+                else "- Formal remediation evidence remains later scope; pilot should not expand seeds automatically unless diagnostics identify a fixable training-budget issue."
+            )
+        ),
+        "",
+        "## MNL/Outside-Option Sensitivity",
+        "",
+        f"- Outside-option utility: `{base_args.get('outside_option_util', '--')}`.",
+        f"- Base utility: `{base_args.get('base_util', '--')}`.",
+        f"- Incentive sensitivity: `{base_args.get('incentive_sens', '--')}`.",
+        "- If quit_rate worsens while ranking metrics improve, passenger-choice sensitivity may dominate menu quality.",
+        "",
+        "## Route-Cost Realization Gap",
+        "",
+        "- Route-cost realization cannot be isolated from aggregate rows alone.",
+        "- Needs follow-up if predicted ranking is reasonable but realized net_profit or total_cost degrades.",
+        "- Do not modify HGS/Hygese route-cost core logic inside this diagnostic phase.",
         "",
         "## Seed Instability",
         "",
@@ -2255,9 +2484,19 @@ def _write_work2_diagnostic_report(path, study_name, standard_rows, source_rows,
 
     lines.extend([
         "",
+        "## Instance/Robustness Instability",
+        "",
+        "- RC formal evidence and robustness evidence are separate claims.",
+        "- Before making any robustness claim, rebuild and inspect `work2_robustness` artifacts.",
+        "- If robustness remains degraded or mixed, use diagnostic-only robustness wording even when RC formal evidence is positive.",
+        "",
         "## Recommended Next Step",
         "",
-        "- Do not alter result rows manually. If diagnostics point to prediction or ranking error, tune that component and rerun the same manifest; if instability dominates, report Phase 4 as mixed and reserve stronger claims for later robustness/formal phases.",
+        (
+            "- Do not alter result rows manually. If diagnostics point to prediction, ranking, feature, MNL, route-cost, or seed instability, open a follow-up remediation phase or approved 300/50 escalation; do not run remediation automatically inside Phase 6."
+            if is_formal
+            else "- Do not alter result rows manually. If diagnostics point to prediction or ranking error, tune that component and rerun the same manifest; if instability dominates, report the current evidence as mixed and reserve stronger claims for later preregistered phases."
+        ),
         "",
     ])
     write_text(path, "\n".join(lines))
@@ -2300,9 +2539,12 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
     cnn_aggregate = aggregate_by_method.get("CNN-SetMenuNet")
     missing_core = [method for method in _WORK2_PHASE4_CORE_METHODS if method not in aggregate_by_method]
     classification = classify_work2_pilot_evidence(rows)
+    is_remediation = study_name.startswith("work2_remediation_")
+    pilot_label = "Phase 7 Remediation Pilot" if is_remediation else "Phase 4 Pilot"
+    readiness_label = "Formal Remediation Readiness" if is_remediation else "Phase 5 Readiness"
 
     lines = [
-        f"# {study_name} Phase 4 Pilot Summary",
+        f"# {study_name} {pilot_label} Summary",
         "",
         f"**Generated:** {utc_now_iso()}",
         "",
@@ -2334,16 +2576,18 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
         "",
         "## Aggregate Mean Table",
         "",
-        "| Method | Seeds | Net profit mean | Net profit sd | Menu regret | Top-L overlap | Quit rate | Avg walk |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Method | Seeds | Net profit | Adjusted profit | Service profit | Guardrail pass | Menu regret | Top-L overlap | Quit rate | Avg walk |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ])
     for aggregate in aggregates:
         lines.append(
-            "| {method} | {seeds} | {profit} | {profit_sd} | {regret} | {top_l} | {quit} | {walk} |".format(
+            "| {method} | {seeds} | {profit} | {adjusted} | {service_profit} | {guardrail} | {regret} | {top_l} | {quit} | {walk} |".format(
                 method=aggregate["method"],
                 seeds=aggregate["seed_count"],
                 profit=format_metric(aggregate.get("net_profit_mean")),
-                profit_sd=format_metric(aggregate.get("net_profit_std")),
+                adjusted=format_metric(aggregate.get("adjusted_profit_mean")),
+                service_profit=format_metric(aggregate.get("service_constrained_net_profit_mean")),
+                guardrail=format_metric(aggregate.get("service_guardrail_pass_mean")),
                 regret=format_metric(aggregate.get("menu_regret_mean")),
                 top_l=format_metric(aggregate.get("top_L_overlap_mean")),
                 quit=format_metric(aggregate.get("quit_rate_mean")),
@@ -2366,7 +2610,7 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
     if missing_core:
         caveat = f"Missing core methods: {', '.join(missing_core)}."
     else:
-        caveat = "All configured Phase 4 core methods are represented in the standard CSV."
+        caveat = f"All configured {pilot_label.lower()} core methods are represented in the standard CSV."
 
     diagnostic_line = "- Diagnostic report: not required for supportive evidence."
     if classification["diagnostic_required"]:
@@ -2377,9 +2621,17 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
             diagnostic_line = f"- Diagnostic report: `{relative_diagnostic}`."
 
     if classification["status"] in {"stronger_support", "preliminary_support"}:
-        phase5_readiness = "Ready to proceed to Phase 5 robustness, while keeping pilot limitations explicit."
+        phase5_readiness = (
+            "Ready to proceed to formal remediation, while keeping pilot limitations explicit."
+            if is_remediation
+            else "Ready to proceed to Phase 5 robustness, while keeping pilot limitations explicit."
+        )
     elif classification["status"] == "incomplete":
-        phase5_readiness = "Not ready for Phase 5 until the minimum runnable method set is complete."
+        phase5_readiness = (
+            "Not ready for formal remediation until the minimum runnable method set is complete."
+            if is_remediation
+            else "Not ready for Phase 5 until the minimum runnable method set is complete."
+        )
     else:
         phase5_readiness = "Conditionally ready only if diagnostics identify a fixable issue or a clear remedial experiment."
 
@@ -2402,7 +2654,7 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
         "## Caveats",
         "",
         f"- {caveat}",
-        "- Phase 4 is a three-seed pilot, not formal robustness evidence.",
+        f"- {pilot_label} is a three-seed pilot, not formal robustness evidence.",
         "- Weak or negative evidence should trigger diagnostics rather than manual result editing.",
     ])
     for item in classification.get("caveats", []):
@@ -2410,9 +2662,143 @@ def _write_work2_pilot_summary(path, study_name, rows, csv_path, manifest, diagn
 
     lines.extend([
         "",
-        "## Phase 5 Readiness",
+        f"## {readiness_label}",
         "",
         f"- {phase5_readiness}",
+    ])
+
+    write_text(path, "\n".join(lines) + "\n")
+
+
+def _write_work2_formal_summary(path, study_name, rows, csv_path, manifest, diagnostic_path=None):
+    base_args = manifest.get("base_args", {}) if manifest is not None else {}
+    relative_csv = _project_relative(csv_path)
+    aggregates = _aggregate_work2_methods(rows)
+    aggregate_by_method = {row["method"]: row for row in aggregates}
+    cnn_aggregate = aggregate_by_method.get("CNN-SetMenuNet")
+    missing_core = [method for method in _WORK2_FORMAL_CORE_METHODS if method not in aggregate_by_method]
+    classification = classify_work2_formal_evidence(rows)
+
+    diagnostic_line = "- Diagnostic report: not required for supportive formal RC evidence."
+    if classification["diagnostic_required"]:
+        if diagnostic_path is None:
+            diagnostic_line = "- Diagnostic report: required for this evidence state; no diagnostic path was provided."
+        else:
+            diagnostic_line = f"- Diagnostic report: `{_project_relative(diagnostic_path)}`."
+
+    if classification["status"] in {"stronger_support", "preliminary_support"}:
+        next_action = (
+            "Formal RC evidence can be reported as supportive, while robustness evidence remains a separate "
+            "claim that must follow refreshed robustness artifacts."
+        )
+    elif classification["status"] == "incomplete":
+        next_action = "Complete missing formal methods/seeds before closing Phase 6."
+    else:
+        next_action = (
+            "Use the diagnostic report to choose a follow-up remediation phase or an explicitly approved "
+            "300/50 escalation if training budget or seed instability is implicated."
+        )
+
+    lines = [
+        f"# {study_name} Formal Summary",
+        "",
+        f"**Generated:** {utc_now_iso()}",
+        "",
+        "## Settings",
+        "",
+        f"- Study: `{study_name}`",
+        f"- Instance: `{base_args.get('instance', 'RC')}`",
+        f"- K: `{base_args.get('max_candidates', '')}`",
+        f"- L: `{base_args.get('menu_k', '')}`",
+        "- Home option: always shown outside public L",
+        f"- Training episodes: `{base_args.get('max_episodes', '')}`",
+        f"- Test episodes: `{base_args.get('eval_episodes', '')}`",
+        f"- Seeds: `{_format_seed_list(rows)}`",
+        "- Formal budget rule: `300/50` is diagnostic escalation only, not automatic.",
+        "",
+        "## Required Formal Methods",
+        "",
+    ]
+    for method in _WORK2_FORMAL_CORE_METHODS:
+        suffix = "" if method in aggregate_by_method else " (missing)"
+        lines.append(f"- {method}{suffix}")
+
+    lines.extend([
+        "",
+        "## Outputs",
+        "",
+        f"- Standard CSV: `{relative_csv}`",
+        "- Raw study outputs remain under `ooh_code/outputs/studies/`.",
+        "- Lightweight Work2 summaries remain under `artifacts/work2_cnn_setmenunet/`.",
+        diagnostic_line,
+        "",
+        "## Main Formal Table",
+        "",
+        "| Method | Seeds | Net profit | Adjusted profit | Service profit | Quit rate | Guardrail pass | MP share | Avg walk | Menu regret | Top-L overlap | Runtime |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    ])
+    for aggregate in aggregates:
+        lines.append(
+            "| {method} | {seeds} | {profit} | {adjusted} | {service_profit} | {quit} | {guardrail} | {mp} | {walk} | {regret} | {top_l} | {runtime} |".format(
+                method=aggregate["method"],
+                seeds=aggregate["seed_count"],
+                profit=format_metric(aggregate.get("net_profit_mean")),
+                adjusted=format_metric(aggregate.get("adjusted_profit_mean")),
+                service_profit=format_metric(aggregate.get("service_constrained_net_profit_mean")),
+                quit=format_metric(aggregate.get("quit_rate_mean")),
+                guardrail=format_metric(aggregate.get("service_guardrail_pass_mean")),
+                mp=format_metric(aggregate.get("meeting_point_share_mean")),
+                walk=format_metric(aggregate.get("avg_walk_mean")),
+                regret=format_metric(aggregate.get("menu_regret_mean")),
+                top_l=format_metric(aggregate.get("top_L_overlap_mean")),
+                runtime=format_metric(aggregate.get("runtime_per_decision_mean")),
+            )
+        )
+
+    lines.extend([
+        "",
+        "## Seed Variation",
+        "",
+        f"- {_seed_variation_note(rows)}",
+        "",
+        "## Method-Level Explanations",
+        "",
+    ])
+    for method in _WORK2_FORMAL_CORE_METHODS:
+        lines.append(f"- {_method_explanation(method, aggregate_by_method.get(method), cnn_aggregate)}")
+
+    lines.extend([
+        "",
+        "## Formal RC Conclusion Support",
+        "",
+        f"- Conclusion gate: {classification['label']}.",
+        f"- Gate detail: {classification['summary']}",
+        f"- Comparator used by gate: `{classification.get('comparator') or '--'}`",
+        "- Net profit is primary; menu regret and Top-L overlap are supporting menu-quality metrics.",
+        "- Quit rate and average walking distance remain passenger-experience guardrails.",
+        "",
+        "## Robustness Claim Separation",
+        "",
+        "- RC formal evidence and robustness evidence are separate claims.",
+        "- A positive RC formal result must not be converted into a global robustness claim.",
+        "- Cite robustness only after rebuilding `work2_robustness` artifacts and checking diagnostic posture.",
+        "",
+        "## Caveats",
+        "",
+    ])
+    if missing_core:
+        lines.append(f"- Missing required formal methods: {', '.join(missing_core)}.")
+    else:
+        lines.append("- All required formal methods are represented in the standard CSV.")
+    lines.append("- Generated result rows, tables, figures, and summaries must not be manually edited toward a desired conclusion.")
+    for item in classification.get("caveats", []):
+        lines.append(f"- {item}")
+
+    lines.extend([
+        "",
+        "## Recommended Next Action",
+        "",
+        f"- {next_action}",
     ])
 
     write_text(path, "\n".join(lines) + "\n")
@@ -2793,8 +3179,11 @@ def build_work2_standard_artifacts(study_summary, manifest):
     summary_path = WORK2_STANDARD_ARTIFACTS_DIR / f"{study_name}_summary.md"
     diagnostic_path = WORK2_STANDARD_ARTIFACTS_DIR / "diagnostics" / f"{study_name}_diagnostic.md"
     _write_standard_csv(csv_path, method_rows)
-    if study_name == "work2_main":
-        classification = classify_work2_pilot_evidence(method_rows)
+    if _is_work2_pilot_study(study_name) or _is_work2_formal_study(study_name):
+        if _is_work2_formal_study(study_name):
+            classification = classify_work2_formal_evidence(method_rows)
+        else:
+            classification = classify_work2_pilot_evidence(method_rows)
         if classification["diagnostic_required"]:
             _write_work2_diagnostic_report(
                 diagnostic_path,
@@ -2806,8 +3195,29 @@ def build_work2_standard_artifacts(study_summary, manifest):
             )
         elif diagnostic_path.exists():
             diagnostic_path.unlink()
-        _write_work2_pilot_summary(summary_path, study_name, method_rows, csv_path, manifest, diagnostic_path)
+        if _is_work2_formal_study(study_name):
+            _write_work2_formal_summary(summary_path, study_name, method_rows, csv_path, manifest, diagnostic_path)
+        else:
+            _write_work2_pilot_summary(summary_path, study_name, method_rows, csv_path, manifest, diagnostic_path)
     else:
+        if study_name == "work2_remediation_smoke":
+            classification = _classification_payload(
+                "smoke_trace",
+                "Remediation smoke trace",
+                "Smoke run validates remediation artifact paths and offer-level objective trace only; it is not paper evidence.",
+                True,
+                caveats=["Smoke output must not be used to upgrade paper conclusions."],
+            )
+            _write_work2_diagnostic_report(
+                diagnostic_path,
+                study_name,
+                method_rows,
+                source_rows,
+                manifest,
+                classification,
+            )
+        elif diagnostic_path.exists():
+            diagnostic_path.unlink()
         _write_work2_smoke_summary(summary_path, study_name, method_rows, csv_path, manifest)
     return method_rows
 
@@ -2954,7 +3364,7 @@ def build_single_study_artifacts(study_summary, study_name, manifest=None):
     elif study_name == "phase32_operational_baselines":
         build_operational_baselines_artifacts(rows, prefix=study_name)
         build_operational_baselines_artifacts(rows, prefix="operational_baselines")
-    elif study_name in {"work2_main", "smoke_work2_main"}:
+    elif _is_work2_standard_study(study_name):
         build_work2_results_artifacts(rows, prefix=study_name)
     elif study_summary["study"]["type"] == "policy_compare":
         title = study_summary["study"].get("title", study_name.replace("_", " "))
@@ -3116,7 +3526,7 @@ def build_generic_artifacts(bundle):
     rows = []
     if summary is not None:
         rows = build_single_study_artifacts(summary, study_name, manifest=bundle["manifest"])
-        if study_name in {"smoke_work2_main", "work2_main"}:
+        if _is_work2_standard_study(study_name):
             build_work2_standard_artifacts(summary, manifest=bundle["manifest"])
     elif study_name == "phase29_exact_greedy_gap":
         build_exact_greedy_artifacts([], prefix=study_name)

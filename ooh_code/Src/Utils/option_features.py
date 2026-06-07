@@ -53,13 +53,15 @@ def normalize_features(raw: dict, time_scale: float, target_time: float) -> dict
 
 
 def build_option_tensor(normalized: dict, max_k: int, device) -> tuple:
-    """Convert normalized feature arrays to padded (K, 6) tensor + mask.
+    """Convert normalized feature arrays to padded (max_k, 6) tensor + mask.
 
     Args:
         normalized: Dict from normalize_features with keys matching
                     _FEATURE_KEYS.  Each value is a 1-D array of length
                     actual_k (may be < max_k).
-        max_k:      Padded sequence length.  If actual_k < max_k the
+        max_k:      Padded option-row length. Work 2 callers pass
+                    candidate_slots = public K meeting points + 1 home row.
+                    If actual_k < max_k the
                     remaining rows are zero-filled and masked False.
         device:     torch device for the returned tensors.
 

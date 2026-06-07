@@ -2,6 +2,7 @@ name: work2_menu_size_robustness
 title: Work 2 Menu Size Robustness
 type: policy_compare
 study_role: support
+runtime_profile: diagnostic_gap_closure
 robustness_dimension: menu_size
 dimension_parameter: menu_k
 dimension_default: 3
@@ -10,10 +11,11 @@ dimension_values:
   - 3
   - 5
 description: >
-  Phase 5 sweep over public L, the number of displayed meeting-point offers.
+  Phase 5 diagnostic gap-closure sweep over public L, the number of displayed meeting-point offers.
   Home pickup remains always shown outside L. Uses compact pilot budgets and
   the Phase 4 Work2 calibration because Phase 4 evidence was mixed rather than
-  confirmatory.
+  confirmatory. This closure evidence is diagnostic only and cannot support a
+  positive robustness claim by itself.
 reference_tag: oracle_menu_L3
 reference_label: Oracle Menu L=3
 reference_policy: menu_optimization
@@ -26,8 +28,8 @@ base_args:
   log_output: file
   debug: true
   seed: 1234
-  max_episodes: 80
-  eval_episodes: 20
+  max_episodes: 1
+  eval_episodes: 1
   menu_k: 3
   max_candidates: 10
   menu_model: cnn_setmenu
@@ -51,26 +53,12 @@ policies:
     policy: cost_l_heuristic
     args_overrides:
       menu_k: 2
-  - tag: cnn_menu_L2
-    label: CNN-Menu L=2
-    policy: top_k_cheapest
-    args_overrides:
-      menu_k: 2
-  - tag: cnn_setmenu_net_L2
-    label: CNN-SetMenuNet L=2
-    policy: menu_optimization
-    args_overrides:
-      menu_k: 2
-      menu_model: cnn_setmenu
   - tag: oracle_menu_L2
     label: Oracle Menu L=2
     policy: menu_optimization
     args_overrides:
       menu_k: 2
       menu_model: cnn_setmenu
-      init_theta_cnn: 0.0
-      cool_theta_cnn: 0.0
-      menu_use_oracle_eta: true
   - tag: cost_L_L3
     label: Cost-L heuristic L=3
     policy: cost_l_heuristic
@@ -87,36 +75,16 @@ policies:
     args_overrides:
       menu_k: 3
       menu_model: cnn_setmenu
-  - tag: oracle_menu_L3
-    label: Oracle Menu L=3
-    policy: menu_optimization
-    args_overrides:
-      menu_k: 3
-      menu_model: cnn_setmenu
-      init_theta_cnn: 0.0
-      cool_theta_cnn: 0.0
-      menu_use_oracle_eta: true
   - tag: cost_L_L5
     label: Cost-L heuristic L=5
     policy: cost_l_heuristic
     args_overrides:
       menu_k: 5
-  - tag: cnn_menu_L5
-    label: CNN-Menu L=5
-    policy: top_k_cheapest
-    args_overrides:
-      menu_k: 5
-  - tag: cnn_setmenu_net_L5
-    label: CNN-SetMenuNet L=5
+  - tag: oracle_menu_L3
+    label: Oracle Menu L=3
     policy: menu_optimization
     args_overrides:
-      menu_k: 5
-      menu_model: cnn_setmenu
-  - tag: oracle_menu_L5
-    label: Oracle Menu L=5
-    policy: menu_optimization
-    args_overrides:
-      menu_k: 5
+      menu_k: 3
       menu_model: cnn_setmenu
       init_theta_cnn: 0.0
       cool_theta_cnn: 0.0

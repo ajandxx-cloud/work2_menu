@@ -1,12 +1,12 @@
 # Results Summary
 
-Built at: `2026-05-31T15:02:26Z`
+Built at: `2026-06-05T02:25:21Z`
 
-Requested artifact scope: `work2_main`
+Requested artifact scope: `work2_remediation_smoke`
 
 ## Main Policy Comparison
 
-- Best mean net profit currently comes from `full_display` with `-4466.685`.
+- Best mean net profit currently comes from `full_display` with `-4331.336`.
 
 ## Menu-k Robustness
 

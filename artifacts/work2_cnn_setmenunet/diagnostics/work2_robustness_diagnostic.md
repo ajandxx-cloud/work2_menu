@@ -1,19 +1,15 @@
 # Work2 Robustness Diagnostic
 
-**Generated:** 2026-06-02T21:01:55Z
+**Generated:** 2026-06-04T07:18:25Z
 
 ## Incomplete/Degraded/Mixed Dimensions
 
-- **menu_size**: Not run - menu_size robustness has no member study summary yet. Likely cause: menu selection error.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **candidate_pool**: Not run - candidate_pool robustness has no member study summary yet. Likely cause: candidate-pool scaling.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **demand**: Not run - demand robustness has no member study summary yet. Likely cause: demand sensitivity.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **outside_option**: Not run - outside_option robustness has no member study summary yet. Likely cause: outside-option/MNL sensitivity.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
-- **cross_instance**: Not run - cross_instance robustness has no member study summary yet. Likely cause: instance instability.
-  - Run or resume the missing Phase 5 member study before making a robustness claim.
+- **menu_size**: Degraded - menu_size robustness degrades against core comparators or guardrails. Likely cause: menu selection error.
+- **candidate_pool**: Degraded - candidate_pool robustness degrades against core comparators or guardrails. Likely cause: candidate-pool scaling.
+- **demand**: Degraded - demand robustness degrades against core comparators or guardrails. Likely cause: demand sensitivity.
+- **outside_option**: Degraded - outside_option robustness degrades against core comparators or guardrails. Likely cause: outside-option/MNL sensitivity.
+- **cross_instance**: Conditional/mixed - cross_instance robustness has mixed primary or menu-quality evidence. Likely cause: instance instability.
+  - Mixed or weak dimensions cannot be converted into supportive wording.
 
 ## Prediction Error
 
@@ -21,19 +17,19 @@
 
 ## Ranking/Menu Selection Error
 
-- menu_size: Not run.
+- menu_size: Degraded.
 
 ## Demand Sensitivity
 
-- demand: Not run.
+- demand: Degraded.
 
 ## Outside-Option/MNL Sensitivity
 
-- outside_option: Not run.
+- outside_option: Degraded.
 
 ## Instance Instability
 
-- cross_instance: Not run.
+- cross_instance: Conditional/mixed.
 
 ## Training Budget
 
@@ -41,7 +37,7 @@
 
 ## Candidate-Pool Scaling
 
-- candidate_pool: Not run.
+- candidate_pool: Degraded.
 
 ## Recommended Next Actions
 

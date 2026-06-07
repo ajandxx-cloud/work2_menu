@@ -1,0 +1,127 @@
+name: work2_phase6_redesign_smoke
+title: Work 2 Phase 6B Redesign Smoke
+type: policy_compare
+study_role: support
+description: >
+  Minimal smoke study for Objective / Service-Constraint Redesign. Outputs
+  feed only Phase 6 local diagnostics and do not support manuscript claims.
+  This Phase 6B version sweeps risk penalties and min-quit tolerances; the
+  service-guarded variant is diagnostic-only because of fallback-heavy risk.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+baseline_variant_tag: cost_L
+behavior_gate:
+  min_acceptance_rate: 0.05
+  max_acceptance_rate: 1.00
+  max_opt_out_rate: 0.90
+phase6_redesign_gate:
+  main_candidate_tags:
+    - risk_lambda_50
+    - risk_lambda_100
+    - risk_lambda_200
+    - risk_lambda_400
+    - min_quit_tol000
+    - min_quit_tol001
+    - min_quit_tol003
+  diagnostic_only_tags:
+    - service_guarded_diagnostic
+base_args:
+  experiment_name: work2_phase6_redesign_smoke
+  instance: RC
+  load_data: true
+  fraction_capacity_limited_meeting_points: 0
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 1
+  eval_episodes: 1
+  menu_k: 3
+  candidate_meeting_points: 10
+  max_candidates: 10
+  menu_model: cnn_setmenu
+  menu_selection_solver: exact
+  menu_use_exact_eval: true
+  menu_exact_threshold: 8
+  menu_objective_mode: system_profit
+  service_quit_penalty: 100.0
+  service_quit_rate_guardrail: 0.4
+  menu_outside_penalty_lambda: 200.0
+  menu_quit_tolerance: 0.01
+  menu_profit_tolerance_fraction: 0.05
+  menu_optout_guardrail: 0.40
+  base_util: 1.0
+  home_pickup_utility: 1.0
+  outside_option_util: 0.0
+  incentive_sens: -0.08
+  menu_travel_time_weight: -0.0004
+  menu_pickup_time_weight: -0.00025
+  pref_window_half_width: 5000
+  menu_eta_filter_mode: none
+  menu_time_prediction_blend: 0.35
+  menu_route_delay_lambda: 0.25
+  menu_capacity_risk_lambda: 0.1
+  cnn_aux_checkpoint: outputs/shared_training/work2_cnn2d_baselineseed0_55278aca/0/checkpoints/supervised_ml.pt
+policies:
+  - tag: nearest_L
+    label: Nearest-L
+    policy: nearest_heuristic
+  - tag: cost_L
+    label: Cost-L heuristic
+    policy: cost_l_heuristic
+  - tag: cnn_menu
+    label: CNN-Menu
+    policy: top_k_cheapest
+  - tag: expected_profit_enumeration
+    label: Expected-Profit Enumeration
+    policy: expected_profit_enumeration
+    args_overrides: {menu_objective_mode: system_profit}
+  - tag: service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit
+    policy: service_constrained_expected_profit
+    args_overrides: {menu_objective_mode: system_profit}
+  - tag: risk_lambda_50
+    label: Risk-Adjusted Expected-Profit lambda=50
+    policy: risk_adjusted_expected_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_outside_penalty_lambda: 50.0}
+  - tag: risk_lambda_100
+    label: Risk-Adjusted Expected-Profit lambda=100
+    policy: risk_adjusted_expected_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_outside_penalty_lambda: 100.0}
+  - tag: risk_lambda_200
+    label: Risk-Adjusted Expected-Profit lambda=200
+    policy: risk_adjusted_expected_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_outside_penalty_lambda: 200.0}
+  - tag: risk_lambda_400
+    label: Risk-Adjusted Expected-Profit lambda=400
+    policy: risk_adjusted_expected_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_outside_penalty_lambda: 400.0}
+  - tag: min_quit_tol000
+    label: Min-Quit-Then-Profit tol=0.00
+    policy: min_quit_then_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_quit_tolerance: 0.0, menu_profit_tolerance_fraction: 0.05}
+  - tag: min_quit_tol001
+    label: Min-Quit-Then-Profit tol=0.01
+    policy: min_quit_then_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_quit_tolerance: 0.01, menu_profit_tolerance_fraction: 0.05}
+  - tag: min_quit_tol003
+    label: Min-Quit-Then-Profit tol=0.03
+    policy: min_quit_then_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_quit_tolerance: 0.03, menu_profit_tolerance_fraction: 0.05}
+  - tag: service_guarded_diagnostic
+    label: Service-Guarded Expected-Profit diagnostic
+    policy: service_guarded_expected_profit
+    args_overrides: {menu_objective_mode: system_profit, menu_optout_guardrail: 0.40}
+  - tag: cost_oracle
+    label: Cost Oracle
+    policy: cost_oracle
+  - tag: profit_oracle
+    label: Profit Oracle
+    policy: profit_oracle
+    args_overrides: {menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+splits:
+  - id: seed0
+    train_split: 0
+    test_split: 1
+    args_overrides: {seed: 0}

@@ -1,0 +1,67 @@
+name: work2_austin_cnn2d
+title: Work 2 Austin CNN-2d Baseline
+type: policy_compare
+description: >
+  CNN-2d (DSPO_Menu) baseline on the Austin instance from the Amazon Last
+  Mile Routing Challenge dataset.  Provides the model-architecture baseline
+  for Work 2 and produces the auxiliary checkpoint used by work2_austin_main.
+  Same MNL parameters as work2_cnn2d_baseline for cross-instance comparison.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+base_args:
+  experiment_name: work2_austin_cnn2d
+  instance: Austin
+  load_data: true
+  fraction_capacity_limited_meeting_points: 0
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 40
+  eval_episodes: 10
+  menu_k: 3
+  max_candidates: 10
+  menu_model: cnn_2d
+  menu_selection_solver: auto
+  menu_use_exact_eval: true
+  # --- MNL / ETA parameters: identical to work2_cnn2d_baseline for cross-instance comparison ---
+  base_util: 1.0
+  home_pickup_utility: 1.0
+  outside_option_util: 0.0
+  incentive_sens: -0.08
+  menu_travel_time_weight: -0.0004
+  menu_pickup_time_weight: -0.00025
+  pref_window_half_width: 5000
+  menu_eta_filter_mode: none
+  menu_time_prediction_blend: 0.35
+  menu_route_delay_lambda: 0.0
+  menu_capacity_risk_lambda: 0.0
+policies:
+  - tag: nearest_L
+    label: Nearest-L
+    policy: nearest_heuristic
+  - tag: cost_L
+    label: Cost-L
+    policy: cost_l_heuristic
+  - tag: cnn_menu
+    label: CNN-Menu
+    policy: top_k_cheapest
+  - tag: oracle_menu
+    label: Oracle Menu
+    policy: menu_optimization
+    args_overrides:
+      init_theta_cnn: 0.0
+      cool_theta_cnn: 0.0
+      menu_use_oracle_eta: true
+splits:
+  - id: seed0
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 0
+  - id: seed1
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 1

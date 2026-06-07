@@ -69,6 +69,7 @@ def test_import_and_init():
     )
     assert hasattr(model, "memory"), "Should have memory buffer"
     assert model.max_candidates == 10, f"max_candidates should be 10, got {model.max_candidates}"
+    assert model.candidate_slots == 11, f"candidate_slots should be 11, got {model.candidate_slots}"
     print("  PASS: MLP_SetMenu initializes with MLPMenuNet + inherited CNN_2d")
     return model
 
@@ -118,7 +119,7 @@ def test_memory_buffer():
     """MLPMemoryBuffer add/sample preserves tensor shapes."""
     from Src.Algorithms.MLP_SetMenu import MLPMemoryBuffer
 
-    K = 10
+    K = 11
     device = torch.device("cpu")
     buf = MLPMemoryBuffer(max_len=50, K=K, device=device)
 
@@ -182,7 +183,7 @@ def test_training_step():
     model = test_import_and_init.__ws_model
     model.train_mode()
 
-    K = model.max_candidates
+    K = model.candidate_slots
     B = 4
 
     opt_feat = torch.randn(B, K, 6)
@@ -193,6 +194,32 @@ def test_training_step():
     assert np.isfinite(loss), f"Loss should be finite, got {loss}"
     assert loss >= 0, f"Huber loss should be non-negative, got {loss}"
     print(f"  PASS: Training step completed, loss = {loss:.4f}")
+
+
+def test_masked_loss_ignores_padding_targets():
+    """Mask-false rows do not contribute to MLP supervised loss."""
+    model = test_import_and_init.__ws_model
+    model.train_mode()
+
+    K = model.candidate_slots
+    B = 4
+    opt_feat = torch.randn(B, K, 6)
+    opt_mask = torch.ones(B, K, dtype=torch.bool)
+    opt_mask[:, -3:] = False
+    costs_a = torch.randn(B, K)
+    costs_b = costs_a.clone()
+    costs_b[:, -3:] = 1000000.0
+
+    with torch.no_grad():
+        predicted = model.mlp_model(opt_feat, opt_mask)
+        per_row_a = torch.nn.functional.smooth_l1_loss(predicted, costs_a, reduction="none")
+        per_row_b = torch.nn.functional.smooth_l1_loss(predicted, costs_b, reduction="none")
+        mask_float = opt_mask.float()
+        loss_a = (per_row_a * mask_float).sum() / mask_float.sum().clamp(min=1.0)
+        loss_b = (per_row_b * mask_float).sum() / mask_float.sum().clamp(min=1.0)
+
+    assert torch.allclose(loss_a, loss_b), "Padding target changes should not affect masked loss"
+    print("  PASS: Masked MLP loss ignores padding targets")
 
 
 # -----------------------------------------------------------------------
@@ -276,6 +303,10 @@ if __name__ == "__main__":
 
     print("[Test 6] Training step...")
     test_training_step()
+    print("  DONE\n")
+
+    print("[Test 6b] Masked loss ignores padding...")
+    test_masked_loss_ignores_padding_targets()
     print("  DONE\n")
 
     print("[Test 7] Parser routing...")

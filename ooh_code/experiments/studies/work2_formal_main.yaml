@@ -1,0 +1,101 @@
+name: work2_formal_main
+title: Work 2 Formal Main Experiment - Phase 6 Five-Seed RC Evidence
+type: policy_compare
+description: >
+  Phase 6 formal RC evidence comparing Nearest-L, Cost-L heuristic,
+  CNN-Menu, MLP-Menu, SetMenuNet, CNN-SetMenuNet, and Oracle Menu with
+  K=10, L=3, home always shown outside public L, and seeds 0,1,2,3,4.
+  This staged formal pass uses 150/50 train/test episodes first; 300/50 is
+  reserved for a later diagnostic escalation when training budget or seed
+  instability is specifically implicated.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+base_args:
+  experiment_name: work2_formal_main
+  instance: RC
+  load_data: true
+  fraction_capacity_limited_meeting_points: 0
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 150
+  eval_episodes: 50
+  menu_k: 3          # L: displayed meeting-point offers; home is always shown outside L
+  max_candidates: 10 # K: meeting-point candidates; tensors use candidate_slots = K + 1
+  menu_model: cnn_setmenu
+  menu_selection_solver: auto
+  menu_use_exact_eval: true
+  # Calibrated Work2 MNL / ETA settings inherited from the Phase 4 pilot.
+  base_util: 1.0
+  home_pickup_utility: 1.0
+  outside_option_util: 0.0
+  incentive_sens: -0.08
+  menu_travel_time_weight: -0.0004
+  menu_pickup_time_weight: -0.00025
+  pref_window_half_width: 5000
+  menu_eta_filter_mode: none
+  menu_time_prediction_blend: 0.35
+  menu_route_delay_lambda: 0.0
+  menu_capacity_risk_lambda: 0.0
+  cnn_aux_checkpoint: outputs/shared_training/work2_cnn2d_baselineseed0_55278aca/0/checkpoints/supervised_ml.pt
+policies:
+  - tag: nearest_L
+    label: Nearest-L
+    policy: nearest_heuristic
+  - tag: cost_L
+    label: Cost-L heuristic
+    policy: cost_l_heuristic
+  - tag: cnn_menu
+    label: CNN-Menu
+    policy: top_k_cheapest
+  - tag: mlp_menu
+    label: MLP-Menu
+    policy: menu_optimization
+    args_overrides:
+      menu_model: mlp_menu
+  - tag: setmenu_net
+    label: SetMenuNet
+    policy: menu_optimization
+    args_overrides:
+      menu_model: mlp_menu
+  - tag: cnn_setmenu_net
+    label: CNN-SetMenuNet
+    policy: menu_optimization
+    args_overrides:
+      menu_model: cnn_setmenu
+  - tag: oracle_menu
+    label: Oracle Menu
+    policy: menu_optimization
+    args_overrides:
+      menu_model: cnn_setmenu
+      init_theta_cnn: 0.0
+      cool_theta_cnn: 0.0
+      menu_use_oracle_eta: true
+splits:
+  - id: seed0
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 0
+  - id: seed1
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 1
+  - id: seed2
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 2
+  - id: seed3
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 3
+  - id: seed4
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 4

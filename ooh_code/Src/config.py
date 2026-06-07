@@ -21,6 +21,7 @@ class Config:
         torch.manual_seed(seed)
 
         self.__dict__.update(vars(args))
+        self.menu_objective_mode = str(getattr(args, "menu_objective_mode", "current"))
         self.menu_route_delay_lambda = float(args.menu_route_delay_lambda)
         self.menu_capacity_risk_lambda = float(args.menu_capacity_risk_lambda)
         self.save_after = max(1, args.max_episodes // args.save_count) if args.max_episodes > 0 else 1

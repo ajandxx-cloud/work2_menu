@@ -1,0 +1,241 @@
+name: work2_phase08_gap_closure_smoke
+title: Work 2 Phase08 Gap Closure Smoke - Service Parameter Grid
+type: policy_compare
+description: >
+  Minimal smoke study for the Phase08 gap-closure service penalty/guardrail
+  grid. This validates the expanded manifest before the 3-seed diagnostic.
+reference_tag: full_display
+reference_label: full display
+reference_policy: offer_all_feasible_bundles
+base_args:
+  experiment_name: work2_phase08_gap_closure_smoke
+  instance: RC
+  load_data: true
+  fraction_capacity_limited_meeting_points: 0
+  save_model: true
+  log_output: file
+  debug: true
+  seed: 1234
+  max_episodes: 1
+  eval_episodes: 1
+  menu_k: 3
+  candidate_meeting_points: 10
+  max_candidates: 10
+  menu_model: cnn_setmenu
+  menu_selection_solver: exact
+  menu_use_exact_eval: true
+  menu_exact_threshold: 8
+  menu_objective_mode: system_profit
+  service_quit_penalty: 100.0
+  service_quit_rate_guardrail: 0.4
+  base_util: 1.0
+  home_pickup_utility: 1.0
+  outside_option_util: 0.0
+  incentive_sens: -0.08
+  menu_travel_time_weight: -0.0004
+  menu_pickup_time_weight: -0.00025
+  pref_window_half_width: 5000
+  menu_eta_filter_mode: none
+  menu_time_prediction_blend: 0.35
+  menu_route_delay_lambda: 0.25
+  menu_capacity_risk_lambda: 0.1
+  cnn_aux_checkpoint: outputs/shared_training/work2_cnn2d_baselineseed0_55278aca/0/checkpoints/supervised_ml.pt
+policies:
+  - tag: p100_g03_nearest_L
+    label: Nearest-L (penalty=100, guardrail=0.3)
+    policy: nearest_heuristic
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3}
+  - tag: p100_g03_cost_L
+    label: Cost-L heuristic (penalty=100, guardrail=0.3)
+    policy: cost_l_heuristic
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3}
+  - tag: p100_g03_cnn_menu
+    label: CNN-Menu (penalty=100, guardrail=0.3)
+    policy: top_k_cheapest
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3}
+  - tag: p100_g03_cnn_setmenu_net_current
+    label: CNN-SetMenuNet current (penalty=100, guardrail=0.3)
+    policy: menu_optimization
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3, menu_model: cnn_setmenu, menu_objective_mode: current, menu_route_delay_lambda: 0.0, menu_capacity_risk_lambda: 0.0}
+  - tag: p100_g03_expected_profit_enumeration
+    label: Expected-Profit Enumeration (penalty=100, guardrail=0.3)
+    policy: expected_profit_enumeration
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit}
+  - tag: p100_g03_service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit (penalty=100, guardrail=0.3)
+    policy: service_constrained_expected_profit
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit}
+  - tag: p100_g03_cost_oracle
+    label: Cost Oracle (penalty=100, guardrail=0.3)
+    policy: cost_oracle
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3}
+  - tag: p100_g03_profit_oracle
+    label: Profit Oracle (penalty=100, guardrail=0.3)
+    policy: profit_oracle
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+  - tag: p100_g04_nearest_L
+    label: Nearest-L (penalty=100, guardrail=0.4)
+    policy: nearest_heuristic
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4}
+  - tag: p100_g04_cost_L
+    label: Cost-L heuristic (penalty=100, guardrail=0.4)
+    policy: cost_l_heuristic
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4}
+  - tag: p100_g04_cnn_menu
+    label: CNN-Menu (penalty=100, guardrail=0.4)
+    policy: top_k_cheapest
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4}
+  - tag: p100_g04_cnn_setmenu_net_current
+    label: CNN-SetMenuNet current (penalty=100, guardrail=0.4)
+    policy: menu_optimization
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4, menu_model: cnn_setmenu, menu_objective_mode: current, menu_route_delay_lambda: 0.0, menu_capacity_risk_lambda: 0.0}
+  - tag: p100_g04_expected_profit_enumeration
+    label: Expected-Profit Enumeration (penalty=100, guardrail=0.4)
+    policy: expected_profit_enumeration
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit}
+  - tag: p100_g04_service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit (penalty=100, guardrail=0.4)
+    policy: service_constrained_expected_profit
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit}
+  - tag: p100_g04_cost_oracle
+    label: Cost Oracle (penalty=100, guardrail=0.4)
+    policy: cost_oracle
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4}
+  - tag: p100_g04_profit_oracle
+    label: Profit Oracle (penalty=100, guardrail=0.4)
+    policy: profit_oracle
+    args_overrides: {service_quit_penalty: 100.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+  - tag: p200_g03_nearest_L
+    label: Nearest-L (penalty=200, guardrail=0.3)
+    policy: nearest_heuristic
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3}
+  - tag: p200_g03_cost_L
+    label: Cost-L heuristic (penalty=200, guardrail=0.3)
+    policy: cost_l_heuristic
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3}
+  - tag: p200_g03_cnn_menu
+    label: CNN-Menu (penalty=200, guardrail=0.3)
+    policy: top_k_cheapest
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3}
+  - tag: p200_g03_cnn_setmenu_net_current
+    label: CNN-SetMenuNet current (penalty=200, guardrail=0.3)
+    policy: menu_optimization
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3, menu_model: cnn_setmenu, menu_objective_mode: current, menu_route_delay_lambda: 0.0, menu_capacity_risk_lambda: 0.0}
+  - tag: p200_g03_expected_profit_enumeration
+    label: Expected-Profit Enumeration (penalty=200, guardrail=0.3)
+    policy: expected_profit_enumeration
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit}
+  - tag: p200_g03_service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit (penalty=200, guardrail=0.3)
+    policy: service_constrained_expected_profit
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit}
+  - tag: p200_g03_cost_oracle
+    label: Cost Oracle (penalty=200, guardrail=0.3)
+    policy: cost_oracle
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3}
+  - tag: p200_g03_profit_oracle
+    label: Profit Oracle (penalty=200, guardrail=0.3)
+    policy: profit_oracle
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+  - tag: p200_g04_nearest_L
+    label: Nearest-L (penalty=200, guardrail=0.4)
+    policy: nearest_heuristic
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4}
+  - tag: p200_g04_cost_L
+    label: Cost-L heuristic (penalty=200, guardrail=0.4)
+    policy: cost_l_heuristic
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4}
+  - tag: p200_g04_cnn_menu
+    label: CNN-Menu (penalty=200, guardrail=0.4)
+    policy: top_k_cheapest
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4}
+  - tag: p200_g04_cnn_setmenu_net_current
+    label: CNN-SetMenuNet current (penalty=200, guardrail=0.4)
+    policy: menu_optimization
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4, menu_model: cnn_setmenu, menu_objective_mode: current, menu_route_delay_lambda: 0.0, menu_capacity_risk_lambda: 0.0}
+  - tag: p200_g04_expected_profit_enumeration
+    label: Expected-Profit Enumeration (penalty=200, guardrail=0.4)
+    policy: expected_profit_enumeration
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit}
+  - tag: p200_g04_service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit (penalty=200, guardrail=0.4)
+    policy: service_constrained_expected_profit
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit}
+  - tag: p200_g04_cost_oracle
+    label: Cost Oracle (penalty=200, guardrail=0.4)
+    policy: cost_oracle
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4}
+  - tag: p200_g04_profit_oracle
+    label: Profit Oracle (penalty=200, guardrail=0.4)
+    policy: profit_oracle
+    args_overrides: {service_quit_penalty: 200.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+  - tag: p500_g03_nearest_L
+    label: Nearest-L (penalty=500, guardrail=0.3)
+    policy: nearest_heuristic
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3}
+  - tag: p500_g03_cost_L
+    label: Cost-L heuristic (penalty=500, guardrail=0.3)
+    policy: cost_l_heuristic
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3}
+  - tag: p500_g03_cnn_menu
+    label: CNN-Menu (penalty=500, guardrail=0.3)
+    policy: top_k_cheapest
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3}
+  - tag: p500_g03_cnn_setmenu_net_current
+    label: CNN-SetMenuNet current (penalty=500, guardrail=0.3)
+    policy: menu_optimization
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3, menu_model: cnn_setmenu, menu_objective_mode: current, menu_route_delay_lambda: 0.0, menu_capacity_risk_lambda: 0.0}
+  - tag: p500_g03_expected_profit_enumeration
+    label: Expected-Profit Enumeration (penalty=500, guardrail=0.3)
+    policy: expected_profit_enumeration
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit}
+  - tag: p500_g03_service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit (penalty=500, guardrail=0.3)
+    policy: service_constrained_expected_profit
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit}
+  - tag: p500_g03_cost_oracle
+    label: Cost Oracle (penalty=500, guardrail=0.3)
+    policy: cost_oracle
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3}
+  - tag: p500_g03_profit_oracle
+    label: Profit Oracle (penalty=500, guardrail=0.3)
+    policy: profit_oracle
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.3, menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+  - tag: p500_g04_nearest_L
+    label: Nearest-L (penalty=500, guardrail=0.4)
+    policy: nearest_heuristic
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4}
+  - tag: p500_g04_cost_L
+    label: Cost-L heuristic (penalty=500, guardrail=0.4)
+    policy: cost_l_heuristic
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4}
+  - tag: p500_g04_cnn_menu
+    label: CNN-Menu (penalty=500, guardrail=0.4)
+    policy: top_k_cheapest
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4}
+  - tag: p500_g04_cnn_setmenu_net_current
+    label: CNN-SetMenuNet current (penalty=500, guardrail=0.4)
+    policy: menu_optimization
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4, menu_model: cnn_setmenu, menu_objective_mode: current, menu_route_delay_lambda: 0.0, menu_capacity_risk_lambda: 0.0}
+  - tag: p500_g04_expected_profit_enumeration
+    label: Expected-Profit Enumeration (penalty=500, guardrail=0.4)
+    policy: expected_profit_enumeration
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit}
+  - tag: p500_g04_service_constrained_expected_profit
+    label: Service-Constrained Expected-Profit (penalty=500, guardrail=0.4)
+    policy: service_constrained_expected_profit
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit}
+  - tag: p500_g04_cost_oracle
+    label: Cost Oracle (penalty=500, guardrail=0.4)
+    policy: cost_oracle
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4}
+  - tag: p500_g04_profit_oracle
+    label: Profit Oracle (penalty=500, guardrail=0.4)
+    policy: profit_oracle
+    args_overrides: {service_quit_penalty: 500.0, service_quit_rate_guardrail: 0.4, menu_objective_mode: system_profit, init_theta_cnn: 0.0, cool_theta_cnn: 0.0, menu_use_oracle_eta: true}
+splits:
+  - id: seed0
+    train_split: 0
+    test_split: 1
+    args_overrides:
+      seed: 0

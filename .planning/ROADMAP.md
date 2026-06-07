@@ -53,7 +53,7 @@
 
 **Goal:** Run smoke and 3-seed pilot evidence before committing to formal experiments.
 **Requirements:** PILOT-01..PILOT-04, VER-01..VER-04
-**Status:** Next
+**Status:** Complete - 2026-06-05
 **Context:** `.planning/phases/04-phase08-pilot-and-decision-gate/04-CONTEXT.md`
 **Research:** `.planning/phases/04-phase08-pilot-and-decision-gate/04-RESEARCH.md`
 **Validation:** `.planning/phases/04-phase08-pilot-and-decision-gate/04-VALIDATION.md`
@@ -83,16 +83,19 @@
 4. Artifact builder creates committed snapshots, tables, figures, and summary markdown.
 5. Manuscript-facing conclusion wording states the evidence level precisely.
 
-## Phase 6: ProfitAware Learning Extension
+## Phase 6: Objective / Service-Constraint Redesign
 
-**Goal:** If exact expected-profit optimization works, convert the objective into a learnable policy and compare against enumeration.
-**Requirements:** LEARN-01..LEARN-03, VER-01..VER-04
+**Goal:** Locally pivot from ProfitAware Learning to objective/service-constraint redesign after Phase 5 failed closed. Determine whether current choice-aware profit menu optimization can be repaired without changing MNL choice, Lambert-W pricing, HGS/Hygese routing, or CNN learning. ProfitAware Learning is deferred until a redesigned non-learning objective passes the Phase 6 gate.
+**Requirements:** REDESIGN-01..REDESIGN-07, VER-01..VER-04
+**Status:** Complete - 2026-06-07
+**Verification:** `.planning/phases/06-objective-service-constraint-redesign/VERIFICATION.md`
 
 **Success Criteria:**
-1. ProfitAware learning target is defined from expected menu contribution rather than insertion cost alone.
-2. At least one ProfitAware option-level or menu-level model is implemented as a controlled extension.
-3. ProfitAware learning is compared against Exact Expected-Profit Enumeration, Cost-L, CNN-Menu, and old CNN-SetMenuNet.
-4. The result either supports a learning contribution or cleanly keeps enumeration as the primary contribution.
+1. Phase 6 planning records that Phase 1-5 remain diagnostic background and formal evidence remains blocked.
+2. Three non-learning redesigned policies are implemented and tested: Risk-Adjusted Expected-Profit, Min-Quit-Then-Profit, and Service-Guarded Expected-Profit.
+3. Smoke and 3-seed diagnostic manifests run only phase-local redesign evidence.
+4. Phase-local artifacts decide exactly one gate state: `proceed_to_formal`, `continue_redesign`, or `conclude_method_unsuitable`.
+5. No manuscript-facing artifacts are written unless a later confirmed gate explicitly unlocks formal evidence.
 
 ## Phase Verification Rule
 
