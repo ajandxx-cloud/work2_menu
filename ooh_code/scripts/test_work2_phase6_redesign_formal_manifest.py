@@ -21,6 +21,19 @@ REQUIRED_TAGS = [
     "cost_oracle",
     "profit_oracle",
 ]
+FORMAL_CANDIDATE_TAGS = {
+    "risk_lambda_200",
+    "risk_lambda_400",
+    "min_quit_tol000",
+    "min_quit_tol001",
+    "min_quit_tol003",
+}
+NON_ORACLE_BASELINE_TAGS = {"nearest_L", "cost_L", "cnn_menu"}
+LEGACY_DIAGNOSTIC_TAGS = {
+    "expected_profit_enumeration",
+    "service_constrained_expected_profit",
+}
+ORACLE_TAGS = {"cost_oracle", "profit_oracle"}
 
 
 def _assert(condition, message):
@@ -61,11 +74,50 @@ def test_identity_and_budget(manifest):
     _assert(gate.get("max_acceptance_rate") == 1.00, "max acceptance gate mismatch")
     _assert(gate.get("max_opt_out_rate") == 0.90, "opt-out gate mismatch")
 
+    checkpoint = base_args.get("cnn_aux_checkpoint")
+    _assert(isinstance(checkpoint, str) and checkpoint.strip(), "cnn_aux_checkpoint must be a non-empty string")
+    checkpoint_path = ROOT / checkpoint
+    print(f"INFO cnn_aux_checkpoint={checkpoint} exists={checkpoint_path.exists()}")
+
 
 def test_policy_contract(manifest):
     policies = manifest.get("policies", [])
     observed_tags = [policy.get("tag") for policy in policies]
     _assert(observed_tags == REQUIRED_TAGS, f"unexpected policy order/tags: {observed_tags}")
+    observed_set = set(observed_tags)
+
+    _assert(
+        "service_guarded_diagnostic" not in observed_set,
+        "service_guarded_diagnostic must remain absent from the formal policy tags",
+    )
+    _assert(
+        observed_set & FORMAL_CANDIDATE_TAGS == FORMAL_CANDIDATE_TAGS,
+        f"formal candidates missing: {FORMAL_CANDIDATE_TAGS - observed_set}",
+    )
+    _assert(
+        {tag for tag in observed_tags if tag in FORMAL_CANDIDATE_TAGS} == FORMAL_CANDIDATE_TAGS,
+        "formal candidate tags must be exactly the accepted Phase 6B winners",
+    )
+    _assert(
+        {tag for tag in observed_tags if tag in NON_ORACLE_BASELINE_TAGS} == NON_ORACLE_BASELINE_TAGS,
+        "non-oracle baselines must be nearest_L, cost_L, and cnn_menu",
+    )
+    _assert(
+        {tag for tag in observed_tags if tag in LEGACY_DIAGNOSTIC_TAGS} == LEGACY_DIAGNOSTIC_TAGS,
+        "legacy expected-profit diagnostics must remain present",
+    )
+    _assert(
+        not (FORMAL_CANDIDATE_TAGS & LEGACY_DIAGNOSTIC_TAGS),
+        "legacy diagnostics must not be formal candidates",
+    )
+    _assert(
+        {tag for tag in observed_tags if tag in ORACLE_TAGS} == ORACLE_TAGS,
+        "cost_oracle and profit_oracle must remain diagnostic references",
+    )
+    _assert(
+        not (FORMAL_CANDIDATE_TAGS & ORACLE_TAGS),
+        "oracle references must not be formal candidates",
+    )
 
     by_tag = {policy["tag"]: policy for policy in policies}
     _assert(
@@ -87,10 +139,6 @@ def test_policy_contract(manifest):
     _assert(
         by_tag["min_quit_tol003"].get("args_overrides", {}).get("menu_quit_tolerance") == 0.03,
         "min_quit_tol003 must keep tolerance 0.03",
-    )
-    _assert(
-        "service_guarded_diagnostic" not in by_tag,
-        "service_guarded_diagnostic must remain out of formal candidate sets",
     )
     _assert(
         by_tag["profit_oracle"].get("args_overrides", {}).get("menu_use_oracle_eta") is True,
