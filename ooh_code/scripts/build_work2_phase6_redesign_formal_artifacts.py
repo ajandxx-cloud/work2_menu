@@ -416,6 +416,8 @@ def classify_gate(rows, policy_summary):
         reasons.append(
             f"{row['variant_tag']}: primary_gap={fmt(row['mean_primary_gap_vs_baseline'])}, "
             f"opt_out={fmt(row['mean_opt_out_rate'])}, unstable_seeds={row['unstable_seed_count']}, "
+            f"primary_available_seeds={row['primary_metric_available_seeds']}/{len(EXPECTED_SEEDS)}, "
+            f"eligible={str(row['eligible_for_positive_claim']).lower()}, "
             f"fallback_max={fmt(row['max_redesign_fallback_rate'])}."
         )
 
@@ -542,6 +544,7 @@ def write_policy_summary_markdown(path, summary_rows, decision):
             fmt(row.get("mean_net_profit")),
             fmt(row.get("mean_opt_out_rate")),
             fmt(row.get("mean_acceptance_rate")),
+            str(row.get("primary_metric_available_seeds", "")),
             fmt(row.get("max_redesign_fallback_rate")),
             str(row.get("passes_formal_gate", False)).lower(),
         ])
@@ -560,6 +563,7 @@ def write_policy_summary_markdown(path, summary_rows, decision):
                 "Net profit",
                 "Opt-out",
                 "Acceptance",
+                "Primary seeds",
                 "Fallback",
                 "Pass",
             ],
