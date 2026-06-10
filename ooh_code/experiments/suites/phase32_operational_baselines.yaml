@@ -1,8 +1,0 @@
-name: phase32_operational_baselines
-title: Phase 32 Operational Baselines Suite
-type: suite
-description: >
-  Operational baseline comparison suite. Single member running all baseline
-  strategies under the RC low-uptake regime.
-members:
-  - phase32_operational_baselines
