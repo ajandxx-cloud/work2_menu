@@ -1,0 +1,103 @@
+\section{Results}
+\label{sec:results}
+
+All headline results use frozen predictors and paired replayed request traces. Unless a table or caption explicitly labels a quantity as a predictor diagnostic, reported values are realized simulator outcomes. The strengthened evidence program separates approximation quality, filtering behavior, uptake-regime sensitivity, and external directional checks so that no claim is stronger than its evidence tier (Table~\ref{tab:evidence_hierarchy_main}).
+
+\subsection{Exact-vs-Greedy Assortment Diagnostics}
+\label{sec:exact_greedy}
+
+\textit{[Mechanism diagnostic.]} This section provides mechanism diagnostics for the menu-construction approximation.
+
+\ArtifactTable{../artifacts/tables/phase29_exact_greedy_gap_summary.tex}{Exact-vs-greedy assortment diagnostics on the RC benchmark.}
+
+Table~\ref{tab:exact_greedy_gap} reports the main approximation-quality diagnostic. Exact enumeration is interpreted as the benchmark for the implemented menu-value surrogate when the candidate set is small enough to enumerate. Greedy forward selection is the scalable approximation. The logged relative optimality gap, menu-overlap rate, and build-time columns therefore answer a narrow but important question: how much surrogate value is lost when the system uses the operationally cheaper greedy construction rather than exact subset enumeration? This table is the primary evidence for the exact-small/greedy-large algorithmic claim; it should not be read as a proof of optimality for the full dynamic DRT routing problem.
+
+\subsection{Robust ETA Filtering}
+\label{sec:robust_filtering}
+
+\textit{[Mechanism diagnostic.]}
+
+\ArtifactTable{../artifacts/tables/phase30_robust_filtering_summary.tex}{Robust ETA-filtering comparison on the RC benchmark.}
+
+Table~\ref{tab:robust_filtering} compares hard ETA filtering, calibrated filtering, interval-overlap filtering, and no ETA filtering. The key diagnostic is not only net profit, but also false-negative pruning, home-only menu share, and displayed menu size. A robust filter is useful only if it preserves operational credibility without removing most feasible meeting-point bundles before assortment optimization acts. The no-filter variant is included as an upper-bound diagnostic on candidate availability, not as a universal recommendation.
+
+\paragraph{Quantile error diagnostics.}
+Table~\ref{tab:filter_validity_summary} in Appendix~\ref{app:evidence_hierarchy} supplements the mean-error diagnostics with P50, P90, and P95 quantiles of displayed-offer absolute errors. Across the four filter variants, ETA P95 errors reach approximately 3\,600 seconds and IVT P95 errors reach approximately 3\,370 seconds, confirming that the filtering signal is coarse: a non-trivial share of displayed offers carry large prediction errors. The deployed blended filter shows ETA P50$\,{\approx}\,3{,}070$\,s and P90$\,{\approx}\,3{,}620$\,s, indicating that most displayed offers over-predict ETA by roughly one hour. This is consistent with the positive ETA bias column, which equals the MAE for the deployed filter (all errors are in the same direction). The heuristic and stronger filters achieve near-zero ETA errors by construction because they only display bundles whose heuristic ETA window is sufficiently narrow.
+Despite these large prediction errors, the filtering diagnostic remains informative because false-negative pruning concentrates in the far distance band, where meeting points are least likely to be accepted; the near-band false-negative rate remains below 0.04 candidates per request (Table~\ref{tab:filter_validity_summary}). The filtering signal is coarse at the individual-offer level, but operationally it preferentially removes distant bundles while preserving nearby options that passengers are more likely to select.
+
+\paragraph{False-negative pruning by distance.}
+The FN breakdown columns in Table~\ref{tab:filter_validity_summary} show that false-negative pruning concentrates in the far distance band ($>$1\,500\,m): across all filter variants, the far-band FN rate is approximately 8.4--8.7 candidates per request, while the near band ($<$500\,m) contributes fewer than 0.04 and the mid band (500--1\,500\,m) contributes approximately 0.11--0.13. This pattern is expected: distant meeting points are more likely to be filtered because the ETA prediction window is wider and more candidates fail the feasibility check. The concentration of false-negative pruning in the far band means that filtering preferentially removes distant meeting points, which is operationally conservative---nearby meeting points, which passengers are more likely to accept, are largely preserved.
+
+\subsection{Uptake-Regime Menu Value}
+\label{sec:uptake_regime}
+
+\textit{[Behavioral stress test.]}
+
+\ArtifactTable{../artifacts/tables/phase31_uptake_menu_value_summary.tex}{Menu-value comparison across low, medium, and high uptake regimes.}
+
+Table~\ref{tab:uptake_menu_value} reports the low-, medium-, and high-uptake RC regimes. This table is the main guard against over-interpreting near-degenerate outside-option settings. When acceptance and non-home uptake are close to zero, profit differences mainly diagnose mechanism behavior; when uptake becomes behaviorally live, the same menu and pricing rules can be interpreted through operator profit, passenger surplus, non-home acceptance, and pricing-boundary diagnostics. The intended claim is therefore conditional: service-menu optimization matters most when passengers have enough willingness to consider meeting-point bundles and the outside option is not overwhelmingly attractive.
+
+\paragraph{Regime-specific tradeoffs.}
+The pricing-rule comparison reveals regime-dependent tradeoffs rather than policy dominance. In the high-uptake regime, flat markdown achieves the largest gap versus full display ($+1.575$ units), but it also reduces the acceptance rate from 0.009 (full display) to 0.007 and the non-home acceptance from 0.009 to 0.007. Consumer surplus under flat markdown is $-0.188$, compared with $-0.500$ under full display, reflecting the lower price floor hit rate (0.000 vs.\ 0.333). Flat markdown therefore trades acceptance breadth for per-passenger surplus improvement and higher profit. In the low-uptake regime, by contrast, all policies produce near-identical zero outcomes, so the pricing comparison is purely a mechanism diagnostic with no behavioral content. The Lambert-W-inspired common-offset rule does not dominate flat markdown in any regime; the operational choice between them depends on whether the operator prioritizes acceptance volume or per-passenger surplus and net profit.
+
+When a filtering policy improves net profit but reduces the acceptance rate, the profit improvement does not automatically imply a service-quality improvement. Table~\ref{tab:rc_main_optout_welfare} reports passenger-facing welfare metrics separately so that operators can assess whether profit gains come at the expense of reduced service coverage or degraded passenger experience. In the RC benchmark, consumer surplus is negative for all policies because the outside option dominates for most passengers; the small surplus differences across policies reflect compositional changes in which passengers are served rather than welfare improvements for a fixed passenger population.
+
+\subsection{MNL Parameter Sensitivity}
+\label{sec:mnl_sensitivity}
+
+\textit{[Behavioral stress test.]}
+
+\ArtifactTable{../artifacts/tables/mnl_sensitivity_summary.tex}{MNL-regime sensitivity summary across low, medium, and higher-uptake RC regimes.}
+
+Table~\ref{tab:mnl_sensitivity_summary} reports the MNL parameter sensitivity results across low-, medium-, and higher-uptake regimes. This evidence addresses the concern that the menu-optimization results are artifacts of a single MNL calibration. The base utility, home-pickup bonus, price sensitivity, walking scale, and outside-option strength are all embedded in the three regime configurations. When acceptance and non-home uptake remain near zero (low regime), profit differences are mechanism diagnostics; when uptake increases (medium and higher regimes), the same menu and pricing rules produce richer behavioral variation.
+
+The sensitivity evidence shows that the direction and rough magnitude of the menu-optimization gap are directionally consistent across the tested MNL parameterizations. This is a stress-test result conditional on the implemented parameterization, not a claim that results generalize to all possible demand curves.
+
+\subsection{Outside-Option Sensitivity}
+\label{sec:outside_option_sensitivity}
+
+\textit{[Behavioral stress test.]}
+
+\ArtifactTable{../artifacts/tables/outside_option_scan_summary.tex}{Outside-option utility sensitivity scan across five $u_0$ levels on the primary RC calibration. Gap vs full is the mean net-profit gap against exhaustive full display.}
+
+Table~\ref{tab:outside_option_scan_summary} reports the outside-option utility scan across five values $u_0 \in \{-1.0, -0.5, 0.0, +0.5, +1.0\}$ on the primary RC calibration. This scan addresses the concern that menu-optimization results depend on an untested outside-option assumption. When the outside option is made more attractive ($u_0$ increases), opt-out rates rise and fewer passengers consider the displayed menu; when the outside option is less attractive ($u_0$ decreases), more passengers consider non-home bundles and the behavioral regime shifts.
+
+The key finding is directional: the sign and rough magnitude of the menu-optimization gap relative to full display are directionally consistent across the tested $u_0$ range, although the absolute profit levels and acceptance rates shift substantially with outside-option strength. This is a stress-test result conditional on the implemented parameterization.
+
+\paragraph{Calibration scope.}
+This outside-option scan constitutes literature-bounded sensitivity testing, not external demand validation. The parameter values in Table~\ref{tab:mnl_params} are not estimated from revealed-preference or survey data; they are simulator design parameters whose plausibility ranges are informed by the DRT and stated-preference literature cited in Section~\ref{sec:mnl}. The scan demonstrates that the menu-optimization mechanism is not brittle to the specific $u_0 = 0$ assumption, but it does not validate the true outside-option utility faced by real DRT passengers. True external demand validation would require survey-based or revealed-preference estimation of the MNL parameters \citep{ben1985discrete}, which is beyond the scope of the current simulator-based study and is discussed as a limitation in Section~\ref{sec:limitations}.
+
+\paragraph{Limitations.}
+Several demand-model limitations remain despite the outside-option scan. First, walking-distance sensitivity ($\sigma$) and the home-bundle bonus ($u^{\text{home}}$) are not varied in this scan; their sensitivity is partially captured by the regime-level MNL stress tests in Table~\ref{tab:mnl_sensitivity_summary}. Second, the scan uses only the primary RC instance with two split pairs per $u_0$ level, which limits the inferential precision of the directional findings. Third, the MNL model itself assumes Independence of Irrelevant Alternatives (IIA); if the true demand model violates IIA, the sensitivity patterns reported here may not hold. Fourth, the opt-out mechanism captures only a binary accept/reject margin and does not model substitution to other travel modes, schedule delay, or trip-chaining effects that real passengers would exhibit.
+
+\subsection{RC Outside-Option Benchmark}
+
+\textit{[Mechanism diagnostic.]}
+
+\ArtifactTable{../artifacts/tables/rc_main_optout_summary.tex}{Main RC policy comparison under the outside-option evaluation setup. Gap and win rate are computed against exhaustive full display across six split-level evaluation pairs.}
+\ArtifactFigure{../artifacts/figures/rc_main_optout_gap_vs_full.png}{0.9\linewidth}{Policy net-profit gap against full display on the RC outside-option study.}{fig:main_policy_gap}
+
+The original RC outside-option benchmark remains useful as a mechanism check. It shows whether policies change menu exposure, home-only collapse, and candidate-set pruning under a demanding outside-option calibration. It is not the main operator-impact benchmark when full-display acceptance is behaviorally degenerate. Split-level uncertainty for RC, Austin, and Seattle is reported in Table~\ref{tab:policy_gap_uncertainty_summary}. The RC benchmark provides six split-level evaluation pairs. Reported gaps are split-level paired means with the observed range; the percentage effect is computed relative to the full-display net profit. When acceptance rates differ between policies (e.g., strict filtering reduces non-home acceptance), the profit gap partially reflects changed request composition rather than purely operational efficiency.
+
+Table~\ref{tab:profit_decomposition} decomposes the net-profit gap into fare revenue, discount cost, travel cost, service cost, and failure cost channels. The decomposition shows that the profit gap between policies is not driven by a single cost component; instead, filtering and assortment rules shift the composition of displayed bundles, which changes discount exposure, service costs, and failure penalties simultaneously. The direction of the net-profit gap is consistent across the tested regimes, but the source decomposition varies with the uptake regime and MNL calibration.
+
+\ArtifactTable{../artifacts/tables/operational_baselines_summary.tex}{Operational baseline comparison on the RC low-uptake benchmark. Insertion-cost greedy, minimum-lateness ranking, and random-top-k floor provide dispatch-floor reference points that do not apply menu optimization or ETA filtering. Gap and win rate are computed against exhaustive full display.}
+
+Table~\ref{tab:operational_baselines} reports the operational-baseline comparison under the RC low-uptake regime. All three operational baselines underperform full display on net profit, with gaps of approximately 4--6 units, confirming that even random selection does not catastrophically degrade performance in this low-uptake setting. The menu-optimization policies in Table~\ref{tab:rc_main_optout} therefore operate in a narrow reference-performance band: they must add value beyond what dispatch-floor selection already achieves, not merely beat a naive floor. This comparison does not establish service-quality bounds or generalize to higher-uptake regimes; it benchmarks the starting point from which menu optimization seeks improvement.
+
+\subsection{Cross-Instance Evaluation}
+\label{sec:cross_instance}
+
+\textit{[Descriptive external check.]} Austin and Seattle each provide only two split-level evaluation pairs; the city results are reported as descriptive two-pair checks, not as stable generalization estimates.
+
+\ArtifactTable{../artifacts/tables/austin_main_summary.tex}{Austin (Amazon Last Mile) policy comparison under the outside-option evaluation setup. Results averaged over two split-level evaluation pairs ($0{\to}1$, $1{\to}0$).}
+
+\ArtifactTable{../artifacts/tables/seattle_main_summary.tex}{Seattle (Amazon Last Mile) policy comparison under the outside-option evaluation setup. Results averaged over two split-level evaluation pairs ($0{\to}1$, $1{\to}0$).}
+
+\ArtifactTable{../artifacts/tables/city_impact_summary.tex}{City-level management summary for the no-filter heuristic against full display and the strict-filter heuristic.}
+
+\ArtifactTable{../artifacts/tables/policy_gap_uncertainty_summary.tex}{Split-level paired gap summary for RC, Austin, and Seattle. The inferential unit is the split-level paired mean net-profit gap; Austin and Seattle remain descriptive because each city has only two split pairs.}
+
+\ArtifactTable{../artifacts/tables/benchmark_bridge_summary.tex}{Benchmark-role bridge summary separating RC's mechanism role from the city impact benchmarks.}
+
+Austin and Seattle preserve real-world-derived geography and travel-time structure but contain only two split pairs per city. They therefore supplement the RC mechanism and uptake-regime studies rather than defining a broad generalization claim. Directionally positive city gaps are useful evidence that the mechanism is not purely an RC artifact, but do not constitute replication or external validation in the inferential sense; stable external validation requires additional city splits and demand calibration.

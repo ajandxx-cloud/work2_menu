@@ -1,0 +1,88 @@
+Module path:  Environments.OOH.Parcelpoint_py Parcelpoint_py
+Dynamically loaded from:  <class 'Environments.OOH.Parcelpoint_py.Parcelpoint_py'>
+
+ Note: the HGS python implementation (hygese 0.0.0.8) throws an assertion error for coords<0, you will need to outcomment this check in hygese.py 
+
+Module path:  Environments.OOH.Parcelpoint_py Parcelpoint_py
+Dynamically loaded from:  <class 'Environments.OOH.Parcelpoint_py.Parcelpoint_py'>
+
+ Note: the HGS python implementation (hygese 0.0.0.8) throws an assertion error for coords<0, you will need to outcomment this check in hygese.py 
+
+Module path:  Src.Algorithms.DSPO DSPO
+Dynamically loaded from:  <class 'Src.Algorithms.DSPO.DSPO'>
+=====Configurations=====
+ Namespace(actor_lr=0.0001, algo_name='DSPO', base_util=-2.0, batch_size=256, batch_size_ppo=100, buffer_size=500, clip_service_time=10, clipping_factor=0.2, cool_theta=0.001176470588235294, cool_theta_cnn=0.001176470588235294, critic_lr=0.01, critic_update_epochs=25, data_seed=0, data_seed_test=1, debug=True, dissatisfaction=False, driver_wage=30, dropout=0.05, env_name='Parcelpoint_py', experiment='run', failure_cost=20.0, folder_suffix='default', fourier_coupled=True, fourier_order=3, fraction_capacitated=0.38, fuel_cost=0.6, gamma=0.999, gauss_variance=2, gpu=0, grid_dim=11, hexa=False, hgs_final_time=1.5, hgs_reopt_time=1.1, hiddenActorLayerSize=8, hiddenLayerSize=16, home_failure=0.1, home_util=3.2, incentive_sens=-0.25, init_theta=1.0, init_theta_cnn=0.75, initial_phase_epochs=50, instance='RC', k=8, learning_rate=0.001, linearModel=False, load_data=True, log_output='term_file', max_episodes=10, max_price=5.0, max_steps_p=0.5, max_steps_r=700, min_price=-6.0, n_filters=16, n_input_layers=2, n_vehicles=15, only_phase_one=False, optim='adam', parcelpoint_capacity=50, policy_update_epochs=25, price_home=0.0, price_pp=-0.0, pricing=True, reopt=10000000, revenue=50, save_count=50, save_model=True, save_routes=False, seed=1234, state_lr=0.1, td_lambda=0.95, timestamp='6|30|11:23:15', truck_speed=30, use3d_conv=False, veh_capacity=25)
+State space: 4
+time required for 10 episodes :2.164249897003174
+Inital training phase started...
+Epoch 0 Huber loss:: 1993.3416748046875
+Epoch 1 Huber loss:: 1931.7234191894531
+Epoch 2 Huber loss:: 1707.2648518880208
+Epoch 3 Huber loss:: 1533.3147659301758
+Epoch 4 Huber loss:: 1328.7878326416017
+Epoch 5 Huber loss:: 1217.684735616048
+Epoch 6 Huber loss:: 1089.5055411202568
+Epoch 7 Huber loss:: 1015.0317726135254
+Epoch 8 Huber loss:: 931.0941535101997
+Epoch 9 Huber loss:: 878.0732925415039
+Epoch 10 Huber loss:: 702.1415809631347
+Epoch 11 Huber loss:: 546.2679481506348
+Epoch 12 Huber loss:: 438.91281204223634
+Epoch 13 Huber loss:: 361.8457572937012
+Epoch 14 Huber loss:: 327.4190475463867
+Epoch 15 Huber loss:: 281.1888198852539
+Epoch 16 Huber loss:: 263.2479583740234
+Epoch 17 Huber loss:: 230.56098480224608
+Epoch 18 Huber loss:: 218.11201858520508
+Epoch 19 Huber loss:: 189.9921745300293
+Epoch 20 Huber loss:: 179.57940864562988
+Epoch 21 Huber loss:: 160.2177761077881
+Epoch 22 Huber loss:: 152.62009811401367
+Epoch 23 Huber loss:: 139.3925983428955
+Epoch 24 Huber loss:: 132.29008445739746
+Epoch 25 Huber loss:: 121.85015144348145
+Epoch 26 Huber loss:: 116.78244972229004
+Epoch 27 Huber loss:: 108.9683006286621
+Epoch 28 Huber loss:: 103.70268058776855
+Epoch 29 Huber loss:: 99.71965942382812
+Epoch 30 Huber loss:: 93.96569290161133
+Epoch 31 Huber loss:: 88.98672027587891
+Epoch 32 Huber loss:: 84.56065692901612
+Epoch 33 Huber loss:: 79.57579917907715
+Epoch 34 Huber loss:: 75.83302936553955
+Epoch 35 Huber loss:: 71.42258968353272
+Epoch 36 Huber loss:: 67.35741500854492
+Epoch 37 Huber loss:: 63.616037368774414
+Epoch 38 Huber loss:: 59.925083541870116
+Epoch 39 Huber loss:: 56.32724323272705
+Epoch 40 Huber loss:: 53.033898544311526
+Epoch 41 Huber loss:: 50.079857444763185
+Epoch 42 Huber loss:: 46.828204822540286
+Epoch 43 Huber loss:: 44.24965324401855
+Epoch 44 Huber loss:: 41.613233184814455
+Epoch 45 Huber loss:: 39.474853515625
+Epoch 46 Huber loss:: 37.542258739471436
+Epoch 47 Huber loss:: 35.213784503936765
+Epoch 48 Huber loss:: 33.3733904838562
+Epoch 49 Huber loss:: 31.52002696990967
+... Initial training phase terminated!
+Huber loss:  25.937673568725586
+Huber loss:  23.581029891967773
+Huber loss:  25.255138397216797
+Huber loss:  19.939226150512695
+Huber loss:  22.55222511291504
+Huber loss:  20.5643367767334
+Huber loss:  21.258975982666016
+Huber loss:  17.14505958557129
+time required for 10 episodes :96.64323306083679
+percentage home delivery:  0.6530748663101604
+travel costs:  3375.44
+service costs:  1436.19
+failure costs:  488.5
+Avg. Charge:  4.320658914728682 std.:  1.4052462996679995
+Avg. Discount:  5.427767366720516 std.:  1.2116683210997623
+Charge revenue:  278.6825
+Discount costs:  1679.8939999999998
+total costs:  6701.3415
+average travelled by customers:  9425.526011560694
+total timing:  324.8466398715973

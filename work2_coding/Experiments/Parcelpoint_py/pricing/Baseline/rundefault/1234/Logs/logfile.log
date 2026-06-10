@@ -1,0 +1,48 @@
+Module path:  Environments.OOH.Parcelpoint_py Parcelpoint_py
+Dynamically loaded from:  <class 'Environments.OOH.Parcelpoint_py.Parcelpoint_py'>
+
+ Note: the HGS python implementation (hygese 0.0.0.8) throws an assertion error for coords<0, you will need to outcomment this check in hygese.py 
+
+Module path:  Environments.OOH.Parcelpoint_py Parcelpoint_py
+Dynamically loaded from:  <class 'Environments.OOH.Parcelpoint_py.Parcelpoint_py'>
+
+ Note: the HGS python implementation (hygese 0.0.0.8) throws an assertion error for coords<0, you will need to outcomment this check in hygese.py 
+
+Module path:  Src.Algorithms.Baseline Baseline
+Dynamically loaded from:  <class 'Src.Algorithms.Baseline.Baseline'>
+=====Configurations=====
+ Namespace(actor_lr=0.0001, algo_name='Baseline', base_util=-2.0, batch_size=128, batch_size_ppo=100, buffer_size=500, clip_service_time=10, clipping_factor=0.2, cool_theta=0.001176470588235294, cool_theta_cnn=0.001176470588235294, critic_lr=0.01, critic_update_epochs=25, data_seed=0, data_seed_test=1, debug=True, dissatisfaction=False, driver_wage=30, dropout=0.05, env_name='Parcelpoint_py', experiment='run', failure_cost=10.0, folder_suffix='default', fourier_coupled=True, fourier_order=3, fraction_capacitated=0.38, fuel_cost=0.6, gamma=0.999, gauss_variance=2, gpu=0, grid_dim=11, hexa=False, hgs_final_time=1.5, hgs_reopt_time=1.1, hiddenActorLayerSize=8, hiddenLayerSize=16, home_failure=0.1, home_util=3.55, incentive_sens=-0.175, init_theta=1.0, init_theta_cnn=1.0, initial_phase_epochs=10, instance='Seattle', k=19, learning_rate=0.001, linearModel=False, load_data=True, log_output='term_file', max_episodes=10, max_price=2.0, max_steps_p=0.5, max_steps_r=700, min_price=-10.0, n_filters=8, n_input_layers=2, n_vehicles=12, only_phase_one=False, optim='adam', parcelpoint_capacity=50, policy_update_epochs=25, price_home=0.0, price_pp=-0.0, pricing=True, reopt=10000000, revenue=50, save_count=50, save_model=True, save_routes=False, seed=1234, state_lr=0.1, td_lambda=0.95, timestamp='6|29|20:26:47', truck_speed=30, use3d_conv=False, veh_capacity=100)
+State space: 4
+time required for 10 episodes :3.255613327026367
+time required for 10 episodes :29.298991441726685
+episode 0
+episode 1
+episode 2
+episode 3
+episode 4
+episode 5
+episode 6
+episode 7
+episode 8
+episode 9
+episode 10
+episode 11
+episode 12
+episode 13
+episode 14
+episode 15
+episode 16
+episode 17
+episode 18
+episode 19
+percentage home delivery:  0.8130052474826266
+travel costs:  2021.2286666666666
+service costs:  2013.2539999999785
+failure costs:  573.25
+Avg. Charge:  nan std.:  nan
+Avg. Discount:  -0.0 std.:  0.0
+Charge revenue:  0.0
+Discount costs:  -0.0
+total costs:  4607.732666666646
+average travelled by customers:  662.352294273796
+total timing:  89.23351168632507

@@ -1,0 +1,157 @@
+\begin{thebibliography}{17}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Article
+\bibitem[{Agatz et~al.(2012)Agatz, Erera, Savelsbergh and
+  Wang}]{agatz2012optimization}
+\bibinfo{author}{Agatz, N.}, \bibinfo{author}{Erera, A.},
+  \bibinfo{author}{Savelsbergh, M.}, \bibinfo{author}{Wang, X.},
+  \bibinfo{year}{2012}.
+\newblock \bibinfo{title}{Optimization for dynamic ride-sharing: A review}.
+\newblock \bibinfo{journal}{European Journal of Operational Research}
+  \bibinfo{volume}{223}, \bibinfo{pages}{295--303}.
+%Type = Book
+\bibitem[{Ben-Akiva and Lerman(1985)}]{ben1985discrete}
+\bibinfo{author}{Ben-Akiva, M.}, \bibinfo{author}{Lerman, S.R.},
+  \bibinfo{year}{1985}.
+\newblock \bibinfo{title}{Discrete Choice Analysis: Theory and Application to
+  Travel Demand}.
+\newblock \bibinfo{publisher}{MIT Press}.
+%Type = Article
+\bibitem[{Cordeau and Laporte(2007)}]{cordeau2007dial}
+\bibinfo{author}{Cordeau, J.F.}, \bibinfo{author}{Laporte, G.},
+  \bibinfo{year}{2007}.
+\newblock \bibinfo{title}{The dial-a-ride problem: Models and algorithms}.
+\newblock \bibinfo{journal}{Annals of Operations Research}
+  \bibinfo{volume}{153}, \bibinfo{pages}{29--46}.
+%Type = Article
+\bibitem[{Cortenbach et~al.(2024)Cortenbach, Kliewer and
+  Masing}]{cortenbach2024}
+\bibinfo{author}{Cortenbach, F.}, \bibinfo{author}{Kliewer, N.},
+  \bibinfo{author}{Masing, B.}, \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{The dial-a-ride problem with meeting points: A
+  problem formulation for shared demand-responsive transit}.
+\newblock \bibinfo{journal}{Transportation Research Part C: Emerging
+  Technologies} \bibinfo{volume}{166}, \bibinfo{pages}{104757}.
+%Type = Article
+\bibitem[{Czioska et~al.(2019)Czioska, Mattfeld and Sester}]{czioska2019}
+\bibinfo{author}{Czioska, P.}, \bibinfo{author}{Mattfeld, D.C.},
+  \bibinfo{author}{Sester, M.}, \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Real-world meeting points for shared
+  demand-responsive transportation systems}.
+\newblock \bibinfo{journal}{Public Transport} \bibinfo{volume}{11},
+  \bibinfo{pages}{341--377}.
+%Type = Article
+\bibitem[{Dong et~al.(2020)Dong, Ye and Liang}]{dong2020}
+\bibinfo{author}{Dong, J.}, \bibinfo{author}{Ye, H.}, \bibinfo{author}{Liang,
+  H.}, \bibinfo{year}{2020}.
+\newblock \bibinfo{title}{Dial-a-ride problem with users' accept/reject
+  decisions based on service utilities}.
+\newblock \bibinfo{journal}{Transportation Research Record}
+  \bibinfo{volume}{2674}, \bibinfo{pages}{308--323}.
+%Type = Article
+\bibitem[{Fielbaum et~al.(2021)Fielbaum, Bai and
+  Alonso-Mora}]{fielbaum2021ondemand}
+\bibinfo{author}{Fielbaum, A.}, \bibinfo{author}{Bai, X.},
+  \bibinfo{author}{Alonso-Mora, J.}, \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{On-demand ridesharing with optimized pick-up and
+  drop-off walking locations}.
+\newblock \bibinfo{journal}{Transportation Research Part C: Emerging
+  Technologies} \bibinfo{volume}{126}, \bibinfo{pages}{103061}.
+%Type = Article
+\bibitem[{Ho et~al.(2018)Ho, Szeto, Kuo, Leung, Petering and
+  Tou}]{ho2018survey}
+\bibinfo{author}{Ho, S.C.}, \bibinfo{author}{Szeto, W.Y.},
+  \bibinfo{author}{Kuo, Y.H.}, \bibinfo{author}{Leung, J.M.Y.},
+  \bibinfo{author}{Petering, M.}, \bibinfo{author}{Tou, T.W.H.},
+  \bibinfo{year}{2018}.
+\newblock \bibinfo{title}{A survey of dial-a-ride problems: Literature review
+  and recent developments}.
+\newblock \bibinfo{journal}{Transportation Research Part B: Methodological}
+  \bibinfo{volume}{111}, \bibinfo{pages}{395--421}.
+%Type = Article
+\bibitem[{McFadden(1974)}]{mcfadden1974conditional}
+\bibinfo{author}{McFadden, D.}, \bibinfo{year}{1974}.
+\newblock \bibinfo{title}{Conditional logit analysis of qualitative choice
+  behavior}.
+\newblock \bibinfo{journal}{Frontiers in Econometrics} ,
+  \bibinfo{pages}{105--142}.
+%Type = Article
+\bibitem[{Merchan et~al.(2022)Merchan, Arora, Pachon, Konduri, Winkenbach,
+  Parks and Noszek}]{merchan2022amazon}
+\bibinfo{author}{Merchan, D.}, \bibinfo{author}{Arora, J.},
+  \bibinfo{author}{Pachon, J.}, \bibinfo{author}{Konduri, K.},
+  \bibinfo{author}{Winkenbach, M.}, \bibinfo{author}{Parks, S.},
+  \bibinfo{author}{Noszek, J.}, \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{2021 {Amazon} last mile routing research challenge:
+  Data set}.
+\newblock \bibinfo{journal}{Transportation Science} \bibinfo{volume}{56},
+  \bibinfo{pages}{1392--1407}.
+%Type = Article
+\bibitem[{Parragh et~al.(2008)Parragh, Doerner and Hartl}]{parragh2008survey}
+\bibinfo{author}{Parragh, S.N.}, \bibinfo{author}{Doerner, K.F.},
+  \bibinfo{author}{Hartl, R.F.}, \bibinfo{year}{2008}.
+\newblock \bibinfo{title}{A survey on pickup and delivery problems}.
+\newblock \bibinfo{journal}{Journal f{\"u}r Betriebswirtschaft}
+  \bibinfo{volume}{58}, \bibinfo{pages}{21--51}.
+%Type = Article
+\bibitem[{Rusmevichientong et~al.(2010)Rusmevichientong, Shen and
+  Shmoys}]{rusmevichientong2010dynamic}
+\bibinfo{author}{Rusmevichientong, P.}, \bibinfo{author}{Shen, Z.J.M.},
+  \bibinfo{author}{Shmoys, D.B.}, \bibinfo{year}{2010}.
+\newblock \bibinfo{title}{Dynamic assortment optimization with a multinomial
+  logit choice model and capacity constraint}.
+\newblock \bibinfo{journal}{Operations Research} \bibinfo{volume}{58},
+  \bibinfo{pages}{1666--1680}.
+%Type = Article
+\bibitem[{Stiglic et~al.(2015)Stiglic, Agatz, Savelsbergh and
+  Gradisar}]{stiglic2015benefits}
+\bibinfo{author}{Stiglic, M.}, \bibinfo{author}{Agatz, N.},
+  \bibinfo{author}{Savelsbergh, M.}, \bibinfo{author}{Gradisar, M.},
+  \bibinfo{year}{2015}.
+\newblock \bibinfo{title}{The benefits of meeting points in ride-sharing
+  systems}.
+\newblock \bibinfo{journal}{Transportation Research Part B: Methodological}
+  \bibinfo{volume}{82}, \bibinfo{pages}{36--53}.
+%Type = Article
+\bibitem[{Stumpe et~al.(2024)Stumpe, Dieter and Friedrich}]{stumpe2024}
+\bibinfo{author}{Stumpe, M.}, \bibinfo{author}{Dieter, M.},
+  \bibinfo{author}{Friedrich, M.}, \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Designing taxi ridesharing systems with shared
+  pick-up and drop-off locations: Insights from a computational study}.
+\newblock \bibinfo{journal}{Transportation Research Part A: Policy and
+  Practice} \bibinfo{volume}{185}, \bibinfo{pages}{104102}.
+%Type = Article
+\bibitem[{Talluri and van Ryzin(2004)}]{talluri2004revenue}
+\bibinfo{author}{Talluri, K.}, \bibinfo{author}{van Ryzin, G.},
+  \bibinfo{year}{2004}.
+\newblock \bibinfo{title}{Revenue management under a general discrete choice
+  model of consumer behavior}.
+\newblock \bibinfo{journal}{Management Science} \bibinfo{volume}{50},
+  \bibinfo{pages}{15--33}.
+%Type = Article
+\bibitem[{Vidal(2022)}]{vidal2022hybrid}
+\bibinfo{author}{Vidal, T.}, \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Hybrid genetic search for the cvrp: Open-source
+  implementation and swap* neighborhood}.
+\newblock \bibinfo{journal}{Computers \& Operations Research}
+  \bibinfo{volume}{140}, \bibinfo{pages}{105643}.
+%Type = Article
+\bibitem[{Wang(2012)}]{wang2012}
+\bibinfo{author}{Wang, R.}, \bibinfo{year}{2012}.
+\newblock \bibinfo{title}{Capacitated assortment and price optimization under
+  the multinomial logit model}.
+\newblock \bibinfo{journal}{Operations Research Letters} \bibinfo{volume}{40},
+  \bibinfo{pages}{492--497}.
+
+\end{thebibliography}

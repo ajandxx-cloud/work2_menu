@@ -1,0 +1,47 @@
+\section{Experimental Design}
+\label{sec:experiments}
+
+\paragraph{Instances.} The primary evaluation uses the RC (Clustered-Random) benchmark instance: 90 customer locations, 10 candidate meeting points, and 1 depot, all placed on a $[0, 140]^2$ Euclidean grid. The fleet consists of 15 vehicles with capacity 25. Travel times are derived from Euclidean distances scaled by a vehicle speed of 30 units/hour. The last 10 nodes in each coordinate file serve as the meeting-point set. Cross-instance validation uses the Austin and Seattle instances from the Amazon Last Mile Routing Research Challenge \citep{merchan2024amazon}: 701 customer delivery stops, 278 (Austin) and 299 (Seattle) candidate meeting points, with real-world geographic coordinates and pre-computed driving-time matrices. All instances share the same MNL parameters, scoring weights, and evaluation protocol.
+
+\paragraph{Amazon Last Mile data transformation.} The Austin and Seattle instances are adapted from the Amazon Last Mile Routing Research Challenge dataset \citep{merchan2024amazon}, which contains real delivery-route data including stop coordinates, planned route sequences, and time-window attributes. The transformation proceeds as follows: (i) each delivery stop in the source dataset becomes a customer origin in the DRT instance; (ii) meeting points are defined as the last $N$ nodes in each coordinate file ($N = 278$ for Austin, $N = 299$ for Seattle), representing geographically dispersed candidate pickup locations; (iii) for each customer, an adjacency matrix records the 20 nearest meeting points by driving time, computed from the dataset's travel-time attributes; (iv) the depot is defined as the first node in the coordinate file, representing the common destination. The resulting instances are therefore \emph{real-world-derived}: they preserve the geographic structure and travel-time characteristics of actual delivery routes but are adapted to the many-to-one DRT setting through the customer-origin and meeting-point mapping described above. We use the term ``real-world-derived'' rather than ``real-world'' throughout to reflect this adaptation.
+
+\paragraph{Data splits.} The RC study uses six train/test split pairs. Splits 0 and 1 are the bundled RC coordinate files; splits 2, 3, and 4 are synthetically generated RC-type instances (same format, different random seeds) that provide additional independent replications. The six evaluation pairs are: $0{\to}1$, $1{\to}0$, $0{\to}1$ (seed 2025), $2{\to}3$, $3{\to}2$, and $4{\to}2$. The Austin and Seattle studies each use two split pairs ($0{\to}1$ and $1{\to}0$). For each pair, the shared predictor is trained on the training split under exhaustive full display and then frozen; all policies are evaluated on the test split under identical replayed request traces.
+
+\paragraph{Reference benchmark.} Exhaustive full display --- the policy that shows every feasible bundle $\mathcal{B}(r)$ to each passenger --- serves as the reference benchmark for three reasons. First, it represents the operator's \emph{status-quo} decision in the absence of any menu-design logic: when no filtering or scoring is applied, all candidates are displayed by default. Second, it \emph{maximizes the offered choice set}: no limited-menu policy can offer a passenger a bundle that full display withholds, so it provides a natural reference for how much choice is being removed by any heuristic policy. Third, it offers a clear operational benchmark against which limited-menu rules can be compared under identical request traces and simulator conditions. A limited-menu policy that outperforms full display on net profit therefore does so by steering demand toward more profitable bundles, not because full display is itself an optimization optimum. In this paper, however, the interpretation of that benchmark depends on whether the full-display reference remains behaviorally non-degenerate. We call a benchmark \emph{non-degenerate} when the full-display acceptance rate stays inside the study's behavior gate and the full-display opt-out rate remains below its maximum threshold. When that condition fails, the benchmark is still useful for mechanism diagnosis, but not as the primary basis for operator-impact claims.
+
+\paragraph{Policies.} The main comparison evaluates ten policies: the seven heuristic and menu-optimization policies described below, plus three operational baselines (insertion-cost greedy, minimum-lateness ranking, and random-top-k floor) that use the same evaluation protocol but do not optimize the menu.
+Exhaustive full display serves as the reference; the strict-filter menu-optimization policy
+(\texttt{menu\_optimization}) and the no-filter variant
+(\texttt{menu\_optimization\_v2} with
+\texttt{menu\_time\_filtering=False}) are the two optimization configurations; revenue-greedy
+(Section~\ref{sec:baselines}), nearest-heuristic, top-$k$ cheapest, and top-$k$
+passenger utility are the four heuristic baselines.
+The core menu objects $\mathcal{B}(r)$, $\mathcal{M}(r)$, $b^0$, the outside option, and the false-negative pruning definition are fixed by Section~\ref{sec:notation_entities}. All limited-menu policies use $k = 3$. The three operational baselines also use $k = 3$ and the same common-offset pricing heuristic, but bypass the menu-value surrogate and ETA-based filtering, providing non-optimized selection references.
+
+\paragraph{Study structure.} The experimental evidence is organized into three tiers. First, \textit{mechanism diagnostics} evaluate the exact-vs-greedy assortment approximation and the ETA-filtering comparison under controlled RC conditions. Second, \textit{behavioral stress tests} examine how menu-optimization outcomes respond to MNL parameter variation and uptake-regime changes. Third, \textit{descriptive external checks} apply the best-performing policies to Austin and Seattle instances. This tiered structure separates internal mechanism evidence from external generalization checks (Table~\ref{tab:evidence_hierarchy_main}). The exact-vs-greedy study compares exact enumeration, greedy forward selection, and the automatic exact-small/greedy-large solver on RC, logging surrogate optimality gaps and build-time tradeoffs. The robust-filtering study compares hard, calibrated, interval-overlap, and no-filter ETA eligibility rules under the same paired-evaluation contract. The uptake-regime study covers low-, medium-, and higher-uptake RC calibrations so that pricing, acceptance, non-home uptake, and welfare are evaluated only where passenger response is behaviorally visible. The seven-policy comparison is rerun on Austin and Seattle using two split pairs per city; these city studies remain external directional checks. Earlier menu-$k$, ablation, fleet-size, demand, and pricing sweeps are retained in the artifact directory as development diagnostics, but they are not used as confirmatory evidence in the strengthened paper unless rerun under the current evaluation contract.
+
+\paragraph{Evaluation state.} Evaluation checkpoints are loaded with the learned ETA/IVT
+heads active rather than the phase-one fallback state. This matters because the
+menu-construction logic depends on those heads whenever ETA filtering is enabled.
+All headline results in Section~\ref{sec:results} use reruns from this active-head
+evaluation state. In the ETA-identification study, only the filtering signal is
+changed across deployed, heuristic, stronger, and oracle variants; in the pricing
+study, the filtering and menu-construction logic are held fixed while only the
+displayed-price rule is changed.
+
+\paragraph{Pipeline.} Each study is specified as a versioned YAML manifest. The
+project-level runner trains the shared predictor once per split pair, replays frozen
+request traces for each policy, and stores normalized summaries under
+\texttt{outputs/studies/}. Paper-facing tables and figures are generated from those
+summaries via \texttt{scripts/build\_artifacts.py} and consumed directly by the
+manuscript, ensuring traceability between reported numbers and named experiment runs.
+The MNL sensitivity manifests are grouped in the MNL sensitivity suite, while the
+uptake-regime suite exposes the strengthened low-, medium-, and high-uptake menu-value
+comparison used by the main text. The exact-vs-greedy suite and the robust-filtering
+suite complete the mechanism-diagnostic tier.
+
+\paragraph{Evaluation metric.} The primary metric is mean net profit per episode:
+\[
+  \text{net profit} = \text{charge revenue} - \text{discount cost} - \text{travel cost} - \text{service cost} - \text{failure cost}.
+\]
+This is a variable-cost metric; fixed fleet costs are excluded by design. Unless a table or caption explicitly labels a quantity as a predictor diagnostic, all reported headline metrics in Section~\ref{sec:results} are realized outcomes under replayed request traces rather than predicted bundle attributes. On RC, the mechanism benchmark remains useful mainly through paired gaps and structural diagnostics because its full-display reference is behaviorally degenerate under the outside option. The calibrated higher-uptake RC regime is therefore the main setting for pricing and welfare interpretation: it keeps the same paired-evaluation contract but restores non-trivial acceptance, allowing menu composition, pricing, and operator--passenger tradeoffs to be compared on realized outcomes rather than near-universal opt-out behavior alone.

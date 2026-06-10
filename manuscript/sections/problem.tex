@@ -1,0 +1,121 @@
+\section{Problem Setting}
+
+\subsection{System Overview}
+
+We consider a many-to-one demand-responsive transit (DRT) system in which passengers are collected from dispersed origins and transported to a common destination (e.g., a transit hub or workplace zone). At each decision epoch, a passenger submits a pickup request. The operator must decide which service offers to display, after which the passenger selects one displayed offer or opts out. The selected offer is then executed by the vehicle routing layer.
+
+The distinguishing feature of this setting relative to standard dial-a-ride formulations \citep{cordeau2007dial} is that passengers are not simply assigned to vehicles; instead, they choose among a \emph{displayed menu} of service bundles. The operator therefore faces a joint problem of offer design and demand steering.
+
+\subsection{Notation and Entities}
+\label{sec:notation_entities}
+
+Let $\mathcal{R}$ denote the set of passenger requests arriving over a planning horizon $T$. For each request $r \in \mathcal{R}$, the simulator first constructs a candidate set of feasible bundles, denoted $\mathcal{B}(r)$. We use \emph{feasible bundle set} as the primary term and \emph{candidate set} as a shorthand for the same object. A \emph{service bundle} $b \in \mathcal{B}(r)$ is a tuple
+\[
+  b = (m_b,\, [t_b^{\text{lo}},\, t_b^{\text{hi}}],\, p_b),
+\]
+where $m_b$ is a meeting point (a geographic location the passenger walks to for pickup), $[t_b^{\text{lo}}, t_b^{\text{hi}}]$ is the offered pickup time window, and $p_b \in \mathbb{R}$ is the price charged to the passenger. A special \emph{home bundle} $b^0$ always satisfies $m_{b^0} = r.\text{origin}$ and imposes zero walking distance. A \emph{displayed menu} is a subset $\mathcal{M}(r) \subseteq \mathcal{B}(r)$. For limited-menu policies, $k$ denotes the cap on displayed non-home offers, so $|\mathcal{M}(r) \setminus \{b^0\}| \leq k$. Passengers may also choose an \emph{outside option}, meaning that no bundle in $\mathcal{M}(r)$ is selected.
+
+Table~\ref{tab:notation} summarizes the main symbols used throughout the paper. The formal problem statement is given in Section~\ref{sec:problem_statement}.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Main notation. Symbols are listed in order of introduction; units are given where applicable.}
+\label{tab:notation}
+\begin{tabular}{@{}p{0.20\linewidth}p{0.74\linewidth}@{}}
+\hline
+Symbol & Definition \\
+\hline
+$r$ & Passenger request \\
+$\mathcal{B}(r)$ & Feasible bundle set for request $r$ \\
+$b = (m_b, [t_b^{\text{lo}}, t_b^{\text{hi}}], p_b)$ & Service bundle: meeting point, time window, price \\
+$b^0$ & Home pickup bundle (zero walking distance) \\
+$\mathcal{M}(r)$ & Displayed menu, $\mathcal{M}(r) \subseteq \mathcal{B}(r)$, $|\mathcal{M}(r) \setminus \{b^0\}| \leq k$ \\
+$k$ & Cap on displayed non-home offers \\
+$\hat{c}(b)$ & Predicted marginal cost of bundle $b$ \\
+$c(b)$ & Realized marginal operational cost of serving bundle $b$ \\
+$\hat{c}_{\text{sys}}(b)$ & Route-aware surrogate cost used in menu scoring \\
+$d_b$ & Walking distance to meeting point $m_b$ (metres) \\
+$\hat{\tau}_b$ & Predicted pickup estimated time of arrival (ETA) for bundle $b$ \\
+$\hat{\tau}_b^{\text{acc}}$ & Passenger's acceptable ETA upper bound \\
+$\hat{\iota}_b$ & Predicted in-vehicle time (IVT) for bundle $b$ \\
+$\Delta_b = \hat{\tau}_b - t_r^{\text{req}}$ & Pickup time deviation from passenger's requested time \\
+$\sigma$ & Distance scale parameter in walking-disutility term (metres) \\
+$\beta$ & Passenger price sensitivity ($\beta < 0$) \\
+$\mu_m,\mu_w,\mu_t,\mu_v$ & Non-negative scoring weights (margin, walk, time, IVT) \\
+$u_b$ & Passenger utility for bundle $b$ (MNL) \\
+$u_0$ & Outside-option utility, normalized to $0$ in the MNL model \\
+$\pi(b \mid \mathcal{M})$ & MNL choice probability for $b$ given menu $\mathcal{M}$ \\
+$\Pi$ & Aggregate net profit over all requests \\
+$T$ & Planning horizon (set of decision epochs) \\
+$t_b^{\text{lo}},\, t_b^{\text{hi}}$ & Lower and upper bounds of the pickup time window for bundle $b$ \\
+$p_b$ & Price charged to passenger for bundle $b$ (monetary units) \\
+$\delta_{\text{impl}}$ & Implemented common-offset pricing parameter (Eq.~\ref{eq:lambertw}) \\
+$R$ & Operator revenue target (monetary units) \\
+$p_{\min},\, p_{\max}$ & Platform price floor and cap (monetary units) \\
+$\bar{u}$ & Base utility intercept (MNL) \\
+$u^{\text{home}}$ & Additional utility of the home bundle (MNL) \\
+$\alpha_\tau$ & In-vehicle time weight (MNL) \\
+$\alpha_\Delta$ & Pickup-time deviation weight (MNL) \\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Note on notation.} To avoid collision with the scoring weights $\mu_m, \mu_w, \mu_t, \mu_v$ introduced in Section~\ref{sec:scoring}, we use $\beta$ (not $\lambda$) for the passenger price sensitivity throughout. The symbol $\lambda$ is reserved for the Lambert W pricing derivation in Section~\ref{sec:mnl}, where it denotes the same quantity as $\beta$ but in the context of the pricing formula.
+
+\noindent\textbf{Predicted versus realized quantities.} Symbols with hats denote predictor outputs or menu-construction surrogates, such as $\hat{c}(b)$, $\hat{\tau}_b$, $\hat{\iota}_b$, and $\hat{c}_{\text{sys}}(b)$. Unhatted outcome quantities refer to realized evaluation outcomes under replayed request traces unless a table or caption explicitly labels them as predictor diagnostics.
+
+\noindent\textbf{False-negative pruning.} For a filtered menu policy, we define the false-negative pruning rate on request $r$ as the share of feasible non-home bundles in $\mathcal{B}(r) \setminus \{b^0\}$ that are removed by the ETA pre-filter:
+\[
+  \mathrm{FN}(r) = \frac{|\mathcal{P}_{\mathrm{FN}}(r)|}{|\mathcal{B}(r) \setminus \{b^0\}|},
+\]
+where $\mathcal{P}_{\mathrm{FN}}(r) \subseteq \mathcal{B}(r) \setminus \{b^0\}$ denotes the feasible non-home bundles pruned before menu scoring. All reported false-negative pruning rates use this non-home feasible-bundle denominator.
+
+\subsection{Formal Problem Statement}
+\label{sec:problem_statement}
+
+\noindent\textbf{Problem Statement (Menu Design for DRT).}
+
+\medskip
+\noindent\textit{Given:}
+\begin{itemize}
+  \item A set of passenger requests $\mathcal{R}$ arriving over planning horizon $T$.
+  \item For each request $r \in \mathcal{R}$, a feasible bundle set
+    \[
+      \mathcal{B}(r) = \bigl\{ b = (m_b,\,[t_b^{\text{lo}},\,t_b^{\text{hi}}],\,p_b) \;\big|\; \text{feasibility}(b, r) \bigr\},
+    \]
+    where feasibility requires: (i) the pickup time window $[t_b^{\text{lo}}, t_b^{\text{hi}}]$ satisfies the passenger's latest acceptable arrival, (ii) the assigned vehicle has sufficient remaining capacity, and (iii) the meeting point $m_b$ is reachable within the vehicle routing time windows enforced by the back-end optimizer.
+  \item A cap $k \geq 1$ on displayed non-home offers.
+  \item An MNL choice model with parameters $(\bar{u}, u^{\text{home}}, \alpha_\tau, \alpha_\Delta, \sigma, \beta)$ (Table~\ref{tab:mnl_params}) and an implemented common-offset pricing parameter $\delta_{\text{impl}}$ (Section~\ref{sec:mnl}).
+\end{itemize}
+
+\noindent\textit{Decision:} For each request $r$, select a displayed menu
+\[
+  \mathcal{M}(r) \subseteq \mathcal{B}(r), \quad |\mathcal{M}(r) \setminus \{b^0\}| \leq k.
+\]
+
+\noindent\textit{Objective:} Maximize aggregate expected net profit over all requests:
+\[
+  \max_{\{\mathcal{M}(r)\}_{r \in \mathcal{R}}} \;\Pi \;=\; \sum_{r \in \mathcal{R}} \sum_{b \in \mathcal{M}(r)} \pi(b \mid \mathcal{M}(r))\,(p_b - c(b)),
+\]
+where $\pi(b \mid \mathcal{M}(r))$ is the MNL choice probability (Eq.~\ref{eq:mnl_prob}) and $c(b)$ is the marginal operational cost of serving bundle $b$.
+
+\noindent\textit{Hardness note:} The exact solution requires evaluating all $\binom{|\mathcal{B}(r)|}{k}$ subsets per request, each requiring a joint pricing and menu-value evaluation. This is practical for small candidate sets and useful as a benchmark, but combinatorially expensive at scale. We therefore use exact enumeration as a small-set reference and greedy forward selection as the scalable approximation described in Section~\ref{sec:scoring}.
+
+\subsection{Three-Layer Decision Structure}
+
+The benchmark environment decomposes each request episode into three sequential layers.
+
+\textbf{Layer 1 --- Candidate generation.} The simulator identifies all feasible meeting-point neighborhoods for request $r$ and constructs the bundle set $\mathcal{B}(r)$, including the home bundle $b^0$. Feasibility is assessed using approximate front-end pickup windows; exact vehicle routing time windows (VRPTW) are enforced by the back-end route optimizer \citep{vidal2022hybrid} after a bundle is selected.
+
+\textbf{Layer 2 --- Menu policy.} The operator selects a menu $\mathcal{M}(r) \subseteq \mathcal{B}(r)$ to display. This is the decision layer studied in this paper. All competing policies in our experiments share the same Layer 1 candidate generator and Layer 3 choice model; they differ only in how they construct $\mathcal{M}(r)$.
+
+\textbf{Layer 3 --- Passenger choice.} The passenger selects one bundle from $\mathcal{M}(r)$ according to a Multinomial Logit (MNL) model \citep{ben1985discrete,mcfadden1974conditional}. The selected bundle is routed by the vehicle layer.
+
+\subsection{Objective}
+
+The operator's objective is to maximize aggregate net profit over all requests:
+\[
+  \Pi = \sum_{r \in \mathcal{R}} \mathbb{E}\bigl[\, p_{\tilde{b}} - c(\tilde{b}) \,\bigr],
+\]
+where $\tilde{b}$ is the bundle chosen by the passenger from $\mathcal{M}(r)$, $p_{\tilde{b}}$ is the price charged, and $c(\tilde{b})$ is the marginal operational cost. In practice, $c(b)$ captures travel cost, discount cost, service cost, and home-pickup failure cost. The menu policy influences $\Pi$ both by restricting which bundles can be chosen and by shaping the prices set for each displayed bundle.

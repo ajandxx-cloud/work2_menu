@@ -1,0 +1,231 @@
+你的感觉是对的。**以目前版本来看，文章贡献偏弱，而且结果支撑也比较保守。** 它现在更像一个 **simulation diagnostic paper / heuristic comparison paper**，而不是一篇强贡献的 DRT 菜单优化论文。
+
+核心问题在于：文章提出的问题是有价值的，但目前的方法和结果没有把这个问题“做深”。
+
+## 一、为什么我也认为贡献不够强？
+
+### 1. 方法主要是已有模块的组合，原创性不够突出
+
+文章的方法由几个已有或常见模块组成：
+
+* MNL choice model；
+* Lambert-W pricing；
+* CNN-2d bundle predictor；
+* greedy scoring heuristic；
+* HGS routing as black box。
+
+这些模块本身都不是新的。文章真正的新意是把它们组合到 **many-to-one DRT menu design** 里面，但组合型贡献如果没有很强的理论、算法或实证结果支撑，容易显得不够强。文章自己也承认 scoring function 是 fixed-weight heuristic，不是 constrained assortment optimization 的精确解。
+
+所以审稿人可能会问：
+
+> 这篇文章到底提出了一个新的 optimization method，还是只是把已有 choice model、pricing formula 和 heuristic scoring 拼在一起？
+
+这是目前最大的问题。
+
+---
+
+### 2. 结果没有形成强结论
+
+RC benchmark 上，所有 heuristic 相比 full display 的利润差距都很小。表现最好的 revenue-greedy 只有 (+8.95)，v2 只有 (+3.38)，而且所有置信区间都包含 0。文章自己也说，corrected RC evidence does not support a strong dominance claim。
+
+这会让贡献变弱，因为文章想证明菜单设计有价值，但实证结果只能说明：
+
+> 菜单结构确实变了，但利润没有显著提升。
+
+这不是不能发，但不能支撑很强的主张。
+
+---
+
+### 3. v2 的核心改进太简单：主要是“去掉 ETA filter”
+
+文章中 v1 到 v2 的关键变化是 disabling ETA-based time-window filtering。也就是说，v2 的主要发现是：**不要用 noisy ETA prediction 做 hard filtering**。
+
+这个发现有实践意义，但作为论文主贡献略显单薄。因为它更像一个实验诊断结果，而不是一个新的优化框架。
+
+审稿人可能会认为：
+
+> 这不是一个新的 algorithm，而是发现原来的 filter 设计有问题，然后把它关掉了。
+
+---
+
+### 4. Passenger welfare 结果非常弱
+
+文章中 RC corrected outside-option setting 下，non-home acceptance rate 不超过 0.1%，opt-out rate 大约 99.5%。
+
+这会引出一个严重问题：
+
+> 如果几乎没有乘客接受 meeting-point bundle，那么这个菜单设计问题在当前实验设定下是否真的有效？
+
+也就是说，文章虽然研究 meeting-point menu design，但实验结果显示乘客几乎都 opt out 或不选择 non-home option。这会削弱文章的现实意义。
+
+---
+
+### 5. Predictor 部分也不够强
+
+文章说 CNN-2d 的 cost prediction 比 naive mean baseline 降低 15.3%，但 ETA 和 IVT 的 CNN MAE 反而高于 naive baseline，后续又通过 heuristic blending 修正。
+
+这会让 prediction layer 的贡献变弱。审稿人可能会问：
+
+> 如果 ETA/IVT predictor 比 naive baseline 还差，那么前端菜单优化为什么要依赖这个 predictor？
+
+---
+
+## 二、这篇文章目前的真实贡献是什么？
+
+我认为目前最真实、最站得住的贡献不是“提出了一个优秀菜单优化算法”，而是：
+
+**提出了一个 many-to-one DRT 菜单设计的实验诊断框架，说明 ETA-based candidate filtering 会严重改变菜单结构，并可能导致 home-only menu collapse。**
+
+也就是说，贡献更偏向：
+
+> diagnostic contribution，而不是 optimization contribution。
+
+文章结论中其实也承认了这一点：primary transferable contribution 是 diagnostic workflow，而不是证明某个 heuristic universally dominates。
+
+如果按这个定位，文章是诚实的；但如果想投较高水平交通/OR期刊，这个贡献确实不够强。
+
+---
+
+## 三、怎样增强贡献？
+
+我建议你不要只做“heuristic menu design”。你可以把它升级成一个更强的 **DRT service-menu optimization problem**。下面是最值得改的几个方向。
+
+### 方向 1：把问题正式定义为“meeting point + time window”的 assortment optimization
+
+现在文章虽然有 menu design，但更像 heuristic ranking。你可以强化成：
+
+**Assortment optimization for DRT service bundles with meeting-point and time-window attributes.**
+
+核心不是简单 top-k，而是选择：
+
+[
+M(r)\subseteq B(r)
+]
+
+使期望利润最大化，同时考虑：
+
+* passenger choice；
+* outside option；
+* walking distance；
+* pickup time window；
+* vehicle operational cost；
+* capacity risk；
+* route delay。
+
+这样贡献会从“启发式菜单排序”升级为：
+
+> a DRT-specific assortment optimization model with operationally endogenous bundle costs.
+
+这比现在的 heuristic scoring 更像一个正式研究问题。
+
+---
+
+### 方向 2：增加一个真正的优化算法，而不是固定权重 scoring
+
+目前 score function 是固定参数：
+
+[
+score(b)=
+\mu_m(p_b-\hat c^{sys}(b))
+-\mu_w \frac{d_b}{\sigma}
+-\mu_t \frac{\Delta_b}{\tau_{scale}}
+-\mu_v \frac{\hat\iota_b}{\tau_{scale}}
+]
+
+这个会被认为比较 ad hoc。你可以改成以下几种更强的方法：
+
+第一种：**exact enumeration for small candidate sets + greedy approximation for large candidate sets**。
+RC 中候选集不大，完全可以对小规模 (B(r)) 枚举所有菜单，得到 exact optimal menu，然后比较 heuristic 的 optimality gap。
+
+第二种：**learning-to-rank menu scoring**。
+不要手动设定 (\mu_m,\mu_w,\mu_t,\mu_v)，而是用历史模拟数据学习 scoring weights。
+
+第三种：**decision-focused learning / SPO for menu selection**。
+这与你的 Work 1 很自然衔接。你可以让 predictor 不只是预测 cost，而是直接优化最终 menu profit。
+
+第四种：**robust filtering / uncertainty-aware menu design**。
+既然文章发现 ETA hard filter 会误删可行 bundle，那么可以把贡献升级为：
+**用 prediction interval 或 distributional ETA uncertainty 做 robust menu filtering。**
+
+这个比“直接去掉 filter”强很多。
+
+---
+
+### 方向 3：重新设计实验，让 non-home acceptance rate 不要接近 0
+
+现在 opt-out rate 约 99.5%，这会严重削弱实验说服力。你需要重新校准 utility parameters，让实验至少出现合理的 meeting-point adoption。
+
+可以设置三种场景：
+
+1. **low acceptance scenario**：乘客强烈偏好 home pickup；
+2. **medium acceptance scenario**：meeting point 有一定吸引力；
+3. **high acceptance scenario**：乘客愿意接受折扣换取步行。
+
+这样文章结论会更完整：
+
+> Menu design matters most when passengers have moderate willingness to walk and outside-option attractiveness is not overwhelmingly high.
+
+这会比现在单一 calibration 下“几乎没人接受”强很多。
+
+---
+
+### 方向 4：把 Amazon case 做成更有说服力的真实场景验证
+
+Austin 和 Seattle 现在只有两个 split pairs，所以文章自己也说只是 suggestive external checks。
+
+如果要增强实证贡献，需要：
+
+* 增加更多城市或更多 split；
+* 说明 Amazon delivery data 到 DRT 的转换逻辑；
+* 加入真实路网距离/时间矩阵；
+* 更明确地解释 depot 为什么可以代表 common destination；
+* 做 out-of-sample generalization：RC 训练，Amazon 测试，或城市间 transfer。
+
+否则审稿人会认为 real-world-derived case 只是补充实验，不是强证据。
+
+---
+
+## 四、如果作为 Work 2，我建议怎么重新定位？
+
+我建议不要把题目定成：
+
+> Heuristic Menu Design for Many-to-One DRT
+
+这个题目会让贡献显得偏弱，因为 “heuristic” 本身就降低了期待。
+
+可以改成更强的方向：
+
+**Service Menu Optimization for Many-to-One Demand-Responsive Transit with Meeting Points and Pickup Time Windows**
+
+或者：
+
+**Assortment-Based Service Menu Design for Demand-Responsive Transit with Meeting-Point and Time-Window Choices**
+
+这样文章的核心变成：
+
+> DRT 中的服务菜单优化，而不是一个 heuristic comparison。
+
+你的 Work 2 本来就应该承接 Work 1，研究 **meeting point + time window + assortment optimization**。所以这篇文章可以作为 Work 2 的雏形，但需要从“诊断型启发式实验”升级为“正式菜单优化模型 + 可解释求解算法 + 更强实证结论”。
+
+---
+
+## 五、我的判断
+
+如果按当前版本投稿：
+
+* **TR Part C / TRB / TS / MSOM 级别**：贡献明显不够；
+* **一般交通类或仿真应用类期刊**：有机会，但需要弱化贡献主张；
+* **作为博士论文 Work 2 初稿**：方向是对的，但还没有达到一个完整强贡献章节的水平。
+
+最关键的问题是：
+**现在文章证明了 filtering 很重要，但没有证明你的 menu optimization 方法本身很强。**
+
+你下一步最应该做的是把文章从：
+
+> “v2 去掉 filter 后效果更好”
+
+升级成：
+
+> “我们提出了一个 DRT service bundle assortment optimization framework，并设计了一个考虑预测不确定性、乘客选择和运营成本的菜单优化算法。”
+
+这样贡献才会更像一篇真正的研究论文。

@@ -1,0 +1,11 @@
+{
+  "built_at_utc": "2026-05-14T03:45:47Z",
+  "study": "phase31_uptake_menu_value",
+  "manuscript_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-6\u5206\uff08\u9700\u964dai\uff09\\ooh_code\\manuscript",
+  "compile_requested": true,
+  "compiler": "latexmk",
+  "compiler_path": "C:\\Users\\39583\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\latexmk.EXE",
+  "status": "compiled",
+  "compiler_used": "pdflatex_fallback",
+  "output_pdf": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-6\u5206\uff08\u9700\u964dai\uff09\\ooh_code\\manuscript\\build\\main.pdf"
+}
