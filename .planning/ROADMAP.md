@@ -22,7 +22,7 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 | 8 | Repository Hygiene And Provenance Freeze | Reduce provenance risk before producing empirical evidence | PROV-01..04 |
 | 9 | Shared Checkpoint Training Pipeline | Create real shared pilot/formal predictor checkpoints with provenance | CKPT-01..05 |
 | 10 | 2/1 | Complete    | 2026-06-11 |
-| 11 | Attention Ablation And Design Fix | Use pilot-only ablations if the attention signal is weak | ABLT-01..04 |
+| 11 | 1/1 | Complete    | 2026-06-11 |
 | 12 | Formal Actual Replay Enablement | Enable strict-gated formal actual replay without placeholder rows | FORM-01..05 |
 | 13 | Formal Attention Evidence And Claim Decision | Run formal evidence and decide the paper claim from artifact guards | CLAIM-01..05 |
 

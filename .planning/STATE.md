@@ -3,15 +3,16 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: evidence_ladder_and_audit_closure
 current_phase: 11
-status: executing
-last_updated: "2026-06-11T14:13:07.596Z"
+status: ready_to_plan
+last_updated: 2026-06-11T14:15:05.008Z
 last_activity: 2026-06-11 -- Phase 11 planning complete
 progress:
   total_phases: 13
-  completed_phases: 10
-  total_plans: 23
-  completed_plans: 23
-  percent: 77
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 24
+  percent: 15
+stopped_at: Phase 11 complete (1/1) — ready to discuss Phase 12
 ---
 
 # Project State
@@ -19,22 +20,22 @@ progress:
 **Project:** Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
 **Initialized:** 2026-06-10
 **Current milestone:** v2.1 evidence_ladder_and_audit_closure
-**Current phase:** 11
-**Status:** Ready to execute
+**Current phase:** 12
+**Status:** Ready to plan
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-06-11)
 
 **Core value:** Produce defensible Work2 evidence that attention-enhanced DSPO improves the original DSPO method under reproducible paired replay.
-**Current focus:** Phase 11 — attention ablation and design fix
+**Current focus:** Phase 12 — formal actual replay enablement
 
 ## Current Position
 
 Phase: 07 audit_closure_and_traceability_repair
 Plan: Not started
 Status: Ready to execute
-Last activity: 2026-06-11 -- Phase 11 planning complete
+Last activity: 2026-06-11
 
 ## Current Facts
 
