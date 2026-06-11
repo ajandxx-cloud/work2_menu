@@ -9,6 +9,7 @@ import yaml
 
 from Src.parser import Parser
 from Src.policy_adapters import (
+    attention_policy_tags,
     adapter_metadata,
     adapter_overrides,
     known_policy_tags,
@@ -172,9 +173,20 @@ def validate_manifest(manifest):
     if len(policy_tags) != len(set(policy_tags)):
         raise ValueError("duplicate policy tags in manifest: " + repr(policy_tags))
 
-    missing_required = [tag for tag in required_policy_tags() if tag not in policy_tags]
+    required_tags = manifest.get("required_policy_tags")
+    if required_tags is None:
+        if manifest.get("comparison_family") == "attention_dspo":
+            required_tags = attention_policy_tags()
+            required_label = "required policy"
+        else:
+            required_tags = required_policy_tags()
+            required_label = "required baseline policy"
+    else:
+        required_label = "required policy"
+    missing_required = [tag for tag in required_tags if tag not in policy_tags]
     if missing_required:
-        raise ValueError("manifest missing required baseline policy tags: " + ", ".join(missing_required))
+        raise ValueError("manifest missing " + required_label + " tags: " + ", ".join(missing_required))
+    _validate_attention_family(manifest, policy_tags)
 
     validate_required_adapter_coverage(parser_choices())
     _validate_checkpoint_contract(manifest)
@@ -270,6 +282,20 @@ def _validate_checkpoint_contract(manifest):
         raise ValueError(manifest["tier"] + " manifests require base_args.require_checkpoint=true")
     if not base_args.get("checkpoint_path"):
         raise ValueError(manifest["tier"] + " manifests require base_args.checkpoint_path")
+
+
+def _validate_attention_family(manifest, policy_tags):
+    if manifest.get("comparison_family") != "attention_dspo":
+        return
+    allowed = set(attention_policy_tags())
+    non_main = [tag for tag in policy_tags if tag not in allowed]
+    if non_main and not (manifest.get("diagnostic") or manifest.get("separate_suite")):
+        raise ValueError("attention_dspo main manifests may only rank DSPO_original and DSPO_attention")
+    varied = set(manifest.get("varied_fields", []))
+    required_varied = {"method_variant", "attention_enabled", "attention_mode"}
+    missing_varied = sorted(required_varied - varied)
+    if missing_varied:
+        raise ValueError("attention_dspo manifests missing varied attention field(s): " + ", ".join(missing_varied))
 
 
 def _validate_uptake_regimes(manifest):

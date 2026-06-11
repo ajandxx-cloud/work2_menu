@@ -19,6 +19,11 @@ OPTIONAL_POLICY_TAGS = [
     "random_top_k",
 ]
 
+ATTENTION_POLICY_TAGS = [
+    "DSPO_original",
+    "DSPO_attention",
+]
+
 POLICY_ONLY_FIELDS = {
     "menu_policy",
     "menu_eta_filter_mode",
@@ -32,6 +37,17 @@ POLICY_ONLY_FIELDS = {
     "menu_optout_guardrail",
     "menu_selection_solver",
     "menu_use_exact_eval",
+    "method_variant",
+    "attention_enabled",
+    "attention_mode",
+    "attention_strength",
+    "attention_weight_eta_risk",
+    "attention_weight_walk",
+    "attention_weight_time",
+    "attention_weight_cost",
+    "attention_weight_route_delay",
+    "attention_weight_capacity_risk",
+    "attention_weight_price",
 }
 
 ADAPTER_DEFAULTS = {
@@ -45,7 +61,9 @@ POLICY_ADAPTERS = {
         "overrides": {"menu_policy": "offer_all_feasible_bundles", "menu_eta_filter_mode": "hard"},
     },
     "home_only": {
-        "description": "Offer only accepted-home service.",
+        "description": "Accepted-home-only cost approximation boundary, not a recommended operating policy.",
+        "comparison_role": "cost_bound",
+        "cost_bound": True,
         "overrides": {"menu_policy": "home_only", "menu_eta_filter_mode": "hard"},
     },
     "nearest_heuristic": {
@@ -97,6 +115,30 @@ POLICY_ADAPTERS = {
         "optional": True,
         "overrides": {"menu_policy": "random_top_k", "menu_eta_filter_mode": "hard"},
     },
+    "DSPO_original": {
+        "description": "Original no-attention DSPO menu method for paired attention comparison.",
+        "comparison_role": "method",
+        "overrides": {
+            "menu_policy": "risk_adjusted_expected_profit",
+            "menu_eta_filter_mode": "chance_constraint",
+            "menu_eta_chance_threshold": 0.25,
+            "method_variant": "DSPO_original",
+            "attention_enabled": False,
+            "attention_mode": "deterministic",
+        },
+    },
+    "DSPO_attention": {
+        "description": "Attention-enhanced DSPO menu method with deterministic candidate attention.",
+        "comparison_role": "method",
+        "overrides": {
+            "menu_policy": "risk_adjusted_expected_profit",
+            "menu_eta_filter_mode": "chance_constraint",
+            "menu_eta_chance_threshold": 0.25,
+            "method_variant": "DSPO_attention",
+            "attention_enabled": True,
+            "attention_mode": "deterministic",
+        },
+    },
 }
 
 
@@ -108,7 +150,12 @@ def known_policy_tags(include_optional=True):
     tags = list(REQUIRED_POLICY_TAGS)
     if include_optional:
         tags.extend(OPTIONAL_POLICY_TAGS)
+    tags.extend(ATTENTION_POLICY_TAGS)
     return tags
+
+
+def attention_policy_tags():
+    return list(ATTENTION_POLICY_TAGS)
 
 
 def policy_adapter(tag):
@@ -133,6 +180,8 @@ def adapter_metadata(tag):
         "policy_tag": tag,
         "diagnostic": bool(adapter.get("diagnostic", False)),
         "optional": bool(adapter.get("optional", False)),
+        "comparison_role": adapter.get("comparison_role", "policy"),
+        "cost_bound": bool(adapter.get("cost_bound", False)),
         "description": adapter.get("description", ""),
     }
 
@@ -166,4 +215,3 @@ def validate_policy_only_overrides(tag, overrides, allowed_fields=None):
     if bad:
         raise ValueError("policy " + str(tag) + " changes non-policy fields: " + ", ".join(bad))
     return True
-

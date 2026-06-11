@@ -22,6 +22,13 @@ NORMALIZED_ROW_FIELDS = [
     "tier",
     "run_mode",
     "policy_tag",
+    "method_variant",
+    "attention_enabled",
+    "attention_mode",
+    "attention_strength",
+    "attention_weight_summary",
+    "attention_pair_id",
+    "attention_pair_complete",
     "split_id",
     "seed",
     "data_seed",
@@ -50,11 +57,20 @@ NORMALIZED_ROW_FIELDS = [
     "menu_build_time",
     "acceptance_rate",
     "optout_rate",
+    "home_share",
+    "meeting_point_uptake_rate",
     "count_opted_out",
     "count_accepted_home",
     "count_accepted_meeting_point",
+    "charge_revenue",
+    "discount_cost",
+    "net_price_revenue",
+    "net_objective_proxy",
+    "service_time_total",
     "uptake_regime",
     "diagnostic",
+    "comparison_role",
+    "cost_bound",
     "placeholder_only",
     "status",
     "execution_status",
@@ -73,9 +89,15 @@ OPTIONAL_ROW_FIELDS = {
     "menu_build_time",
     "acceptance_rate",
     "optout_rate",
+    "home_share",
+    "meeting_point_uptake_rate",
     "count_opted_out",
     "count_accepted_home",
     "count_accepted_meeting_point",
+    "charge_revenue",
+    "discount_cost",
+    "net_price_revenue",
+    "service_time_total",
     "git_status_summary",
 }
 
@@ -106,6 +128,28 @@ def trace_identity(study_name, split_id, args):
 
 def settings_hash(args):
     return stable_json_hash(args, "settings", length=16)
+
+
+def attention_pair_identity(setting):
+    args = setting["args"]
+    pair_fields = {
+        "study_name": setting["study_name"],
+        "split_id": setting["split_id"],
+        "trace_id": setting["trace_id"],
+        "seed": args.get("seed"),
+        "data_seed": args.get("data_seed"),
+        "data_seed_test": args.get("data_seed_test"),
+        "pricing": args.get("pricing"),
+        "checkpoint_path": args.get("checkpoint_path"),
+        "menu_policy": args.get("menu_policy"),
+        "menu_eta_filter_mode": args.get("menu_eta_filter_mode"),
+        "menu_objective_mode": args.get("menu_objective_mode"),
+        "menu_k": args.get("menu_k"),
+        "max_candidates": args.get("max_candidates"),
+        "hgs_reopt_time": args.get("hgs_reopt_time"),
+        "hgs_final_time": args.get("hgs_final_time"),
+    }
+    return stable_json_hash(pair_fields, "attnpair", length=16)
 
 
 def resolve_paired_settings(manifest, manifest_hash_value=None):
@@ -223,6 +267,32 @@ def build_normalized_row(
         "tier": setting["tier"],
         "run_mode": setting["run_mode"],
         "policy_tag": setting["policy_tag"],
+        "method_variant": _first_value(
+            menu_metadata.get("method_variant"),
+            args.get("method_variant"),
+            policy_metadata.get("method_variant"),
+            "DSPO_original",
+        ),
+        "attention_enabled": bool(_first_value(
+            menu_metadata.get("attention_enabled"),
+            args.get("attention_enabled"),
+            policy_metadata.get("attention_enabled"),
+            False,
+        )),
+        "attention_mode": _first_value(
+            menu_metadata.get("attention_mode"),
+            args.get("attention_mode"),
+            policy_metadata.get("attention_mode"),
+            "deterministic",
+        ),
+        "attention_strength": float(_first_value(
+            menu_metadata.get("attention_strength"),
+            args.get("attention_strength"),
+            1.0,
+        )),
+        "attention_weight_summary": _first_value(menu_metadata.get("attention_weight_summary"), {}),
+        "attention_pair_id": _first_value(menu_metadata.get("attention_pair_id"), attention_pair_identity(setting)),
+        "attention_pair_complete": bool(menu_metadata.get("attention_pair_complete", False)),
         "split_id": setting["split_id"],
         "seed": args.get("seed"),
         "data_seed": args.get("data_seed"),
@@ -251,11 +321,25 @@ def build_normalized_row(
         "menu_build_time": menu_metadata.get("menu_build_time"),
         "acceptance_rate": stats_metadata.get("acceptance_rate"),
         "optout_rate": stats_metadata.get("optout_rate"),
+        "home_share": stats_metadata.get("home_share"),
+        "meeting_point_uptake_rate": stats_metadata.get("meeting_point_uptake_rate"),
         "count_opted_out": stats_metadata.get("count_opted_out"),
         "count_accepted_home": stats_metadata.get("count_accepted_home"),
         "count_accepted_meeting_point": stats_metadata.get("count_accepted_meeting_point"),
+        "charge_revenue": stats_metadata.get("charge_revenue"),
+        "discount_cost": stats_metadata.get("discount_cost"),
+        "net_price_revenue": stats_metadata.get("net_price_revenue"),
+        "net_objective_proxy": _first_value(
+            stats_metadata.get("net_objective_proxy"),
+            menu_metadata.get("net_objective_proxy"),
+            stats_metadata.get("net_price_revenue"),
+            0.0,
+        ),
+        "service_time_total": stats_metadata.get("service_time_total"),
         "uptake_regime": args.get("uptake_regime", "unspecified"),
         "diagnostic": bool(policy_metadata.get("diagnostic", False)),
+        "comparison_role": policy_metadata.get("comparison_role", "policy"),
+        "cost_bound": bool(policy_metadata.get("cost_bound", False)),
         "placeholder_only": bool(placeholder_only),
         "status": status,
         "execution_status": execution_status,
@@ -265,6 +349,18 @@ def build_normalized_row(
     }
     validate_normalized_row(row)
     return row
+
+
+def annotate_attention_pair_completeness(rows):
+    groups = {}
+    for row in rows:
+        groups.setdefault(row.get("attention_pair_id"), []).append(row)
+    for group in groups.values():
+        methods = {row.get("method_variant") for row in group}
+        complete = {"DSPO_original", "DSPO_attention"}.issubset(methods)
+        for row in group:
+            row["attention_pair_complete"] = bool(complete)
+    return rows
 
 
 def validate_normalized_row(row):

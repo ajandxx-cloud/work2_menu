@@ -18,12 +18,14 @@ from Src.experiment_contracts import (  # noqa: E402
 )
 from Src.paired_replay import (  # noqa: E402
     NORMALIZED_ROW_FIELDS,
+    annotate_attention_pair_completeness,
     build_normalized_row,
     checkpoint_row_metadata,
     resolve_paired_settings,
     validate_rows,
 )
 from Src.study_execution import (  # noqa: E402
+    actual_rows_for_manifest,
     blocked_rows_for_manifest,
     collect_git_provenance,
     inspect_manifest_prerequisites,
@@ -95,6 +97,7 @@ def contract_rows_for_manifest(manifest, run_id, max_policies=None):
             placeholder_only=True,
         )
         rows.append(row)
+    annotate_attention_pair_completeness(rows)
     validate_rows(rows)
     return rows
 
@@ -122,7 +125,36 @@ def execute_study(manifest, output_root=None, contract_only=True, max_policies=N
         actual_execution=actual_execution,
         contract_only=contract_only,
     )
-    if actual_execution or blockers:
+    if actual_execution and not blockers:
+        try:
+            rows = actual_rows_for_manifest(
+                manifest,
+                run_id,
+                mh,
+                max_policies=max_policies,
+            )
+            execution_status = "completed"
+            placeholder_only = False
+        except Exception as exc:
+            blockers = [
+                {
+                    "code": "actual_replay_failed",
+                    "severity": "blocking",
+                    "tier": manifest.get("tier", ""),
+                    "message": str(exc),
+                }
+            ]
+            rows = blocked_rows_for_manifest(
+                manifest,
+                run_id,
+                mh,
+                blockers,
+                max_policies=max_policies,
+                root=ROOT,
+            )
+            execution_status = "blocked"
+            placeholder_only = True
+    elif blockers:
         rows = blocked_rows_for_manifest(
             manifest,
             run_id,
