@@ -203,6 +203,19 @@ class Parser(object):
         parser.add_argument("--menu_quit_tolerance", default=0.01, type=float)
         parser.add_argument("--menu_profit_tolerance_fraction", default=0.05, type=float)
         parser.add_argument("--menu_optout_guardrail", default=0.4, type=float)
+        parser.add_argument("--method_variant", default="DSPO_original",
+                            choices=["DSPO_original", "DSPO_attention"])
+        parser.add_argument("--attention_enabled", default=False, type=self.str2bool)
+        parser.add_argument("--attention_mode", default="deterministic",
+                            choices=["deterministic", "neural"])
+        parser.add_argument("--attention_strength", default=1.0, type=float)
+        parser.add_argument("--attention_weight_eta_risk", default=-1.0, type=float)
+        parser.add_argument("--attention_weight_walk", default=-0.25, type=float)
+        parser.add_argument("--attention_weight_time", default=-0.25, type=float)
+        parser.add_argument("--attention_weight_cost", default=-0.05, type=float)
+        parser.add_argument("--attention_weight_route_delay", default=-0.5, type=float)
+        parser.add_argument("--attention_weight_capacity_risk", default=-0.5, type=float)
+        parser.add_argument("--attention_weight_price", default=0.05, type=float)
         parser.add_argument("--freeze_learning", default=False, type=self.str2bool)
         parser.add_argument("--eval_only", default=False, type=self.str2bool)
 

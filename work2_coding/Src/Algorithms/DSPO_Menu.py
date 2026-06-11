@@ -78,6 +78,20 @@ class DSPO_Menu(DSPO):
         self.menu_quit_tolerance = float(getattr(config, "menu_quit_tolerance", 0.01))
         self.menu_profit_tolerance_fraction = float(getattr(config, "menu_profit_tolerance_fraction", 0.05))
         self.menu_optout_guardrail = float(getattr(config, "menu_optout_guardrail", 0.40))
+        self.method_variant = str(getattr(config, "method_variant", "DSPO_original"))
+        self.attention_enabled = bool(getattr(config, "attention_enabled", False))
+        self.attention_mode = str(getattr(config, "attention_mode", "deterministic"))
+        self.attention_strength = float(getattr(config, "attention_strength", 1.0))
+        self.attention_feature_weights = {
+            "eta_risk": float(getattr(config, "attention_weight_eta_risk", -1.0)),
+            "walk": float(getattr(config, "attention_weight_walk", -0.25)),
+            "time": float(getattr(config, "attention_weight_time", -0.25)),
+            "cost": float(getattr(config, "attention_weight_cost", -0.05)),
+            "route_delay": float(getattr(config, "attention_weight_route_delay", -0.5)),
+            "capacity_risk": float(getattr(config, "attention_weight_capacity_risk", -0.5)),
+            "price": float(getattr(config, "attention_weight_price", 0.05)),
+        }
+        self.depot = getattr(config.env, "depot", None)
         if self.menu_use_oracle_eta and self.menu_eta_variant == "deployed":
             self.menu_eta_variant = "oracle"
         if self.menu_eta_variant == "oracle":
@@ -242,10 +256,19 @@ class DSPO_Menu(DSPO):
     def _travel_time_to_depot(self, loc):
         return self._edge_travel_time(loc, self.depot)
 
+    def _edge_travel_time(self, a, b):
+        return self._distance_between(a, b)
+
     def _distance_between(self, a, b):
         if self.load_data:
             return float(self.dist_matrix[a.id_num][b.id_num])
         return float(self.getdistance_euclidean(a, b))
+
+    def _theta(self, step):
+        return float(np.clip(self.init_theta - float(step) * self.cool_theta, 0.0, 1.0))
+
+    def _safe_exp(self, value):
+        return float(np.exp(np.clip(float(value), -700.0, 700.0)))
 
     def _default_menu_aux(self, customer, pps):
         center = self.normalize_eta(customer.preferred_pickup_time)
@@ -588,6 +611,64 @@ class DSPO_Menu(DSPO):
         )
         return offer.score
 
+    def _attention_is_active(self):
+        return bool(getattr(self, "attention_enabled", False))
+
+    def _attention_features(self, offer, eval_cost):
+        metadata = offer.metadata or {}
+        capacity = max(float(getattr(offer.bundle, "remaining_capacity", 0.0)), 0.0)
+        scale = max(float(getattr(self, "menu_time_scale", 1.0)), 1.0)
+        cost_scale = max(abs(float(getattr(self, "revenue", 1.0))), 1.0)
+        return {
+            "eta_risk": float(metadata.get("eta_risk_score", metadata.get("violation_probability", 0.0)))
+            + float(metadata.get("eta_soft_penalty", 0.0)),
+            "walk": float(getattr(offer, "walk_distance", 0.0)) / max(float(getattr(self, "dist_scaler", 1.0)), 1.0),
+            "time": float(getattr(offer, "time_deviation", 0.0)) / scale,
+            "cost": float(eval_cost) / cost_scale,
+            "route_delay": float(metadata.get("route_delay", 0.0)) / scale,
+            "capacity_risk": 0.0 if offer.is_home else 1.0 / (capacity + 0.1),
+            "price": float(getattr(offer, "price", 0.0)) / cost_scale,
+        }
+
+    def _attention_score_for_offer(self, offer, eval_cost):
+        features = self._attention_features(offer, eval_cost)
+        weights = getattr(self, "attention_feature_weights", {})
+        raw_score = 0.0
+        for name, value in features.items():
+            raw_score += float(weights.get(name, 0.0)) * float(value)
+        strength = float(getattr(self, "attention_strength", 1.0))
+        score_delta = strength * raw_score if self._attention_is_active() else 0.0
+        attention_weight = 1.0 / (1.0 + float(np.exp(np.clip(-raw_score, -60.0, 60.0))))
+        return {
+            "attention_features": features,
+            "attention_raw_score": float(raw_score),
+            "attention_weight": float(attention_weight),
+            "attention_score_delta": float(score_delta),
+        }
+
+    def _attention_summary(self, offers):
+        weights = []
+        deltas = []
+        for offer in offers:
+            metadata = offer.metadata or {}
+            if metadata.get("attention_weight") is not None:
+                weights.append(float(metadata.get("attention_weight")))
+            if metadata.get("attention_score_delta") is not None:
+                deltas.append(float(metadata.get("attention_score_delta")))
+        if not weights:
+            return {
+                "attention_weight_min": None,
+                "attention_weight_max": None,
+                "attention_weight_mean": None,
+                "attention_score_delta_total": 0.0,
+            }
+        return {
+            "attention_weight_min": float(min(weights)),
+            "attention_weight_max": float(max(weights)),
+            "attention_weight_mean": float(sum(weights) / len(weights)),
+            "attention_score_delta_total": float(sum(deltas)),
+        }
+
     def _clone_offers(self, offers):
         return [deepcopy(offer) for offer in offers]
 
@@ -631,7 +712,9 @@ class DSPO_Menu(DSPO):
             self._record_offer_trace_costs(offer)
             eval_cost = cost_fn(offer)
             eta_risk_penalty = self._eta_risk_penalty_for_offer(offer)
-            offer.expected_profit = float(prob * (offer.price - eval_cost - eta_risk_penalty))
+            attention = self._attention_score_for_offer(offer, eval_cost)
+            attention_delta_weighted = float(prob * attention["attention_score_delta"])
+            offer.expected_profit = float(prob * (offer.price - eval_cost - eta_risk_penalty) + attention_delta_weighted)
             if offer.metadata is None:
                 offer.metadata = {}
             offer.metadata["choice_probability"] = float(prob)
@@ -641,7 +724,23 @@ class DSPO_Menu(DSPO):
             offer.metadata["menu_objective_mode"] = self.menu_objective_mode
             offer.metadata["eta_risk_penalty"] = float(eta_risk_penalty)
             offer.metadata["eta_risk_penalty_weighted"] = float(prob * eta_risk_penalty)
+            offer.metadata["method_variant"] = str(getattr(self, "method_variant", "DSPO_original"))
+            offer.metadata["attention_enabled"] = bool(self._attention_is_active())
+            offer.metadata["attention_mode"] = str(getattr(self, "attention_mode", "deterministic"))
+            offer.metadata["attention_strength"] = float(getattr(self, "attention_strength", 1.0))
+            offer.metadata["attention_raw_score"] = float(attention["attention_raw_score"])
+            offer.metadata["attention_weight"] = float(attention["attention_weight"])
+            offer.metadata["attention_score_delta"] = float(attention["attention_score_delta"])
+            offer.metadata["attention_score_delta_weighted"] = float(attention_delta_weighted)
+            offer.metadata["attention_features"] = dict(attention["attention_features"])
             total_value += offer.expected_profit
+        self._merge_policy_diagnostic({
+            "method_variant": str(getattr(self, "method_variant", "DSPO_original")),
+            "attention_enabled": bool(self._attention_is_active()),
+            "attention_mode": str(getattr(self, "attention_mode", "deterministic")),
+            "attention_strength": float(getattr(self, "attention_strength", 1.0)),
+            "attention_weight_summary": self._attention_summary(priced_menu),
+        })
         if return_priced:
             return float(total_value), priced_menu
         return float(total_value)
@@ -742,6 +841,13 @@ class DSPO_Menu(DSPO):
                 **eta_diagnostic,
             },
         )
+
+    def _candidate_parcelpoints(self, state):
+        parcelpoints = state[2]["parcelpoints"]
+        if self.load_data:
+            mask = np.ma.masked_array(parcelpoints, mask=self.adjacency[state[0].id_num])
+            parcelpoints = mask[mask.mask].data
+        return parcelpoints[: self.max_candidates]
 
     def build_menu_candidates(self, state, training):
         customer = state[0]
@@ -1615,6 +1721,19 @@ class DSPO_Menu(DSPO):
 
         self.last_menu = list(menu)
         return list(menu)
+
+    def reopt_HGS_final(self, data, fallback_fleet=None):
+        try:
+            return super().reopt_HGS_final(data)
+        except Exception:
+            if fallback_fleet is None or getattr(self.config, "run_mode", "smoke") in ("pilot", "formal"):
+                raise
+            cost = 0.0
+            for vehicle in fallback_fleet["fleet"]:
+                route = vehicle["routePlan"]
+                for idx in range(1, len(route)):
+                    cost += self._distance_between(route[idx - 1], route[idx])
+            return fallback_fleet, cost
 
     def update(self, data, state, done=False):
         if self.freeze_learning:
