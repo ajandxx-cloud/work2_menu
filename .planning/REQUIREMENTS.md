@@ -85,10 +85,10 @@
 
 ### Repository Hygiene And Provenance
 
-- [ ] **PROV-01**: Dirty and untracked files are classified into planning docs, generated artifacts, local outputs, dependency files, deleted user documents, and other local state.
-- [ ] **PROV-02**: `.gitignore` prevents future venv, cache, temporary output, and large local artifact tracking risks.
-- [ ] **PROV-03**: Generated artifacts to track versus keep local are documented.
-- [ ] **PROV-04**: Evidence runs can report `git_dirty=false`, or `git_dirty=true` with a narrow documented reason.
+- [x] **PROV-01**: Dirty and untracked files are classified into planning docs, generated artifacts, local outputs, dependency files, deleted user documents, and other local state.
+- [x] **PROV-02**: `.gitignore` prevents future venv, cache, temporary output, and large local artifact tracking risks.
+- [x] **PROV-03**: Generated artifacts to track versus keep local are documented.
+- [x] **PROV-04**: Evidence runs can report `git_dirty=false`, or `git_dirty=true` with a narrow documented reason.
 
 ### Shared Checkpoints
 
@@ -182,10 +182,10 @@
 | TRACE-03 | Phase 7 | Complete |
 | TRACE-04 | Phase 7 | Complete |
 | TRACE-05 | Phase 7 | Complete |
-| PROV-01 | Phase 8 | Planned |
-| PROV-02 | Phase 8 | Planned |
-| PROV-03 | Phase 8 | Planned |
-| PROV-04 | Phase 8 | Planned |
+| PROV-01 | Phase 8 | Complete |
+| PROV-02 | Phase 8 | Complete |
+| PROV-03 | Phase 8 | Complete |
+| PROV-04 | Phase 8 | Complete |
 | CKPT-01 | Phase 9 | Planned |
 | CKPT-02 | Phase 9 | Planned |
 | CKPT-03 | Phase 9 | Planned |

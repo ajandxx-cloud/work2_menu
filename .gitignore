@@ -1,0 +1,51 @@
+# Repository-local dependencies and environments
+.venv/
+venv/
+env/
+ENV/
+work2_coding/venv/
+
+# Python caches and test/runtime scratch state
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*.bak
+
+# LaTeX/manuscript build byproducts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# Raw local experiment outputs.
+# Review-facing artifact bundles under artifacts/ and work2_coding/artifacts/
+# remain trackable unless a later formal archive policy says otherwise.
+work2_coding/outputs/
+work2_coding/Experiments/Parcelpoint_py/pricing/DSPO_Menu/
+work2_coding/Experiments/studies/diagnostic_actual_menu.yaml
+outputs/
+
+# Local model/checkpoint binaries. Evidence-stage checkpoints require sidecars
+# and hashes before they can support claims.
+*.pt
+*.pth
+*.ckpt
+
+# Generated planning reports are local summaries; canonical planning records live
+# in .planning/PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md, and phases/.
+.planning/reports/

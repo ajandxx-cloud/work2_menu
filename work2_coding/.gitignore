@@ -1,5 +1,9 @@
+# Runtime-local development state
 .idea
 venv/
-Experiments/
-outputs/
 __pycache__/
+
+# Raw experiment state; study manifests remain trackable.
+Experiments/Parcelpoint_py/pricing/DSPO_Menu/
+Experiments/studies/diagnostic_actual_menu.yaml
+outputs/
