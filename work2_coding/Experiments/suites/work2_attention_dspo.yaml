@@ -1,0 +1,8 @@
+type: suite
+schema_version: 1
+name: work2_attention_dspo
+description: Phase 6 suite for paired DSPO_original versus DSPO_attention studies.
+members:
+  - study: smoke_attention_dspo
+  - study: pilot_attention_dspo
+  - study: formal_attention_dspo
