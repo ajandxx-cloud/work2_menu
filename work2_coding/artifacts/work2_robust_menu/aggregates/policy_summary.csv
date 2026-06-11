@@ -1,0 +1,11 @@
+acceptance_rate_mean,checkpoint_statuses,diagnostic,filter_mode,home_share_mean,menu_build_time_mean,optout_rate_mean,placeholder_only,policy_tag,rank_eligible,relative_optimality_gap_mean,row_count,status,uptake_regimes
+,failed,False,hard,,,,True,full_display,True,,2,blocked,low; medium
+,failed,False,hard,,,,True,hard_filter,True,,2,blocked,low; medium
+,failed,False,hard,,,,True,home_only,True,,2,blocked,low; medium
+,failed,False,hard,,,,True,min_lateness,True,,2,blocked,low; medium
+,failed,False,hard,,,,True,nearest_heuristic,True,,2,blocked,low; medium
+,failed,True,none,,,,True,no_filter_diagnostic,False,,2,blocked,low; medium
+,failed,False,hard,,,,True,random_top_k,True,,2,blocked,low; medium
+,failed,False,chance_constraint,,,,True,robust_risk_adjusted,True,,2,blocked,low; medium
+,failed,False,interval_overlap,,,,True,robust_service_guarded,True,,2,blocked,low; medium
+,failed,False,hard,,,,True,top_k_cheapest,True,,2,blocked,low; medium

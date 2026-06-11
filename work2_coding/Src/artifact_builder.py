@@ -236,7 +236,7 @@ def generate_figures(figures_dir, aggregates, run_data, status_info):
     return artifacts
 
 
-def _copy_lightweight(src_root, mirror_root):
+def mirror_lightweight_artifacts(src_root, mirror_root):
     mirror_root = Path(mirror_root)
     if mirror_root.exists():
         shutil.rmtree(mirror_root)
@@ -332,7 +332,7 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
     artifacts.append(readme_path)
 
     if mirror_root:
-        _copy_lightweight(output_root, mirror_root)
+        mirror_lightweight_artifacts(output_root, mirror_root)
 
     return {
         "output_root": str(output_root),
@@ -341,4 +341,3 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
         "artifact_status": status_info,
         "artifacts": [str(path) for path in artifacts],
     }
-

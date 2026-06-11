@@ -1,0 +1,151 @@
+{
+  "artifact_status": {
+    "blockers": [
+      {
+        "checkpoint_path": "outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt",
+        "code": "missing_checkpoint_file",
+        "expected_status": "loaded",
+        "message": "Required checkpoint file is unavailable; refusing random-weight evidence.",
+        "resolved_checkpoint_path": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\shared_training\\work2_robust_menu\\pilot\\supervised_ml.pt",
+        "severity": "blocking",
+        "tier": "pilot"
+      }
+    ],
+    "checkpoint_statuses": [
+      "failed"
+    ],
+    "claim_ready": false,
+    "diagnostic_policy_labels": [
+      "no_filter_diagnostic"
+    ],
+    "execution_statuses": [
+      "blocked"
+    ],
+    "placeholder_only": true,
+    "reasons": [
+      "pilot/formal rows require loaded checkpoint provenance",
+      "placeholder_only rows cannot support claim-ready artifacts",
+      "source study execution is blocked"
+    ],
+    "row_statuses": [
+      "blocked"
+    ],
+    "status": "blocked",
+    "uptake_regimes": [
+      "low",
+      "medium"
+    ]
+  },
+  "blockers": [
+    {
+      "checkpoint_path": "outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt",
+      "code": "missing_checkpoint_file",
+      "expected_status": "loaded",
+      "message": "Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "resolved_checkpoint_path": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\shared_training\\work2_robust_menu\\pilot\\supervised_ml.pt",
+      "severity": "blocking",
+      "tier": "pilot"
+    },
+    {
+      "code": "formal_skipped",
+      "message": "Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "severity": "blocking"
+    }
+  ],
+  "checkpoint_statuses": [
+    "failed"
+  ],
+  "claim_ready": false,
+  "environment_provenance": {
+    "packages": {
+      "matplotlib": "3.10.9",
+      "numpy": "2.4.4",
+      "torch": "2.10.0+cu126",
+      "yaml": "6.0.3"
+    },
+    "pip_freeze": null,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.4"
+  },
+  "formal_claim_ready": false,
+  "generated_artifacts": [
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.json.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.csv",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.csv.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\policy_summary.tex",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\policy_summary.tex.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\robust_filtering.tex",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\robust_filtering.tex.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\exact_greedy.tex",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\exact_greedy.tex.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\uptake_regime.tex",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\uptake_regime.tex.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\provenance_status.tex",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\provenance_status.tex.metadata.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\acceptance_optout.png.status.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\exact_greedy_time.png.status.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\profit_gap.png.status.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\eta_pruning.png.status.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\home_only_share.png.status.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\recommended_policy_ranking.json",
+    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\recommended_policy_ranking.json.metadata.json"
+  ],
+  "git_provenance": {
+    "git_commit": "8507867d28ea8aeb78ec765776d03a3e3e6cc873",
+    "git_dirty": true,
+    "git_status_summary": "D \"learning meeting point.docx\";  M work2_coding/Src/artifact_builder.py; ?? work2_coding/scripts/run_phase4_artifacts.py; ?? work2_coding/scripts/test_phase4_artifact_pipeline.py; ?? \"\\345\\267\\245\\344\\275\\234\\350\\256\\250\\350\\256\\2726.10.txt\""
+  },
+  "manifest_hash": "e1646ba1cf878d1ef8597423517515527eda5e8ba468ca5754f1e15e4f1db191",
+  "phase4_pipeline": {
+    "artifact_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu",
+    "commands": [
+      {
+        "mode": "actual_or_blocked",
+        "name": "run_study",
+        "output_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies",
+        "study": "pilot_robust_menu"
+      },
+      {
+        "allow_incomplete": true,
+        "mirror_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\artifacts\\work2_robust_menu",
+        "name": "build_artifacts",
+        "output_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu"
+      }
+    ],
+    "formal_blockers": [
+      {
+        "code": "formal_skipped",
+        "message": "Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "severity": "blocking"
+      }
+    ],
+    "formal_claim_ready": false,
+    "mirror_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\artifacts\\work2_robust_menu",
+    "pilot_claim_ready": false,
+    "run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\pilot_robust_menu\\pilot_robust_menu-20260611T072352Z-e1646ba1"
+  },
+  "pilot_claim_ready": false,
+  "placeholder_only": true,
+  "policies": [
+    "full_display",
+    "hard_filter",
+    "home_only",
+    "min_lateness",
+    "nearest_heuristic",
+    "no_filter_diagnostic",
+    "random_top_k",
+    "robust_risk_adjusted",
+    "robust_service_guarded",
+    "top_k_cheapest"
+  ],
+  "row_count": 20,
+  "run_id": "pilot_robust_menu-20260611T072352Z-e1646ba1",
+  "source_run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\pilot_robust_menu\\pilot_robust_menu-20260611T072352Z-e1646ba1",
+  "study": "pilot_robust_menu",
+  "tier": "pilot",
+  "uptake_regimes": [
+    "low",
+    "medium"
+  ]
+}
