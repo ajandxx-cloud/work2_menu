@@ -23,7 +23,7 @@ class Parser(object):
         parser.add_argument("--experiment", default='run', help="Name of the experiment")
 
         parser.add_argument("--algo_name", default='DSPO', help="Policy/algorithm used, capital sensitive",
-                            choices=['DSPO','Heuristic','Baseline','PPO','SPO'])
+                            choices=['DSPO','DSPO_Menu','Heuristic','Baseline','PPO','SPO'])
         parser.add_argument("--gpu", default=0, help="GPU BUS ID ", type=int)
 
         # Environment parameters
@@ -34,6 +34,7 @@ class Parser(object):
         self.Heuristic_parameters(parser)
         self.Baseline_parameters(parser)
         self.PPO_parameters(parser)
+        self.Menu_parameters(parser)
 
         self.parser = parser
 
@@ -124,6 +125,75 @@ class Parser(object):
         parser.add_argument("--policy_update_epochs", default=25,help="number of epochs with which we perform policy updates in PPO", type=int)
         parser.add_argument("--critic_update_epochs", default=25,help="number of epochs with which we perform critic updates in PPO", type=int)
 
+    def Menu_parameters(self, parser):
+        parser.add_argument("--menu_mode", default=False, help="Enable Work2 service-menu runtime", type=self.str2bool)
+        parser.add_argument("--menu_policy", default="menu_optimization",
+                            choices=[
+                                "menu_optimization",
+                                "offer_all_feasible_bundles",
+                                "nearest_heuristic",
+                                "top_k_cheapest",
+                                "top_k_passenger_utility",
+                                "revenue_greedy",
+                                "insertion_cost_greedy",
+                                "min_lateness",
+                                "random_top_k",
+                                "home_only",
+                                "cost_l_heuristic",
+                                "cost_oracle",
+                                "expected_profit_enumeration",
+                                "service_constrained_expected_profit",
+                                "risk_adjusted_expected_profit",
+                                "min_quit_then_profit",
+                                "service_guarded_expected_profit",
+                                "profit_oracle",
+                            ])
+        parser.add_argument("--menu_k", default=3, type=int)
+        parser.add_argument("--max_candidates", default=10, type=int)
+        parser.add_argument("--menu_keep_home", default=True, type=self.str2bool)
+        parser.add_argument("--menu_use_exact_eval", default=True, type=self.str2bool)
+        parser.add_argument("--menu_exact_threshold", default=8, type=int)
+        parser.add_argument("--menu_selection_solver", default="auto", choices=["auto", "exact", "greedy"])
+        parser.add_argument("--menu_exact_gap_threshold", default=8, type=int)
+        parser.add_argument("--menu_objective_mode", default="current",
+                            choices=["current", "system_profit", "expected_profit"])
+        parser.add_argument("--menu_time_filtering", default=True, type=self.str2bool)
+        parser.add_argument("--menu_eta_filter_mode", default="hard",
+                            choices=["hard", "calibrated", "interval", "interval_overlap",
+                                     "chance_constraint", "soft_penalty", "none"])
+        parser.add_argument("--pref_window_half_width", default=900.0, type=float)
+        parser.add_argument("--display_window_half_width", default=600.0, type=float)
+        parser.add_argument("--menu_window_slots_each_side", default=1, type=int)
+        parser.add_argument("--menu_target_arrival_time", default=3600.0, type=float)
+        parser.add_argument("--menu_pref_buffer_seconds", default=300.0, type=float)
+        parser.add_argument("--menu_travel_time_weight", default=-0.001, type=float)
+        parser.add_argument("--menu_pickup_time_weight", default=-0.001, type=float)
+        parser.add_argument("--menu_score_lambda_margin", default=1.0, type=float)
+        parser.add_argument("--menu_score_lambda_walk", default=1.0, type=float)
+        parser.add_argument("--menu_score_lambda_time", default=1.0, type=float)
+        parser.add_argument("--menu_score_lambda_ivt", default=1.0, type=float)
+        parser.add_argument("--menu_route_delay_lambda", default=0.0, type=float)
+        parser.add_argument("--menu_capacity_risk_lambda", default=0.0, type=float)
+        parser.add_argument("--menu_use_time_head", default=False, type=self.str2bool)
+        parser.add_argument("--menu_time_prediction_blend", default=0.5, type=float)
+        parser.add_argument("--menu_time_scale", default=3600.0, type=float)
+        parser.add_argument("--eta_scale", default=1.0, type=float)
+        parser.add_argument("--menu_use_oracle_eta", default=False, type=self.str2bool)
+        parser.add_argument("--menu_eta_variant", default="deployed",
+                            choices=["deployed", "heuristic", "stronger", "oracle"])
+        parser.add_argument("--menu_stronger_eta_gamma", default=0.5, type=float)
+        parser.add_argument("--menu_pricing_mode", default="lambertw",
+                            choices=["lambertw", "cost_plus", "constant", "zero"])
+        parser.add_argument("--menu_pricing_constant", default=-3.0, type=float)
+        parser.add_argument("--service_quit_penalty", default=100.0, type=float)
+        parser.add_argument("--service_quit_rate_guardrail", default=0.4, type=float)
+        parser.add_argument("--menu_outside_penalty_lambda", default=0.0, type=float)
+        parser.add_argument("--menu_quit_tolerance", default=0.01, type=float)
+        parser.add_argument("--menu_profit_tolerance_fraction", default=0.05, type=float)
+        parser.add_argument("--menu_optout_guardrail", default=0.4, type=float)
+        parser.add_argument("--freeze_learning", default=False, type=self.str2bool)
+        parser.add_argument("--eval_only", default=False, type=self.str2bool)
+
 
     def str2bool(self, text):
         if text == 'True':
@@ -136,5 +206,4 @@ class Parser(object):
 
     def get_parser(self):
         return self.parser
-
 

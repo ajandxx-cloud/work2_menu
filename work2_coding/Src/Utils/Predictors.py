@@ -3,19 +3,29 @@ import torch.nn as nn
 import numpy as np
 
 class LinReg(nn.Module):
-    def __init__(self,dim):
+    def __init__(self, dim, aux_dim=1, output_dim=1):
         super().__init__()
-     
+        self.aux_dim = int(aux_dim)
+        self.output_dim = int(output_dim)
         self.flatten = nn.Flatten()
-        self.linearLayer = nn.Linear(1+dim, 1,bias=True)#+1 for capacity
+        self.linearLayer = nn.Linear(self.aux_dim + dim, self.output_dim, bias=True)
         
         
     def forward(self, x, capacity):
         x = self.flatten(x)
-        x = torch.cat((x, capacity.unsqueeze(1)), dim=1)#add capacity
+        capacity = self._format_aux(capacity, x.shape[0], x.device)
+        x = torch.cat((x, capacity), dim=1)
         output = self.linearLayer(x)
 
         return output
+
+    def _format_aux(self, capacity, batch_size, device):
+        capacity = capacity.to(device)
+        if capacity.dim() == 0:
+            capacity = capacity.reshape(1, 1)
+        elif capacity.dim() == 1:
+            capacity = capacity.reshape(batch_size, self.aux_dim)
+        return capacity.float()
     
     def reset(self):
         return
@@ -27,8 +37,10 @@ class LinReg(nn.Module):
         self.load_state_dict(torch.load(filename))
 
 class CNN_2d(nn.Module):
-    def __init__(self,dim,n_layers,n_filters,dropout):
+    def __init__(self, dim, n_layers, n_filters, dropout, aux_dim=1, output_dim=1):
         super().__init__()
+        self.aux_dim = int(aux_dim)
+        self.output_dim = int(output_dim)
         
         kernel1 = (3,3)#conv
         kernel2 = (2,2)#pool
@@ -54,11 +66,11 @@ class CNN_2d(nn.Module):
         
         self.flatten = nn.Flatten(start_dim=1)
         
-        self.fc1 = nn.Linear(in_features=int(1+2*out_channels*h3*w3), out_features=256)#+1 for capacity of OOH
+        self.fc1 = nn.Linear(in_features=int(self.aux_dim + 2*out_channels*h3*w3), out_features=256)
        
         #self.fc1 = nn.Linear(in_features=200, out_features=256)
         self.fc2 = nn.Linear(256, 128)
-        self.fc3 = nn.Linear(128, 1)
+        self.fc3 = nn.Linear(128, self.output_dim)
         
         self.dropout = nn.Dropout(p=dropout)
 
@@ -71,12 +83,21 @@ class CNN_2d(nn.Module):
 		# flatten the output from the previous layer and pass it
 		# through our only set of FC => RELU layers
         x = self.flatten(x)
-        x = torch.cat((x, capacity.unsqueeze(1)), dim=1)#add capacity
+        capacity = self._format_aux(capacity, x.shape[0], x.device)
+        x = torch.cat((x, capacity), dim=1)
         x = self.dropout(nn.functional.relu(self.fc1(x)))
         x = self.dropout(nn.functional.relu(self.fc2(x)))
         output = self.fc3(x)
 
         return output
+
+    def _format_aux(self, capacity, batch_size, device):
+        capacity = capacity.to(device)
+        if capacity.dim() == 0:
+            capacity = capacity.reshape(1, 1)
+        elif capacity.dim() == 1:
+            capacity = capacity.reshape(batch_size, self.aux_dim)
+        return capacity.float()
     
     def reset(self):
         return
@@ -89,8 +110,10 @@ class CNN_2d(nn.Module):
 
 #Not used in paper, usage will throw an error
 class CNN_3d(nn.Module):
-    def __init__(self,dim,n_layers,n_filters,dropout):
+    def __init__(self, dim, n_layers, n_filters, dropout, aux_dim=1, output_dim=1):
         super().__init__()
+        self.aux_dim = int(aux_dim)
+        self.output_dim = int(output_dim)
         
         print("Not supported yet, but should be useful for even more complex data, with 4th dimension, e.g., time windows")
         
@@ -102,7 +125,7 @@ class CNN_3d(nn.Module):
         self.relu3 = nn.ReLU()
         self.fc2 = nn.Linear(40, 20)
         self.relu4 = nn.ReLU()
-        self.fc3 = nn.Linear(20, 1)
+        self.fc3 = nn.Linear(20, self.output_dim)
 
     def forward(self, x):
 		# pass the input through our first set of CONV => RELU =>

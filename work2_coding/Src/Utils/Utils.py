@@ -149,13 +149,16 @@ def search(dir, name, exact=False):
 
 def dynamic_load(dir, name, load_class=False):
     try:
-        abs_path = search(dir, name).split('/')[1:]
+        found = search(dir, name)
+        abs_path = found.replace('\\', '/').split('/')
+        if 'Src' in abs_path:
+            pos = abs_path.index('Src')
+        elif 'Environments' in abs_path:
+            pos = abs_path.index('Environments')
+        else:
+            raise ValueError("Could not infer package path for " + str(found))
 
-        if len(abs_path) == 0:
-            abs_path = search(dir, name).split('\\')[1:]
-        pos = abs_path.index('ooh_code')
-
-        module_path = '.'.join([str(item) for item in abs_path[pos + 1:]])
+        module_path = '.'.join([str(item) for item in abs_path[pos:]])
         print("Module path: ", module_path, name)
         if load_class:
             obj = getattr(importlib.import_module(module_path), name)
@@ -448,10 +451,14 @@ class MemoryBuffer:
     """
     Pre-allocated memory interface for storing and using observations
     """
-    def __init__(self, max_len, time_intervals, matrix_dim, target_dim, atype, config, stype=float32):
+    def __init__(self, max_len, time_intervals, matrix_dim, target_dim, atype, config, stype=float32, aux_dim=1):
 
         self.features = torch.zeros((max_len, time_intervals, matrix_dim, matrix_dim), dtype=stype, requires_grad=False,device=config.device)
-        self.capacity_features = torch.zeros(max_len, dtype=stype, requires_grad=False, device=config.device)
+        self.aux_dim = int(aux_dim)
+        if self.aux_dim == 1:
+            self.capacity_features = torch.zeros(max_len, dtype=stype, requires_grad=False, device=config.device)
+        else:
+            self.capacity_features = torch.zeros((max_len, self.aux_dim), dtype=stype, requires_grad=False, device=config.device)
         self.target = torch.zeros((max_len, target_dim), dtype=atype, requires_grad=False,device=config.device)
 
         self.length = 0
@@ -499,7 +506,13 @@ class MemoryBuffer:
     
             self.features[pos] = torch.tensor(features[i].reshape(time_intervals,mtrx_dim,mtrx_dim), dtype=self.stype)
             self.capacity_features[pos] = torch.tensor(capacity_features[i], dtype=self.stype)
-            self.target[pos] = torch.tensor(target[i][1], dtype=self.atype)
+            target_row = torch.tensor(target[i], dtype=self.atype)
+            if target_row.dim() > 0 and target_row.numel() == self.target.shape[1]:
+                self.target[pos] = target_row.reshape(self.target.shape[1])
+            elif target_row.dim() > 0 and target_row.numel() > 1:
+                self.target[pos] = target_row.reshape(-1)[1]
+            else:
+                self.target[pos] = target_row.reshape(-1)[0]
         
     def save(self, filename):
         torch.save(self.features, filename + 'feat.pt')
