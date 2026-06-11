@@ -1,0 +1,52 @@
+{
+  "blocker_count": 1,
+  "blockers": [
+    {
+      "checkpoint_path": "outputs/shared_training/work2_attention_dspo/pilot/supervised_ml.pt",
+      "code": "missing_checkpoint_file",
+      "expected_status": "loaded",
+      "message": "Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "resolved_checkpoint_path": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\shared_training\\work2_attention_dspo\\pilot\\supervised_ml.pt",
+      "severity": "blocking",
+      "tier": "pilot"
+    }
+  ],
+  "checkpoint_statuses": [
+    "failed"
+  ],
+  "contract_only": false,
+  "execution_status": "blocked",
+  "git_provenance": {
+    "git_commit": "cdb1bf8d21368e9ac8b4c73610b62114db67f1dd",
+    "git_dirty": true,
+    "git_status_summary": "M .planning/PROJECT.md;  M .planning/REQUIREMENTS.md;  M .planning/ROADMAP.md;  M .planning/STATE.md;  M artifacts/work2_robust_menu/ARTIFACT_STATUS.json;  M artifacts/work2_robust_menu/README.md;  M artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json;  M artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json;  M artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json;  M artifacts/work2_robust_menu/figures/acceptance_optout.png.status.json;  M artifacts/work2_robust_menu/figures/eta_pruning.png.status.json;  M artifacts/work2_robust_menu/figures/exact_greedy_time.png.status.json;  M artifacts/work2_robust_menu/figures/home_only_share.png.status.json;  M artifacts/work2_robust_menu/figures/profit_gap.png.status.json;  M artifacts/work2_robust_menu/manuscript/CLAIM_GUARD.json;  M artifacts/work2_robust_menu/tables/exact_greedy.tex.metadata.json;  M artifacts/work2_robust_menu/tables/policy_summary.tex.metadata.json;  M artifacts/work2_robust_menu/tables/provenance_status.tex.metadata.json;  M artifacts/work2_robust_menu/tables/robust_filtering.tex.metadata.json;  M artifacts/work2_robust_menu/tables/uptake_regime.tex.metadata.json"
+  },
+  "manifest_hash": "07415c4ff2ed16244fb5bcf08fcb64c86137e20b37575cba7c5ab212f23ed32f",
+  "outputs": [
+    "manifest_snapshot.yaml",
+    "study_summary.json",
+    "normalized_rows.json",
+    "normalized_rows.csv",
+    "blockers.json"
+  ],
+  "placeholder_only": true,
+  "policy_tags": [
+    "DSPO_attention",
+    "DSPO_original"
+  ],
+  "row_count": 4,
+  "run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\pilot_attention_dspo\\pilot_attention_dspo-20260611T105742Z-07415c4f",
+  "run_id": "pilot_attention_dspo-20260611T105742Z-07415c4f",
+  "run_mode": "pilot",
+  "runtime_blocker": "Required checkpoint file is unavailable; refusing random-weight evidence.",
+  "split_ids": [
+    "pilot_attention_rc_low_seed0",
+    "pilot_attention_rc_medium_seed1"
+  ],
+  "study_name": "pilot_attention_dspo",
+  "tier": "pilot",
+  "uptake_regimes": [
+    "low",
+    "medium"
+  ]
+}

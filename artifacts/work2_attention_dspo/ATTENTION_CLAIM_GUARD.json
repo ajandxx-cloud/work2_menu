@@ -2,24 +2,24 @@
   "aggregate": {
     "complete_pair_count": 1,
     "metric_means": {
-      "acceptance_rate_attention_mean": null,
-      "acceptance_rate_delta_mean": null,
-      "acceptance_rate_original_mean": null,
-      "meeting_point_uptake_rate_attention_mean": null,
-      "meeting_point_uptake_rate_delta_mean": null,
-      "meeting_point_uptake_rate_original_mean": null,
-      "net_objective_proxy_attention_mean": 0.0,
+      "acceptance_rate_attention_mean": 1.0,
+      "acceptance_rate_delta_mean": 0.0,
+      "acceptance_rate_original_mean": 1.0,
+      "meeting_point_uptake_rate_attention_mean": 0.0,
+      "meeting_point_uptake_rate_delta_mean": 0.0,
+      "meeting_point_uptake_rate_original_mean": 0.0,
+      "net_objective_proxy_attention_mean": -595.0,
       "net_objective_proxy_delta_mean": 0.0,
-      "net_objective_proxy_original_mean": 0.0,
-      "net_price_revenue_attention_mean": null,
-      "net_price_revenue_delta_mean": null,
-      "net_price_revenue_original_mean": null,
-      "optout_rate_attention_mean": null,
-      "optout_rate_delta_mean": null,
-      "optout_rate_original_mean": null,
-      "service_time_total_attention_mean": null,
-      "service_time_total_delta_mean": null,
-      "service_time_total_original_mean": null
+      "net_objective_proxy_original_mean": -595.0,
+      "net_price_revenue_attention_mean": 5.0,
+      "net_price_revenue_delta_mean": 0.0,
+      "net_price_revenue_original_mean": 5.0,
+      "optout_rate_attention_mean": 0.0,
+      "optout_rate_delta_mean": 0.0,
+      "optout_rate_original_mean": 0.0,
+      "service_time_total_attention_mean": 600.0,
+      "service_time_total_delta_mean": 0.0,
+      "service_time_total_original_mean": 600.0
     },
     "pair_count": 1
   },
@@ -37,36 +37,8 @@
       "message": "Smoke evidence validates schema/execution only, not improvement claims."
     },
     {
-      "code": "placeholder_rows",
-      "message": "Placeholder rows cannot support attention improvement claims."
-    },
-    {
-      "code": "incomplete_rows",
-      "message": "All attention rows must be completed."
-    },
-    {
       "code": "primary_metric_not_positive",
       "message": "Attention does not improve the primary net objective proxy."
-    },
-    {
-      "code": "service_constraint_failed",
-      "message": "metric unavailable",
-      "metric": "acceptance_rate"
-    },
-    {
-      "code": "service_constraint_failed",
-      "message": "metric unavailable",
-      "metric": "optout_rate"
-    },
-    {
-      "code": "service_constraint_failed",
-      "message": "metric unavailable",
-      "metric": "meeting_point_uptake_rate"
-    },
-    {
-      "code": "service_constraint_failed",
-      "message": "metric unavailable",
-      "metric": "service_time_total"
     }
   ],
   "checkpoint_statuses": [
@@ -74,9 +46,9 @@
   ],
   "claim_ready": false,
   "execution_statuses": [
-    "contract_only"
+    "completed"
   ],
-  "generated_at": "2026-06-11T10:55:25+00:00",
+  "generated_at": "2026-06-11T10:58:46+00:00",
   "pair_completeness": {
     "all_pairs_complete": true,
     "complete_pair_count": 1,
@@ -88,31 +60,39 @@
     "name": "net_objective_proxy"
   },
   "row_statuses": [
-    "contract_only"
+    "completed"
   ],
   "service_constraints": {
     "acceptance_rate": {
+      "delta_mean": 0.0,
       "metric": "acceptance_rate",
-      "passed": false,
-      "reason": "metric unavailable"
+      "passed": true,
+      "reason": "",
+      "tolerance": 0.05
     },
     "meeting_point_uptake_rate": {
+      "delta_mean": 0.0,
       "metric": "meeting_point_uptake_rate",
-      "passed": false,
-      "reason": "metric unavailable"
+      "passed": true,
+      "reason": "",
+      "tolerance": 0.05
     },
     "optout_rate": {
+      "delta_mean": 0.0,
       "metric": "optout_rate",
-      "passed": false,
-      "reason": "metric unavailable"
+      "passed": true,
+      "reason": "",
+      "tolerance": 0.05
     },
     "service_time_total": {
+      "delta_mean": 0.0,
       "metric": "service_time_total",
-      "passed": false,
-      "reason": "metric unavailable"
+      "passed": true,
+      "reason": "",
+      "tolerance": 0.05
     }
   },
-  "source_run_id": "smoke_attention_dspo-20260611T105515Z-80ab59ee",
+  "source_run_id": "smoke_attention_dspo-20260611T105742Z-80ab59ee",
   "source_study": "smoke_attention_dspo",
   "tiers": [
     "smoke"

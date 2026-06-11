@@ -1,0 +1,13 @@
+{
+  "blockers": [
+    {
+      "checkpoint_path": "outputs/shared_training/work2_attention_dspo/pilot/supervised_ml.pt",
+      "code": "missing_checkpoint_file",
+      "expected_status": "loaded",
+      "message": "Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "resolved_checkpoint_path": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\shared_training\\work2_attention_dspo\\pilot\\supervised_ml.pt",
+      "severity": "blocking",
+      "tier": "pilot"
+    }
+  ]
+}

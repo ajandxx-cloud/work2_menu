@@ -1,0 +1,98 @@
+schema_version: 1
+name: smoke_attention_dspo
+tier: smoke
+run_mode: smoke
+comparison_family: attention_dspo
+required_policy_tags:
+- DSPO_original
+- DSPO_attention
+description: Cheap smoke contract for paired DSPO_original versus DSPO_attention execution.
+base_args:
+  algo_name: DSPO_Menu
+  menu_mode: true
+  run_mode: smoke
+  instance: RC
+  load_data: true
+  pricing: true
+  max_episodes: 1
+  max_steps_r: 2
+  max_steps_p: 0.95
+  reopt: 10000000
+  hgs_reopt_time: 0.05
+  hgs_final_time: 0.05
+  menu_k: 3
+  max_candidates: 6
+  menu_exact_threshold: 6
+  menu_exact_gap_threshold: 6
+  menu_objective_mode: expected_profit
+  checkpoint_path: ''
+  require_checkpoint: false
+  allow_checkpoint_mismatch: false
+splits:
+- split_id: smoke_attention_rc_medium_seed0
+  seed: 111
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+policies:
+- tag: DSPO_original
+- tag: DSPO_attention
+paired_fields:
+- seed
+- data_seed
+- data_seed_test
+- instance
+- load_data
+- pricing
+- hgs_reopt_time
+- hgs_final_time
+- reopt
+- checkpoint_path
+- require_checkpoint
+- menu_k
+- max_candidates
+- max_steps_r
+- max_steps_p
+- home_util
+- base_util
+- incentive_sens
+- menu_policy
+- menu_eta_filter_mode
+- menu_objective_mode
+- method_variant
+- attention_enabled
+- attention_mode
+varied_fields:
+- method_variant
+- attention_enabled
+- attention_mode
+- attention_strength
+output_schema:
+  normalized-row-v1: true
+  fields:
+  - study_name
+  - run_id
+  - policy_tag
+  - method_variant
+  - attention_enabled
+  - attention_mode
+  - attention_strength
+  - attention_weight_summary
+  - attention_pair_id
+  - attention_pair_complete
+  - seed
+  - split_id
+  - trace_id
+  - manifest_hash
+  - checkpoint_load_status
+  - menu_k
+  - filter_mode
+  - effective_policy
+  - net_objective_proxy
+  - acceptance_rate
+  - optout_rate
+  - placeholder_only
