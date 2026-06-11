@@ -109,10 +109,10 @@
 
 ### Attention Ablation
 
-- [ ] **ABLT-01**: Pilot-only attention strength, feature, and ETA-variant ablation manifests exist when pilot evidence is weak.
-- [ ] **ABLT-02**: Ablations pre-register varied fields and selection criteria before execution.
-- [ ] **ABLT-03**: Paired replay fairness is preserved; only declared attention fields vary.
-- [ ] **ABLT-04**: Exactly one formal candidate configuration is selected before formal, or the superiority claim is stopped.
+- [x] **ABLT-01**: Pilot-only attention strength, feature, and ETA-variant ablation manifests exist when pilot evidence is weak.
+- [x] **ABLT-02**: Ablations pre-register varied fields and selection criteria before execution.
+- [x] **ABLT-03**: Paired replay fairness is preserved; only declared attention fields vary.
+- [x] **ABLT-04**: Exactly one formal candidate configuration is selected before formal, or the superiority claim is stopped.
 
 ### Formal Enablement
 
@@ -197,10 +197,10 @@
 | PILOT-04 | Phase 10 | Complete |
 | PILOT-05 | Phase 10 | Complete |
 | PILOT-06 | Phase 10 | Complete |
-| ABLT-01 | Phase 11 | Planned |
-| ABLT-02 | Phase 11 | Planned |
-| ABLT-03 | Phase 11 | Planned |
-| ABLT-04 | Phase 11 | Planned |
+| ABLT-01 | Phase 11 | Complete |
+| ABLT-02 | Phase 11 | Complete |
+| ABLT-03 | Phase 11 | Complete |
+| ABLT-04 | Phase 11 | Complete |
 | FORM-01 | Phase 12 | Planned |
 | FORM-02 | Phase 12 | Planned |
 | FORM-03 | Phase 12 | Planned |
