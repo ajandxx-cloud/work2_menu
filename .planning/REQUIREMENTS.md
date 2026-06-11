@@ -49,10 +49,10 @@
 
 ### Manuscript
 
-- [ ] **PAPER-01**: Project produces a method outline covering service bundles, displayed menu decision, outside option, ETA uncertainty, MNL choice, pricing, robust filter, and exact/greedy solver.
-- [ ] **PAPER-02**: Project produces an experiment outline covering datasets/scenarios, baselines, metrics, paired replay, seeds, and splits.
-- [ ] **PAPER-03**: Project produces a result outline for exact-vs-greedy quality, robust filtering comparison, uptake-regime behavior, external/semi-real check, and limitations.
-- [ ] **PAPER-04**: Project maintains a claim checklist that prevents universal dominance, real passenger validation, no-filter operational recommendation, or full dynamic-system exact-optimality claims without evidence.
+- [x] **PAPER-01**: Project produces a method outline covering service bundles, displayed menu decision, outside option, ETA uncertainty, MNL choice, pricing, robust filter, and exact/greedy solver.
+- [x] **PAPER-02**: Project produces an experiment outline covering datasets/scenarios, baselines, metrics, paired replay, seeds, and splits.
+- [x] **PAPER-03**: Project produces a result outline for exact-vs-greedy quality, robust filtering comparison, uptake-regime behavior, external/semi-real check, and limitations.
+- [x] **PAPER-04**: Project maintains a claim checklist that prevents universal dominance, real passenger validation, no-filter operational recommendation, or full dynamic-system exact-optimality claims without evidence.
 
 ## v2 Requirements
 
@@ -105,10 +105,10 @@
 | ART-02 | Phase 4 | Complete |
 | ART-03 | Phase 4 | Complete |
 | ART-04 | Phase 4 | Complete |
-| PAPER-01 | Phase 5 | Pending |
-| PAPER-02 | Phase 5 | Pending |
-| PAPER-03 | Phase 5 | Pending |
-| PAPER-04 | Phase 5 | Pending |
+| PAPER-01 | Phase 5 | Complete |
+| PAPER-02 | Phase 5 | Complete |
+| PAPER-03 | Phase 5 | Complete |
+| PAPER-04 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total
@@ -117,4 +117,4 @@
 
 ---
 *Requirements defined: 2026-06-10*
-*Last updated: 2026-06-11 after Phase 4 completion*
+*Last updated: 2026-06-11 after Phase 5 completion*

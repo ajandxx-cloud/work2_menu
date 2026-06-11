@@ -14,7 +14,7 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 | 2 | Core Semantics And Robust Menu Logic | Fix accounting/checkpoint risks and implement robust filtering/objective/solver behavior | ACCT-01..04, ETA-01..04, MENU-01..04 |
 | 3 | Experiment Contracts And Fair Replay (Complete 2026-06-11) | Define runnable study contracts and paired comparisons | EXP-01..04 |
 | 4 | Evidence And Artifacts (Complete 2026-06-11) | Generate the evidence chain required for paper-facing Work2 claims | ART-01..04 |
-| 5 | Manuscript Framing And Claim Guard | Produce paper-ready method/results/limitations text and enforce claim boundaries | PAPER-01..04 |
+| 5 | Manuscript Framing And Claim Guard (Complete 2026-06-11) | Produce paper-ready method/results/limitations text and enforce claim boundaries | PAPER-01..04 |
 
 ## Phases
 

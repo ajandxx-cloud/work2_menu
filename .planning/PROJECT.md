@@ -24,10 +24,11 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 - Phase 2 repaired core semantics: opt-out outcomes no longer mutate routes as accepted home pickups, checkpoint load metadata is explicit, robust ETA modes emit diagnostics, and exact/greedy solver telemetry is available.
 - Phase 3 added smoke, pilot, and formal robust-menu study contracts; required baseline adapters; paired replay validation; normalized row schema; uptake-regime contracts; and a contract-only smoke runner that emits JSON/CSV rows.
 - Phase 4 added the evidence/artifact pipeline: honest execution statuses, blocker metadata for missing pilot/formal prerequisites, aggregate JSON/CSV outputs, LaTeX tables, figure/status artifacts, provenance sidecars, and mirrored review artifacts. The current bundle is blocked/non-claim-ready because the required pilot checkpoint is absent and formal evidence was skipped.
+- Phase 5 added manuscript support artifacts and a claim guard: method, experiment, and result outlines; Markdown claim checklist; machine-readable `CLAIM_GUARD.json`; and tests proving blocked evidence cannot become empirical claims.
 
 ### Active
 
-- [ ] Produce a manuscript-ready method/result outline and claim checklist that prevents overclaiming.
+- [ ] Complete milestone archival and decide whether to supply the missing pilot checkpoint for claim-ready empirical evidence.
 
 ### Out of Scope
 
@@ -73,6 +74,7 @@ Known engineering risks to address early:
 | Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Validated in Phase 1 |
 | Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Implemented in Phase 2 and carried into Phase 3 row schema |
 | Treat blocked Phase 4 artifacts as evidence-status outputs, not empirical claims | Required pilot checkpoint is absent; the pipeline must expose blockers instead of fabricating non-placeholder rows | Validated in Phase 4 |
+| Generate manuscript support from artifact status, not manual result-row edits | Current evidence is blocked, so manuscript framing must be status-driven and fail closed | Validated in Phase 5 |
 
 ## Evolution
 
@@ -92,4 +94,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-11 after Phase 4 completion*
+*Last updated: 2026-06-11 after Phase 5 completion*

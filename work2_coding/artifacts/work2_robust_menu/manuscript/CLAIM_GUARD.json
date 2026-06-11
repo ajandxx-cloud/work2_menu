@@ -1,0 +1,111 @@
+{
+  "allowed_claims": [
+    {
+      "id": "robust_time_window_menu_framework",
+      "label": "Robust time-window service-menu framework is implemented",
+      "rationale": "Core menu logic, contracts, paired replay schema, and artifact gates exist in the repository."
+    },
+    {
+      "id": "robust_pruning_modes",
+      "label": "Robust ETA pruning and soft-penalty modes are available",
+      "rationale": "The method can describe hard, calibrated, interval-overlap, chance-constraint, soft-penalty, and none modes."
+    },
+    {
+      "id": "solver_auditability",
+      "label": "Exact-small and greedy-large menu construction is auditable",
+      "rationale": "Solver diagnostics record fallback, gap, overlap, candidate count, and build-time metadata."
+    },
+    {
+      "id": "paired_replay_contracts",
+      "label": "Paired replay contracts are defined for fair policy comparisons",
+      "rationale": "Study contracts require shared traces, seeds, checkpoints, pricing, and HGS settings."
+    },
+    {
+      "id": "artifact_status_transparency",
+      "label": "Artifact status and blockers are reported transparently",
+      "rationale": "Phase 4 status artifacts expose blocked, incomplete, placeholder, checkpoint, and provenance state."
+    }
+  ],
+  "artifact_status": "blocked",
+  "blocked_claims": [
+    {
+      "id": "universal_dominance",
+      "label": "Robust menu universally dominates all baselines",
+      "reason": "Universal dominance is stronger than any bounded simulation or diagnostic artifact can support."
+    },
+    {
+      "id": "real_passenger_validation",
+      "label": "The choice model is validated on real passenger behavior",
+      "reason": "No external survey or revealed-preference validation is part of v1."
+    },
+    {
+      "id": "no_filter_operational_recommendation",
+      "label": "No-filter is recommended as an operational policy",
+      "reason": "no_filter_diagnostic is a diagnostic upper bound or stress test, not an operational recommendation."
+    },
+    {
+      "id": "full_dynamic_exact_optimality",
+      "label": "The full dynamic DRT system is solved exactly",
+      "reason": "Exact enumeration is limited to small menu candidate sets, with greedy fallback for larger sets."
+    },
+    {
+      "id": "empirical_superiority",
+      "label": "Robust menu empirically improves profit, acceptance, or opt-out versus baselines",
+      "reason": "Current artifact status is not claim-ready."
+    },
+    {
+      "id": "pilot_formal_completed",
+      "label": "Pilot/formal experiments are complete and support manuscript results",
+      "reason": "Current artifact status is blocked or incomplete."
+    }
+  ],
+  "blockers": [
+    {
+      "checkpoint_path": "outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt",
+      "code": "missing_checkpoint_file",
+      "expected_status": "loaded",
+      "message": "Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "resolved_checkpoint_path": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\shared_training\\work2_robust_menu\\pilot\\supervised_ml.pt",
+      "severity": "blocking",
+      "tier": "pilot"
+    },
+    {
+      "code": "formal_skipped",
+      "message": "Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "severity": "blocking"
+    }
+  ],
+  "claim_ready": false,
+  "conditional_claims": [
+    {
+      "allowed": false,
+      "id": "pilot_formal_effect_sizes",
+      "label": "Pilot/formal effect-size conclusions",
+      "required_status": "claim_ready plus pilot or formal claim readiness"
+    },
+    {
+      "allowed": false,
+      "id": "formal_policy_ranking",
+      "label": "Formal recommended-policy ranking",
+      "required_status": "formal_claim_ready"
+    },
+    {
+      "allowed": true,
+      "id": "diagnostic_result_tables",
+      "label": "Diagnostic/status tables and blocked-artifact explanations",
+      "required_status": "artifact status available"
+    }
+  ],
+  "diagnostic_policies": [
+    "no_filter_diagnostic"
+  ],
+  "formal_claim_ready": false,
+  "pilot_claim_ready": false,
+  "placeholder_only": true,
+  "source_run_id": "pilot_robust_menu-20260611T072352Z-e1646ba1",
+  "source_study": "pilot_robust_menu",
+  "uptake_regimes": [
+    "low",
+    "medium"
+  ]
+}
