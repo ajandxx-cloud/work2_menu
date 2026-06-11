@@ -82,8 +82,11 @@ class DSPO_Menu(DSPO):
             self.menu_eta_variant = "oracle"
         if self.menu_eta_variant == "oracle":
             self.menu_use_oracle_eta = True
-        self.menu_eta_filter_mode = str(getattr(config, "menu_eta_filter_mode", "hard"))
-        self._eta_sigma = 5703.0  # empirical ETA MAE from outputs/phase5/predictor_mae.json
+        self.menu_eta_filter_mode = self._canonical_eta_filter_mode(str(getattr(config, "menu_eta_filter_mode", "hard")))
+        self._eta_sigma = float(getattr(config, "menu_eta_sigma", 5703.0))
+        self._eta_sigma_source = str(getattr(config, "menu_eta_sigma_source", "global_config"))
+        self.menu_eta_chance_threshold = float(getattr(config, "menu_eta_chance_threshold", 0.25))
+        self.menu_eta_soft_penalty_lambda = float(getattr(config, "menu_eta_soft_penalty_lambda", 1.0))
         # Preserve legacy semantics: disabling menu_time_filtering must disable ETA pruning
         # even when the newer mode flag is left at its default value.
         if not self.menu_time_filtering:
@@ -133,6 +136,7 @@ class DSPO_Menu(DSPO):
         self.last_menu_build_time = 0.0
         self.last_exact_gap_diagnostic = None
         self.last_policy_diagnostic = {}
+        self.last_candidate_diagnostics = []
         self.freeze_learning = bool(getattr(config, "freeze_learning", False) or getattr(config, "eval_only", False))
 
     def reset(self):
@@ -142,6 +146,7 @@ class DSPO_Menu(DSPO):
         self.last_menu_build_time = 0.0
         self.last_exact_gap_diagnostic = None
         self.last_policy_diagnostic = {}
+        self.last_candidate_diagnostics = []
 
     def _objective_uses_system_eval(self):
         return self.menu_policy == "menu_optimization" or self.menu_policy in self.EXPECTED_PROFIT_POLICIES
@@ -180,6 +185,10 @@ class DSPO_Menu(DSPO):
         metadata.setdefault("route_delay", float(metadata.get("route_delay", 0.0)))
         metadata.setdefault("remaining_capacity", float(getattr(offer.bundle, "remaining_capacity", 0.0)))
         return menu_cost, system_cost
+
+    def _eta_risk_penalty_for_offer(self, offer):
+        metadata = offer.metadata or {}
+        return float(metadata.get("eta_soft_penalty", 0.0))
 
     def get_prediction(self, cur_feat, home, pps, aux_features=None):
         time_int = min(int(home.time / max(self.interval, 1)), self.n_layers - 1)
@@ -265,45 +274,138 @@ class DSPO_Menu(DSPO):
             dtype=np.float32,
         )
 
-    def _choose_display_window(self, customer, eta):
-        t_pref, earliest, latest = self.derive_preferred_pickup_time(customer)
-        mode = self.menu_eta_filter_mode
+    def _canonical_eta_filter_mode(self, mode):
+        aliases = {
+            "interval": "interval_overlap",
+            "no_filter": "none",
+        }
+        canonical = aliases.get(str(mode), str(mode))
+        valid = {
+            "hard",
+            "calibrated",
+            "interval_overlap",
+            "chance_constraint",
+            "soft_penalty",
+            "none",
+        }
+        if canonical not in valid:
+            raise ValueError("Unsupported menu_eta_filter_mode: " + str(mode))
+        return canonical
 
-        # --- ETA feasibility gate ---
-        if mode == "hard":
-            if eta < earliest or eta > latest:
-                return None
-        elif mode == "calibrated":
-            _z = 1.2816  # 90th percentile of standard normal
-            if eta > latest + _z * self._eta_sigma or eta < earliest - _z * self._eta_sigma:
-                return None
-        elif mode == "interval":
-            if (eta + self._eta_sigma) < earliest or (eta - self._eta_sigma) > latest:
-                return None
-        # mode == "none": no pruning
+    def _normal_cdf(self, x):
+        import math
+        return 0.5 * (1.0 + math.erf(float(x) / math.sqrt(2.0)))
 
+    def _eta_violation_probability(self, eta, sigma, earliest, latest):
+        sigma = max(float(sigma), 0.0)
+        eta = float(eta)
+        earliest = float(earliest)
+        latest = float(latest)
+        if sigma <= 1e-12:
+            return 0.0 if earliest <= eta <= latest else 1.0
+        p_before = self._normal_cdf((earliest - eta) / sigma)
+        p_after = 1.0 - self._normal_cdf((latest - eta) / sigma)
+        return float(np.clip(p_before + p_after, 0.0, 1.0))
+
+    def _display_windows(self, customer):
+        t_pref, _, _ = self.derive_preferred_pickup_time(customer)
         slot_step = max(2.0 * self.display_window_half_width, 1.0)
         centers = [
             t_pref + offset * slot_step
             for offset in range(-self.menu_window_slots_each_side, self.menu_window_slots_each_side + 1)
         ]
+        return centers
+
+    def _window_for_eta(self, customer, eta, allow_nearest=False):
+        centers = self._display_windows(customer)
         for center in centers:
-            if abs(eta - center) <= self.display_window_half_width + 1e-9:
+            if abs(float(eta) - center) <= self.display_window_half_width + 1e-9:
                 return (
                     float(center - self.display_window_half_width),
                     float(center + self.display_window_half_width),
                     float(center),
                 )
-
-        if mode in ("hard", "calibrated", "interval"):
+        if not allow_nearest:
             return None
-
-        best_center = min(centers, key=lambda center: abs(eta - center))
+        best_center = min(centers, key=lambda center: abs(float(eta) - center))
         return (
             float(best_center - self.display_window_half_width),
             float(best_center + self.display_window_half_width),
             float(best_center),
         )
+
+    def _eta_filter_result(self, customer, filter_eta, predicted_eta=None, eta_variant="deployed", true_eta=None):
+        _, earliest, latest = self.derive_preferred_pickup_time(customer)
+        mode = self._canonical_eta_filter_mode(self.menu_eta_filter_mode)
+        sigma = max(float(self._eta_sigma), 0.0)
+        eta = float(filter_eta)
+        predicted_eta = eta if predicted_eta is None else float(predicted_eta)
+        true_eta_value = None if true_eta is None else float(true_eta)
+        interval_low = eta - sigma
+        interval_high = eta + sigma
+        violation_probability = self._eta_violation_probability(eta, sigma, earliest, latest)
+        soft_distance = max(float(earliest) - eta, 0.0, eta - float(latest))
+        soft_penalty = float(self.menu_eta_soft_penalty_lambda * soft_distance / max(self.menu_time_scale, 1.0))
+        risk_score = float(violation_probability + soft_penalty)
+
+        eta_pass = True
+        prune_reason = ""
+        if mode == "hard":
+            eta_pass = float(earliest) <= eta <= float(latest)
+            prune_reason = "" if eta_pass else "outside_preferred_window"
+        elif mode == "calibrated":
+            z = 1.2816
+            eta_pass = not (eta > float(latest) + z * sigma or eta < float(earliest) - z * sigma)
+            prune_reason = "" if eta_pass else "outside_calibrated_window"
+        elif mode == "interval_overlap":
+            eta_pass = not (interval_high < float(earliest) or interval_low > float(latest))
+            prune_reason = "" if eta_pass else "eta_interval_no_overlap"
+        elif mode == "chance_constraint":
+            eta_pass = violation_probability <= self.menu_eta_chance_threshold + 1e-12
+            prune_reason = "" if eta_pass else "violation_probability_above_threshold"
+        elif mode in ("soft_penalty", "none"):
+            eta_pass = True
+            prune_reason = ""
+
+        allow_nearest = mode in ("soft_penalty", "none")
+        display_window = self._window_for_eta(customer, eta, allow_nearest=allow_nearest)
+        if not eta_pass and mode != "soft_penalty":
+            display_window = None
+        if display_window is None and eta_pass:
+            eta_pass = False
+            prune_reason = "outside_display_window"
+
+        retained_in_objective = bool(eta_pass or mode == "soft_penalty")
+        diagnostics = {
+            "predicted_eta": float(predicted_eta),
+            "filter_eta": float(eta),
+            "eta_sigma": float(sigma),
+            "eta_sigma_source": self._eta_sigma_source,
+            "preferred_window_start": float(earliest),
+            "preferred_window_end": float(latest),
+            "window_start": None if display_window is None else float(display_window[0]),
+            "window_end": None if display_window is None else float(display_window[1]),
+            "window_center": None if display_window is None else float(display_window[2]),
+            "eta_interval_lower": float(interval_low),
+            "eta_interval_upper": float(interval_high),
+            "eta_filter_passed": bool(eta_pass),
+            "prune_reason": prune_reason,
+            "violation_probability": float(violation_probability),
+            "eta_filter_mode": mode,
+            "eta_source": str(eta_variant),
+            "eta_variant": str(eta_variant),
+            "true_eta": true_eta_value,
+            "oracle_eta": true_eta_value,
+            "eta_soft_penalty": float(soft_penalty if mode == "soft_penalty" else 0.0),
+            "eta_risk_score": float(risk_score),
+            "retained_in_objective": retained_in_objective,
+            "menu_eta_chance_threshold": float(self.menu_eta_chance_threshold),
+        }
+        return display_window, diagnostics
+
+    def _choose_display_window(self, customer, eta):
+        display_window, _ = self._eta_filter_result(customer, eta)
+        return display_window
 
     def _estimate_in_vehicle_time(self, loc, pred_ivt_norm=None):
         heuristic_ivt = self._travel_time_to_depot(loc)
@@ -394,6 +496,10 @@ class DSPO_Menu(DSPO):
 
         sens = float(customer.incentiveSensitivity)
         pricing_mode = self.menu_pricing_mode
+        if pricing_mode == "constant":
+            pricing_mode = "flat_markdown"
+        elif pricing_mode == "zero":
+            pricing_mode = "no_pricing"
         cost_fn = self._system_eval_cost if use_system_eval else self._menu_eval_cost
         cost_kind = self._evaluation_cost_kind(use_system_eval)
 
@@ -524,7 +630,8 @@ class DSPO_Menu(DSPO):
             offer.predicted_utility = float(utility)
             self._record_offer_trace_costs(offer)
             eval_cost = cost_fn(offer)
-            offer.expected_profit = float(prob * (offer.price - eval_cost))
+            eta_risk_penalty = self._eta_risk_penalty_for_offer(offer)
+            offer.expected_profit = float(prob * (offer.price - eval_cost - eta_risk_penalty))
             if offer.metadata is None:
                 offer.metadata = {}
             offer.metadata["choice_probability"] = float(prob)
@@ -532,6 +639,8 @@ class DSPO_Menu(DSPO):
             offer.metadata["expected_profit"] = float(offer.expected_profit)
             offer.metadata["evaluation_cost_kind"] = eval_cost_kind
             offer.metadata["menu_objective_mode"] = self.menu_objective_mode
+            offer.metadata["eta_risk_penalty"] = float(eta_risk_penalty)
+            offer.metadata["eta_risk_penalty_weighted"] = float(prob * eta_risk_penalty)
             total_value += offer.expected_profit
         if return_priced:
             return float(total_value), priced_menu
@@ -594,7 +703,13 @@ class DSPO_Menu(DSPO):
             yield list(subset)
 
     def _build_home_offer(self, customer, home_cost, home_eta, home_ivt, eta_target, ivt_target):
-        home_window = self._choose_display_window(customer, home_eta)
+        home_window, eta_diagnostic = self._eta_filter_result(
+            customer,
+            home_eta,
+            predicted_eta=home_eta,
+            eta_variant="home",
+            true_eta=eta_target,
+        )
         if home_window is None:
             home_window = (
                 float(home_eta - self.display_window_half_width),
@@ -624,6 +739,7 @@ class DSPO_Menu(DSPO):
                 "heuristic_eta": float(eta_target),
                 "heuristic_ivt": float(ivt_target),
                 "route_delay": 0.0,
+                **eta_diagnostic,
             },
         )
 
@@ -681,6 +797,15 @@ class DSPO_Menu(DSPO):
         fn_pruned_near = 0
         fn_pruned_mid = 0
         fn_pruned_far = 0
+        candidate_diagnostics = []
+        if home_offer_obj.metadata is not None:
+            home_diag = dict(home_offer_obj.metadata)
+            home_diag.update({
+                "candidate_type": "home",
+                "bundle_id": home_offer_obj.bundle_id,
+                "parcelpoint_id": -1,
+            })
+            candidate_diagnostics.append(home_diag)
 
         for idx, pp in enumerate(pps):
             if pp.remainingCapacity <= 0:
@@ -702,13 +827,26 @@ class DSPO_Menu(DSPO):
                 pred_eta_norm=outputs[idx + 2][1] if outputs.shape[1] > 1 else None,
             )
             eta_choice = self._resolve_eta_variant(eta_pp, eta_target)
-            display_window = self._choose_display_window(
+            display_window, eta_diagnostic = self._eta_filter_result(
                 customer,
                 eta_choice["filter_eta"],
+                predicted_eta=eta_choice["predicted_eta"],
+                eta_variant=eta_choice["variant"],
+                true_eta=eta_target,
             )
+            eta_diagnostic.update({
+                "candidate_type": "meeting_point",
+                "parcelpoint_id": int(pp.id_num),
+            })
             if display_window is None:
                 pruned_by_eta_count += 1
                 walk_dist_pruned = self._distance_between(customer.home, pp.location)
+                eta_diagnostic.update({
+                    "walk_distance": float(walk_dist_pruned),
+                    "retained_in_objective": False,
+                    "bundle_id": f"pp_{pp.id_num}_pruned_eta",
+                })
+                candidate_diagnostics.append(dict(eta_diagnostic))
                 if walk_dist_pruned < 500:
                     fn_pruned_near += 1
                 elif walk_dist_pruned < 1500:
@@ -751,9 +889,15 @@ class DSPO_Menu(DSPO):
                         "route_delay": float(route_delay),
                         "true_eta": float(eta_target),
                         "true_ivt": float(ivt_target),
+                        **eta_diagnostic,
                     },
                 )
             )
+            candidate_diagnostics.append({
+                **eta_diagnostic,
+                "bundle_id": candidates[-1].bundle_id,
+                "walk_distance": float(walk_dist),
+            })
 
         deduped = {}
         for offer in candidates:
@@ -769,7 +913,9 @@ class DSPO_Menu(DSPO):
             offer.metadata.setdefault("fn_pruned_near", fn_pruned_near)
             offer.metadata.setdefault("fn_pruned_mid", fn_pruned_mid)
             offer.metadata.setdefault("fn_pruned_far", fn_pruned_far)
+            offer.metadata.setdefault("candidate_diagnostic_count", len(candidate_diagnostics))
 
+        self.last_candidate_diagnostics = candidate_diagnostics
         return list(deduped.values())
 
     def build_option_features(self, state, pps, customer):
@@ -871,6 +1017,37 @@ class DSPO_Menu(DSPO):
                 ooh_offers.append(offer)
         return home_offer, ooh_offers
 
+    def _solver_diagnostic(
+        self,
+        effective_solver,
+        candidate_count,
+        enumerated_count=0,
+        fallback_used=False,
+        fallback_reason="",
+        selected_value=None,
+    ):
+        diagnostic = {
+            "menu_selection_solver_requested": str(self.menu_selection_solver),
+            "menu_selection_solver_effective": str(effective_solver),
+            "effective_menu_selection_solver": str(effective_solver),
+            "solver_candidate_count": int(candidate_count),
+            "exact_gap_candidate_count": int(candidate_count),
+            "exact_enumerated_menu_count": int(enumerated_count),
+            "solver_fallback_used": bool(fallback_used),
+            "solver_fallback_reason": str(fallback_reason),
+            "exact_gap_logged": bool(enumerated_count > 0),
+            "effective_menu_policy": self._effective_menu_policy(),
+        }
+        if selected_value is not None and selected_value > -np.inf:
+            diagnostic["exact_menu_value"] = float(selected_value)
+        return diagnostic
+
+    def _merge_policy_diagnostic(self, diagnostic):
+        merged = dict(self.last_policy_diagnostic or {})
+        merged.update(diagnostic)
+        self.last_policy_diagnostic = merged
+        return merged
+
     def _select_menu_exact(self, customer, home_offer, ooh_candidates):
         base_menu = [home_offer] if home_offer is not None and self.menu_keep_home else []
         # When keep_home=False, home is an optional candidate counted toward menu_k
@@ -893,14 +1070,12 @@ class DSPO_Menu(DSPO):
             if value > best_value:
                 best_value = value
                 best_menu = menu
-        if self.menu_policy in self.EXPECTED_PROFIT_POLICIES:
-            self.last_policy_diagnostic = {
-                "exact_enumerated_menu_count": int(enumerated_count),
-                "exact_gap_candidate_count": int(len(ooh_candidates)),
-                "exact_menu_value": float(best_value) if best_value > -np.inf else None,
-                "exact_gap_logged": True,
-                "effective_menu_policy": self._effective_menu_policy(),
-            }
+        self._merge_policy_diagnostic(self._solver_diagnostic(
+            "exact",
+            len(ooh_candidates),
+            enumerated_count=enumerated_count,
+            selected_value=best_value,
+        ))
         return best_menu if best_menu is not None else list(base_menu)
 
     def _select_menu_service_constrained(self, customer, home_offer, ooh_candidates):
@@ -965,6 +1140,14 @@ class DSPO_Menu(DSPO):
             "service_constrained_adjusted_profit": float(selected_adjusted_value),
             "service_quit_rate_guardrail": float(self.service_quit_rate_guardrail),
         }
+        self._merge_policy_diagnostic(self._solver_diagnostic(
+            "exact",
+            len(ooh_candidates),
+            enumerated_count=enumerated_count,
+            fallback_used=fallback_used,
+            fallback_reason="no_guardrail_feasible_menu" if fallback_used else "",
+            selected_value=selected_value,
+        ))
         return selected_menu if selected_menu is not None else list(base_menu)
 
     def _redesign_family(self):
@@ -980,11 +1163,13 @@ class DSPO_Menu(DSPO):
         value, priced_menu = self._evaluate_menu_for_objective(customer, menu, return_priced=True)
         outside_probability = 1.0
         system_eval_cost = 0.0
+        eta_risk_penalty_total = 0.0
         if priced_menu:
             metadata = priced_menu[0].metadata or {}
             outside_probability = float(metadata.get("menu_outside_probability", 1.0))
             for offer in priced_menu:
                 offer_metadata = offer.metadata or {}
+                eta_risk_penalty_total += float(offer_metadata.get("eta_risk_penalty_weighted", 0.0))
                 if offer_metadata.get("system_eval_cost") is not None:
                     system_eval_cost += float(offer_metadata.get("system_eval_cost"))
                 else:
@@ -996,6 +1181,7 @@ class DSPO_Menu(DSPO):
             "predicted_outside_probability": float(outside_probability),
             "risk_adjusted_score": float(risk_adjusted_score),
             "system_eval_cost": float(system_eval_cost),
+            "eta_risk_penalty_total": float(eta_risk_penalty_total),
         }
 
     def _choose_redesigned_menu(self, evaluated):
@@ -1072,6 +1258,7 @@ class DSPO_Menu(DSPO):
             "selected_predicted_expected_system_profit": float(selected["predicted_expected_system_profit"]),
             "selected_predicted_outside_probability": float(selected["predicted_outside_probability"]),
             "min_predicted_outside_probability": float(min_outside),
+            "eta_risk_penalty_total": float(selected.get("eta_risk_penalty_total", 0.0)),
             "menu_outside_penalty_lambda": float(self.menu_outside_penalty_lambda),
             "menu_quit_tolerance": float(self.menu_quit_tolerance),
             "menu_profit_tolerance_fraction": float(self.menu_profit_tolerance_fraction),
@@ -1136,6 +1323,14 @@ class DSPO_Menu(DSPO):
             "exact_gap_candidate_count": int(len(ooh_candidates)),
             "exact_gap_logged": bool(exact_used),
         })
+        diagnostics.update(self._solver_diagnostic(
+            "exact" if exact_used else "greedy",
+            len(ooh_candidates),
+            enumerated_count=enumerated_count if exact_used else 0,
+            fallback_used=not exact_used,
+            fallback_reason="" if exact_used else "above_exact_threshold",
+            selected_value=diagnostics.get("predicted_expected_system_profit"),
+        ))
         self.last_policy_diagnostic = diagnostics
         return selected_menu
 
@@ -1302,29 +1497,56 @@ class DSPO_Menu(DSPO):
                 menu = self._select_menu_exact(customer, home_offer, ooh_candidates)
             else:
                 menu = self._select_menu_greedy(customer, home_offer, ooh_candidates)
-                self.last_policy_diagnostic = {
-                    "effective_menu_policy": self._effective_menu_policy(),
-                    "exact_enumerated_menu_count": 0,
-                    "exact_gap_candidate_count": int(len(ooh_candidates)),
-                    "exact_gap_logged": False,
-                    "service_constrained_fallback_reason": "above_exact_threshold",
-                }
+                self.last_policy_diagnostic = self._solver_diagnostic(
+                    "greedy",
+                    len(ooh_candidates),
+                    fallback_used=True,
+                    fallback_reason="above_exact_threshold",
+                )
         else:
             self._maybe_log_exact_gap_diagnostic(customer, home_offer, ooh_candidates)
+            fallback_used = False
+            fallback_reason = ""
             if self.menu_selection_solver == "greedy":
                 menu = self._select_menu_greedy(customer, home_offer, ooh_candidates)
+                effective_solver = "greedy"
             elif self.menu_selection_solver == "exact":
                 if len(ooh_candidates) <= self._exact_threshold_for_policy():
                     menu = self._select_menu_exact(customer, home_offer, ooh_candidates)
+                    effective_solver = "exact"
                 else:
                     menu = self._select_menu_greedy(customer, home_offer, ooh_candidates)
+                    effective_solver = "greedy"
+                    fallback_used = True
+                    fallback_reason = "above_exact_threshold"
             elif self.menu_use_exact_eval and len(ooh_candidates) <= self._exact_threshold_for_policy():
                 menu = self._select_menu_exact(customer, home_offer, ooh_candidates)
+                effective_solver = "exact"
             else:
                 menu = self._select_menu_greedy(customer, home_offer, ooh_candidates)
+                effective_solver = "greedy"
+                if self.menu_use_exact_eval and len(ooh_candidates) > self._exact_threshold_for_policy():
+                    fallback_used = True
+                    fallback_reason = "above_exact_threshold"
+            prior_diagnostic = self.last_policy_diagnostic or {}
+            exact_enumerated = int(prior_diagnostic.get("exact_enumerated_menu_count", 0))
+            selected_value = prior_diagnostic.get("exact_menu_value")
+            self._merge_policy_diagnostic(self._solver_diagnostic(
+                effective_solver,
+                len(ooh_candidates),
+                enumerated_count=exact_enumerated if effective_solver == "exact" else 0,
+                fallback_used=fallback_used,
+                fallback_reason=fallback_reason,
+                selected_value=selected_value,
+            ))
 
         if len(menu) == 0 and home_offer is not None:
             menu = [home_offer]
+        if "menu_selection_solver_effective" not in (self.last_policy_diagnostic or {}):
+            self._merge_policy_diagnostic(self._solver_diagnostic(
+                "heuristic",
+                len(ooh_candidates),
+            ))
         return menu
 
     def get_action_menu(self, state, training=False):

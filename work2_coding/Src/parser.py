@@ -169,6 +169,10 @@ class Parser(object):
         parser.add_argument("--menu_eta_filter_mode", default="hard",
                             choices=["hard", "calibrated", "interval", "interval_overlap",
                                      "chance_constraint", "soft_penalty", "none"])
+        parser.add_argument("--menu_eta_sigma", default=5703.0, type=float)
+        parser.add_argument("--menu_eta_sigma_source", default="global_config", type=str)
+        parser.add_argument("--menu_eta_chance_threshold", default=0.25, type=float)
+        parser.add_argument("--menu_eta_soft_penalty_lambda", default=1.0, type=float)
         parser.add_argument("--pref_window_half_width", default=900.0, type=float)
         parser.add_argument("--display_window_half_width", default=600.0, type=float)
         parser.add_argument("--menu_window_slots_each_side", default=1, type=int)
@@ -191,7 +195,7 @@ class Parser(object):
                             choices=["deployed", "heuristic", "stronger", "oracle"])
         parser.add_argument("--menu_stronger_eta_gamma", default=0.5, type=float)
         parser.add_argument("--menu_pricing_mode", default="lambertw",
-                            choices=["lambertw", "cost_plus", "constant", "zero"])
+                            choices=["lambertw", "cost_plus", "constant", "flat_markdown", "zero", "no_pricing"])
         parser.add_argument("--menu_pricing_constant", default=-3.0, type=float)
         parser.add_argument("--service_quit_penalty", default=100.0, type=float)
         parser.add_argument("--service_quit_rate_guardrail", default=0.4, type=float)
