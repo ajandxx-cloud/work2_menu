@@ -18,6 +18,13 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 | 4 | Evidence And Artifacts (Complete 2026-06-11) | Generate the evidence chain required for paper-facing Work2 claims | ART-01..04 |
 | 5 | Manuscript Framing And Claim Guard (Complete 2026-06-11) | Produce paper-ready method/results/limitations text and enforce claim boundaries | PAPER-01..04 |
 | 6 | Attention-Enhanced DSPO Evidence Pivot (Complete 2026-06-11) | Implement and evaluate attention-enhanced DSPO against the original DSPO baseline | ATTN-01..04, BEHAV-01 |
+| 7 | Audit Closure And Traceability Repair | Close v2.0 procedural audit gaps before new experiments | TRACE-01..05 |
+| 8 | Repository Hygiene And Provenance Freeze | Reduce provenance risk before producing empirical evidence | PROV-01..04 |
+| 9 | Shared Checkpoint Training Pipeline | Create real shared pilot/formal predictor checkpoints with provenance | CKPT-01..05 |
+| 10 | Pilot Attention Evidence Run | Run checkpoint-backed pilot DSPO_original vs DSPO_attention evidence | PILOT-01..06 |
+| 11 | Attention Ablation And Design Fix | Use pilot-only ablations if the attention signal is weak | ABLT-01..04 |
+| 12 | Formal Actual Replay Enablement | Enable strict-gated formal actual replay without placeholder rows | FORM-01..05 |
+| 13 | Formal Attention Evidence And Claim Decision | Run formal evidence and decide the paper claim from artifact guards | CLAIM-01..05 |
 
 ## Phases
 
@@ -100,9 +107,99 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 
 **Requirements:** ATTN-01, ATTN-02, ATTN-03, ATTN-04, BEHAV-01
 
+### Phase 7: Audit Closure And Traceability Repair
+**Goal:** Close the procedural GSD audit gaps before running more experiments.
+**Mode:** mvp
+
+**Success Criteria**:
+1. `.planning/phases/02-core-semantics-and-robust-menu-logic/02-VERIFICATION.md` exists.
+2. ACCT-01..04, ETA-01..04, and MENU-01..04 have command-backed evidence rows or explicit gaps.
+3. MENU-02 has explicit evidence or remains an explicit blocker.
+4. Phase 2 validation exists because Nyquist validation is enabled.
+5. Phase 07 verification states whether Phase 08 may proceed.
+
+**Requirements:** TRACE-01, TRACE-02, TRACE-03, TRACE-04, TRACE-05
+
+### Phase 8: Repository Hygiene And Provenance Freeze
+**Goal:** Reduce provenance risk before producing new empirical evidence.
+**Mode:** mvp
+
+**Success Criteria**:
+1. Dirty files are classified and unexplained files are resolved or documented.
+2. `.gitignore` handles venv, cache, temporary outputs, and large local artifacts.
+3. Deleted user documents are documented before restore/removal decisions.
+4. Generated artifact tracking policy is recorded.
+5. STATE records repository hygiene status.
+
+**Requirements:** PROV-01, PROV-02, PROV-03, PROV-04
+
+### Phase 9: Shared Checkpoint Training Pipeline
+**Goal:** Create real shared predictor checkpoints for pilot and formal attention evidence.
+**Mode:** mvp
+
+**Success Criteria**:
+1. `scripts/train_shared_checkpoint.py` exists if no stable training entry point already satisfies the contract.
+2. Pilot and formal `supervised_ml.pt` files exist under `outputs/shared_training/work2_attention_dspo/`.
+3. Metadata sidecars record hashes, commands, seeds, splits, dataset, run ID, git provenance, args, and timestamp.
+4. Checkpoints load through the run-study code path.
+5. Missing or random-weight checkpoints are refused.
+
+**Requirements:** CKPT-01, CKPT-02, CKPT-03, CKPT-04, CKPT-05
+
+### Phase 10: Pilot Attention Evidence Run
+**Goal:** Run the checkpoint-backed pilot comparison for `DSPO_original` versus `DSPO_attention`.
+**Mode:** mvp
+
+**Success Criteria**:
+1. `pilot_attention_dspo` completes with loaded checkpoint provenance and non-placeholder rows.
+2. Every `attention_pair_id` group contains both compared policies.
+3. Low and medium uptake regimes are present.
+4. Attention artifacts and claim guard are rebuilt from the completed run.
+5. A written go/no-go decision controls the next phase.
+
+**Requirements:** PILOT-01, PILOT-02, PILOT-03, PILOT-04, PILOT-05, PILOT-06
+
+### Phase 11: Attention Ablation And Design Fix
+**Goal:** If pilot evidence is weak, identify whether attention design, weights, behavioral regime, or metric design is responsible.
+**Mode:** mvp
+
+**Success Criteria**:
+1. Pilot-only attention strength, feature, and ETA-variant manifests exist.
+2. Varied fields and selection criteria are pre-registered before ablations run.
+3. Paired replay fairness is preserved within ablations.
+4. Exactly one formal candidate is selected before formal evidence, or the claim is stopped.
+
+**Requirements:** ABLT-01, ABLT-02, ABLT-03, ABLT-04
+
+### Phase 12: Formal Actual Replay Enablement
+**Goal:** Enable formal actual replay safely with strict evidence gates.
+**Mode:** mvp
+
+**Success Criteria**:
+1. The old unconditional formal actual replay block is replaced by strict gated execution.
+2. Formal execution requires loaded checkpoint provenance and non-placeholder rows.
+3. Missing checkpoint still fails closed with blocker metadata.
+4. Formal placeholder rows are impossible.
+5. Formal contract, missing-checkpoint, loaded-checkpoint, and placeholder-impossibility tests exist.
+
+**Requirements:** FORM-01, FORM-02, FORM-03, FORM-04, FORM-05
+
+### Phase 13: Formal Attention Evidence And Claim Decision
+**Goal:** Run final formal evidence and decide the manuscript claim from artifact status.
+**Mode:** mvp
+
+**Success Criteria**:
+1. Formal attention rows are completed, paired, non-placeholder, and checkpoint-loaded.
+2. Formal artifacts report primary/secondary deltas, regime results, and variance/confidence summaries.
+3. Diagnostic and cost-bound policies are not ranked as method baselines.
+4. `ATTENTION_CLAIM_GUARD.json` makes the final claim decision.
+5. Final milestone audit passes before archive.
+
+**Requirements:** CLAIM-01, CLAIM-02, CLAIM-03, CLAIM-04, CLAIM-05
+
 ## Requirement Coverage
 
-All 28 v1 requirements are mapped to exactly one phase. Phase 6 adds the v2 attention-evidence pivot.
+All 28 v1 requirements are mapped to exactly one phase. Phase 6 adds the v2 attention-evidence pivot. Milestone v2.1 adds 34 evidence-ladder requirements mapped to Phases 7-13.
 
 ---
-*Roadmap created: 2026-06-10 after initialization*
+*Roadmap last updated: 2026-06-11 starting milestone v2.1*

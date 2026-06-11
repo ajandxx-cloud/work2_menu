@@ -10,6 +10,17 @@ The current paper target is to show that adding attention to the original DSPO m
 
 The project must produce defensible Work2 evidence: a reproducible pipeline where attention-enhanced DSPO can be fairly compared against the original DSPO method on the same request traces, split IDs, seeds, pricing mode, routing settings, and checkpoint policy.
 
+## Current Milestone: v2.1 evidence_ladder_and_audit_closure
+
+**Goal:** Close the v2.0 audit gaps and complete a defensible checkpoint-backed evidence ladder for the attention-enhanced DSPO claim.
+
+**Target features:**
+- Repair Phase 2 audit traceability with verification and validation artifacts for ACCT, ETA, and MENU requirements.
+- Freeze repository provenance and generated-output hygiene before new empirical evidence.
+- Train real shared pilot/formal checkpoints with metadata and hashes.
+- Run checkpoint-backed pilot evidence, then ablate or proceed according to predeclared go/no-go rules.
+- Safely enable formal actual replay and make the final claim decision only from artifacts and claim guards.
+
 ## Requirements
 
 ### Validated
@@ -30,7 +41,12 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 
 ### Active
 
+- [ ] Close `.planning/v2.0-MILESTONE-AUDIT.md` gaps before treating v2.0 as archive-ready.
+- [ ] Create Phase 2 verification and validation artifacts and reconcile ACCT/ETA/MENU traceability honestly.
+- [ ] Freeze repository hygiene and provenance before new empirical evidence runs.
+- [ ] Train real shared attention checkpoints for pilot and formal profiles.
 - [ ] Supply the shared attention pilot checkpoint, then run `pilot_attention_dspo` and rebuild `work2_attention_dspo` artifacts.
+- [ ] Decide pilot go/no-go from checkpoint-backed paired artifacts and `ATTENTION_CLAIM_GUARD`, not manual row interpretation.
 - [ ] Keep `home_only` and meeting-point-only outputs as cost-approximation boundary references, not baseline methods for ranking.
 
 ### Out of Scope
@@ -78,6 +94,9 @@ Known engineering risks to address early:
 | Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Implemented in Phase 2 and carried into Phase 3 row schema |
 | Treat blocked Phase 4 artifacts as evidence-status outputs, not empirical claims | Required pilot checkpoint is absent; the pipeline must expose blockers instead of fabricating non-placeholder rows | Validated in Phase 4 |
 | Generate manuscript support from artifact status, not manual result-row edits | Current evidence is blocked, so manuscript framing must be status-driven and fail closed | Validated in Phase 5 |
+| Treat the v2.0 audit as the source of truth for v2.1 startup | `STATE.md` said milestone complete, but the milestone audit found orphaned Phase 2 verification and missing validation artifacts | Active in v2.1 |
+| Preserve old phase directories during v2.1 initialization | Phase 07 must repair Phase 2 and validate phases 01..06, so clearing prior phase directories would destroy required evidence context | Active in v2.1 |
+| Require real checkpoint-backed evidence before attention superiority language | Current attention artifacts are smoke-only and claim guard blocks improvement claims | Active in v2.1 |
 
 ## Evolution
 
@@ -97,4 +116,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-11 after Phase 6 execution*
+*Last updated: 2026-06-11 starting milestone v2.1*

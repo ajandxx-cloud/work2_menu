@@ -73,6 +73,63 @@
 - **CAL-01**: System can estimate distance-band or candidate-type ETA sigma after global-sigma robust policies are complete.
 - **CAL-02**: System can incorporate survey or revealed-preference data if available.
 
+## v2.1 Requirements
+
+### Audit Closure And Traceability
+
+- [ ] **TRACE-01**: Project has a Phase 2 verification artifact that records ACCT-01..04, ETA-01..04, and MENU-01..04 with command-backed evidence or explicit gaps.
+- [ ] **TRACE-02**: Project has Phase 2 validation evidence because `workflow.nyquist_validation` is enabled.
+- [ ] **TRACE-03**: Requirements traceability no longer contradicts Phase 2 summaries, verification, or validation artifacts.
+- [ ] **TRACE-04**: MENU-02 is reconciled with explicit pricing/system-aware cost evidence or a documented remaining gap.
+- [ ] **TRACE-05**: Phase 07 records a pass/fail gate before Phase 08 begins.
+
+### Repository Hygiene And Provenance
+
+- [ ] **PROV-01**: Dirty and untracked files are classified into planning docs, generated artifacts, local outputs, dependency files, deleted user documents, and other local state.
+- [ ] **PROV-02**: `.gitignore` prevents future venv, cache, temporary output, and large local artifact tracking risks.
+- [ ] **PROV-03**: Generated artifacts to track versus keep local are documented.
+- [ ] **PROV-04**: Evidence runs can report `git_dirty=false`, or `git_dirty=true` with a narrow documented reason.
+
+### Shared Checkpoints
+
+- [ ] **CKPT-01**: A stable shared checkpoint training entry point exists for the attention evidence family.
+- [ ] **CKPT-02**: Pilot and formal checkpoints are real trained weights, not placeholders.
+- [ ] **CKPT-03**: Checkpoint sidecars record sha256, training command, seed, split, dataset, run_id, git commit, dirty status, training args, and timestamp.
+- [ ] **CKPT-04**: Checkpoints load through the same code path used by `run_study.py`.
+- [ ] **CKPT-05**: Missing, mismatched, or random-weight checkpoints are refused for pilot/formal evidence.
+
+### Pilot Evidence
+
+- [ ] **PILOT-01**: `pilot_attention_dspo` completes with non-placeholder rows and loaded checkpoint provenance.
+- [ ] **PILOT-02**: Every attention pair contains both `DSPO_original` and `DSPO_attention`.
+- [ ] **PILOT-03**: Low and medium uptake regimes are present and behaviorally live.
+- [ ] **PILOT-04**: Pilot artifacts and claim guard are rebuilt from the completed run.
+- [ ] **PILOT-05**: Pilot summary reports primary and secondary paired deltas, attention weights, checkpoint provenance, and regime-level results.
+- [ ] **PILOT-06**: A written go/no-go decision controls whether formal evidence or ablation follows.
+
+### Attention Ablation
+
+- [ ] **ABLT-01**: Pilot-only attention strength, feature, and ETA-variant ablation manifests exist when pilot evidence is weak.
+- [ ] **ABLT-02**: Ablations pre-register varied fields and selection criteria before execution.
+- [ ] **ABLT-03**: Paired replay fairness is preserved; only declared attention fields vary.
+- [ ] **ABLT-04**: Exactly one formal candidate configuration is selected before formal, or the superiority claim is stopped.
+
+### Formal Enablement
+
+- [ ] **FORM-01**: Formal actual replay is no longer blocked by the old unconditional guard when strict evidence gates are satisfied.
+- [ ] **FORM-02**: Formal execution requires `tier=formal`, `actual_execution=true`, `require_checkpoint=true`, existing checkpoint, loaded status, non-empty hash, non-placeholder rows, and git provenance.
+- [ ] **FORM-03**: Formal execution fails closed with blocker metadata for missing checkpoints or invalid provenance.
+- [ ] **FORM-04**: Formal placeholder rows are impossible.
+- [ ] **FORM-05**: Formal contract-only, missing-checkpoint, loaded-checkpoint, and placeholder-impossibility tests exist.
+
+### Formal Evidence And Claim Decision
+
+- [ ] **CLAIM-01**: `formal_attention_dspo` completes with non-placeholder, checkpoint-loaded, paired formal rows.
+- [ ] **CLAIM-02**: Formal artifacts report primary and secondary paired deltas, regime deltas, and variance/confidence summaries.
+- [ ] **CLAIM-03**: Diagnostic and cost-bound policies are not ranked as method baselines.
+- [ ] **CLAIM-04**: `ATTENTION_CLAIM_GUARD.json` alone decides whether attention-improves-DSPO language is allowed.
+- [ ] **CLAIM-05**: Manuscript support and milestone archive status match artifact status and final validation/audit results.
+
 ## Out of Scope
 
 | Feature | Reason |
@@ -120,13 +177,48 @@
 | ATTN-02 | Phase 6 | Complete |
 | ATTN-03 | Phase 6 | Complete |
 | ATTN-04 | Phase 6 | Complete |
+| TRACE-01 | Phase 7 | Planned |
+| TRACE-02 | Phase 7 | Planned |
+| TRACE-03 | Phase 7 | Planned |
+| TRACE-04 | Phase 7 | Planned |
+| TRACE-05 | Phase 7 | Planned |
+| PROV-01 | Phase 8 | Planned |
+| PROV-02 | Phase 8 | Planned |
+| PROV-03 | Phase 8 | Planned |
+| PROV-04 | Phase 8 | Planned |
+| CKPT-01 | Phase 9 | Planned |
+| CKPT-02 | Phase 9 | Planned |
+| CKPT-03 | Phase 9 | Planned |
+| CKPT-04 | Phase 9 | Planned |
+| CKPT-05 | Phase 9 | Planned |
+| PILOT-01 | Phase 10 | Planned |
+| PILOT-02 | Phase 10 | Planned |
+| PILOT-03 | Phase 10 | Planned |
+| PILOT-04 | Phase 10 | Planned |
+| PILOT-05 | Phase 10 | Planned |
+| PILOT-06 | Phase 10 | Planned |
+| ABLT-01 | Phase 11 | Planned |
+| ABLT-02 | Phase 11 | Planned |
+| ABLT-03 | Phase 11 | Planned |
+| ABLT-04 | Phase 11 | Planned |
+| FORM-01 | Phase 12 | Planned |
+| FORM-02 | Phase 12 | Planned |
+| FORM-03 | Phase 12 | Planned |
+| FORM-04 | Phase 12 | Planned |
+| FORM-05 | Phase 12 | Planned |
+| CLAIM-01 | Phase 13 | Planned |
+| CLAIM-02 | Phase 13 | Planned |
+| CLAIM-03 | Phase 13 | Planned |
+| CLAIM-04 | Phase 13 | Planned |
+| CLAIM-05 | Phase 13 | Planned |
 
 **Coverage:**
 - v1 requirements: 28 total
 - Mapped to phases: 28
 - Unmapped: 0
 - v2 attention-pivot requirements: 5 mapped to Phase 6
+- v2.1 evidence-ladder requirements: 34 mapped to Phases 7-13
 
 ---
 *Requirements defined: 2026-06-10*
-*Last updated: 2026-06-11 after Phase 6 execution*
+*Last updated: 2026-06-11 starting milestone v2.1*
