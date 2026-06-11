@@ -7,10 +7,10 @@
 
 ### Audit
 
-- [ ] **AUDIT-01**: Researcher can identify the active runtime root and distinguish current files from stale planning references.
-- [ ] **AUDIT-02**: Researcher can run an import smoke test for the active package and record the result.
-- [ ] **AUDIT-03**: Researcher can list available runner scripts, missing runner scripts, existing menu policies, and relevant simulator modules.
-- [ ] **AUDIT-04**: Researcher can produce a concise Stage 0 audit report before modifying algorithm behavior.
+- [x] **AUDIT-01**: Researcher can identify the active runtime root and distinguish current files from stale planning references.
+- [x] **AUDIT-02**: Researcher can run an import smoke test for the active package and record the result.
+- [x] **AUDIT-03**: Researcher can list available runner scripts, missing runner scripts, existing menu policies, and relevant simulator modules.
+- [x] **AUDIT-04**: Researcher can produce a concise Stage 0 audit report before modifying algorithm behavior.
 
 ### Accounting
 
@@ -81,10 +81,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUDIT-01 | Phase 1 | Pending |
-| AUDIT-02 | Phase 1 | Pending |
-| AUDIT-03 | Phase 1 | Pending |
-| AUDIT-04 | Phase 1 | Pending |
+| AUDIT-01 | Phase 1 | Complete |
+| AUDIT-02 | Phase 1 | Complete |
+| AUDIT-03 | Phase 1 | Complete |
+| AUDIT-04 | Phase 1 | Complete |
 | ACCT-01 | Phase 2 | Pending |
 | ACCT-02 | Phase 2 | Pending |
 | ACCT-03 | Phase 2 | Pending |

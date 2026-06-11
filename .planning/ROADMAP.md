@@ -10,7 +10,7 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 
 | # | Phase | Goal | Requirements |
 |---|-------|------|--------------|
-| 1 | Repository Audit And Runtime Baseline | Identify the active Work2 runtime and produce a minimal runnable patch plan | AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04 |
+| 1 | Repository Audit And Runtime Baseline (Complete 2026-06-11) | Identify the active Work2 runtime and produce a minimal runnable patch plan | AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04 |
 | 2 | Core Semantics And Robust Menu Logic | Fix accounting/checkpoint risks and implement robust filtering/objective/solver behavior | ACCT-01..04, ETA-01..04, MENU-01..04 |
 | 3 | Experiment Contracts And Fair Replay | Define runnable study contracts and paired comparisons | EXP-01..04 |
 | 4 | Evidence And Artifacts | Run smoke/pilot/formal evidence and generate provenance-backed tables/figures | ART-01..04 |

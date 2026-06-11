@@ -19,11 +19,11 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 - `work2_coding/Src/Algorithms/DSPO_Menu.py` exists and already contains menu-mode logic, ETA filter variants, menu policies, exact/greedy selection paths, and exact-vs-greedy diagnostics.
 - `work2_coding/Environments/OOH/` contains the OOH simulator, MNL choice model, routing utilities, domain containers, and bundled Homberger/Gehring and Amazon data.
 - Existing README documents the inherited DSPO/OOH codebase, Python 3.10 runtime, PyTorch dependency, and Hygese routing dependency.
+- Phase 1 Stage 0 audit is complete and recorded in `.planning/phases/01-repository-audit-and-runtime-baseline/01-STAGE0-AUDIT.md`.
+- `ooh_code/` is absent from the current filesystem; existing `.planning/codebase/` references to `ooh_code/` are stale historical context until revalidated.
 
 ### Active
 
-- [ ] Produce a Stage 0 repository audit before changing algorithm behavior.
-- [ ] Establish `work2_coding/` as the active runtime root or document any competing roots if discovered.
 - [ ] Repair or isolate opt-out accounting so outside-option choices do not mutate routes as accepted home pickups.
 - [ ] Make shared predictor checkpoint loading explicit and row-level visible.
 - [ ] Implement robust ETA/time-window filtering modes with diagnostics and metadata.
@@ -70,11 +70,11 @@ Known engineering risks to address early:
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Use `work2_coding/` as the active runtime root unless Stage 0 finds otherwise | It exists in the current tree and passed an import smoke check; existing codebase maps mention a missing `ooh_code/` root | Pending |
+| Use `work2_coding/` as the active runtime root unless Stage 0 finds otherwise | It exists in the current tree, passed an import smoke check, and Phase 1 confirmed no current `ooh_code/` root | Validated in Phase 1 |
 | Focus Work2 on robust time-window service-menu optimization | This is feasible in the existing DSPO_Menu code and gives a clearer contribution than attention-first framing | Pending |
 | Treat `no_filter` as diagnostic, not the final method | It can expose candidate-availability upper bounds but is not automatically operationally credible | Pending |
 | Defer attention mechanisms | The user selected scheme 1 and explicitly excluded attention for this project | Pending |
-| Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Pending |
+| Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Validated in Phase 1 |
 | Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Pending |
 
 ## Evolution
@@ -95,4 +95,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-10 after initialization*
+*Last updated: 2026-06-11 after Phase 1 completion*
