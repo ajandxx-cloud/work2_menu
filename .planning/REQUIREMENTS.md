@@ -126,9 +126,9 @@
 
 - [ ] **CLAIM-01**: `formal_attention_dspo` completes with non-placeholder, checkpoint-loaded, paired formal rows.
 - [ ] **CLAIM-02**: Formal artifacts report primary and secondary paired deltas, regime deltas, and variance/confidence summaries.
-- [ ] **CLAIM-03**: Diagnostic and cost-bound policies are not ranked as method baselines.
-- [ ] **CLAIM-04**: `ATTENTION_CLAIM_GUARD.json` alone decides whether attention-improves-DSPO language is allowed.
-- [ ] **CLAIM-05**: Manuscript support and milestone archive status match artifact status and final validation/audit results.
+- [x] **CLAIM-03**: Diagnostic and cost-bound policies are not ranked as method baselines.
+- [x] **CLAIM-04**: `ATTENTION_CLAIM_GUARD.json` alone decides whether attention-improves-DSPO language is allowed.
+- [x] **CLAIM-05**: Manuscript support and milestone archive status match artifact status and final validation/audit results.
 
 ## Out of Scope
 
@@ -206,11 +206,11 @@
 | FORM-03 | Phase 12 | Complete |
 | FORM-04 | Phase 12 | Complete |
 | FORM-05 | Phase 12 | Complete |
-| CLAIM-01 | Phase 13 | Planned |
-| CLAIM-02 | Phase 13 | Planned |
-| CLAIM-03 | Phase 13 | Planned |
-| CLAIM-04 | Phase 13 | Planned |
-| CLAIM-05 | Phase 13 | Planned |
+| CLAIM-01 | Phase 13 | Failed |
+| CLAIM-02 | Phase 13 | Failed |
+| CLAIM-03 | Phase 13 | Complete |
+| CLAIM-04 | Phase 13 | Complete |
+| CLAIM-05 | Phase 13 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total
