@@ -94,6 +94,38 @@ def test_attention_suite_members_resolve():
     assert suite_members(suite) == ["smoke_attention_dspo", "pilot_attention_dspo", "formal_attention_dspo"]
 
 
+def test_attention_ablation_manifests_are_preregistered_and_fair():
+    names = [
+        "pilot_attention_ablation_strength_high",
+        "pilot_attention_ablation_eta_feature_focus",
+        "pilot_attention_ablation_shared_eta_stronger",
+    ]
+    for name in names:
+        manifest = load_manifest(name)
+        assert manifest["tier"] == "pilot"
+        assert manifest["shared_checkpoint"]["required"] is True
+        assert manifest["base_args"]["require_checkpoint"] is True
+        assert {split["uptake_regime"] for split in manifest["splits"]} == {"low", "medium"}
+        assert [policy["tag"] for policy in manifest["policies"]] == ["DSPO_original", "DSPO_attention"]
+        varied = set(manifest["varied_fields"])
+        for split in manifest["splits"]:
+            original = resolve_policy_args(manifest, split, manifest["policies"][0])
+            attention = resolve_policy_args(manifest, split, manifest["policies"][1])
+            differences = {key for key in original if original.get(key) != attention.get(key)}
+            assert differences.issubset(varied), (name, differences - varied)
+            assert original["checkpoint_path"] == attention["checkpoint_path"]
+            assert original["menu_eta_filter_mode"] == attention["menu_eta_filter_mode"]
+
+
+def test_attention_ablation_suite_members_resolve():
+    suite = load_suite("work2_attention_ablation")
+    assert suite_members(suite) == [
+        "pilot_attention_ablation_strength_high",
+        "pilot_attention_ablation_eta_feature_focus",
+        "pilot_attention_ablation_shared_eta_stronger",
+    ]
+
+
 def main():
     tests = [
         test_attention_policy_adapters_are_main_methods,
@@ -103,6 +135,8 @@ def main():
         test_attention_manifest_rejects_diagnostic_policy_in_main_family,
         test_attention_manifest_requires_varied_attention_fields,
         test_attention_suite_members_resolve,
+        test_attention_ablation_manifests_are_preregistered_and_fair,
+        test_attention_ablation_suite_members_resolve,
     ]
     for test in tests:
         test()

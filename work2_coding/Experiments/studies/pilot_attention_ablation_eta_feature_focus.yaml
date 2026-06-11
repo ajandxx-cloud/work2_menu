@@ -1,0 +1,133 @@
+schema_version: 1
+name: pilot_attention_ablation_eta_feature_focus
+tier: pilot
+run_mode: pilot
+comparison_family: attention_dspo
+required_policy_tags:
+  - DSPO_original
+  - DSPO_attention
+description: Pilot-only ablation focusing deterministic attention on ETA risk.
+shared_checkpoint:
+  required: true
+  path: outputs/shared_training/work2_attention_dspo/pilot/supervised_ml.pt
+  expected_status: loaded
+base_args:
+  algo_name: DSPO_Menu
+  menu_mode: true
+  run_mode: pilot
+  instance: RC
+  load_data: true
+  pricing: true
+  max_episodes: 3
+  max_steps_r: 20
+  max_steps_p: 0.7
+  reopt: 10000000
+  hgs_reopt_time: 0.2
+  hgs_final_time: 0.2
+  menu_k: 3
+  max_candidates: 8
+  menu_exact_threshold: 8
+  menu_exact_gap_threshold: 8
+  menu_objective_mode: expected_profit
+  checkpoint_path: outputs/shared_training/work2_attention_dspo/pilot/supervised_ml.pt
+  require_checkpoint: true
+  allow_checkpoint_mismatch: false
+splits:
+  - split_id: ablation_eta_feature_low_seed0
+    seed: 421
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: low
+    args_overrides:
+      home_util: 3.8
+      base_util: -2.8
+      incentive_sens: -0.18
+  - split_id: ablation_eta_feature_medium_seed1
+    seed: 422
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: medium
+    args_overrides:
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+policies:
+  - tag: DSPO_original
+  - tag: DSPO_attention
+    args_overrides:
+      attention_strength: 1.5
+      attention_weight_eta_risk: -3.0
+      attention_weight_walk: 0.0
+      attention_weight_time: 0.0
+      attention_weight_cost: 0.0
+      attention_weight_route_delay: 0.0
+      attention_weight_capacity_risk: 0.0
+      attention_weight_price: 0.0
+paired_fields:
+  - seed
+  - data_seed
+  - data_seed_test
+  - instance
+  - load_data
+  - pricing
+  - hgs_reopt_time
+  - hgs_final_time
+  - reopt
+  - checkpoint_path
+  - require_checkpoint
+  - menu_k
+  - max_candidates
+  - max_steps_r
+  - max_steps_p
+  - home_util
+  - base_util
+  - incentive_sens
+  - menu_policy
+  - menu_eta_filter_mode
+  - menu_objective_mode
+  - method_variant
+  - attention_enabled
+  - attention_mode
+  - attention_strength
+  - attention_weight_eta_risk
+  - attention_weight_walk
+  - attention_weight_time
+  - attention_weight_cost
+  - attention_weight_route_delay
+  - attention_weight_capacity_risk
+  - attention_weight_price
+varied_fields:
+  - method_variant
+  - attention_enabled
+  - attention_mode
+  - attention_strength
+  - attention_weight_eta_risk
+  - attention_weight_walk
+  - attention_weight_time
+  - attention_weight_cost
+  - attention_weight_route_delay
+  - attention_weight_capacity_risk
+  - attention_weight_price
+output_schema:
+  normalized-row-v1: true
+  fields:
+    - study_name
+    - run_id
+    - policy_tag
+    - method_variant
+    - attention_enabled
+    - attention_mode
+    - attention_strength
+    - attention_weight_summary
+    - attention_pair_id
+    - attention_pair_complete
+    - seed
+    - split_id
+    - trace_id
+    - manifest_hash
+    - checkpoint_load_status
+    - net_objective_proxy
+    - acceptance_rate
+    - optout_rate
+    - placeholder_only
+

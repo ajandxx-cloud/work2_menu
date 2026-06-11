@@ -1,0 +1,9 @@
+type: suite
+schema_version: 1
+name: work2_attention_ablation
+description: Phase 11 pilot-only ablation suite after the baseline attention pilot no-go.
+members:
+  - study: pilot_attention_ablation_strength_high
+  - study: pilot_attention_ablation_eta_feature_focus
+  - study: pilot_attention_ablation_shared_eta_stronger
+
