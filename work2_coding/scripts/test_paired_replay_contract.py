@@ -124,7 +124,7 @@ def test_build_normalized_row_from_synthetic_metadata():
             "menu_build_time": 0.01,
         },
         status="completed",
-        execution_status="synthetic",
+        execution_status="completed",
         placeholder_only=False,
     )
     assert set(NORMALIZED_ROW_FIELDS).issubset(set(row.keys()))
@@ -180,4 +180,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

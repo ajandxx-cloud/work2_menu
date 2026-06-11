@@ -7,6 +7,14 @@ from copy import deepcopy
 from Src.policy_adapters import adapter_metadata
 
 
+STUDY_EXECUTION_STATUSES = {
+    "completed",
+    "contract_only",
+    "diagnostic",
+    "incomplete",
+    "blocked",
+}
+
 NORMALIZED_ROW_FIELDS = [
     "schema_version",
     "study_name",
@@ -50,6 +58,9 @@ NORMALIZED_ROW_FIELDS = [
     "placeholder_only",
     "status",
     "execution_status",
+    "git_commit",
+    "git_dirty",
+    "git_status_summary",
 ]
 
 OPTIONAL_ROW_FIELDS = {
@@ -65,6 +76,7 @@ OPTIONAL_ROW_FIELDS = {
     "count_opted_out",
     "count_accepted_home",
     "count_accepted_meeting_point",
+    "git_status_summary",
 }
 
 
@@ -192,6 +204,7 @@ def build_normalized_row(
     checkpoint_metadata=None,
     stats_metadata=None,
     menu_metadata=None,
+    provenance_metadata=None,
     status="contract_only",
     execution_status="contract_only",
     placeholder_only=True,
@@ -199,6 +212,7 @@ def build_normalized_row(
     args = deepcopy(setting["args"])
     stats_metadata = stats_metadata or {}
     menu_metadata = menu_metadata or {}
+    provenance_metadata = provenance_metadata or {}
     checkpoint_metadata = checkpoint_metadata or checkpoint_row_metadata(args)
     policy_metadata = setting.get("policy_metadata", {})
 
@@ -245,6 +259,9 @@ def build_normalized_row(
         "placeholder_only": bool(placeholder_only),
         "status": status,
         "execution_status": execution_status,
+        "git_commit": provenance_metadata.get("git_commit", "unknown"),
+        "git_dirty": bool(provenance_metadata.get("git_dirty", False)),
+        "git_status_summary": provenance_metadata.get("git_status_summary", ""),
     }
     validate_normalized_row(row)
     return row
@@ -263,6 +280,14 @@ def validate_normalized_row(row):
         raise ValueError("normalized row has empty required fields: " + ", ".join(empty))
     if row.get("tier") == "formal" and row.get("placeholder_only"):
         raise ValueError("formal normalized rows cannot be placeholder_only=True")
+    if row.get("status") not in STUDY_EXECUTION_STATUSES:
+        raise ValueError("normalized row has invalid status: " + repr(row.get("status")))
+    if row.get("execution_status") not in STUDY_EXECUTION_STATUSES:
+        raise ValueError("normalized row has invalid execution_status: " + repr(row.get("execution_status")))
+    if row.get("status") == "completed" and row.get("placeholder_only"):
+        raise ValueError("completed normalized rows cannot be placeholder_only=True")
+    if row.get("status") == "completed" and row.get("execution_status") != "completed":
+        raise ValueError("completed normalized rows require execution_status=completed")
     return True
 
 

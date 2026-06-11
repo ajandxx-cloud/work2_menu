@@ -23,6 +23,11 @@ from Src.paired_replay import (  # noqa: E402
     resolve_paired_settings,
     validate_rows,
 )
+from Src.study_execution import (  # noqa: E402
+    blocked_rows_for_manifest,
+    collect_git_provenance,
+    inspect_manifest_prerequisites,
+)
 
 
 def utc_run_id(study_name, manifest_hash_value):
@@ -65,6 +70,7 @@ def contract_rows_for_manifest(manifest, run_id, max_policies=None):
         settings = [setting for setting in settings if setting["policy_tag"] in set(allowed_tags)]
 
     rows = []
+    provenance = collect_git_provenance()
     for setting in settings:
         checkpoint = checkpoint_row_metadata(setting["args"])
         row = build_normalized_row(
@@ -83,6 +89,7 @@ def contract_rows_for_manifest(manifest, run_id, max_policies=None):
                 "effective_menu_policy": setting["args"].get("menu_policy"),
                 "menu_selection_solver_effective": "contract_only",
             },
+            provenance_metadata=provenance,
             status="contract_only",
             execution_status="contract_only",
             placeholder_only=True,
@@ -92,21 +99,45 @@ def contract_rows_for_manifest(manifest, run_id, max_policies=None):
     return rows
 
 
-def execute_study(manifest, output_root=None, contract_only=True, max_policies=None):
-    if not contract_only:
-        raise ValueError("actual smoke execution is not enabled in Phase 3; use --contract-only")
-    if manifest["tier"] == "formal":
+def _write_run_outputs(run_dir, manifest, rows, summary, blockers=None):
+    write_manifest_snapshot(run_dir / "manifest_snapshot.yaml", manifest)
+    write_json(run_dir / "normalized_rows.json", rows)
+    write_csv(run_dir / "normalized_rows.csv", rows)
+    write_json(run_dir / "study_summary.json", summary)
+    if blockers:
+        write_json(run_dir / "blockers.json", {"blockers": blockers})
+
+
+def execute_study(manifest, output_root=None, contract_only=True, max_policies=None, actual_execution=False):
+    if contract_only and manifest["tier"] == "formal":
         raise ValueError("formal studies cannot emit placeholder contract-only rows")
 
     mh = manifest_hash(manifest)
     run_id = utc_run_id(manifest["name"], mh)
     output_root = Path(output_root) if output_root else ROOT / "outputs" / "studies"
     run_dir = output_root / manifest["name"] / run_id
-    rows = contract_rows_for_manifest(manifest, run_id, max_policies=max_policies)
+    blockers = inspect_manifest_prerequisites(
+        manifest,
+        root=ROOT,
+        actual_execution=actual_execution,
+        contract_only=contract_only,
+    )
+    if actual_execution or blockers:
+        rows = blocked_rows_for_manifest(
+            manifest,
+            run_id,
+            mh,
+            blockers,
+            max_policies=max_policies,
+            root=ROOT,
+        )
+        execution_status = "blocked" if any(item.get("severity") == "blocking" for item in blockers) else "incomplete"
+        placeholder_only = True
+    else:
+        rows = contract_rows_for_manifest(manifest, run_id, max_policies=max_policies)
+        execution_status = "contract_only"
+        placeholder_only = True
 
-    write_manifest_snapshot(run_dir / "manifest_snapshot.yaml", manifest)
-    write_json(run_dir / "normalized_rows.json", rows)
-    write_csv(run_dir / "normalized_rows.csv", rows)
     summary = {
         "study_name": manifest["name"],
         "tier": manifest["tier"],
@@ -114,34 +145,49 @@ def execute_study(manifest, output_root=None, contract_only=True, max_policies=N
         "run_id": run_id,
         "run_dir": str(run_dir),
         "manifest_hash": mh,
-        "execution_status": "contract_only",
+        "execution_status": execution_status,
         "contract_only": bool(contract_only),
-        "placeholder_only": True,
+        "placeholder_only": placeholder_only,
         "row_count": len(rows),
         "policy_tags": sorted({row["policy_tag"] for row in rows}),
         "split_ids": sorted({row["split_id"] for row in rows}),
+        "uptake_regimes": sorted({row["uptake_regime"] for row in rows}),
+        "checkpoint_statuses": sorted({row["checkpoint_load_status"] for row in rows}),
+        "git_provenance": collect_git_provenance(),
+        "blocker_count": len(blockers),
+        "blockers": blockers,
         "outputs": [
             "manifest_snapshot.yaml",
             "study_summary.json",
             "normalized_rows.json",
             "normalized_rows.csv",
         ],
-        "runtime_blocker": "Phase 3 validates and emits row contracts; Phase 4 owns pilot/formal execution.",
+        "runtime_blocker": blockers[0]["message"] if blockers else "",
     }
-    write_json(run_dir / "study_summary.json", summary)
+    if blockers:
+        summary["outputs"].append("blockers.json")
+    _write_run_outputs(run_dir, manifest, rows, summary, blockers=blockers)
     return summary
 
 
-def execute_suite(suite, output_root=None, contract_only=True, max_policies=None):
+def execute_suite(suite, output_root=None, contract_only=True, max_policies=None, actual_execution=False):
     summaries = []
     for member in suite_members(suite):
         manifest = load_manifest(member)
         if manifest["tier"] == "formal":
             continue
-        summaries.append(execute_study(manifest, output_root=output_root, contract_only=contract_only, max_policies=max_policies))
+        summaries.append(
+            execute_study(
+                manifest,
+                output_root=output_root,
+                contract_only=contract_only,
+                max_policies=max_policies,
+                actual_execution=actual_execution,
+            )
+        )
     return {
         "suite_name": suite["name"],
-        "execution_status": "contract_only",
+        "execution_status": "blocked" if any(item["execution_status"] == "blocked" for item in summaries) else "contract_only",
         "studies": summaries,
     }
 
@@ -153,6 +199,8 @@ def parse_args(argv=None):
     target.add_argument("--suite", help="Suite manifest name or path")
     parser.add_argument("--output-root", default="", help="Override output root")
     parser.add_argument("--contract-only", action="store_true", help="Emit contract-level normalized rows")
+    parser.add_argument("--execute", action="store_true", help="Attempt actual replay; writes blockers if prerequisites are unavailable")
+    parser.add_argument("--run-mode", choices=["contract", "actual"], default="contract", help="Execution mode")
     parser.add_argument("--max-policies", type=int, default=0, help="Limit unique policy tags for smoke pacing")
     return parser.parse_args(argv)
 
@@ -161,7 +209,8 @@ def main(argv=None):
     args = parse_args(argv)
     output_root = args.output_root or None
     max_policies = args.max_policies if args.max_policies and args.max_policies > 0 else None
-    contract_only = True if args.contract_only else True
+    actual_execution = args.execute or args.run_mode == "actual"
+    contract_only = not actual_execution
 
     if args.study:
         manifest = load_manifest(args.study)
@@ -170,6 +219,7 @@ def main(argv=None):
             output_root=output_root,
             contract_only=contract_only,
             max_policies=max_policies,
+            actual_execution=actual_execution,
         )
         print(summary["run_dir"])
         return summary
@@ -180,6 +230,7 @@ def main(argv=None):
         output_root=output_root,
         contract_only=contract_only,
         max_policies=max_policies,
+        actual_execution=actual_execution,
     )
     print(json.dumps(summary, indent=2, sort_keys=True))
     return summary
