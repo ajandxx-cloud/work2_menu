@@ -2,17 +2,17 @@
 gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: evidence_ladder_and_audit_closure
-current_phase: 07
-status: planning
-last_updated: 2026-06-11T12:57:57.742Z
-last_activity: 2026-06-11
+current_phase: 07 audit_closure_and_traceability_repair
+status: ready_to_plan
+last_updated: 2026-06-11T13:46:32.217Z
+last_activity: 2026-06-11 - Milestone v2.1 started and Phase 07 plan created
 progress:
-  total_phases: 7
-  completed_phases: 0
-  total_plans: 1
-  completed_plans: 0
-  percent: 0
-stopped_at: Phase 07 planned; execution not started
+  total_phases: 13
+  completed_phases: 6
+  total_plans: 19
+  completed_plans: 19
+  percent: 46
+stopped_at: Phase 07 complete (1/1) — ready to discuss Phase 8
 ---
 
 # Project State
@@ -20,22 +20,22 @@ stopped_at: Phase 07 planned; execution not started
 **Project:** Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
 **Initialized:** 2026-06-10
 **Current milestone:** v2.1 evidence_ladder_and_audit_closure
-**Current phase:** 07 audit_closure_and_traceability_repair
-**Status:** Planning
+**Current phase:** 8
+**Status:** Ready to plan
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-06-11)
 
 **Core value:** Produce defensible Work2 evidence that attention-enhanced DSPO improves the original DSPO method under reproducible paired replay.
-**Current focus:** Close v2.0 audit gaps before any additional empirical evidence runs.
+**Current focus:** Phase 8 — repository hygiene and provenance freeze
 
 ## Current Position
 
 Phase: 07 audit_closure_and_traceability_repair
-Plan: `.planning/phases/07-audit-closure-and-traceability-repair/07-PLAN.md`
+Plan: Not started
 Status: Planned; ready for Phase 07 execution
-Last activity: 2026-06-11 - Milestone v2.1 started and Phase 07 plan created
+Last activity: 2026-06-11
 
 ## Current Facts
 
