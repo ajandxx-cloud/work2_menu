@@ -42,6 +42,13 @@ completed: 2026-06-11
 
 **Phase 5 now produces status-driven manuscript support without upgrading blocked evidence into empirical claims**
 
+## Forced Replan Refresh
+
+- **Forced replan:** 2026-06-11T16:12:39+08:00 via `plan phase5 --force`
+- **Result:** Existing Phase 5 implementation was revalidated against the regenerated idempotent plan; no manuscript support artifact content changed.
+- **Commit:** `c11a278` regenerated the Phase 5 plan and marked the phase ready for the forced execution pass.
+- **Evidence posture:** Still blocked/non-claim-ready until Phase 4 receives loaded checkpoint provenance and non-placeholder pilot/formal rows.
+
 ## Performance
 
 - **Duration:** 25 min
@@ -83,6 +90,12 @@ completed: 2026-06-11
 
 ## Verification
 
+- Forced replan refresh:
+  - `cd work2_coding; python scripts/test_manuscript_claim_guard.py` -> `PASS: 4 manuscript claim guard tests`
+  - `cd work2_coding; python scripts/build_manuscript_frame.py --artifact-root artifacts/work2_robust_menu --mirror-root ../artifacts/work2_robust_menu` -> regenerated all five manuscript support files and reported `claim_ready: false`
+  - `cd work2_coding; python -c "import sys; sys.path.insert(0, '.'); import Src.config; print('IMPORT_OK')"` -> `IMPORT_OK`
+  - `cd work2_coding; python -m py_compile Src/manuscript_claims.py scripts/build_manuscript_frame.py scripts/test_manuscript_claim_guard.py` -> passed
+  - Work2-local and root `CLAIM_GUARD.json` files agree on status flags; blocked claims count is 6 and blocker count is 2.
 - `cd work2_coding; python scripts/test_manuscript_claim_guard.py` -> `PASS: 4 manuscript claim guard tests`
 - `cd work2_coding; python scripts/build_manuscript_frame.py --artifact-root artifacts/work2_robust_menu --mirror-root ../artifacts/work2_robust_menu` -> generated all five manuscript support files and reported `claim_ready: false`
 - `cd work2_coding; python -c "import sys; sys.path.insert(0, '.'); import Src.config; print('IMPORT_OK')"` -> `IMPORT_OK`

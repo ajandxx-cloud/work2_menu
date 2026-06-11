@@ -19,6 +19,20 @@ Phase 5 achieved its goal: the project now has paper-ready method, experiment, a
 
 After the initial auto draft, the user required Phase 5 to pass through human discussion. The final verified decisions are `1A, 2A, 3A`: strict conservative evidence posture, Markdown/JSON support documents, and fail-closed claim guard.
 
+## Forced Replan Verification
+
+On 2026-06-11T16:12:39+08:00, Phase 5 was force-replanned and revalidated. The regenerated plan is idempotent: it audits, refreshes, and verifies the existing manuscript claim guard rather than assuming a fresh implementation.
+
+Additional forced-refresh checks:
+
+- `cd work2_coding; python scripts/test_manuscript_claim_guard.py` -> `PASS: 4 manuscript claim guard tests`
+- `cd work2_coding; python scripts/build_manuscript_frame.py --artifact-root artifacts/work2_robust_menu --mirror-root ../artifacts/work2_robust_menu` -> regenerated all five manuscript support files and reported `claim_ready: false`
+- `cd work2_coding; python -c "import sys; sys.path.insert(0, '.'); import Src.config; print('IMPORT_OK')"` -> `IMPORT_OK`
+- `cd work2_coding; python -m py_compile Src/manuscript_claims.py scripts/build_manuscript_frame.py scripts/test_manuscript_claim_guard.py` -> passed
+- Work2-local and root `CLAIM_GUARD.json` files agree on `artifact_status`, `claim_ready`, `pilot_claim_ready`, and `formal_claim_ready`; blocked claims count is 6 and blocker count is 2.
+
+The force refresh did not make Phase 4 evidence claim-ready. `claim_ready`, `pilot_claim_ready`, and `formal_claim_ready` remain false.
+
 ## Requirement Traceability
 
 | Requirement | Status | Evidence |
