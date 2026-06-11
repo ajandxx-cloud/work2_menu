@@ -206,7 +206,7 @@ def execute_suite(suite, output_root=None, contract_only=True, max_policies=None
     summaries = []
     for member in suite_members(suite):
         manifest = load_manifest(member)
-        if manifest["tier"] == "formal":
+        if manifest["tier"] == "formal" and contract_only and not actual_execution:
             continue
         summaries.append(
             execute_study(

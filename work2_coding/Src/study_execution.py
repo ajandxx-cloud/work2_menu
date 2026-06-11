@@ -344,9 +344,6 @@ def _row_from_actual_replay(setting, run_id):
 
 
 def actual_rows_for_manifest(manifest, run_id, manifest_hash_value, max_policies=None):
-    if manifest.get("tier") == "formal":
-        raise ValueError("formal actual replay is not enabled for the conservative public runner")
-
     rows = []
     for setting in _settings_for_manifest(manifest, manifest_hash_value, max_policies=max_policies):
         rows.append(_row_from_actual_replay(setting, run_id))

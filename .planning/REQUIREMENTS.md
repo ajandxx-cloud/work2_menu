@@ -116,11 +116,11 @@
 
 ### Formal Enablement
 
-- [ ] **FORM-01**: Formal actual replay is no longer blocked by the old unconditional guard when strict evidence gates are satisfied.
-- [ ] **FORM-02**: Formal execution requires `tier=formal`, `actual_execution=true`, `require_checkpoint=true`, existing checkpoint, loaded status, non-empty hash, non-placeholder rows, and git provenance.
-- [ ] **FORM-03**: Formal execution fails closed with blocker metadata for missing checkpoints or invalid provenance.
-- [ ] **FORM-04**: Formal placeholder rows are impossible.
-- [ ] **FORM-05**: Formal contract-only, missing-checkpoint, loaded-checkpoint, and placeholder-impossibility tests exist.
+- [x] **FORM-01**: Formal actual replay is no longer blocked by the old unconditional guard when strict evidence gates are satisfied.
+- [x] **FORM-02**: Formal execution requires `tier=formal`, `actual_execution=true`, `require_checkpoint=true`, existing checkpoint, loaded status, non-empty hash, non-placeholder rows, and git provenance.
+- [x] **FORM-03**: Formal execution fails closed with blocker metadata for missing checkpoints or invalid provenance.
+- [x] **FORM-04**: Formal placeholder rows are impossible.
+- [x] **FORM-05**: Formal contract-only, missing-checkpoint, loaded-checkpoint, and placeholder-impossibility tests exist.
 
 ### Formal Evidence And Claim Decision
 
@@ -201,11 +201,11 @@
 | ABLT-02 | Phase 11 | Complete |
 | ABLT-03 | Phase 11 | Complete |
 | ABLT-04 | Phase 11 | Complete |
-| FORM-01 | Phase 12 | Planned |
-| FORM-02 | Phase 12 | Planned |
-| FORM-03 | Phase 12 | Planned |
-| FORM-04 | Phase 12 | Planned |
-| FORM-05 | Phase 12 | Planned |
+| FORM-01 | Phase 12 | Complete |
+| FORM-02 | Phase 12 | Complete |
+| FORM-03 | Phase 12 | Complete |
+| FORM-04 | Phase 12 | Complete |
+| FORM-05 | Phase 12 | Complete |
 | CLAIM-01 | Phase 13 | Planned |
 | CLAIM-02 | Phase 13 | Planned |
 | CLAIM-03 | Phase 13 | Planned |
