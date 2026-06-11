@@ -1,4 +1,5 @@
 .idea
 venv/
 Experiments/
+outputs/
 __pycache__/

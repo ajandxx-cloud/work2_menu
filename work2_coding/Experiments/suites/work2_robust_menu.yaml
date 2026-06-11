@@ -1,0 +1,9 @@
+type: suite
+schema_version: 1
+name: work2_robust_menu
+description: Phase 3 suite for robust time-window service-menu study contracts.
+members:
+  - study: smoke_robust_menu
+  - study: pilot_robust_menu
+  - study: formal_robust_menu
+
