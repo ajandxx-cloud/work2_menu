@@ -21,15 +21,11 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 - Existing README documents the inherited DSPO/OOH codebase, Python 3.10 runtime, PyTorch dependency, and Hygese routing dependency.
 - Phase 1 Stage 0 audit is complete and recorded in `.planning/phases/01-repository-audit-and-runtime-baseline/01-STAGE0-AUDIT.md`.
 - `ooh_code/` is absent from the current filesystem; existing `.planning/codebase/` references to `ooh_code/` are stale historical context until revalidated.
+- Phase 2 repaired core semantics: opt-out outcomes no longer mutate routes as accepted home pickups, checkpoint load metadata is explicit, robust ETA modes emit diagnostics, and exact/greedy solver telemetry is available.
+- Phase 3 added smoke, pilot, and formal robust-menu study contracts; required baseline adapters; paired replay validation; normalized row schema; uptake-regime contracts; and a contract-only smoke runner that emits JSON/CSV rows.
 
 ### Active
 
-- [ ] Repair or isolate opt-out accounting so outside-option choices do not mutate routes as accepted home pickups.
-- [ ] Make shared predictor checkpoint loading explicit and row-level visible.
-- [ ] Implement robust ETA/time-window filtering modes with diagnostics and metadata.
-- [ ] Integrate robust ETA/time-window risk into menu evaluation and selection.
-- [ ] Compare exact-small and greedy-large menu selection with approximation diagnostics.
-- [ ] Create reproducible smoke, pilot, and formal experiment manifests or their nearest runnable equivalent in the current package.
 - [ ] Generate normalized result rows, aggregate summaries, artifact tables/figures, and provenance records.
 - [ ] Produce a manuscript-ready method/result outline and claim checklist that prevents overclaiming.
 
@@ -71,11 +67,11 @@ Known engineering risks to address early:
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Use `work2_coding/` as the active runtime root unless Stage 0 finds otherwise | It exists in the current tree, passed an import smoke check, and Phase 1 confirmed no current `ooh_code/` root | Validated in Phase 1 |
-| Focus Work2 on robust time-window service-menu optimization | This is feasible in the existing DSPO_Menu code and gives a clearer contribution than attention-first framing | Pending |
-| Treat `no_filter` as diagnostic, not the final method | It can expose candidate-availability upper bounds but is not automatically operationally credible | Pending |
+| Focus Work2 on robust time-window service-menu optimization | This is feasible in the existing DSPO_Menu code and gives a clearer contribution than attention-first framing | Validated through Phase 3 contracts |
+| Treat `no_filter` as diagnostic, not the final method | It can expose candidate-availability upper bounds but is not automatically operationally credible | Enforced in Phase 3 manifests and row metadata |
 | Defer attention mechanisms | The user selected scheme 1 and explicitly excluded attention for this project | Pending |
 | Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Validated in Phase 1 |
-| Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Pending |
+| Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Implemented in Phase 2 and carried into Phase 3 row schema |
 
 ## Evolution
 
@@ -95,4 +91,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-11 after Phase 1 completion*
+*Last updated: 2026-06-11 after Phase 3 completion*

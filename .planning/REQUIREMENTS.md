@@ -35,10 +35,10 @@
 
 ### Experiments
 
-- [ ] **EXP-01**: Project defines smoke, pilot, and formal study contracts for robust time-window menu experiments.
-- [ ] **EXP-02**: Experiments compare full display, home only, nearest heuristic, top-k cheapest, min-lateness, hard filter, no-filter diagnostic, robust time-window menu, and optional random top-k.
-- [ ] **EXP-03**: Every formal comparison uses paired request traces, shared predictor checkpoints, fixed seeds, split IDs, pricing mode, and HGS/routing parameters.
-- [ ] **EXP-04**: Experiments include uptake-regime checks so results are not based only on degenerate opt-out behavior.
+- [x] **EXP-01**: Project defines smoke, pilot, and formal study contracts for robust time-window menu experiments.
+- [x] **EXP-02**: Experiments compare full display, home only, nearest heuristic, top-k cheapest, min-lateness, hard filter, no-filter diagnostic, robust time-window menu, and optional random top-k.
+- [x] **EXP-03**: Every formal comparison uses paired request traces, shared predictor checkpoints, fixed seeds, split IDs, pricing mode, and HGS/routing parameters.
+- [x] **EXP-04**: Experiments include uptake-regime checks so results are not based only on degenerate opt-out behavior.
 
 ### Artifacts
 
@@ -97,10 +97,10 @@
 | MENU-02 | Phase 2 | Pending |
 | MENU-03 | Phase 2 | Pending |
 | MENU-04 | Phase 2 | Pending |
-| EXP-01 | Phase 3 | Pending |
-| EXP-02 | Phase 3 | Pending |
-| EXP-03 | Phase 3 | Pending |
-| EXP-04 | Phase 3 | Pending |
+| EXP-01 | Phase 3 | Complete |
+| EXP-02 | Phase 3 | Complete |
+| EXP-03 | Phase 3 | Complete |
+| EXP-04 | Phase 3 | Complete |
 | ART-01 | Phase 4 | Pending |
 | ART-02 | Phase 4 | Pending |
 | ART-03 | Phase 4 | Pending |
