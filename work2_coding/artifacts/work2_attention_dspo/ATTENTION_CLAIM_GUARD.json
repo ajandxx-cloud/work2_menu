@@ -1,27 +1,27 @@
 {
   "aggregate": {
-    "complete_pair_count": 1,
+    "complete_pair_count": 2,
     "metric_means": {
-      "acceptance_rate_attention_mean": 1.0,
+      "acceptance_rate_attention_mean": 0.6428571428571429,
       "acceptance_rate_delta_mean": 0.0,
-      "acceptance_rate_original_mean": 1.0,
+      "acceptance_rate_original_mean": 0.6428571428571429,
       "meeting_point_uptake_rate_attention_mean": 0.0,
       "meeting_point_uptake_rate_delta_mean": 0.0,
       "meeting_point_uptake_rate_original_mean": 0.0,
-      "net_objective_proxy_attention_mean": -595.0,
+      "net_objective_proxy_attention_mean": -8378.3,
       "net_objective_proxy_delta_mean": 0.0,
-      "net_objective_proxy_original_mean": -595.0,
-      "net_price_revenue_attention_mean": 5.0,
+      "net_objective_proxy_original_mean": -8378.3,
+      "net_price_revenue_attention_mean": 62.5,
       "net_price_revenue_delta_mean": 0.0,
-      "net_price_revenue_original_mean": 5.0,
-      "optout_rate_attention_mean": 0.0,
+      "net_price_revenue_original_mean": 62.5,
+      "optout_rate_attention_mean": 0.35714285714285715,
       "optout_rate_delta_mean": 0.0,
-      "optout_rate_original_mean": 0.0,
-      "service_time_total_attention_mean": 600.0,
+      "optout_rate_original_mean": 0.35714285714285715,
+      "service_time_total_attention_mean": 8440.8,
       "service_time_total_delta_mean": 0.0,
-      "service_time_total_original_mean": 600.0
+      "service_time_total_original_mean": 8440.8
     },
-    "pair_count": 1
+    "pair_count": 2
   },
   "attention_improves_dspo_allowed": false,
   "blocked_claims": [
@@ -33,26 +33,22 @@
   ],
   "blockers": [
     {
-      "code": "smoke_only",
-      "message": "Smoke evidence validates schema/execution only, not improvement claims."
-    },
-    {
       "code": "primary_metric_not_positive",
       "message": "Attention does not improve the primary net objective proxy."
     }
   ],
   "checkpoint_statuses": [
-    "not_requested"
+    "loaded"
   ],
   "claim_ready": false,
   "execution_statuses": [
     "completed"
   ],
-  "generated_at": "2026-06-11T10:58:46+00:00",
+  "generated_at": "2026-06-11T14:06:26+00:00",
   "pair_completeness": {
     "all_pairs_complete": true,
-    "complete_pair_count": 1,
-    "pair_count": 1
+    "complete_pair_count": 2,
+    "pair_count": 2
   },
   "primary_metric": {
     "delta_mean": 0.0,
@@ -92,9 +88,9 @@
       "tolerance": 0.05
     }
   },
-  "source_run_id": "smoke_attention_dspo-20260611T105742Z-80ab59ee",
-  "source_study": "smoke_attention_dspo",
+  "source_run_id": "pilot_attention_dspo-20260611T140616Z-07415c4f",
+  "source_study": "pilot_attention_dspo",
   "tiers": [
-    "smoke"
+    "pilot"
   ]
 }

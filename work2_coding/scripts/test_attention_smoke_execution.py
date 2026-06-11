@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
@@ -94,11 +96,17 @@ def test_attention_actual_smoke_attempt_is_completed_or_blocked_explicitly():
 
 def test_attention_pilot_missing_checkpoint_writes_blockers():
     with TemporaryDirectory() as tmp:
+        manifest = yaml.safe_load((ROOT / "Experiments" / "studies" / "pilot_attention_dspo.yaml").read_text(encoding="utf-8"))
+        missing_checkpoint = Path(tmp) / "missing" / "supervised_ml.pt"
+        manifest["shared_checkpoint"]["path"] = str(missing_checkpoint)
+        manifest["base_args"]["checkpoint_path"] = str(missing_checkpoint)
+        manifest_path = Path(tmp) / "pilot_attention_missing_checkpoint.yaml"
+        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
         result = run_command([
             sys.executable,
             "scripts/run_study.py",
             "--study",
-            "pilot_attention_dspo",
+            str(manifest_path),
             "--execute",
             "--output-root",
             str(Path(tmp)),
@@ -111,7 +119,7 @@ def test_attention_pilot_missing_checkpoint_writes_blockers():
         blockers = json.loads((run_dir / "blockers.json").read_text(encoding="utf-8"))["blockers"]
         assert summary["execution_status"] == "blocked"
         assert blockers[0]["code"] == "missing_checkpoint_file"
-        assert "work2_attention_dspo" in blockers[0]["checkpoint_path"]
+        assert blockers[0]["checkpoint_path"] == str(missing_checkpoint)
         assert {row["checkpoint_load_status"] for row in rows} == {"failed"}
         assert all(row["placeholder_only"] for row in rows)
         assert_guard_blocks_improvement(rows, summary)

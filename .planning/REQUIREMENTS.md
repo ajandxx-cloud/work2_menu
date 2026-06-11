@@ -100,12 +100,12 @@
 
 ### Pilot Evidence
 
-- [ ] **PILOT-01**: `pilot_attention_dspo` completes with non-placeholder rows and loaded checkpoint provenance.
-- [ ] **PILOT-02**: Every attention pair contains both `DSPO_original` and `DSPO_attention`.
-- [ ] **PILOT-03**: Low and medium uptake regimes are present and behaviorally live.
-- [ ] **PILOT-04**: Pilot artifacts and claim guard are rebuilt from the completed run.
-- [ ] **PILOT-05**: Pilot summary reports primary and secondary paired deltas, attention weights, checkpoint provenance, and regime-level results.
-- [ ] **PILOT-06**: A written go/no-go decision controls whether formal evidence or ablation follows.
+- [x] **PILOT-01**: `pilot_attention_dspo` completes with non-placeholder rows and loaded checkpoint provenance.
+- [x] **PILOT-02**: Every attention pair contains both `DSPO_original` and `DSPO_attention`.
+- [x] **PILOT-03**: Low and medium uptake regimes are present and behaviorally live.
+- [x] **PILOT-04**: Pilot artifacts and claim guard are rebuilt from the completed run.
+- [x] **PILOT-05**: Pilot summary reports primary and secondary paired deltas, attention weights, checkpoint provenance, and regime-level results.
+- [x] **PILOT-06**: A written go/no-go decision controls whether formal evidence or ablation follows.
 
 ### Attention Ablation
 
@@ -191,12 +191,12 @@
 | CKPT-03 | Phase 9 | Complete |
 | CKPT-04 | Phase 9 | Complete |
 | CKPT-05 | Phase 9 | Complete |
-| PILOT-01 | Phase 10 | Planned |
-| PILOT-02 | Phase 10 | Planned |
-| PILOT-03 | Phase 10 | Planned |
-| PILOT-04 | Phase 10 | Planned |
-| PILOT-05 | Phase 10 | Planned |
-| PILOT-06 | Phase 10 | Planned |
+| PILOT-01 | Phase 10 | Complete |
+| PILOT-02 | Phase 10 | Complete |
+| PILOT-03 | Phase 10 | Complete |
+| PILOT-04 | Phase 10 | Complete |
+| PILOT-05 | Phase 10 | Complete |
+| PILOT-06 | Phase 10 | Complete |
 | ABLT-01 | Phase 11 | Planned |
 | ABLT-02 | Phase 11 | Planned |
 | ABLT-03 | Phase 11 | Planned |

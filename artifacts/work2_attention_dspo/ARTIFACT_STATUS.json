@@ -3,16 +3,12 @@
   "attention_improves_dspo_allowed": false,
   "blockers": [
     {
-      "code": "smoke_only",
-      "message": "Smoke evidence validates schema/execution only, not improvement claims."
-    },
-    {
       "code": "primary_metric_not_positive",
       "message": "Attention does not improve the primary net objective proxy."
     }
   ],
   "checkpoint_statuses": [
-    "not_requested"
+    "loaded"
   ],
   "claim_ready": false,
   "generated_artifacts": [
@@ -23,16 +19,16 @@
     "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_attention_dspo\\ATTENTION_CLAIM_GUARD.json",
     "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_attention_dspo\\tables\\attention_pair_deltas.tex"
   ],
-  "generated_at": "2026-06-11T10:58:46+00:00",
+  "generated_at": "2026-06-11T14:06:26+00:00",
   "git_provenance": {
-    "git_commit": "cdb1bf8d21368e9ac8b4c73610b62114db67f1dd",
-    "git_dirty": true,
-    "git_status_summary": "M .planning/PROJECT.md;  M .planning/REQUIREMENTS.md;  M .planning/ROADMAP.md;  M .planning/STATE.md;  M artifacts/work2_robust_menu/ARTIFACT_STATUS.json;  M artifacts/work2_robust_menu/README.md;  M artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json;  M artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json;  M artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json;  M artifacts/work2_robust_menu/figures/acceptance_optout.png.status.json;  M artifacts/work2_robust_menu/figures/eta_pruning.png.status.json;  M artifacts/work2_robust_menu/figures/exact_greedy_time.png.status.json;  M artifacts/work2_robust_menu/figures/home_only_share.png.status.json;  M artifacts/work2_robust_menu/figures/profit_gap.png.status.json;  M artifacts/work2_robust_menu/manuscript/CLAIM_GUARD.json;  M artifacts/work2_robust_menu/tables/exact_greedy.tex.metadata.json;  M artifacts/work2_robust_menu/tables/policy_summary.tex.metadata.json;  M artifacts/work2_robust_menu/tables/provenance_status.tex.metadata.json;  M artifacts/work2_robust_menu/tables/robust_filtering.tex.metadata.json;  M artifacts/work2_robust_menu/tables/uptake_regime.tex.metadata.json"
+    "git_commit": "f813b23da2a44bcb3b1cdb52992d5761597e6afe",
+    "git_dirty": false,
+    "git_status_summary": ""
   },
-  "pair_count": 1,
-  "row_count": 2,
-  "run_id": "smoke_attention_dspo-20260611T105742Z-80ab59ee",
-  "source_run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\smoke_attention_dspo\\smoke_attention_dspo-20260611T105742Z-80ab59ee",
-  "study": "smoke_attention_dspo",
-  "tier": "smoke"
+  "pair_count": 2,
+  "row_count": 4,
+  "run_id": "pilot_attention_dspo-20260611T140616Z-07415c4f",
+  "source_run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\pilot_attention_dspo\\pilot_attention_dspo-20260611T140616Z-07415c4f",
+  "study": "pilot_attention_dspo",
+  "tier": "pilot"
 }

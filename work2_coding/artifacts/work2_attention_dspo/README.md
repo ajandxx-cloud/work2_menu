@@ -1,7 +1,7 @@
 # Work2 Attention DSPO Artifacts
 
-Study: smoke_attention_dspo
+Study: pilot_attention_dspo
 
-Run: smoke_attention_dspo-20260611T105742Z-80ab59ee
+Run: pilot_attention_dspo-20260611T140616Z-07415c4f
 
 Claim ready: False
