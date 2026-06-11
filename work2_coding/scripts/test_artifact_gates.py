@@ -114,6 +114,15 @@ def test_bad_checkpoint_blocks_pilot_claim_ready():
     assert any("checkpoint" in reason for reason in status["reasons"])
 
 
+def test_diagnostic_run_mode_is_not_claim_ready():
+    manifest = load_manifest("diagnostic_actual_menu")
+    rows = synthetic_rows(manifest, manifest_hash(manifest))
+    status = classify_artifact(rows, {"tier": "smoke", "run_mode": "diagnostic", "execution_status": "completed"})
+    assert status["status"] == "diagnostic"
+    assert status["claim_ready"] is False
+    assert any("diagnostic run mode" in reason for reason in status["reasons"])
+
+
 def test_formal_claim_ready_requires_dependency_snapshot():
     manifest = load_manifest("formal_robust_menu")
     rows = synthetic_rows(manifest, manifest_hash(manifest))
@@ -136,6 +145,11 @@ def test_no_filter_excluded_from_recommended_ranking():
         ranking = json.loads(((Path(tmp) / "artifacts" / "aggregates" / "recommended_policy_ranking.json").read_text(encoding="utf-8")))
         assert ranking
         assert all(row["policy_tag"] != "no_filter_diagnostic" for row in ranking)
+        assert all(row["policy_tag"] != "home_only" for row in ranking)
+        policy_summary = json.loads(((Path(tmp) / "artifacts" / "aggregates" / "policy_summary.json").read_text(encoding="utf-8")))
+        home_only = [row for row in policy_summary if row["policy_tag"] == "home_only"][0]
+        assert home_only["cost_bound"] is True
+        assert home_only["rank_eligible"] is False
 
 
 def test_sidecar_and_dirty_git_provenance_are_recorded():
@@ -155,6 +169,7 @@ def main():
         test_claim_ready_synthetic_pilot_rows,
         test_placeholder_rows_are_not_claim_ready,
         test_bad_checkpoint_blocks_pilot_claim_ready,
+        test_diagnostic_run_mode_is_not_claim_ready,
         test_formal_claim_ready_requires_dependency_snapshot,
         test_no_filter_excluded_from_recommended_ranking,
         test_sidecar_and_dirty_git_provenance_are_recorded,
@@ -166,4 +181,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

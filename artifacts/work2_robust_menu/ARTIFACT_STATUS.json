@@ -69,48 +69,48 @@
   },
   "formal_claim_ready": false,
   "generated_artifacts": [
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.json.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.csv",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\policy_summary.csv.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\policy_summary.tex",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\policy_summary.tex.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\robust_filtering.tex",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\robust_filtering.tex.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\exact_greedy.tex",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\exact_greedy.tex.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\uptake_regime.tex",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\uptake_regime.tex.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\provenance_status.tex",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\tables\\provenance_status.tex.metadata.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\acceptance_optout.png.status.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\exact_greedy_time.png.status.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\profit_gap.png.status.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\eta_pruning.png.status.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\figures\\home_only_share.png.status.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\recommended_policy_ranking.json",
-    "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu\\aggregates\\recommended_policy_ranking.json.metadata.json"
+    "artifacts\\work2_robust_menu\\aggregates\\policy_summary.json",
+    "artifacts\\work2_robust_menu\\aggregates\\policy_summary.json.metadata.json",
+    "artifacts\\work2_robust_menu\\aggregates\\policy_summary.csv",
+    "artifacts\\work2_robust_menu\\aggregates\\policy_summary.csv.metadata.json",
+    "artifacts\\work2_robust_menu\\tables\\policy_summary.tex",
+    "artifacts\\work2_robust_menu\\tables\\policy_summary.tex.metadata.json",
+    "artifacts\\work2_robust_menu\\tables\\robust_filtering.tex",
+    "artifacts\\work2_robust_menu\\tables\\robust_filtering.tex.metadata.json",
+    "artifacts\\work2_robust_menu\\tables\\exact_greedy.tex",
+    "artifacts\\work2_robust_menu\\tables\\exact_greedy.tex.metadata.json",
+    "artifacts\\work2_robust_menu\\tables\\uptake_regime.tex",
+    "artifacts\\work2_robust_menu\\tables\\uptake_regime.tex.metadata.json",
+    "artifacts\\work2_robust_menu\\tables\\provenance_status.tex",
+    "artifacts\\work2_robust_menu\\tables\\provenance_status.tex.metadata.json",
+    "artifacts\\work2_robust_menu\\figures\\acceptance_optout.png.status.json",
+    "artifacts\\work2_robust_menu\\figures\\exact_greedy_time.png.status.json",
+    "artifacts\\work2_robust_menu\\figures\\profit_gap.png.status.json",
+    "artifacts\\work2_robust_menu\\figures\\eta_pruning.png.status.json",
+    "artifacts\\work2_robust_menu\\figures\\home_only_share.png.status.json",
+    "artifacts\\work2_robust_menu\\aggregates\\recommended_policy_ranking.json",
+    "artifacts\\work2_robust_menu\\aggregates\\recommended_policy_ranking.json.metadata.json"
   ],
   "git_provenance": {
-    "git_commit": "8507867d28ea8aeb78ec765776d03a3e3e6cc873",
+    "git_commit": "db87a93d3635332159dd82a9952a3fdc12b8c0d0",
     "git_dirty": true,
-    "git_status_summary": "D \"learning meeting point.docx\";  M work2_coding/Src/artifact_builder.py; ?? work2_coding/scripts/run_phase4_artifacts.py; ?? work2_coding/scripts/test_phase4_artifact_pipeline.py; ?? \"\\345\\267\\245\\344\\275\\234\\350\\256\\250\\350\\256\\2726.10.txt\""
+    "git_status_summary": "D \"learning meeting point.docx\"; ?? \"\\345\\267\\245\\344\\275\\234\\350\\256\\250\\350\\256\\2726.10.txt\""
   },
   "manifest_hash": "e1646ba1cf878d1ef8597423517515527eda5e8ba468ca5754f1e15e4f1db191",
   "phase4_pipeline": {
-    "artifact_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu",
+    "artifact_root": "artifacts\\work2_robust_menu",
     "commands": [
       {
         "mode": "actual_or_blocked",
         "name": "run_study",
-        "output_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies",
+        "output_root": "outputs\\studies",
         "study": "pilot_robust_menu"
       },
       {
         "allow_incomplete": true,
-        "mirror_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\artifacts\\work2_robust_menu",
+        "mirror_root": "..\\artifacts\\work2_robust_menu",
         "name": "build_artifacts",
-        "output_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\artifacts\\work2_robust_menu"
+        "output_root": "artifacts\\work2_robust_menu"
       }
     ],
     "formal_blockers": [
@@ -121,9 +121,9 @@
       }
     ],
     "formal_claim_ready": false,
-    "mirror_root": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\artifacts\\work2_robust_menu",
+    "mirror_root": "..\\artifacts\\work2_robust_menu",
     "pilot_claim_ready": false,
-    "run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\pilot_robust_menu\\pilot_robust_menu-20260611T072352Z-e1646ba1"
+    "run_dir": "outputs\\studies\\pilot_robust_menu\\pilot_robust_menu-20260611T082839Z-e1646ba1"
   },
   "pilot_claim_ready": false,
   "placeholder_only": true,
@@ -140,8 +140,8 @@
     "top_k_cheapest"
   ],
   "row_count": 20,
-  "run_id": "pilot_robust_menu-20260611T072352Z-e1646ba1",
-  "source_run_dir": "C:\\Users\\39583\\Desktop\\4_Publication\\2.paper_2_menu optimization-7\u5206_trE\\work2_coding\\outputs\\studies\\pilot_robust_menu\\pilot_robust_menu-20260611T072352Z-e1646ba1",
+  "run_id": "pilot_robust_menu-20260611T082839Z-e1646ba1",
+  "source_run_dir": "outputs\\studies\\pilot_robust_menu\\pilot_robust_menu-20260611T082839Z-e1646ba1",
   "study": "pilot_robust_menu",
   "tier": "pilot",
   "uptake_regimes": [

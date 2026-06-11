@@ -1,0 +1,11 @@
+acceptance_rate_mean,checkpoint_statuses,diagnostic,filter_mode,home_share_mean,menu_build_time_mean,optout_rate_mean,placeholder_only,policy_tag,rank_eligible,relative_optimality_gap_mean,row_count,status,uptake_regimes
+1.0,not_requested,False,hard,1.0,0.0042097000405192375,0.0,False,full_display,True,,1,completed,medium
+1.0,not_requested,False,hard,1.0,0.0018704000394791365,0.0,False,hard_filter,True,,1,completed,medium
+1.0,not_requested,False,hard,1.0,0.001749000046402216,0.0,False,home_only,True,,1,completed,medium
+1.0,not_requested,False,hard,1.0,0.0018613999709486961,0.0,False,min_lateness,True,,1,completed,medium
+1.0,not_requested,False,hard,1.0,0.001882700016722083,0.0,False,nearest_heuristic,True,,1,completed,medium
+1.0,not_requested,True,none,1.0,0.008656100137159228,0.0,False,no_filter_diagnostic,False,,1,completed,medium
+1.0,not_requested,False,hard,1.0,0.0016592999454587698,0.0,False,random_top_k,True,,1,completed,medium
+1.0,not_requested,False,chance_constraint,1.0,0.0020508000161498785,0.0,False,robust_risk_adjusted,True,,1,completed,medium
+1.0,not_requested,False,interval_overlap,1.0,0.0023135999217629433,0.0,False,robust_service_guarded,True,,1,completed,medium
+1.0,not_requested,False,hard,1.0,0.001962800044566393,0.0,False,top_k_cheapest,True,,1,completed,medium

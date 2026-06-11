@@ -1,0 +1,35 @@
+{
+  "artifact_kind": "figure-status",
+  "artifact_path": "artifacts\\work2_diagnostic_actual\\figures\\home_only_share.png",
+  "checkpoint_summary": [
+    "not_requested"
+  ],
+  "claim_ready": false,
+  "diagnostic_policy_labels": [
+    "no_filter_diagnostic"
+  ],
+  "figure_status": "incomplete",
+  "generated_at": "2026-06-11T09:00:21+00:00",
+  "git_provenance": {
+    "git_commit": "db87a93d3635332159dd82a9952a3fdc12b8c0d0",
+    "git_dirty": true,
+    "git_status_summary": "M artifacts/work2_robust_menu/ARTIFACT_STATUS.json;  M artifacts/work2_robust_menu/README.md;  M artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json;  M artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json;  M artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json;  M artifacts/work2_robust_menu/figures/acceptance_optout.png.status.json;  M artifacts/work2_robust_menu/figures/eta_pruning.png.status.json;  M artifacts/work2_robust_menu/figures/exact_greedy_time.png.status.json;  M artifacts/work2_robust_menu/figures/home_only_share.png.status.json;  M artifacts/work2_robust_menu/figures/profit_gap.png.status.json;  M artifacts/work2_robust_menu/manuscript/CLAIM_GUARD.json;  M artifacts/work2_robust_menu/tables/exact_greedy.tex.metadata.json;  M artifacts/work2_robust_menu/tables/policy_summary.tex.metadata.json;  M artifacts/work2_robust_menu/tables/provenance_status.tex.metadata.json;  M artifacts/work2_robust_menu/tables/robust_filtering.tex.metadata.json;  M artifacts/work2_robust_menu/tables/uptake_regime.tex.metadata.json;  D \"learning meeting point.docx\";  M work2_coding/Src/Algorithms/DSPO_Menu.py;  M work2_coding/Src/artifact_builder.py;  M work2_coding/Src/artifact_status.py"
+  },
+  "manifest_hash": "90b16f2d2986014cce6450cfb4dc7fb0b39c92db35d58870894f8cbbbbe13ccb",
+  "missing_reason": "home-only share metric is unavailable",
+  "placeholder_only": false,
+  "reasons": [
+    "diagnostic run mode is not claim-ready evidence"
+  ],
+  "row_count": 30,
+  "source_rows": 30,
+  "source_run_dir": "outputs\\studies_actual\\diagnostic_actual_menu\\diagnostic_actual_menu-20260611T085925Z-90b16f2d",
+  "source_run_id": "diagnostic_actual_menu-20260611T085925Z-90b16f2d",
+  "status": "diagnostic",
+  "study": "diagnostic_actual_menu",
+  "uptake_regimes": [
+    "low",
+    "medium",
+    "meeting_point_friendly"
+  ]
+}

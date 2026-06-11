@@ -1,0 +1,20 @@
+\begin{table}[ht]
+\centering
+\begin{tabular}{lllllll}
+ \hline
+policy\_tag & row\_count & acceptance\_rate\_mean & optout\_rate\_mean & meeting\_point\_uptake\_rate\_mean & comparison\_role & rank\_eligible \\
+ \hline
+full\_display & 3 & 0.5603 & 0.4397 & 0.1138 & policy & True \\
+hard\_filter & 3 & 0.5671 & 0.4329 & 0.1223 & policy & True \\
+home\_only & 3 & 0.4483 & 0.5517 & 0 & cost\_bound & False \\
+min\_lateness & 3 & 0.5667 & 0.4333 & 0.1115 & policy & True \\
+nearest\_heuristic & 3 & 0.5446 & 0.4554 & 0.1364 & policy & True \\
+no\_filter\_diagnostic & 3 & 0.5443 & 0.4557 & 0.08861 & policy & False \\
+random\_top\_k & 3 & 0.5918 & 0.4082 & 0.1479 & policy & True \\
+robust\_risk\_adjusted & 3 & 0.4483 & 0.5517 & 0 & policy & True \\
+robust\_service\_guarded & 3 & 0.5915 & 0.4085 & 0.2099 & policy & True \\
+top\_k\_cheapest & 3 & 0.5765 & 0.4235 & 0.1379 & policy & True \\
+ \hline
+\end{tabular}
+\caption{Policy summary}
+\end{table}

@@ -40,6 +40,7 @@ def classify_artifact(rows, summary=None, claim_ready_requested=False, dependenc
     placeholder = any(bool(row.get("placeholder_only")) for row in rows)
     row_statuses = set(_unique(rows, "status"))
     execution_statuses = set(_unique(rows, "execution_status"))
+    run_modes = set(_unique(rows, "run_mode") or [summary.get("run_mode")])
     checkpoint_bad = [
         row
         for row in rows
@@ -59,6 +60,9 @@ def classify_artifact(rows, summary=None, claim_ready_requested=False, dependenc
     if checkpoint_bad and formal_or_pilot:
         status = BLOCKED
         reasons.append("pilot/formal rows require loaded checkpoint provenance")
+    if "diagnostic" in run_modes and status == CLAIM_READY:
+        status = DIAGNOSTIC
+        reasons.append("diagnostic run mode is not claim-ready evidence")
     if diagnostic_labels and status == CLAIM_READY and len(diagnostic_labels) == len({row.get("policy_tag") for row in rows}):
         status = DIAGNOSTIC
         reasons.append("all source policies are diagnostic-only")
@@ -118,4 +122,3 @@ def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True), encoding="utf-8")
-

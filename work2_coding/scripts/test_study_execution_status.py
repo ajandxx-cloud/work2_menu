@@ -89,6 +89,37 @@ def test_pilot_missing_checkpoint_writes_blockers():
         assert all(row["placeholder_only"] for row in rows)
 
 
+def test_actual_smoke_writes_completed_rows():
+    with TemporaryDirectory() as tmp:
+        result = run_command([
+            sys.executable,
+            "scripts/run_study.py",
+            "--study",
+            "smoke_robust_menu",
+            "--execute",
+            "--output-root",
+            str(Path(tmp)),
+            "--max-policies",
+            "2",
+        ])
+        assert result.returncode == 0, result.stderr
+        run_dir = last_stdout_path(result)
+        summary = json.loads((run_dir / "study_summary.json").read_text(encoding="utf-8"))
+        rows = json.loads((run_dir / "normalized_rows.json").read_text(encoding="utf-8"))
+        assert summary["execution_status"] == "completed"
+        assert summary["placeholder_only"] is False
+        assert rows
+        assert {row["status"] for row in rows} == {"completed"}
+        assert {row["execution_status"] for row in rows} == {"completed"}
+        assert not any(row["placeholder_only"] for row in rows)
+        assert all(row["acceptance_rate"] is not None for row in rows)
+        assert all(row["optout_rate"] is not None for row in rows)
+        assert all(row["home_share"] is not None for row in rows)
+        assert all(row["meeting_point_uptake_rate"] is not None for row in rows)
+        assert all(row["net_price_revenue"] is not None for row in rows)
+        assert {row["checkpoint_load_status"] for row in rows} == {"not_requested"}
+
+
 def test_incomplete_or_blocked_row_cannot_look_completed():
     manifest = load_manifest("smoke_robust_menu")
     setting = resolve_paired_settings(manifest)[0]
@@ -141,6 +172,7 @@ def main():
         test_contract_only_smoke_status_and_git_fields,
         test_formal_placeholder_rejection_preserved,
         test_pilot_missing_checkpoint_writes_blockers,
+        test_actual_smoke_writes_completed_rows,
         test_incomplete_or_blocked_row_cannot_look_completed,
         test_no_filter_label_survives_public_runner,
         test_prerequisite_helper_reports_expected_checkpoint_status,

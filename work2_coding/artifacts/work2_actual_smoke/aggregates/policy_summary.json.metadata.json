@@ -1,0 +1,29 @@
+{
+  "artifact_kind": "aggregate-json",
+  "artifact_path": "artifacts\\work2_actual_smoke\\aggregates\\policy_summary.json",
+  "checkpoint_summary": [
+    "not_requested"
+  ],
+  "claim_ready": true,
+  "diagnostic_policy_labels": [
+    "no_filter_diagnostic"
+  ],
+  "generated_at": "2026-06-11T08:43:28+00:00",
+  "git_provenance": {
+    "git_commit": "db87a93d3635332159dd82a9952a3fdc12b8c0d0",
+    "git_dirty": true,
+    "git_status_summary": "M artifacts/work2_robust_menu/ARTIFACT_STATUS.json;  M artifacts/work2_robust_menu/README.md;  M artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json;  M artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json;  M artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json;  M artifacts/work2_robust_menu/figures/acceptance_optout.png.status.json;  M artifacts/work2_robust_menu/figures/eta_pruning.png.status.json;  M artifacts/work2_robust_menu/figures/exact_greedy_time.png.status.json;  M artifacts/work2_robust_menu/figures/home_only_share.png.status.json;  M artifacts/work2_robust_menu/figures/profit_gap.png.status.json;  M artifacts/work2_robust_menu/manuscript/CLAIM_GUARD.json;  M artifacts/work2_robust_menu/tables/exact_greedy.tex.metadata.json;  M artifacts/work2_robust_menu/tables/policy_summary.tex.metadata.json;  M artifacts/work2_robust_menu/tables/provenance_status.tex.metadata.json;  M artifacts/work2_robust_menu/tables/robust_filtering.tex.metadata.json;  M artifacts/work2_robust_menu/tables/uptake_regime.tex.metadata.json;  D \"learning meeting point.docx\";  M work2_coding/Src/Algorithms/DSPO_Menu.py;  M work2_coding/Src/study_execution.py;  M work2_coding/artifacts/work2_robust_menu/ARTIFACT_STATUS.json"
+  },
+  "manifest_hash": "d0584c071cd2fe39b67688e69f7cedff85f94d4329d6abbedf5828b6c0e4fba2",
+  "placeholder_only": false,
+  "reasons": [],
+  "row_count": 10,
+  "source_rows": 10,
+  "source_run_dir": "outputs\\studies_actual\\smoke_robust_menu\\smoke_robust_menu-20260611T084312Z-d0584c07",
+  "source_run_id": "smoke_robust_menu-20260611T084312Z-d0584c07",
+  "status": "claim_ready",
+  "study": "smoke_robust_menu",
+  "uptake_regimes": [
+    "medium"
+  ]
+}

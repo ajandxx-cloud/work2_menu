@@ -58,6 +58,13 @@ def test_no_filter_diagnostic_flag_and_runtime_knobs():
     assert args["menu_time_filtering"] is False
 
 
+def test_home_only_is_cost_bound_not_ranked_policy():
+    metadata = adapter_metadata("home_only")
+    assert metadata["comparison_role"] == "cost_bound"
+    assert metadata["cost_bound"] is True
+    assert metadata["diagnostic"] is False
+
+
 def test_robust_policy_separation():
     manifest = load_manifest("smoke_robust_menu")
     split = manifest["splits"][0]
@@ -133,6 +140,7 @@ def main():
         test_required_adapter_coverage_and_parser_compatibility,
         test_required_baselines_present_in_smoke_manifest,
         test_no_filter_diagnostic_flag_and_runtime_knobs,
+        test_home_only_is_cost_bound_not_ranked_policy,
         test_robust_policy_separation,
         test_policy_only_override_guard_rejects_hgs_drift,
         test_manifest_policy_drift_rejected,
@@ -148,4 +156,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

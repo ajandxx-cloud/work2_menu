@@ -80,22 +80,31 @@ def aggregate_by_policy(rows):
     aggregates = []
     for policy_tag in sorted(groups):
         policy_rows = groups[policy_tag]
+        cost_bound = any(bool(row.get("cost_bound")) for row in policy_rows) or policy_tag in {"home_only", "meeting_point_only"}
+        diagnostic = any(bool(row.get("diagnostic")) for row in policy_rows)
         aggregates.append(
             {
                 "policy_tag": policy_tag,
                 "row_count": len(policy_rows),
                 "filter_mode": _stable_join(row.get("filter_mode") for row in policy_rows),
-                "diagnostic": any(bool(row.get("diagnostic")) for row in policy_rows),
-                "rank_eligible": not any(bool(row.get("diagnostic")) for row in policy_rows),
+                "diagnostic": diagnostic,
+                "comparison_role": _stable_join(row.get("comparison_role") for row in policy_rows),
+                "cost_bound": cost_bound,
+                "rank_eligible": not diagnostic and not cost_bound,
                 "placeholder_only": any(bool(row.get("placeholder_only")) for row in policy_rows),
                 "status": _stable_join(row.get("status") for row in policy_rows),
                 "checkpoint_statuses": _stable_join(row.get("checkpoint_load_status") for row in policy_rows),
                 "uptake_regimes": _stable_join(row.get("uptake_regime") for row in policy_rows),
                 "acceptance_rate_mean": _mean(row.get("acceptance_rate") for row in policy_rows),
                 "optout_rate_mean": _mean(row.get("optout_rate") for row in policy_rows),
+                "home_share_mean": _mean(row.get("home_share") for row in policy_rows),
+                "meeting_point_uptake_rate_mean": _mean(row.get("meeting_point_uptake_rate") for row in policy_rows),
+                "charge_revenue_mean": _mean(row.get("charge_revenue") for row in policy_rows),
+                "discount_cost_mean": _mean(row.get("discount_cost") for row in policy_rows),
+                "net_price_revenue_mean": _mean(row.get("net_price_revenue") for row in policy_rows),
+                "service_time_total_mean": _mean(row.get("service_time_total") for row in policy_rows),
                 "menu_build_time_mean": _mean(row.get("menu_build_time") for row in policy_rows),
                 "relative_optimality_gap_mean": _mean(row.get("relative_optimality_gap") for row in policy_rows),
-                "home_share_mean": _mean(row.get("count_accepted_home") for row in policy_rows),
             }
         )
     return aggregates
@@ -279,9 +288,10 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
     artifacts.extend([aggregate_csv, write_sidecar(aggregate_csv, run_data, status_info, "aggregate-csv")])
 
     tables = [
-        ("policy_summary.tex", "Policy summary", ["policy_tag", "row_count", "acceptance_rate_mean", "optout_rate_mean", "rank_eligible"]),
-        ("robust_filtering.tex", "Robust filtering summary", ["policy_tag", "filter_mode", "diagnostic", "rank_eligible"]),
+        ("policy_summary.tex", "Policy summary", ["policy_tag", "row_count", "acceptance_rate_mean", "optout_rate_mean", "meeting_point_uptake_rate_mean", "comparison_role", "rank_eligible"]),
+        ("robust_filtering.tex", "Robust filtering summary", ["policy_tag", "filter_mode", "diagnostic", "cost_bound", "rank_eligible"]),
         ("exact_greedy.tex", "Exact and greedy solver diagnostics", ["policy_tag", "menu_build_time_mean", "relative_optimality_gap_mean"]),
+        ("profit_decomposition.tex", "Price revenue and service summary", ["policy_tag", "net_price_revenue_mean", "charge_revenue_mean", "discount_cost_mean", "service_time_total_mean"]),
         ("uptake_regime.tex", "Uptake regime coverage", ["policy_tag", "uptake_regimes", "row_count"]),
         ("provenance_status.tex", "Provenance and status", ["policy_tag", "status", "placeholder_only", "checkpoint_statuses"]),
     ]

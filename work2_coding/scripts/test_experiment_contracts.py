@@ -35,7 +35,7 @@ def test_parser_choices_are_available():
 
 
 def test_valid_manifests_load():
-    for name in ["smoke_robust_menu", "pilot_robust_menu", "formal_robust_menu"]:
+    for name in ["smoke_robust_menu", "diagnostic_actual_menu", "pilot_robust_menu", "formal_robust_menu"]:
         manifest = load_manifest(name)
         assert manifest["name"] == name
         assert manifest["output_schema"]["normalized-row-v1"] is True
@@ -143,4 +143,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
