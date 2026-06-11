@@ -1,6 +1,7 @@
 from math import exp
 from numpy.random import gumbel
 import numpy as np
+from Environments.OOH.containers import ChoiceResult, MenuOffer
 
 class customerchoicemodel(object):
     def __init__(self,
@@ -72,3 +73,49 @@ class customerchoicemodel(object):
             return customer.home, False, -1, action[0]#home delivery
         else:
             return pps[idx-1].location, True, pps[idx-1].id_num,action[idx-1]#accept offer
+
+    def customerchoice_menu(self, customer, offers):
+        """MNL choice over displayed MenuOffer objects plus outside option."""
+        if len(offers) == 0:
+            return ChoiceResult.opted_out({"reason": "empty_menu"})
+
+        utilities = [0.0]
+        for offer in offers:
+            if not isinstance(offer, MenuOffer):
+                raise TypeError("customerchoice_menu expects MenuOffer actions")
+            if offer.predicted_utility is not None:
+                utility = float(offer.predicted_utility)
+            else:
+                base = self.base_util + (customer.home_util if offer.is_home else 0.0)
+                if offer.is_home:
+                    distance_term = 0.0
+                else:
+                    distance = self.euclidean_distance(customer.home, offer.location)
+                    distance_term = -exp(-distance / max(self.dist_scaler, 1.0))
+                utility = base + distance_term + customer.incentiveSensitivity * float(offer.price)
+            utilities.append(utility)
+
+        noisy = np.asarray(utilities, dtype=float).reshape((-1, 1))
+        noisy = np.add(noisy, gumbel(0, 1, np.shape(noisy)))
+        idx = int(np.argmax(noisy))
+        if idx == 0:
+            return ChoiceResult.opted_out({
+                "reason": "outside_option",
+                "displayed_menu_size": int(len(offers)),
+            })
+
+        offer = offers[idx - 1]
+        if offer.is_home:
+            return ChoiceResult.accepted_home(
+                offer.location,
+                offer=offer,
+                price=offer.price,
+                metadata={"displayed_menu_size": int(len(offers))},
+            )
+        return ChoiceResult.accepted_meeting_point(
+            offer.location,
+            offer.parcelpoint_id,
+            offer=offer,
+            price=offer.price,
+            metadata={"displayed_menu_size": int(len(offers))},
+        )

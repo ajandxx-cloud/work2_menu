@@ -4,7 +4,7 @@ import numpy as np
 import numpy.ma as ma
 import sys
 from Src.Utils.Utils import get_dist_mat_HGS,get_fleet
-from Environments.OOH.containers import Location,ParcelPoint,ParcelPoints,Vehicle,Fleet,Customer
+from Environments.OOH.containers import ChoiceResult, Location, MenuOffer, ParcelPoint, ParcelPoints, Vehicle, Fleet, Customer
 from Environments.OOH.env_utils import utils_env
 from Environments.OOH.customerchoice import customerchoicemodel
 
@@ -114,6 +114,12 @@ class Parcelpoint_py(object):
         self.count_home_delivery = 0
         self.total_prices = []
         self.total_discounts = []
+        self.count_opted_out = 0
+        self.count_accepted_home = 0
+        self.count_accepted_meeting_point = 0
+        self.last_choice_result = None
+        self.last_selected_offer = None
+        self.choice_log = []
 
         self.data['x_coordinates'] = self.depot.x
         self.data['y_coordinates'] =  self.depot.y
@@ -165,12 +171,58 @@ class Parcelpoint_py(object):
             return 0
 
     def get_delivery_loc_pricing(self,action):
+        if self._is_menu_action(action):
+            return self.customerchoice.customerchoice_menu(self.newCustomer, action)
         mask = ma.masked_array(self.parcelPoints["parcelpoints"], mask=self.adjacency[self.newCustomer.id_num])#only offer 20 closest
         return self.customerChoice(self.newCustomer,action,mask)
 
     def get_delivery_loc_offer(self,action):
+        if self._is_menu_action(action):
+            return self.customerchoice.customerchoice_menu(self.newCustomer, action)
         #get the chosen delivery location
         return self.customerChoice(self.newCustomer,action,self.parcelPoints["parcelpoints"])
+
+    def _is_menu_action(self, action):
+        return isinstance(action, list) and (len(action) == 0 or isinstance(action[0], MenuOffer))
+
+    def _choice_from_legacy(self, result):
+        loc, accepted_pp, idx, price = result
+        if accepted_pp:
+            return ChoiceResult.accepted_meeting_point(loc, idx, price=price)
+        return ChoiceResult.accepted_home(loc, price=price)
+
+    def _normalize_choice_result(self, result):
+        if isinstance(result, ChoiceResult):
+            return result
+        return self._choice_from_legacy(result)
+
+    def _parcelpoint_index(self, parcelpoint_id):
+        preferred = int(parcelpoint_id) - int(self.n_unique_customer_locs)
+        if 0 <= preferred < len(self.parcelPoints["parcelpoints"]):
+            return preferred
+        for idx, pp in enumerate(self.parcelPoints["parcelpoints"]):
+            if int(pp.id_num) == int(parcelpoint_id):
+                return idx
+        return None
+
+    def _choice_distance(self, loc):
+        if loc is None:
+            return 0.0
+        if len(self.dist_matrix) > 0:
+            return self.dist_matrix[self.newCustomer.home.id_num][loc.id_num]
+        return self.utils.getdistance_euclidean(self.newCustomer.home, loc)
+
+    def acceptance_rate(self):
+        total = self.count_accepted_home + self.count_accepted_meeting_point + self.count_opted_out
+        if total == 0:
+            return 0.0
+        return float(self.count_accepted_home + self.count_accepted_meeting_point) / float(total)
+
+    def optout_rate(self):
+        total = self.count_accepted_home + self.count_accepted_meeting_point + self.count_opted_out
+        if total == 0:
+            return 0.0
+        return float(self.count_opted_out) / float(total)
 
     def reopt_for_eval(self,data):
         if self.load_data:
@@ -183,40 +235,78 @@ class Parcelpoint_py(object):
         self.steps += 1
 
         #get the customer's choice of delivery location
-        loc,accepted_pp,idx,price = self.get_delivery_loc(action)
-        if price>0:
-            self.total_prices.append(price)
+        choice = self._normalize_choice_result(self.get_delivery_loc(action))
+        loc = choice.location
+        price = float(choice.price)
+        self.last_choice_result = choice
+        self.last_selected_offer = choice.offer if choice.route_mutates else None
+        self.choice_log.append({
+            "step": int(self.steps),
+            "outcome": choice.outcome,
+            "parcelpoint_id": int(choice.parcelpoint_id),
+            "price": float(price),
+            "route_mutates": bool(choice.route_mutates),
+        })
+
+        if choice.outcome == "opted_out":
+            self.count_opted_out += 1
         else:
-            self.total_discounts.append(price)
-        self.data['x_coordinates']= np.append(self.data['x_coordinates'],loc.x)
-        self.data['y_coordinates'] = np.append(self.data['y_coordinates'],loc.y)
-        self.data['id'] = np.append(self.data['id'],loc.id_num)
-        self.data['time'] = np.append(self.data['time'],self.steps)
+            if price > 0:
+                self.total_prices.append(price)
+            else:
+                self.total_discounts.append(price)
+            self.data['x_coordinates']= np.append(self.data['x_coordinates'],loc.x)
+            self.data['y_coordinates'] = np.append(self.data['y_coordinates'],loc.y)
+            self.data['id'] = np.append(self.data['id'],loc.id_num)
+            self.data['time'] = np.append(self.data['time'],self.steps)
 
-        #reduce parcelpoint capacity, if chosen
-        if accepted_pp:
-            self.parcelPoints["parcelpoints"][idx-self.n_unique_customer_locs].remainingCapacity -= 1
-            self.service_time+=0
-        else:#home delivery
-            self.service_time+=self.service_times[idx]
-            self.count_home_delivery+=1
+            if choice.outcome == "accepted_meeting_point":
+                pp_idx = self._parcelpoint_index(choice.parcelpoint_id)
+                if pp_idx is not None:
+                    self.parcelPoints["parcelpoints"][pp_idx].remainingCapacity -= 1
+                self.count_accepted_meeting_point += 1
+                self.service_time += 0
+            elif choice.outcome == "accepted_home":
+                self.service_time += self.newCustomer.service_time
+                self.count_home_delivery += 1
+                self.count_accepted_home += 1
 
-        if self.dissatisfaction:#perhaps remove, not used so far
+        if self.dissatisfaction and not self._is_menu_action(action):#perhaps remove, not used so far
             if np.mean(action)>2.75 and np.std(action)<1.0:
                 self.count_dissatisfaction+=1
 
-        #construct intermittent route kept in memory during booking horizon
-        insertVeh,idx,costs = self.utils.cheapestInsertionRoute(loc,self.fleet)
-        self.fleet["fleet"][insertVeh]["routePlan"].insert(idx,loc)
+        if choice.route_mutates:
+            #construct intermittent route kept in memory during booking horizon
+            insertVeh,idx,costs = self.utils.cheapestInsertionRoute(loc,self.fleet)
+            self.fleet["fleet"][insertVeh]["routePlan"].insert(idx,loc)
 
         #re-optimize the intermittent route after X steps, we did not do this for the paper
-        if self.steps % self.reopt_freq == 0:#do re-opt using HGS
+        if choice.route_mutates and self.steps % self.reopt_freq == 0:#do re-opt using HGS
             if self.load_data:
                 self.data["distance_matrix"] = get_dist_mat_HGS(self.dist_matrix,self.data['id'])
             self.fleet,_ = self.utils.reopt_HGS(self.data)
 
         #info for plots and statistics
-        stats = self.steps,self.count_home_delivery,self.service_time,self.total_prices,self.parcelPoints["parcelpoints"],self.dist_matrix[self.newCustomer.home.id_num][loc.id_num],self.total_discounts,price
+        stats_metadata = {
+            "count_opted_out": int(self.count_opted_out),
+            "count_accepted_home": int(self.count_accepted_home),
+            "count_accepted_meeting_point": int(self.count_accepted_meeting_point),
+            "acceptance_rate": self.acceptance_rate(),
+            "optout_rate": self.optout_rate(),
+            "last_outcome": choice.outcome,
+            "route_mutates": bool(choice.route_mutates),
+        }
+        stats = (
+            self.steps,
+            self.count_home_delivery,
+            self.service_time,
+            self.total_prices,
+            self.parcelPoints["parcelpoints"],
+            self._choice_distance(loc),
+            self.total_discounts,
+            price,
+            stats_metadata,
+        )
 
         #generate new customer arrival and return state info
         self.curr_state = self.make_state()

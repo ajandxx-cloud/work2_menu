@@ -98,3 +98,52 @@ class MenuOffer:
 
     def __getitem__(self, item):
         return getattr(self, item)
+
+@dataclass
+class ChoiceResult:
+    outcome: str
+    location: Optional[Location]
+    offer: Optional[MenuOffer]
+    price: float
+    parcelpoint_id: int
+    route_mutates: bool
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def accepted_home(cls, location, offer=None, price=0.0, metadata=None):
+        return cls(
+            outcome="accepted_home",
+            location=location,
+            offer=offer,
+            price=float(price),
+            parcelpoint_id=-1,
+            route_mutates=True,
+            metadata=metadata or {},
+        )
+
+    @classmethod
+    def accepted_meeting_point(cls, location, parcelpoint_id, offer=None, price=0.0, metadata=None):
+        return cls(
+            outcome="accepted_meeting_point",
+            location=location,
+            offer=offer,
+            price=float(price),
+            parcelpoint_id=int(parcelpoint_id),
+            route_mutates=True,
+            metadata=metadata or {},
+        )
+
+    @classmethod
+    def opted_out(cls, metadata=None):
+        return cls(
+            outcome="opted_out",
+            location=None,
+            offer=None,
+            price=0.0,
+            parcelpoint_id=-1,
+            route_mutates=False,
+            metadata=metadata or {},
+        )
+
+    def __getitem__(self, item):
+        return getattr(self, item)
