@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+from Src.Utils.Utils import load_module_checkpoint
 
 class LinReg(nn.Module):
     def __init__(self, dim, aux_dim=1, output_dim=1):
@@ -33,8 +34,17 @@ class LinReg(nn.Module):
     def save(self, filename):
         torch.save(self.state_dict(), filename)
 
-    def load(self, filename):
-        self.load_state_dict(torch.load(filename))
+    def load(self, filename, required=False, allow_mismatch=False, run_mode="smoke", run_id="", settings_summary=None):
+        return load_module_checkpoint(
+            self,
+            filename,
+            required=required,
+            allow_mismatch=allow_mismatch,
+            run_mode=run_mode,
+            model_type=self.__class__.__name__,
+            run_id=run_id,
+            settings_summary=settings_summary,
+        )
 
 class CNN_2d(nn.Module):
     def __init__(self, dim, n_layers, n_filters, dropout, aux_dim=1, output_dim=1):
@@ -105,8 +115,17 @@ class CNN_2d(nn.Module):
     def save(self, filename):
         torch.save(self.state_dict(), filename)
 
-    def load(self, filename):
-        self.load_state_dict(torch.load(filename))
+    def load(self, filename, required=False, allow_mismatch=False, run_mode="smoke", run_id="", settings_summary=None):
+        return load_module_checkpoint(
+            self,
+            filename,
+            required=required,
+            allow_mismatch=allow_mismatch,
+            run_mode=run_mode,
+            model_type=self.__class__.__name__,
+            run_id=run_id,
+            settings_summary=settings_summary,
+        )
 
 #Not used in paper, usage will throw an error
 class CNN_3d(nn.Module):
@@ -152,5 +171,14 @@ class CNN_3d(nn.Module):
     def save(self, filename):
         torch.save(self.state_dict(), filename)
 
-    def load(self, filename):
-        self.load_state_dict(torch.load(filename))
+    def load(self, filename, required=False, allow_mismatch=False, run_mode="smoke", run_id="", settings_summary=None):
+        return load_module_checkpoint(
+            self,
+            filename,
+            required=required,
+            allow_mismatch=allow_mismatch,
+            run_mode=run_mode,
+            model_type=self.__class__.__name__,
+            run_id=run_id,
+            settings_summary=settings_summary,
+        )

@@ -1,4 +1,5 @@
 from __future__ import print_function
+import hashlib
 import numpy as np
 import torch
 import torch.nn as nn
@@ -127,6 +128,116 @@ def save_training_checkpoint(state, is_best, episode_count):
     torch.save(state, filename)
     if is_best:
         shutil.copyfile(filename, 'model_best.pth.tar')
+
+
+def checkpoint_sha256(filename):
+    digest = hashlib.sha256()
+    with open(filename, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def default_checkpoint_metadata(
+    status="not_requested",
+    checkpoint_path="",
+    checkpoint_required=False,
+    checkpoint_intentional_mismatch=False,
+    checkpoint_load_error="",
+    checkpoint_hash="",
+    checkpoint_model_type="",
+    checkpoint_compatibility_reason="",
+    run_mode="smoke",
+    run_id="",
+    settings_summary=None,
+):
+    return {
+        "checkpoint_load_status": status,
+        "checkpoint_path": checkpoint_path or "",
+        "checkpoint_hash": checkpoint_hash or "",
+        "checkpoint_load_error": checkpoint_load_error or "",
+        "checkpoint_model_type": checkpoint_model_type or "",
+        "checkpoint_compatibility_reason": checkpoint_compatibility_reason or "",
+        "checkpoint_intentional_mismatch": bool(checkpoint_intentional_mismatch),
+        "checkpoint_required": bool(checkpoint_required),
+        "run_mode": run_mode or "smoke",
+        "run_id": run_id or "",
+        "settings_summary": settings_summary or {},
+    }
+
+
+def _torch_load_state_dict(filename):
+    try:
+        return torch.load(filename, map_location="cpu", weights_only=True)
+    except TypeError:
+        return torch.load(filename, map_location="cpu")
+
+
+def load_module_checkpoint(
+    module,
+    filename,
+    required=False,
+    allow_mismatch=False,
+    run_mode="smoke",
+    model_type=None,
+    run_id="",
+    settings_summary=None,
+):
+    model_name = model_type or module.__class__.__name__
+    filename = str(filename or "")
+    metadata = default_checkpoint_metadata(
+        status="not_requested",
+        checkpoint_path=filename,
+        checkpoint_required=required,
+        checkpoint_intentional_mismatch=False,
+        checkpoint_model_type=model_name,
+        run_mode=run_mode,
+        run_id=run_id,
+        settings_summary=settings_summary,
+    )
+
+    if allow_mismatch and run_mode in ("pilot", "formal"):
+        raise ValueError("checkpoint mismatch is diagnostic-only and cannot be used in pilot/formal mode")
+
+    if not filename:
+        return metadata
+
+    if not path.isfile(filename):
+        message = "checkpoint file not found"
+        metadata.update({
+            "checkpoint_load_status": "failed",
+            "checkpoint_load_error": message,
+            "checkpoint_compatibility_reason": message,
+        })
+        if required:
+            raise FileNotFoundError(filename)
+        return metadata
+
+    metadata["checkpoint_hash"] = checkpoint_sha256(filename)
+    try:
+        state = _torch_load_state_dict(filename)
+        if isinstance(state, dict) and "state_dict" in state:
+            state = state["state_dict"]
+        module.load_state_dict(state)
+    except Exception as exc:
+        message = str(exc)
+        status = "intentional_mismatch" if allow_mismatch else "failed"
+        metadata.update({
+            "checkpoint_load_status": status,
+            "checkpoint_load_error": message,
+            "checkpoint_compatibility_reason": message,
+            "checkpoint_intentional_mismatch": bool(allow_mismatch),
+        })
+        if required:
+            raise RuntimeError("required checkpoint load failed: " + message)
+        return metadata
+
+    metadata.update({
+        "checkpoint_load_status": "loaded",
+        "checkpoint_load_error": "",
+        "checkpoint_compatibility_reason": "state_dict loaded",
+    })
+    return metadata
 
 
 def search(dir, name, exact=False):
@@ -542,7 +653,7 @@ class NeuralNet(nn.Module):
         torch.save(self.state_dict(), filename)
 
     def load(self, filename):
-        self.load_state_dict(torch.load(filename))
+        return load_module_checkpoint(self, filename, model_type=self.__class__.__name__)
 
     def check_nan(self):
         # Check for nan periodically

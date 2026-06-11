@@ -20,6 +20,15 @@ class Config(object):
 
         # Copy all the variables from args to config
         self.__dict__.update(vars(args))
+        self.checkpoint_metadata = Utils.default_checkpoint_metadata(
+            status="not_requested",
+            checkpoint_path=getattr(args, "checkpoint_path", ""),
+            run_mode=getattr(args, "run_mode", "smoke"),
+            checkpoint_required=getattr(args, "require_checkpoint", False),
+            checkpoint_intentional_mismatch=getattr(args, "allow_checkpoint_mismatch", False),
+            run_id=getattr(args, "run_id", ""),
+            checkpoint_compatibility_reason="checkpoint not requested",
+        )
 
         # Save results after every certain number of episodes
         self.save_after = args.max_episodes // args.save_count if args.max_episodes >= args.save_count else args.max_episodes

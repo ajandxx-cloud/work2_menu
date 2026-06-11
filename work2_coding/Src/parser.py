@@ -14,6 +14,14 @@ class Parser(object):
         parser.add_argument("--log_output", default='term_file', help="Log all the print outputs",choices=['term_file', 'term', 'file'])
         parser.add_argument("--debug", default=True, type=self.str2bool, help="Debug mode on/off")
         parser.add_argument("--save_model", default=True, type=self.str2bool, help="flag to save model checkpoints")
+        parser.add_argument("--run_mode", default="smoke", choices=["smoke", "diagnostic", "pilot", "formal"],
+                            help="Run provenance strictness mode")
+        parser.add_argument("--checkpoint_path", default="", help="Optional shared predictor checkpoint path")
+        parser.add_argument("--require_checkpoint", default=False, type=self.str2bool,
+                            help="Fail closed if the requested checkpoint cannot be loaded")
+        parser.add_argument("--allow_checkpoint_mismatch", default=False, type=self.str2bool,
+                            help="Allow diagnostic-only random initialization after checkpoint mismatch")
+        parser.add_argument("--run_id", default="", help="Optional run identifier for provenance metadata")
 
         # For documentation purposes
         now = datetime.now()
@@ -206,4 +214,3 @@ class Parser(object):
 
     def get_parser(self):
         return self.parser
-
