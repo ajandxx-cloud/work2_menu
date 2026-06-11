@@ -26,6 +26,7 @@ key-files:
     - artifacts/work2_robust_menu/manuscript/CLAIM_GUARD.json
   modified: []
 key-decisions:
+  - "Human discussion amendment selected 1A/2A/3A: strict conservative evidence posture, Markdown/JSON support documents, and fail-closed claim guard."
   - "Current Phase 4 evidence remains blocked/non-claim-ready and the manuscript artifacts preserve that status."
   - "Allowed claims cover framework, robust pruning, solver auditability, paired replay contracts, and artifact transparency."
   - "Blocked claims include universal dominance, real passenger validation, no-filter operational recommendation, full dynamic exact optimality, empirical superiority, and pilot/formal completion."
@@ -60,6 +61,7 @@ completed: 2026-06-11
   - `result_outline.md`
   - `claim_checklist.md`
   - `CLAIM_GUARD.json`
+- After user review, amended Phase 5 discussion records to show the human-confirmed choices: 1A strictly conservative, 2A support documents, 3A fail closed.
 
 ## Files Created
 
@@ -88,7 +90,7 @@ completed: 2026-06-11
 
 ## Deviations from Plan
 
-None.
+The first Phase 5 pass used auto-selected GSD yolo/auto-advance decisions. The user then required explicit human discussion. The final Phase 5 context and discussion log were amended to record the user's `1A, 2A, 3A` choices; implementation did not need behavioral changes because it already matched those choices.
 
 ## Issues Encountered
 

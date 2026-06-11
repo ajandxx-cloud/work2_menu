@@ -17,6 +17,8 @@ Status: passed
 
 Phase 5 achieved its goal: the project now has paper-ready method, experiment, and result outlines plus an explicit claim checklist and machine-readable claim guard. These artifacts are generated from the Phase 4 artifact status and correctly preserve the current blocked/non-claim-ready evidence boundary.
 
+After the initial auto draft, the user required Phase 5 to pass through human discussion. The final verified decisions are `1A, 2A, 3A`: strict conservative evidence posture, Markdown/JSON support documents, and fail-closed claim guard.
+
 ## Requirement Traceability
 
 | Requirement | Status | Evidence |
@@ -36,6 +38,7 @@ Phase 5 achieved its goal: the project now has paper-ready method, experiment, a
 ## Must-Have Review
 
 - The generated claim guard reads `ARTIFACT_STATUS.json`; it does not infer claim readiness from prose.
+- Phase 5 context and discussion log record the user's explicit `1A, 2A, 3A` choices.
 - Current status remains `blocked`, with `claim_ready=false`, `pilot_claim_ready=false`, and `formal_claim_ready=false`.
 - Missing checkpoint and formal skipped blockers are preserved in `CLAIM_GUARD.json` and checklist output.
 - `no_filter_diagnostic` remains diagnostic-only.
@@ -58,4 +61,3 @@ Phase 5 does not make the manuscript empirically complete. It makes the current 
 
 - The repository still has unrelated pre-existing dirty state (`learning meeting point.docx` deletion and one untracked Chinese-named text file). Phase 5 ignored these files.
 - The generated outlines are Markdown support artifacts, not final LaTeX paper text.
-

@@ -2,7 +2,8 @@
 
 **Gathered:** 2026-06-11T15:35:11+08:00
 **Status:** Ready for planning
-**Mode:** auto-selected from existing project evidence and GSD yolo/auto-advance settings
+**Mode:** Human discussion amendment confirmed after initial auto draft
+**Human decisions:** 2026-06-11 - `1A, 2A, 3A`
 
 <domain>
 ## Phase Boundary
@@ -11,13 +12,15 @@ Phase 5 translates the verified Work2 pipeline into restrained, paper-ready manu
 
 This phase does not fabricate empirical results, hand-edit generated result rows, create new robust-menu algorithm behavior, supply missing checkpoints, or upgrade the current blocked artifact bundle into claim-ready evidence. If artifact status remains blocked, the manuscript framing must say the pipeline and diagnostic artifacts are ready while pilot/formal empirical claims are still gated.
 
+Human discussion confirmed the strict path: treat the current Phase 4 blocked/non-claim-ready status conservatively; keep Phase 5 outputs as Markdown/JSON support documents; and make the claim guard fail closed whenever claim-ready flags are false.
+
 </domain>
 
 <decisions>
 ## Implementation Decisions
 
 ### Manuscript Scope
-- **D-01:** Phase 5 should generate manuscript support documents from verified project state and artifact status, not from manual row edits or unverifiable prose.
+- **D-01:** Human-selected option 1A: Phase 5 should use a strictly conservative evidence posture. It should generate manuscript support documents from verified project state and artifact status, not from manual row edits or unverifiable prose.
 - **D-02:** The method outline must cover service bundles, displayed menu decisions, outside option, robust time-window handling, MNL choice, pricing, and exact-small/greedy-large solver behavior.
 - **D-03:** The experiment outline must cover scenarios, baselines, metrics, paired replay protocol, seeds, splits, checkpoint handling, and uptake regimes.
 - **D-04:** The result outline may describe planned/diagnostic result families, but current empirical wording must be blocked when `claim_ready`, `pilot_claim_ready`, or `formal_claim_ready` is false.
@@ -27,9 +30,10 @@ This phase does not fabricate empirical results, hand-edit generated result rows
 - **D-06:** Claims blocked before claim-ready evidence include universal dominance, real passenger behavioral validation, no-filter operational recommendation, full dynamic-system exact optimality, and completed pilot/formal effect-size conclusions.
 - **D-07:** `no_filter_diagnostic` may be discussed only as a diagnostic upper bound or stress test, not as an operational policy recommendation.
 - **D-08:** Missing or failed checkpoint provenance must appear in the checklist and limitations text whenever artifact status records it.
+- **D-08a:** Human-selected option 3A: the claim guard must fail closed. If any required claim-ready flag is false, empirical superiority, rankings, and policy recommendations are blocked rather than softened into formal claims.
 
 ### Output Contract
-- **D-09:** Outputs should live under `work2_coding/artifacts/work2_robust_menu/manuscript/` and be mirrored to `artifacts/work2_robust_menu/manuscript/` for review, matching the Phase 4 artifact pattern.
+- **D-09:** Human-selected option 2A: outputs should remain support documents, not LaTeX final prose. They should live under `work2_coding/artifacts/work2_robust_menu/manuscript/` and be mirrored to `artifacts/work2_robust_menu/manuscript/` for review, matching the Phase 4 artifact pattern.
 - **D-10:** A machine-readable claim guard JSON should sit beside Markdown outlines so later manuscript tooling can fail closed without parsing prose.
 - **D-11:** Tests should prove blocked Phase 4 status prevents empirical claims while still allowing framework and pipeline claims.
 
