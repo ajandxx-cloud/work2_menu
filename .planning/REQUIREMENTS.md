@@ -1,7 +1,7 @@
-# Requirements: Work2 Robust Time-Window Service Menu Optimization for Many-to-One DRT
+# Requirements: Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
 
 **Defined:** 2026-06-10
-**Core Value:** Produce defensible Work2 evidence through a reproducible robust time-window service-menu optimization pipeline.
+**Core Value:** Produce defensible Work2 evidence that attention-enhanced DSPO improves the original DSPO method under reproducible paired replay.
 
 ## v1 Requirements
 
@@ -61,6 +61,13 @@
 - **BEHAV-01**: System can test attention-based menu-aware choice/scoring as an ablation or extension.
 - **BEHAV-02**: System can test decision-focused menu regret or oracle-label ranking after robust pipeline evidence is stable.
 
+### Attention Evidence Pivot
+
+- **ATTN-01**: System exposes explicit `DSPO_original` and `DSPO_attention` variants without conflating robust-menu diagnostics with the main method comparison.
+- **ATTN-02**: Attention-enhanced DSPO integrates attention into candidate/menu scoring or cost prediction while preserving opt-out accounting, checkpoint metadata, and routing feasibility.
+- **ATTN-03**: Attention-vs-original experiments use paired replay with identical request traces, seeds, split IDs, pricing mode, routing/HGS settings, and checkpoint policy.
+- **ATTN-04**: Artifacts and claim guards report attention-vs-original DSPO deltas and only allow superiority claims from completed, non-placeholder paired evidence.
+
 ### Calibration Enhancements
 
 - **CAL-01**: System can estimate distance-band or candidate-type ETA sigma after global-sigma robust policies are complete.
@@ -70,7 +77,6 @@
 
 | Feature | Reason |
 |---------|--------|
-| Attention as main Work2 contribution | User selected scheme 1; robust time-window menu optimization is the primary contribution |
 | Work3 many-to-many DRT | Separate dissertation workstream |
 | Work4 planning | Separate dissertation workstream |
 | Full simulator rewrite | Current code has reusable DSPO, simulator, and routing infrastructure |
@@ -109,12 +115,18 @@
 | PAPER-02 | Phase 5 | Complete |
 | PAPER-03 | Phase 5 | Complete |
 | PAPER-04 | Phase 5 | Complete |
+| BEHAV-01 | Phase 6 | Complete |
+| ATTN-01 | Phase 6 | Complete |
+| ATTN-02 | Phase 6 | Complete |
+| ATTN-03 | Phase 6 | Complete |
+| ATTN-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total
 - Mapped to phases: 28
 - Unmapped: 0
+- v2 attention-pivot requirements: 5 mapped to Phase 6
 
 ---
 *Requirements defined: 2026-06-10*
-*Last updated: 2026-06-11 after Phase 5 completion*
+*Last updated: 2026-06-11 after Phase 6 execution*

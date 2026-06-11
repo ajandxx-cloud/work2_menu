@@ -1,4 +1,4 @@
-# Roadmap: Work2 Robust Time-Window Service Menu Optimization for Many-to-One DRT
+# Roadmap: Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
 
 **Created:** 2026-06-10
 **Granularity:** coarse
@@ -6,7 +6,9 @@
 
 ## Overview
 
-This roadmap preserves the user's staged evidence pipeline while grouping work into five coarse phases. Phase 1 is the requested first task: Stage 0 repository audit before algorithm behavior changes.
+This roadmap preserves the user's staged evidence pipeline while grouping work into coarse phases. Phase 1 is the requested first task: Stage 0 repository audit before algorithm behavior changes.
+
+**Direction update 2026-06-11:** The paper-method target is now to show that adding an attention mechanism improves the original DSPO method under fair paired replay. The robust time-window/menu pipeline remains useful as reproducible infrastructure, diagnostics, and guardrails, but it is no longer the sole main contribution claim. `home_only` and any meeting-point-only variant should be reported as cost-approximation boundary references, not ranked comparison methods.
 
 | # | Phase | Goal | Requirements |
 |---|-------|------|--------------|
@@ -15,6 +17,7 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 | 3 | Experiment Contracts And Fair Replay (Complete 2026-06-11) | Define runnable study contracts and paired comparisons | EXP-01..04 |
 | 4 | Evidence And Artifacts (Complete 2026-06-11) | Generate the evidence chain required for paper-facing Work2 claims | ART-01..04 |
 | 5 | Manuscript Framing And Claim Guard (Complete 2026-06-11) | Produce paper-ready method/results/limitations text and enforce claim boundaries | PAPER-01..04 |
+| 6 | Attention-Enhanced DSPO Evidence Pivot (Complete 2026-06-11) | Implement and evaluate attention-enhanced DSPO against the original DSPO baseline | ATTN-01..04, BEHAV-01 |
 
 ## Phases
 
@@ -84,9 +87,22 @@ This roadmap preserves the user's staged evidence pipeline while grouping work i
 
 **Requirements:** PAPER-01, PAPER-02, PAPER-03, PAPER-04
 
+### Phase 6: Attention-Enhanced DSPO Evidence Pivot
+**Goal:** Make the main method comparison `DSPO_original` vs `DSPO_attention`, with paired replay evidence that attention improves the original DSPO method.
+**Mode:** mvp
+
+**Success Criteria**:
+1. Original DSPO baseline and attention-enhanced DSPO treatment are exposed through explicit, named policy/model variants.
+2. The attention module is integrated into DSPO scoring or cost/candidate evaluation without breaking existing opt-out accounting, checkpoint metadata, or paired replay fairness.
+3. Study manifests compare `DSPO_original` and `DSPO_attention` on the same request traces, seeds, split IDs, pricing mode, routing/HGS settings, and checkpoint policy.
+4. Artifacts report attention-vs-original DSPO deltas for acceptance, opt-out, non-home uptake, service cost, net objective/profit proxy, and relevant prediction/decision diagnostics.
+5. Claim gates only allow "attention improves DSPO" statements when completed non-placeholder paired evidence supports that direction; robust/no-filter diagnostics remain clearly labeled.
+
+**Requirements:** ATTN-01, ATTN-02, ATTN-03, ATTN-04, BEHAV-01
+
 ## Requirement Coverage
 
-All 28 v1 requirements are mapped to exactly one phase.
+All 28 v1 requirements are mapped to exactly one phase. Phase 6 adds the v2 attention-evidence pivot.
 
 ---
 *Roadmap created: 2026-06-10 after initialization*

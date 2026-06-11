@@ -1,14 +1,14 @@
-# Work2 Robust Time-Window Service Menu Optimization for Many-to-One DRT
+# Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
 
 ## What This Is
 
 This project turns Work2 into a runnable, reproducible experimental pipeline for many-to-one demand-responsive transit service-menu optimization. The platform chooses a limited displayed menu of service bundles, where each bundle combines a meeting point, pickup time window, and price, while accounting for passenger choice, ETA uncertainty, routing cost, capacity risk, and service quality.
 
-The contribution is not "turning off ETA filtering." The contribution is an uncertainty-aware service-menu optimization framework with auditable exact-small and greedy-large menu construction, paired replay experiments, diagnostic artifacts, and paper-ready evidence for when robust time-window menu construction improves profit, acceptance, non-home uptake, opt-out, and service-quality metrics.
+The current paper target is to show that adding attention to the original DSPO method improves menu/recommendation decisions under fair paired replay. The robust time-window service-menu work remains the reproducible experiment platform, guardrail layer, and diagnostic infrastructure supporting that comparison.
 
 ## Core Value
 
-The project must produce defensible Work2 evidence: a reproducible pipeline where robust time-window menu policies can be fairly compared against hard filtering, no-filter diagnostics, and practical baselines on the same request traces and shared predictor checkpoints.
+The project must produce defensible Work2 evidence: a reproducible pipeline where attention-enhanced DSPO can be fairly compared against the original DSPO method on the same request traces, split IDs, seeds, pricing mode, routing settings, and checkpoint policy.
 
 ## Requirements
 
@@ -25,14 +25,16 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 - Phase 3 added smoke, pilot, and formal robust-menu study contracts; required baseline adapters; paired replay validation; normalized row schema; uptake-regime contracts; and a contract-only smoke runner that emits JSON/CSV rows.
 - Phase 4 added the evidence/artifact pipeline: honest execution statuses, blocker metadata for missing pilot/formal prerequisites, aggregate JSON/CSV outputs, LaTeX tables, figure/status artifacts, provenance sidecars, and mirrored review artifacts. The current bundle is blocked/non-claim-ready because the required pilot checkpoint is absent and formal evidence was skipped.
 - Phase 5 added manuscript support artifacts and a claim guard: method, experiment, and result outlines; Markdown claim checklist; machine-readable `CLAIM_GUARD.json`; and tests proving blocked evidence cannot become empirical claims.
+- 2026-06-11 method direction update: the main comparison should become attention-enhanced DSPO versus original DSPO. Robust menu diagnostics remain supporting evidence, and `home_only`/meeting-point-only variants are cost-approximation bounds rather than ranked comparison methods.
+- Phase 6 added deterministic `DSPO_attention`, preserved `DSPO_original`, created paired attention manifests/rows/artifacts, and ran completed smoke evidence. The attention claim guard remains non-claim-ready because smoke evidence is not sufficient and the primary metric delta is not positive.
 
 ### Active
 
-- [ ] Complete milestone archival and decide whether to supply the missing pilot checkpoint for claim-ready empirical evidence.
+- [ ] Supply the shared attention pilot checkpoint, then run `pilot_attention_dspo` and rebuild `work2_attention_dspo` artifacts.
+- [ ] Keep `home_only` and meeting-point-only outputs as cost-approximation boundary references, not baseline methods for ranking.
 
 ### Out of Scope
 
-- Attention-based choice/scoring module - defer until the robust time-window service-menu pipeline is runnable and evidenced.
 - Work3 many-to-many DRT and Work4 planning - separate dissertation workstreams.
 - Rewriting the whole simulator - reuse the inherited Work1/Work2 infrastructure unless an audit proves a targeted replacement is necessary.
 - Treating `no_filter` as the recommended policy by default - it is a diagnostic upper bound unless formal evidence justifies a stronger claim.
@@ -43,7 +45,7 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 
 Work1 studies dynamic meeting-point recommendation and pricing with cost prediction and decision-focused learning. Work2 extends that pricing/recommendation layer into the menu layer: instead of asking how to price already-given boarding options, Work2 asks which limited set of feasible spatiotemporal service bundles should be displayed to each passenger.
 
-The user discussion on 2026-06-10 selects "scheme 1": robust time-window service menu optimization. Attention is explicitly deferred; it may become a later behavioral-model enhancement, not the main contribution.
+The user discussion on 2026-06-10 selected "scheme 1": robust time-window service menu optimization. The follow-up decision on 2026-06-11 pivots the paper-method claim: the desired result is that attention-enhanced DSPO improves over the original DSPO method. Robust menu and ETA-guard work should now support this comparison rather than compete with it as the main claim.
 
 The repository is a brownfield research codebase. Current filesystem inspection shows `work2_coding/` as the actual runnable package, while the existing `.planning/codebase/` map refers heavily to `ooh_code/`. This mismatch must be resolved during Stage 0 so future phases do not duplicate work into the wrong root.
 
@@ -59,7 +61,7 @@ Known engineering risks to address early:
 - **Runtime root**: Prefer `work2_coding/` because it is present and imports `Src.config`; do not create a parallel `ooh_code/` implementation unless the audit proves it is required.
 - **Language and dependencies**: Python 3.10 style code with PyTorch, NumPy, Hygese, and local script-style tests; avoid adding heavyweight framework dependencies without need.
 - **Experiment fairness**: Formal comparisons must share request traces, checkpoints, seeds, split IDs, routing parameters, and pricing mode unless a manifest explicitly varies one factor.
-- **Scientific scope**: Robust filtering and service-constrained menu optimization are the main Work2 contribution; attention, decision-focused regret learning, and many-to-many DRT are deferred.
+- **Scientific scope**: The main Work2 method claim is attention-enhanced DSPO improving original DSPO under paired replay. Robust filtering, service-constrained menu optimization, and cost-bound policies are supporting infrastructure/diagnostics; decision-focused regret learning and many-to-many DRT remain deferred.
 - **Artifacts**: Do not hand-edit generated results. Formal artifacts need manifest hash, run ID, git commit/hash, checkpoint provenance, and placeholder status.
 - **Implementation style**: Keep functions small, testable, and modular. Prefer config flags, metadata fields, tests, and manifest contracts over hard-coded experiment choices.
 
@@ -70,7 +72,8 @@ Known engineering risks to address early:
 | Use `work2_coding/` as the active runtime root unless Stage 0 finds otherwise | It exists in the current tree, passed an import smoke check, and Phase 1 confirmed no current `ooh_code/` root | Validated in Phase 1 |
 | Focus Work2 on robust time-window service-menu optimization | This is feasible in the existing DSPO_Menu code and gives a clearer contribution than attention-first framing | Validated through Phase 3 contracts |
 | Treat `no_filter` as diagnostic, not the final method | It can expose candidate-availability upper bounds but is not automatically operationally credible | Enforced in Phase 3 manifests and row metadata |
-| Defer attention mechanisms | The user selected scheme 1 and explicitly excluded attention for this project | Pending |
+| Pivot main method evidence to attention-enhanced DSPO vs original DSPO | The user clarified that the needed methodological result is attention outperforming the original DSPO method | Implemented in Phase 6; empirical improvement remains blocked pending pilot/formal evidence |
+| Treat `home_only` and meeting-point-only variants as cost bounds | These variants approximate lower/upper cost boundaries and should not be ranked as comparison methods | Implemented in metadata/artifact guardrails |
 | Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Validated in Phase 1 |
 | Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Implemented in Phase 2 and carried into Phase 3 row schema |
 | Treat blocked Phase 4 artifacts as evidence-status outputs, not empirical claims | Required pilot checkpoint is absent; the pipeline must expose blockers instead of fabricating non-placeholder rows | Validated in Phase 4 |
@@ -94,4 +97,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-11 after Phase 5 completion*
+*Last updated: 2026-06-11 after Phase 6 execution*

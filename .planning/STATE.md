@@ -1,31 +1,31 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-current_phase: 5
+milestone: v2.0
+milestone_name: attention_method_pivot
+current_phase: 06
 status: milestone_complete
-last_updated: 2026-06-11T08:13:16.523Z
+last_updated: 2026-06-11T11:00:52.731Z
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 14
-  completed_plans: 14
+  total_phases: 6
+  completed_phases: 6
+  total_plans: 18
+  completed_plans: 18
   percent: 100
-stopped_at: Milestone complete (Phase 05 was final phase)
+stopped_at: Milestone complete (Phase 06 was final phase)
 ---
 
 # Project State
 
-**Project:** Work2 Robust Time-Window Service Menu Optimization for Many-to-One DRT
+**Project:** Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
 **Initialized:** 2026-06-10
-**Current phase:** 05
+**Current phase:** 06
 **Status:** Milestone complete
 
 ## Project Reference
 
 See: `.planning/PROJECT.md` (updated 2026-06-11)
 
-**Core value:** Produce defensible Work2 evidence through a reproducible robust time-window service-menu optimization pipeline.
+**Core value:** Produce defensible Work2 evidence that attention-enhanced DSPO improves the original DSPO method under reproducible paired replay.
 **Current focus:** Milestone complete
 
 ## Current Facts
@@ -36,6 +36,8 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 - `.planning/config.json` uses recommended defaults: yolo mode, coarse granularity, parallel execution, commit docs, balanced model profile, research/plan-check/verifier enabled.
 - Phase 4 artifact status is blocked/non-claim-ready because the required pilot checkpoint is absent and formal evidence was skipped.
 - Phase 5 manuscript support artifacts preserve that blocked evidence boundary through `CLAIM_GUARD.json` and Markdown outlines.
+- 2026-06-11 method decision: the desired paper result is that adding attention improves the original DSPO method.
+- Robust menu/time-window diagnostics remain supporting infrastructure; `home_only` and meeting-point-only variants are cost-approximation bounds, not ranked comparison methods.
 
 ## Current Plans
 
@@ -60,10 +62,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-11)
 - Phase 5 is complete:
   - `.planning/phases/05-manuscript-framing-and-claim-guard/05-01-SUMMARY.md`
   - `.planning/phases/05-manuscript-framing-and-claim-guard/05-VERIFICATION.md`
+- Phase 6 is complete:
+  - `.planning/phases/06-attention-enhanced-dspo-evidence-pivot/06-01-SUMMARY.md`
+  - `.planning/phases/06-attention-enhanced-dspo-evidence-pivot/06-02-SUMMARY.md`
+  - `.planning/phases/06-attention-enhanced-dspo-evidence-pivot/06-03-SUMMARY.md`
+  - `.planning/phases/06-attention-enhanced-dspo-evidence-pivot/06-04-SUMMARY.md`
+  - `.planning/phases/06-attention-enhanced-dspo-evidence-pivot/06-VERIFICATION.md`
 
 ## Next Step
 
-Complete the v1.0 milestone archive, or supply the missing pilot checkpoint and rerun Phase 4 if claim-ready empirical results are needed before milestone closeout.
+Supply the shared attention pilot checkpoint at `work2_coding/outputs/shared_training/work2_attention_dspo/pilot/supervised_ml.pt`, then run `cd work2_coding; python scripts/run_study.py --study pilot_attention_dspo --execute` and rebuild `work2_attention_dspo` artifacts. Current smoke evidence is execution/schema evidence only; the claim guard blocks attention-improves-DSPO language.
 
 ---
 *State initialized: 2026-06-10*
