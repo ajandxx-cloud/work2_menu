@@ -92,11 +92,11 @@
 
 ### Shared Checkpoints
 
-- [ ] **CKPT-01**: A stable shared checkpoint training entry point exists for the attention evidence family.
-- [ ] **CKPT-02**: Pilot and formal checkpoints are real trained weights, not placeholders.
-- [ ] **CKPT-03**: Checkpoint sidecars record sha256, training command, seed, split, dataset, run_id, git commit, dirty status, training args, and timestamp.
-- [ ] **CKPT-04**: Checkpoints load through the same code path used by `run_study.py`.
-- [ ] **CKPT-05**: Missing, mismatched, or random-weight checkpoints are refused for pilot/formal evidence.
+- [x] **CKPT-01**: A stable shared checkpoint training entry point exists for the attention evidence family.
+- [x] **CKPT-02**: Pilot and formal checkpoints are real trained weights, not placeholders.
+- [x] **CKPT-03**: Checkpoint sidecars record sha256, training command, seed, split, dataset, run_id, git commit, dirty status, training args, and timestamp.
+- [x] **CKPT-04**: Checkpoints load through the same code path used by `run_study.py`.
+- [x] **CKPT-05**: Missing, mismatched, or random-weight checkpoints are refused for pilot/formal evidence.
 
 ### Pilot Evidence
 
@@ -186,11 +186,11 @@
 | PROV-02 | Phase 8 | Complete |
 | PROV-03 | Phase 8 | Complete |
 | PROV-04 | Phase 8 | Complete |
-| CKPT-01 | Phase 9 | Planned |
-| CKPT-02 | Phase 9 | Planned |
-| CKPT-03 | Phase 9 | Planned |
-| CKPT-04 | Phase 9 | Planned |
-| CKPT-05 | Phase 9 | Planned |
+| CKPT-01 | Phase 9 | Complete |
+| CKPT-02 | Phase 9 | Complete |
+| CKPT-03 | Phase 9 | Complete |
+| CKPT-04 | Phase 9 | Complete |
+| CKPT-05 | Phase 9 | Complete |
 | PILOT-01 | Phase 10 | Planned |
 | PILOT-02 | Phase 10 | Planned |
 | PILOT-03 | Phase 10 | Planned |
