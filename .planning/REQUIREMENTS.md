@@ -42,10 +42,10 @@
 
 ### Artifacts
 
-- [ ] **ART-01**: Pipeline writes normalized rows and aggregate summaries with policy tag, seed, split, trace ID, checkpoint status, menu settings, and filter mode.
-- [ ] **ART-02**: Pipeline builds robust filtering, exact-greedy, uptake-regime, ETA diagnostics, profit decomposition, and uncertainty/gap tables.
-- [ ] **ART-03**: Pipeline builds figures for net-profit gap, acceptance/opt-out, false-negative pruning, home-only menu share, ETA error quantiles, and exact/greedy build time.
-- [ ] **ART-04**: Artifact status records source run ID, manifest hash, git marker, checkpoint path/hash, completed/incomplete status, and placeholder flag.
+- [x] **ART-01**: Pipeline writes normalized rows and aggregate summaries with policy tag, seed, split, trace ID, checkpoint status, menu settings, and filter mode.
+- [x] **ART-02**: Pipeline builds robust filtering, exact-greedy, uptake-regime, ETA diagnostics, profit decomposition, and uncertainty/gap tables.
+- [x] **ART-03**: Pipeline builds figures for net-profit gap, acceptance/opt-out, false-negative pruning, home-only menu share, ETA error quantiles, and exact/greedy build time.
+- [x] **ART-04**: Artifact status records source run ID, manifest hash, git marker, checkpoint path/hash, completed/incomplete status, and placeholder flag.
 
 ### Manuscript
 
@@ -101,10 +101,10 @@
 | EXP-02 | Phase 3 | Complete |
 | EXP-03 | Phase 3 | Complete |
 | EXP-04 | Phase 3 | Complete |
-| ART-01 | Phase 4 | Pending |
-| ART-02 | Phase 4 | Pending |
-| ART-03 | Phase 4 | Pending |
-| ART-04 | Phase 4 | Pending |
+| ART-01 | Phase 4 | Complete |
+| ART-02 | Phase 4 | Complete |
+| ART-03 | Phase 4 | Complete |
+| ART-04 | Phase 4 | Complete |
 | PAPER-01 | Phase 5 | Pending |
 | PAPER-02 | Phase 5 | Pending |
 | PAPER-03 | Phase 5 | Pending |
@@ -117,4 +117,4 @@
 
 ---
 *Requirements defined: 2026-06-10*
-*Last updated: 2026-06-10 after initialization*
+*Last updated: 2026-06-11 after Phase 4 completion*

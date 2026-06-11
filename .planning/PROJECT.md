@@ -23,10 +23,10 @@ The project must produce defensible Work2 evidence: a reproducible pipeline wher
 - `ooh_code/` is absent from the current filesystem; existing `.planning/codebase/` references to `ooh_code/` are stale historical context until revalidated.
 - Phase 2 repaired core semantics: opt-out outcomes no longer mutate routes as accepted home pickups, checkpoint load metadata is explicit, robust ETA modes emit diagnostics, and exact/greedy solver telemetry is available.
 - Phase 3 added smoke, pilot, and formal robust-menu study contracts; required baseline adapters; paired replay validation; normalized row schema; uptake-regime contracts; and a contract-only smoke runner that emits JSON/CSV rows.
+- Phase 4 added the evidence/artifact pipeline: honest execution statuses, blocker metadata for missing pilot/formal prerequisites, aggregate JSON/CSV outputs, LaTeX tables, figure/status artifacts, provenance sidecars, and mirrored review artifacts. The current bundle is blocked/non-claim-ready because the required pilot checkpoint is absent and formal evidence was skipped.
 
 ### Active
 
-- [ ] Generate normalized result rows, aggregate summaries, artifact tables/figures, and provenance records.
 - [ ] Produce a manuscript-ready method/result outline and claim checklist that prevents overclaiming.
 
 ### Out of Scope
@@ -72,6 +72,7 @@ Known engineering risks to address early:
 | Defer attention mechanisms | The user selected scheme 1 and explicitly excluded attention for this project | Pending |
 | Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Validated in Phase 1 |
 | Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Implemented in Phase 2 and carried into Phase 3 row schema |
+| Treat blocked Phase 4 artifacts as evidence-status outputs, not empirical claims | Required pilot checkpoint is absent; the pipeline must expose blockers instead of fabricating non-placeholder rows | Validated in Phase 4 |
 
 ## Evolution
 
@@ -91,4 +92,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-11 after Phase 3 completion*
+*Last updated: 2026-06-11 after Phase 4 completion*
