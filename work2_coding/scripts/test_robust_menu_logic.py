@@ -176,6 +176,27 @@ def test_eta_soft_penalty_enters_objective():
     assert risky.metadata["eta_risk_penalty_weighted"] > 0.0
 
 
+def test_pricing_and_system_cost_kind_metadata_for_expected_profit_policy():
+    algo = make_algo("hard")
+    algo.menu_policy = "risk_adjusted_expected_profit"
+    customer = make_customer()
+    offer = make_offer("system", value=2.0)
+    offer.metadata["route_delay"] = 20.0
+    offer.bundle.remaining_capacity = 1.0
+
+    value, priced = algo._evaluate_menu_for_objective(customer, [offer], return_priced=True)
+    priced_offer = priced[0]
+    metadata = priced_offer.metadata
+
+    assert value == priced_offer.expected_profit
+    assert metadata["pricing_mode"] == "no_pricing"
+    assert metadata["pricing_eval_cost_kind"] == "system_eval_cost"
+    assert metadata["evaluation_cost_kind"] == "system_eval_cost"
+    assert "menu_eval_cost" in metadata
+    assert "system_eval_cost" in metadata
+    assert metadata["system_eval_cost"] >= metadata["menu_eval_cost"]
+
+
 def test_service_guard_fallback_diagnostic():
     algo = make_algo("hard")
     algo.menu_policy = "service_guarded_expected_profit"
@@ -235,6 +256,7 @@ def main():
         test_eta_filter_modes_and_diagnostics,
         test_home_offer_carries_eta_diagnostics,
         test_eta_soft_penalty_enters_objective,
+        test_pricing_and_system_cost_kind_metadata_for_expected_profit_policy,
         test_service_guard_fallback_diagnostic,
         test_solver_exact_and_threshold_fallback_diagnostics,
     ]

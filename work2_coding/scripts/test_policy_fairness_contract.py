@@ -105,6 +105,26 @@ def test_allowed_filter_and_objective_drift_passes():
     assert hard_args["checkpoint_path"] == robust_args["checkpoint_path"]
 
 
+def test_pricing_contract_is_paired_and_row_recorded():
+    manifest = load_manifest("smoke_robust_menu")
+    assert "pricing" in manifest["paired_fields"]
+    assert "pricing" not in manifest["varied_fields"]
+    assert "menu_pricing_mode" not in manifest["varied_fields"]
+    assert "menu_pricing_constant" not in manifest["varied_fields"]
+
+    settings = resolve_paired_settings(manifest)
+    pricing_values = {setting["args"]["pricing"] for setting in settings}
+    pricing_modes = {setting["args"].get("menu_pricing_mode") for setting in settings}
+    pricing_constants = {setting["args"].get("menu_pricing_constant") for setting in settings}
+
+    assert pricing_values == {True}
+    assert len(pricing_modes) == 1
+    assert len(pricing_constants) == 1
+
+    row = build_normalized_row(settings[0], run_id="pricing-contract")
+    assert row["pricing"] is True
+
+
 def test_pilot_and_formal_uptake_regimes():
     for name in ["pilot_robust_menu", "formal_robust_menu"]:
         manifest = load_manifest(name)
@@ -145,6 +165,7 @@ def main():
         test_policy_only_override_guard_rejects_hgs_drift,
         test_manifest_policy_drift_rejected,
         test_allowed_filter_and_objective_drift_passes,
+        test_pricing_contract_is_paired_and_row_recorded,
         test_pilot_and_formal_uptake_regimes,
         test_uptake_regime_is_split_level_not_policy_level,
         test_row_ready_uptake_regime_metadata,

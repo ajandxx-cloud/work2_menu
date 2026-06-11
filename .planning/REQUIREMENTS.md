@@ -14,24 +14,24 @@
 
 ### Accounting
 
-- [ ] **ACCT-01**: System can represent passenger outcomes as `accepted_home`, `accepted_meeting_point`, or `opted_out`.
-- [ ] **ACCT-02**: System prevents `opted_out` events from mutating route plans as accepted home service.
-- [ ] **ACCT-03**: System records opt-out count, acceptance rate, service cost, and route-state effects correctly.
-- [ ] **ACCT-04**: System exposes checkpoint load success, failure, intentional mismatch, and checkpoint provenance in result metadata.
+- [x] **ACCT-01**: System can represent passenger outcomes as `accepted_home`, `accepted_meeting_point`, or `opted_out`.
+- [x] **ACCT-02**: System prevents `opted_out` events from mutating route plans as accepted home service.
+- [x] **ACCT-03**: System records opt-out count, acceptance rate, service cost, and route-state effects correctly.
+- [x] **ACCT-04**: System exposes checkpoint load success, failure, intentional mismatch, and checkpoint provenance in result metadata.
 
 ### Robust Filtering
 
-- [ ] **ETA-01**: System supports ETA filter modes `hard`, `calibrated`, `interval_overlap`, `chance_constraint`, `soft_penalty`, and `none`.
-- [ ] **ETA-02**: System records candidate-level ETA diagnostics including predicted ETA, sigma, interval bounds, window bounds, pass/fail, violation probability, and prune reason.
-- [ ] **ETA-03**: System ensures no-filter disables ETA pruning only, not routing or capacity feasibility.
-- [ ] **ETA-04**: System ensures soft-penalty preserves candidates while changing objective value through time-risk penalty.
+- [x] **ETA-01**: System supports ETA filter modes `hard`, `calibrated`, `interval_overlap`, `chance_constraint`, `soft_penalty`, and `none`.
+- [x] **ETA-02**: System records candidate-level ETA diagnostics including predicted ETA, sigma, interval bounds, window bounds, pass/fail, violation probability, and prune reason.
+- [x] **ETA-03**: System ensures no-filter disables ETA pruning only, not routing or capacity feasibility.
+- [x] **ETA-04**: System ensures soft-penalty preserves candidates while changing objective value through time-risk penalty.
 
 ### Menu Optimization
 
-- [ ] **MENU-01**: System evaluates menus with expected profit, opt-out penalty, ETA risk penalty, and service guardrails.
-- [ ] **MENU-02**: System applies pricing and system-aware cost definitions consistently across compared policies.
-- [ ] **MENU-03**: System uses exact enumeration only for small candidate sets and greedy forward selection for larger sets.
-- [ ] **MENU-04**: System logs exact-vs-greedy value, relative gap, overlap, build time, candidate count, and enumerated menu count.
+- [x] **MENU-01**: System evaluates menus with expected profit, opt-out penalty, ETA risk penalty, and service guardrails.
+- [x] **MENU-02**: System applies pricing and system-aware cost definitions consistently across compared policies.
+- [x] **MENU-03**: System uses exact enumeration only for small candidate sets and greedy forward selection for larger sets.
+- [x] **MENU-04**: System logs exact-vs-greedy value, relative gap, overlap, build time, candidate count, and enumerated menu count.
 
 ### Experiments
 
@@ -77,11 +77,11 @@
 
 ### Audit Closure And Traceability
 
-- [ ] **TRACE-01**: Project has a Phase 2 verification artifact that records ACCT-01..04, ETA-01..04, and MENU-01..04 with command-backed evidence or explicit gaps.
-- [ ] **TRACE-02**: Project has Phase 2 validation evidence because `workflow.nyquist_validation` is enabled.
-- [ ] **TRACE-03**: Requirements traceability no longer contradicts Phase 2 summaries, verification, or validation artifacts.
-- [ ] **TRACE-04**: MENU-02 is reconciled with explicit pricing/system-aware cost evidence or a documented remaining gap.
-- [ ] **TRACE-05**: Phase 07 records a pass/fail gate before Phase 08 begins.
+- [x] **TRACE-01**: Project has a Phase 2 verification artifact that records ACCT-01..04, ETA-01..04, and MENU-01..04 with command-backed evidence or explicit gaps.
+- [x] **TRACE-02**: Project has Phase 2 validation evidence because `workflow.nyquist_validation` is enabled.
+- [x] **TRACE-03**: Requirements traceability no longer contradicts Phase 2 summaries, verification, or validation artifacts.
+- [x] **TRACE-04**: MENU-02 is reconciled with explicit pricing/system-aware cost evidence or a documented remaining gap.
+- [x] **TRACE-05**: Phase 07 records a pass/fail gate before Phase 08 begins.
 
 ### Repository Hygiene And Provenance
 
@@ -148,18 +148,18 @@
 | AUDIT-02 | Phase 1 | Complete |
 | AUDIT-03 | Phase 1 | Complete |
 | AUDIT-04 | Phase 1 | Complete |
-| ACCT-01 | Phase 2 | Pending |
-| ACCT-02 | Phase 2 | Pending |
-| ACCT-03 | Phase 2 | Pending |
-| ACCT-04 | Phase 2 | Pending |
-| ETA-01 | Phase 2 | Pending |
-| ETA-02 | Phase 2 | Pending |
-| ETA-03 | Phase 2 | Pending |
-| ETA-04 | Phase 2 | Pending |
-| MENU-01 | Phase 2 | Pending |
-| MENU-02 | Phase 2 | Pending |
-| MENU-03 | Phase 2 | Pending |
-| MENU-04 | Phase 2 | Pending |
+| ACCT-01 | Phase 2 | Complete |
+| ACCT-02 | Phase 2 | Complete |
+| ACCT-03 | Phase 2 | Complete |
+| ACCT-04 | Phase 2 | Complete |
+| ETA-01 | Phase 2 | Complete |
+| ETA-02 | Phase 2 | Complete |
+| ETA-03 | Phase 2 | Complete |
+| ETA-04 | Phase 2 | Complete |
+| MENU-01 | Phase 2 | Complete |
+| MENU-02 | Phase 2 | Complete |
+| MENU-03 | Phase 2 | Complete |
+| MENU-04 | Phase 2 | Complete |
 | EXP-01 | Phase 3 | Complete |
 | EXP-02 | Phase 3 | Complete |
 | EXP-03 | Phase 3 | Complete |
@@ -177,11 +177,11 @@
 | ATTN-02 | Phase 6 | Complete |
 | ATTN-03 | Phase 6 | Complete |
 | ATTN-04 | Phase 6 | Complete |
-| TRACE-01 | Phase 7 | Planned |
-| TRACE-02 | Phase 7 | Planned |
-| TRACE-03 | Phase 7 | Planned |
-| TRACE-04 | Phase 7 | Planned |
-| TRACE-05 | Phase 7 | Planned |
+| TRACE-01 | Phase 7 | Complete |
+| TRACE-02 | Phase 7 | Complete |
+| TRACE-03 | Phase 7 | Complete |
+| TRACE-04 | Phase 7 | Complete |
+| TRACE-05 | Phase 7 | Complete |
 | PROV-01 | Phase 8 | Planned |
 | PROV-02 | Phase 8 | Planned |
 | PROV-03 | Phase 8 | Planned |
