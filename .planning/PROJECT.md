@@ -1,119 +1,55 @@
-# Work2 Attention-Enhanced DSPO Menu Optimization for Many-to-One DRT
+# Akkerman RC No-Failure-Cost Reproduction
 
 ## What This Is
 
-This project turns Work2 into a runnable, reproducible experimental pipeline for many-to-one demand-responsive transit service-menu optimization. The platform chooses a limited displayed menu of service bundles, where each bundle combines a meeting point, pickup time window, and price, while accounting for passenger choice, ETA uncertainty, routing cost, capacity risk, and service quality.
-
-The current paper target is to show that adding attention to the original DSPO method improves menu/recommendation decisions under fair paired replay. The robust time-window service-menu work remains the reproducible experiment platform, guardrail layer, and diagnostic infrastructure supporting that comparison.
+This project reproduces the Akkerman DSPO synthetic RC experiment in the current `work2_coding/` runtime while removing home-delivery failure cost from the actual objective, training reward, evaluation metrics, and result summaries.
 
 ## Core Value
 
-The project must produce defensible Work2 evidence: a reproducible pipeline where attention-enhanced DSPO can be fairly compared against the original DSPO method on the same request traces, split IDs, seeds, pricing mode, routing settings, and checkpoint policy.
-
-## Current Milestone: v2.1 evidence_ladder_and_audit_closure
-
-**Goal:** Close the v2.0 audit gaps and complete a defensible checkpoint-backed evidence ladder for the attention-enhanced DSPO claim.
-
-**Target features:**
-- Repair Phase 2 audit traceability with verification and validation artifacts for ACCT, ETA, and MENU requirements.
-- Freeze repository provenance and generated-output hygiene before new empirical evidence.
-- Train real shared pilot/formal checkpoints with metadata and hashes.
-- Run checkpoint-backed pilot evidence, then ablate or proceed according to predeclared go/no-go rules.
-- Safely enable formal actual replay and make the final claim decision only from artifacts and claim guards.
+Produce a defensible Table-2-style RC reproduction where failure cost is truly absent rather than subtracted after the fact.
 
 ## Requirements
 
 ### Validated
 
-- Existing Work2 runtime package is present under `work2_coding/`.
-- `work2_coding/Src/config.py` imports successfully when `work2_coding/` is on `sys.path`.
-- `work2_coding/Src/Algorithms/DSPO_Menu.py` exists and already contains menu-mode logic, ETA filter variants, menu policies, exact/greedy selection paths, and exact-vs-greedy diagnostics.
-- `work2_coding/Environments/OOH/` contains the OOH simulator, MNL choice model, routing utilities, domain containers, and bundled Homberger/Gehring and Amazon data.
-- Existing README documents the inherited DSPO/OOH codebase, Python 3.10 runtime, PyTorch dependency, and Hygese routing dependency.
-- Phase 1 Stage 0 audit is complete and recorded in `.planning/phases/01-repository-audit-and-runtime-baseline/01-STAGE0-AUDIT.md`.
-- `ooh_code/` is absent from the current filesystem; existing `.planning/codebase/` references to `ooh_code/` are stale historical context until revalidated.
-- Phase 2 repaired core semantics: opt-out outcomes no longer mutate routes as accepted home pickups, checkpoint load metadata is explicit, robust ETA modes emit diagnostics, and exact/greedy solver telemetry is available.
-- Phase 3 added smoke, pilot, and formal robust-menu study contracts; required baseline adapters; paired replay validation; normalized row schema; uptake-regime contracts; and a contract-only smoke runner that emits JSON/CSV rows.
-- Phase 4 added the evidence/artifact pipeline: honest execution statuses, blocker metadata for missing pilot/formal prerequisites, aggregate JSON/CSV outputs, LaTeX tables, figure/status artifacts, provenance sidecars, and mirrored review artifacts. The current bundle is blocked/non-claim-ready because the required pilot checkpoint is absent and formal evidence was skipped.
-- Phase 5 added manuscript support artifacts and a claim guard: method, experiment, and result outlines; Markdown claim checklist; machine-readable `CLAIM_GUARD.json`; and tests proving blocked evidence cannot become empirical claims.
-- 2026-06-11 method direction update: the main comparison should become attention-enhanced DSPO versus original DSPO. Robust menu diagnostics remain supporting evidence, and `home_only`/meeting-point-only variants are cost-approximation bounds rather than ranked comparison methods.
-- Phase 6 added deterministic `DSPO_attention`, preserved `DSPO_original`, created paired attention manifests/rows/artifacts, and ran completed smoke evidence. The attention claim guard remains non-claim-ready because smoke evidence is not sufficient and the primary metric delta is not positive.
+(None yet - ship to validate)
 
 ### Active
 
-- [ ] Close `.planning/v2.0-MILESTONE-AUDIT.md` gaps before treating v2.0 as archive-ready.
-- [ ] Create Phase 2 verification and validation artifacts and reconcile ACCT/ETA/MENU traceability honestly.
-- [ ] Freeze repository hygiene and provenance before new empirical evidence runs.
-- [ ] Train real shared attention checkpoints for pilot and formal profiles.
-- [ ] Supply the shared attention pilot checkpoint, then run `pilot_attention_dspo` and rebuild `work2_attention_dspo` artifacts.
-- [ ] Decide pilot go/no-go from checkpoint-backed paired artifacts and `ATTENTION_CLAIM_GUARD`, not manual row interpretation.
-- [ ] Keep `home_only` and meeting-point-only outputs as cost-approximation boundary references, not baseline methods for ranking.
+- [ ] Run the RC synthetic setting from `work2_coding/` without creating `ooh_code/`.
+- [ ] Support exact NoOOH and OnlyOOH baselines without price-only approximations.
+- [ ] Disable customer exit for the reproduction with `outside_option_util=None`.
+- [ ] Produce raw CSV, summary CSV, and summary JSON with failure costs fixed at zero.
+- [ ] Preserve manuscript, figures, revision notes, and historical result artifacts.
 
 ### Out of Scope
 
-- Work3 many-to-many DRT and Work4 planning - separate dissertation workstreams.
-- Rewriting the whole simulator - reuse the inherited Work1/Work2 infrastructure unless an audit proves a targeted replacement is necessary.
-- Treating `no_filter` as the recommended policy by default - it is a diagnostic upper bound unless formal evidence justifies a stronger claim.
-- Real passenger behavioral validation - current evidence is simulation-based unless external survey or revealed-preference data is added later.
-- Exact optimality for the full dynamic DRT system - exact enumeration is only an auditable surrogate for small candidate sets.
+- New DSPO methodology - this is a reproduction and accounting repair.
+- Attention, DRPO, SPO, Yanjiao/DRT extensions, and robust-menu claim generation.
+- Hand-editing generated result rows or paper artifacts.
 
 ## Context
 
-Work1 studies dynamic meeting-point recommendation and pricing with cost prediction and decision-focused learning. Work2 extends that pricing/recommendation layer into the menu layer: instead of asking how to price already-given boarding options, Work2 asks which limited set of feasible spatiotemporal service bundles should be displayed to each passenger.
-
-The user discussion on 2026-06-10 selected "scheme 1": robust time-window service menu optimization. The follow-up decision on 2026-06-11 pivots the paper-method claim: the desired result is that attention-enhanced DSPO improves over the original DSPO method. Robust menu and ETA-guard work should now support this comparison rather than compete with it as the main claim.
-
-The repository is a brownfield research codebase. Current filesystem inspection shows `work2_coding/` as the actual runnable package, while the existing `.planning/codebase/` map refers heavily to `ooh_code/`. This mismatch must be resolved during Stage 0 so future phases do not duplicate work into the wrong root.
-
-Known engineering risks to address early:
-- Active runtime root and import paths must be verified before patches.
-- Opt-out must be separated from accepted home service in routing and accounting.
-- Checkpoint loading must fail visibly or emit explicit `checkpoint_load_status`; random fallback cannot silently enter formal comparisons.
-- All policy comparisons must use paired request traces, shared trained predictors, fixed seeds, and shared routing/HGS parameters.
-- Exact enumeration must be limited to small candidate sets; large candidate sets need greedy/approximate selection with logged diagnostics.
+The current runnable code lives in `work2_coding/`. Existing `.planning/codebase/` maps mention `ooh_code/`, but those references are stale for this reproduction. The relevant runtime files are parser/config, `run.py`, `run_ppo.py`, legacy algorithms, choice/environment code, and new experiment scripts/tests under `work2_coding/`.
 
 ## Constraints
 
-- **Runtime root**: Prefer `work2_coding/` because it is present and imports `Src.config`; do not create a parallel `ooh_code/` implementation unless the audit proves it is required.
-- **Language and dependencies**: Python 3.10 style code with PyTorch, NumPy, Hygese, and local script-style tests; avoid adding heavyweight framework dependencies without need.
-- **Experiment fairness**: Formal comparisons must share request traces, checkpoints, seeds, split IDs, routing parameters, and pricing mode unless a manifest explicitly varies one factor.
-- **Scientific scope**: The main Work2 method claim is attention-enhanced DSPO improving original DSPO under paired replay. Robust filtering, service-constrained menu optimization, and cost-bound policies are supporting infrastructure/diagnostics; decision-focused regret learning and many-to-many DRT remain deferred.
-- **Artifacts**: Do not hand-edit generated results. Formal artifacts need manifest hash, run ID, git commit/hash, checkpoint provenance, and placeholder status.
-- **Implementation style**: Keep functions small, testable, and modular. Prefer config flags, metadata fields, tests, and manifest contracts over hard-coded experiment choices.
+- **Runtime root**: Use `work2_coding/` only.
+- **Accounting**: Home failure probability and cost must be zero in the real runtime configuration.
+- **Choice model**: No outside option or quit-threshold behavior in the reproduction.
+- **Artifacts**: Do not modify manuscript text, revision notes, figures, related-work files, or historical results.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Use `work2_coding/` as the active runtime root unless Stage 0 finds otherwise | It exists in the current tree, passed an import smoke check, and Phase 1 confirmed no current `ooh_code/` root | Validated in Phase 1 |
-| Focus Work2 on robust time-window service-menu optimization | This is feasible in the existing DSPO_Menu code and gives a clearer contribution than attention-first framing | Validated through Phase 3 contracts |
-| Treat `no_filter` as diagnostic, not the final method | It can expose candidate-availability upper bounds but is not automatically operationally credible | Enforced in Phase 3 manifests and row metadata |
-| Pivot main method evidence to attention-enhanced DSPO vs original DSPO | The user clarified that the needed methodological result is attention outperforming the original DSPO method | Implemented in Phase 6; empirical improvement remains blocked pending pilot/formal evidence |
-| Treat `home_only` and meeting-point-only variants as cost bounds | These variants approximate lower/upper cost boundaries and should not be ranked as comparison methods | Implemented in metadata/artifact guardrails |
-| Start with Stage 0 audit before algorithm edits | Existing path/accounting/checkpoint risks can invalidate downstream evidence if skipped | Validated in Phase 1 |
-| Use exact-small and greedy-large solver diagnostics | Provides auditability for small sets and scalability for realistic candidate sets | Implemented in Phase 2 and carried into Phase 3 row schema |
-| Treat blocked Phase 4 artifacts as evidence-status outputs, not empirical claims | Required pilot checkpoint is absent; the pipeline must expose blockers instead of fabricating non-placeholder rows | Validated in Phase 4 |
-| Generate manuscript support from artifact status, not manual result-row edits | Current evidence is blocked, so manuscript framing must be status-driven and fail closed | Validated in Phase 5 |
-| Treat the v2.0 audit as the source of truth for v2.1 startup | `STATE.md` said milestone complete, but the milestone audit found orphaned Phase 2 verification and missing validation artifacts | Active in v2.1 |
-| Preserve old phase directories during v2.1 initialization | Phase 07 must repair Phase 2 and validate phases 01..06, so clearing prior phase directories would destroy required evidence context | Active in v2.1 |
-| Require real checkpoint-backed evidence before attention superiority language | Current attention artifacts are smoke-only and claim guard blocks improvement claims | Active in v2.1 |
+| Map `ooh_code/` scope to `work2_coding/` | Current filesystem has no `ooh_code/`; AGENTS says `work2_coding/` is active. | Pending |
+| Add exact service modes | NoOOH/OnlyOOH must be verified by behavior, not extreme prices. | Pending |
+| Keep PPO outside default table | Required for CLI compatibility, not for the requested minimum algorithm set. | Pending |
 
 ## Evolution
 
-This document evolves at phase transitions and milestone boundaries.
-
-**After each phase transition** (via `$gsd-transition`):
-1. Requirements invalidated? Move to Out of Scope with reason.
-2. Requirements validated? Move to Validated with phase reference.
-3. New requirements emerged? Add to Active.
-4. Decisions to log? Add to Key Decisions.
-5. "What This Is" still accurate? Update if drifted.
-
-**After each milestone** (via `$gsd-complete-milestone`):
-1. Full review of all sections.
-2. Core Value check - still the right priority?
-3. Audit Out of Scope - reasons still valid?
-4. Update Context with current state.
+Update this document only when the reproduction scope changes or after the experiment is verified.
 
 ---
-*Last updated: 2026-06-11 starting milestone v2.1*
+*Last updated: 2026-06-12 after reproduction initialization*

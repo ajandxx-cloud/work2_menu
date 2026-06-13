@@ -29,7 +29,9 @@ class Parcelpoint_py(object):
                  adjacency=[],
                  service_times=[],
                  dissatisfaction=False,
-                 hgs_time=3.0):
+                 hgs_time=3.0,
+                 outside_option_util=0.0,
+                 service_mode="mixed"):
 
         #episode length params
         self.max_steps = 0
@@ -75,6 +77,8 @@ class Parcelpoint_py(object):
         self.home_util = home_util
         self.incentive_sens = incentive_sens
         self.dissatisfaction = dissatisfaction
+        self.outside_option_util = outside_option_util
+        self.service_mode = service_mode
 
         self.newCustomer = Customer
         self.fleet = get_fleet([self.depot,self.depot],self.n_vehicles,self.veh_capacity)
@@ -82,12 +86,14 @@ class Parcelpoint_py(object):
         #pricing of offering problem variant
         if pricing:
             #self.action_space_matrix = self.get_actions(pricing,self.n_parcelpoints)
-            self.customerchoice = customerchoicemodel(base_util,self.dist_scaler,self.utils.getdistance_euclidean,self.dist_matrix,self.n_unique_customer_locs)
+            self.customerchoice = customerchoicemodel(base_util,self.dist_scaler,self.utils.getdistance_euclidean,self.dist_matrix,self.n_unique_customer_locs,
+                                                      outside_option_util=outside_option_util,service_mode=service_mode)
             self.customerChoice = self.customerchoice.customerchoice_pricing
             self.get_delivery_loc = self.get_delivery_loc_pricing
         else:
             #self.action_space_matrix = self.get_actions(pricing,self.n_parcelpoints)
-            self.customerchoice = customerchoicemodel(base_util,self.dist_scaler,self.utils.getdistance_euclidean,self.dist_matrix,self.n_unique_customer_locs)
+            self.customerchoice = customerchoicemodel(base_util,self.dist_scaler,self.utils.getdistance_euclidean,self.dist_matrix,self.n_unique_customer_locs,
+                                                      outside_option_util=outside_option_util,service_mode=service_mode)
             self.customerChoice = self.customerchoice.customerchoice_offer
             self.get_delivery_loc = self.get_delivery_loc_offer
 

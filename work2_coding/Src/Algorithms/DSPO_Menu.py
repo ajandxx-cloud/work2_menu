@@ -697,8 +697,11 @@ class DSPO_Menu(DSPO):
         )
         max_u = np.max(raw_utilities)
         raw_utilities -= max_u
-        # Include outside option (u_0=0, shifted by -max_u)
-        outside_shifted = float(np.exp(np.clip(0.0 - max_u, -700.0, 700.0)))
+        outside_util = getattr(self.config, "outside_option_util", 0.0)
+        if outside_util is None:
+            outside_shifted = 0.0
+        else:
+            outside_shifted = float(np.exp(np.clip(float(outside_util) - max_u, -700.0, 700.0)))
         probs = np.exp(np.clip(raw_utilities, -700.0, 700.0))
         denom = max(np.sum(probs) + outside_shifted, 1e-12)
         probs = probs / denom
@@ -1658,6 +1661,11 @@ class DSPO_Menu(DSPO):
     def get_action_menu(self, state, training=False):
         start_time = perf_counter()
         candidates = self.build_menu_candidates(state, training)
+        service_mode = str(getattr(self.config, "service_mode", "mixed"))
+        if service_mode == "home_only":
+            candidates = [offer for offer in candidates if offer.is_home]
+        elif service_mode == "ooh_only":
+            candidates = [offer for offer in candidates if not offer.is_home]
         _, feasible_ooh_candidates = self._split_menu_candidates(candidates)
         feasible_ooh_count = len(feasible_ooh_candidates)
         customer = state[0]
@@ -1745,10 +1753,13 @@ class DSPO_Menu(DSPO):
             return 0.0
 
         if not done:
-            self.features = np.vstack((self.features, self.get_feature_rep(data).flatten()))
             selected_offer = getattr(self.config.env, "last_selected_offer", None)
             if selected_offer is None:
+                last_choice = getattr(self.config.env, "last_choice_result", None)
+                if getattr(last_choice, "outcome", None) == "opted_out":
+                    return 0.0
                 raise ValueError("Menu mode requires env.last_selected_offer to be populated before update().")
+            self.features = np.vstack((self.features, self.get_feature_rep(data).flatten()))
             self.cap_features = np.vstack((self.cap_features, self._offer_aux_features(selected_offer)))
             eta_label = selected_offer.metadata.get("heuristic_eta", selected_offer.predicted_eta)
             ivt_label = selected_offer.metadata.get("heuristic_ivt", selected_offer.predicted_in_vehicle_time)

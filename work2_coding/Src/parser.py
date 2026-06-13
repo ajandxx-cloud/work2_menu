@@ -31,7 +31,8 @@ class Parser(object):
         parser.add_argument("--experiment", default='run', help="Name of the experiment")
 
         parser.add_argument("--algo_name", default='DSPO', help="Policy/algorithm used, capital sensitive",
-                            choices=['DSPO','DSPO_Menu','Heuristic','Baseline','PPO','SPO'])
+                            choices=['DSPO','DSPO_Menu','Heuristic','Baseline','PPO','SPO',
+                                     'Hindsight','Foresight'])
         parser.add_argument("--gpu", default=0, help="GPU BUS ID ", type=int)
 
         # Environment parameters
@@ -73,6 +74,12 @@ class Parser(object):
         parser.add_argument("--base_util", default=-2.0, help="base utility across all alternativesy", type=float)#-2.0
         parser.add_argument("--home_util", default=3.2, help="utility given to home delivery", type=float)#3.55 amazon, 3.2 homberger
         parser.add_argument("--dissatisfaction", default=False, help="customer dissatisfaction penalty when all delivery options have too high prices", type=self.str2bool)
+        parser.add_argument("--outside_option_util", default=0.0, type=self.parse_optional_float,
+                            help="Utility of outside option in menu choice; pass None to disable customer exit")
+        parser.add_argument("--quit_threshold", default=None, type=self.parse_optional_float,
+                            help="Optional quit threshold; None disables quit-threshold behavior")
+        parser.add_argument("--service_mode", default="mixed", choices=["mixed", "home_only", "ooh_only"],
+                            help="Restrict available service outcomes for exact baselines")
 
         parser.add_argument("--revenue", default=50, help="revenue per customer, only used for pricing decision", type=float)#90
         parser.add_argument("--fuel_cost", default=0.6, help="costs of fuel per distance unit", type=float)#0.3/0.6
@@ -80,8 +87,8 @@ class Parser(object):
         parser.add_argument("--clip_service_time", default=10, help="maximum service time in minutes", type=float)#10
         parser.add_argument("--driver_wage", default=30, help="salary of driver per hour", type=float)#30
 
-        parser.add_argument("--home_failure", default=0.1, help="the probability of delivery failure for home delivery", type=float)#0.1
-        parser.add_argument("--failure_cost", default=20.0, help="the monetary costs of a delivery failure", type=float)#10
+        parser.add_argument("--home_failure", default=0.0, help="the probability of delivery failure for home delivery", type=float)
+        parser.add_argument("--failure_cost", default=0.0, help="the monetary costs of a delivery failure", type=float)
 
         parser.add_argument("--reopt", default=10000000, help="re-opt frequency of cheapest insertion route using HGS", type=int)
         parser.add_argument("--hgs_reopt_time", default=1.1, help="re-opt HGS time limit", type=float)
@@ -228,6 +235,16 @@ class Parser(object):
         else:
             raise argparse.ArgumentTypeError('Boolean value expected.')
         return arg
+
+    def parse_optional_float(self, text):
+        if text is None:
+            return None
+        if isinstance(text, str) and text.strip().lower() in {"none", "null", "na"}:
+            return None
+        try:
+            return float(text)
+        except (TypeError, ValueError):
+            raise argparse.ArgumentTypeError('Float value or None expected.')
 
     def get_parser(self):
         return self.parser

@@ -142,6 +142,9 @@ class DSPO(Agent):
             
             homeCosts = state[0].service_time*mltplr+((1-theta)*(self.cheapestInsertionCosts(state[0].home, state[1]) ) + theta*( costs[1]-costs[0] ))
             sum_mnl = exp(self.base_util+state[0].home_util+(state[0].incentiveSensitivity*(homeCosts-self.revenue)))
+            outside_util = getattr(self.config, "outside_option_util", None)
+            if outside_util is not None:
+                sum_mnl += exp(float(outside_util))
             
             #Slight change compared to paper, to support faster training, without relying on the CVRP solver every time,
             #See bottom of this file for details.
@@ -149,7 +152,7 @@ class DSPO(Agent):
                 if pp.remainingCapacity > 0:                    
                     util = self.mnl(state[0],pp)
                     pp_costs[idx] = mltplr * ((1-theta)* ( self.cheapestInsertionCosts(pp.location, state[1]) )+ theta*(costs[idx+2]-costs[0]) )
-                    sum_mnl += exp(util+(state[0].incentiveSensitivity*(pp_costs[idx]-self.revenue)))
+                    sum_mnl += exp(util+(state[0].incentiveSensitivity*(float(pp_costs[idx, 0])-self.revenue)))
            
             #2 obtain lambert w0
             lambertw0 = (lambertw(sum_mnl/e).real+1)/state[0].incentiveSensitivity
@@ -159,7 +162,7 @@ class DSPO(Agent):
             a_hat[0] = homeCosts - self.revenue - lambertw0
             for idx,pp in enumerate(pps):
                 if pp.remainingCapacity > 0:
-                    a_hat[idx+1] = pp_costs[idx] - self.revenue - lambertw0
+                    a_hat[idx+1] = float(pp_costs[idx, 0]) - self.revenue - lambertw0
             
             a_hat = np.clip(a_hat,self.min_p,self.max_p)
             return np.around(a_hat,decimals=2)
@@ -228,6 +231,9 @@ class DSPO(Agent):
     def update(self,data,state,done=False):
         #first obtain data      
         if not done:
+            last_choice = getattr(self.config.env, "last_choice_result", None)
+            if getattr(last_choice, "outcome", None) == "opted_out":
+                return 0.0
             self.features = np.vstack(( self.features, self.get_feature_rep(data).flatten()))
             try:
                 self.cap_features = np.vstack(( self.cap_features, state[2]["parcelpoints"][data["id"][-1]].remainingCapacity))
@@ -242,9 +248,11 @@ class DSPO(Agent):
             
             target = self.get_per_customer_costs(fleet)
             target = sorted(target, key=itemgetter(0))#sort in order of arrival (same as features)
-            penalties = 20 / (self.cap_features + 0.1)
-            adjusted_target = [t + p for t, p in zip(target, penalties)]
-            self.memory.add(self.features, self.cap_features, adjusted_target)
+            max_count = min(len(target), len(self.features), len(self.cap_features))
+            if max_count > 0:
+                penalties = 20 / (self.cap_features[:max_count] + 0.1)
+                adjusted_target = [t + p for t, p in zip(target[:max_count], penalties)]
+                self.memory.add(self.features[:max_count], self.cap_features[:max_count], adjusted_target)
             
             self.features = np.empty((0,self.n_layers*self.grid_dim*self.grid_dim))
             self.cap_features = np.empty((0,1))

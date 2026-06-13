@@ -81,6 +81,9 @@ class Heuristic(Agent):
         
         homeCosts = state[0].service_time/60*self.wage+mltplr*((1-theta)*(self.cheapestInsertionCosts(state[0].home, state[1]) ) + theta*(self.historicCosts(state[0].home,self.historicRoutes) ))
         sum_mnl = exp(self.base_util+state[0].home_util+(state[0].incentiveSensitivity*(homeCosts-self.revenue)))
+        outside_util = getattr(self.config, "outside_option_util", None)
+        if outside_util is not None:
+            sum_mnl += exp(float(outside_util))
         
         mask = ma.masked_array(state[2]["parcelpoints"], mask=self.adjacency[state[0].id_num])#only offer 20 closest
         pps = mask[mask.mask].data

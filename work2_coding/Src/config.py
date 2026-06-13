@@ -36,6 +36,12 @@ class Config(object):
         # Add path to models
         folder_suffix = args.experiment + args.folder_suffix
         self.paths['Experiments'] = path.join(self.paths['root'], 'Experiments')
+        runtime_algo_name = {
+            "Foresight": "Heuristic",
+            "Hindsight": "Baseline",
+        }.get(args.algo_name, args.algo_name)
+        self.runtime_algo_name = runtime_algo_name
+
         if args.pricing:
             self.paths['experiment'] = path.join(self.paths['Experiments'], args.env_name,'pricing', args.algo_name, folder_suffix)
         else:
@@ -78,7 +84,7 @@ class Config(object):
         self.test_env.seed(seed)
 
         # Set Model
-        self.algo = Utils.dynamic_load(path.join(self.paths['root'], 'Src', 'Algorithms'), args.algo_name, load_class=True)
+        self.algo = Utils.dynamic_load(path.join(self.paths['root'], 'Src', 'Algorithms'), runtime_algo_name, load_class=True)
 
         # GPU
         if args.gpu:
@@ -111,12 +117,14 @@ class Config(object):
                 env = obj(model=args.algo_name,max_steps_r=args.max_steps_r,max_steps_p=args.max_steps_p,pricing=args.pricing,n_vehicles=args.n_vehicles,
                       veh_capacity=args.veh_capacity,parcelpoint_capacity=args.parcelpoint_capacity,fraction_capacitated=args.fraction_capacitated,incentive_sens=args.incentive_sens,base_util=args.base_util,
                       home_util=args.home_util,reopt=args.reopt,load_data=args.load_data,coords=self.coords_test,dist_matrix=self.dist_matrix_test,
-                      n_parcelpoints=self.n_parcelpoints_test,adjacency=self.adjacency_test,service_times=self.service_times_test,dissatisfaction=self.dissatisfaction,hgs_time=args.hgs_reopt_time)
+                      n_parcelpoints=self.n_parcelpoints_test,adjacency=self.adjacency_test,service_times=self.service_times_test,dissatisfaction=self.dissatisfaction,hgs_time=args.hgs_reopt_time,
+                      outside_option_util=args.outside_option_util,service_mode=args.service_mode)
             else:
                 env = obj(model=args.algo_name,max_steps_r=args.max_steps_r,max_steps_p=args.max_steps_p,pricing=args.pricing,n_vehicles=args.n_vehicles,
                       veh_capacity=args.veh_capacity,parcelpoint_capacity=args.parcelpoint_capacity,fraction_capacitated=args.fraction_capacitated,incentive_sens=args.incentive_sens,base_util=args.base_util,
                       home_util=args.home_util,reopt=args.reopt,load_data=args.load_data,coords=self.coords,dist_matrix=self.dist_matrix,
-                      n_parcelpoints=self.n_parcelpoints,adjacency=self.adjacency,service_times=self.service_times,dissatisfaction=self.dissatisfaction,hgs_time=args.hgs_reopt_time)
+                      n_parcelpoints=self.n_parcelpoints,adjacency=self.adjacency,service_times=self.service_times,dissatisfaction=self.dissatisfaction,hgs_time=args.hgs_reopt_time,
+                      outside_option_util=args.outside_option_util,service_mode=args.service_mode)
             return env
 
 if __name__ == '__main__':
