@@ -53,7 +53,7 @@ coherent, and gated before empirical superiority claims are made.
   rows are excluded from formal ranking claims.
 - [ ] **GATE-03**: Generated tables and figures are consumed from artifact
   builders rather than edited by hand.
-- [ ] **GATE-04**: Every failed phase reports failure reason, minimal fix, and
+- [x] **GATE-04**: Every failed phase reports failure reason, minimal fix, and
   rerun instruction before the roadmap advances.
 
 ### Ablation And Reviewer Readiness

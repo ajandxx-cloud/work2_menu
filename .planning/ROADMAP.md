@@ -95,7 +95,7 @@ provenance.
 **Goal:** Run and gate DSPO clip/wide configurations under the same paired
 replay contract as the baselines.
 
-**Status:** Pending
+**Status:** In Progress
 
 **Success Criteria**:
 1. DSPO clip and DSPO wide variants are executable.

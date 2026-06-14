@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Work2_TR_PartC_Paper_Rewriting_and_Experiment_Rebuild_RC
 status: executing
-last_updated: "2026-06-14T12:50:27.724Z"
+last_updated: "2026-06-14T13:00:50.791Z"
 last_activity: 2026-06-14
 progress:
   total_phases: 6
   completed_phases: 3
   total_plans: 12
-  completed_plans: 13
+  completed_plans: 14
   percent: 50
 ---
 
@@ -28,7 +28,7 @@ coherent, and gated before empirical superiority claims are made.
 ## Current Position
 
 Phase: 09 (dspo-family-full-run) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-06-14
 
