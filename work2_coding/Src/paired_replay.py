@@ -13,15 +13,24 @@ STUDY_EXECUTION_STATUSES = {
     "diagnostic",
     "incomplete",
     "blocked",
+    "failed",
 }
 
 NORMALIZED_ROW_FIELDS = [
     "schema_version",
+    "study_id",
     "study_name",
+    "manifest_path",
     "run_id",
     "tier",
     "run_mode",
     "policy_tag",
+    "candidate_id",
+    "method",
+    "product_mode",
+    "time_window_mode",
+    "menu_mode",
+    "pricing_mode",
     "method_variant",
     "attention_enabled",
     "attention_mode",
@@ -55,6 +64,11 @@ NORMALIZED_ROW_FIELDS = [
     "relative_optimality_gap",
     "menu_overlap_rate",
     "menu_build_time",
+    "menu_utilization",
+    "choice_entropy",
+    "accepted_count",
+    "served_count",
+    "served_rate",
     "acceptance_rate",
     "optout_rate",
     "home_share",
@@ -65,6 +79,9 @@ NORMALIZED_ROW_FIELDS = [
     "charge_revenue",
     "discount_cost",
     "net_price_revenue",
+    "net_profit",
+    "operational_cost",
+    "total_cost",
     "net_objective_proxy",
     "service_time_total",
     "uptake_regime",
@@ -74,6 +91,8 @@ NORMALIZED_ROW_FIELDS = [
     "placeholder_only",
     "status",
     "execution_status",
+    "error_type",
+    "error_message",
     "git_commit",
     "git_dirty",
     "git_status_summary",
@@ -87,6 +106,11 @@ OPTIONAL_ROW_FIELDS = {
     "relative_optimality_gap",
     "menu_overlap_rate",
     "menu_build_time",
+    "menu_utilization",
+    "choice_entropy",
+    "accepted_count",
+    "served_count",
+    "served_rate",
     "acceptance_rate",
     "optout_rate",
     "home_share",
@@ -97,7 +121,12 @@ OPTIONAL_ROW_FIELDS = {
     "charge_revenue",
     "discount_cost",
     "net_price_revenue",
+    "net_profit",
+    "operational_cost",
+    "total_cost",
     "service_time_total",
+    "error_type",
+    "error_message",
     "git_status_summary",
 }
 
@@ -167,6 +196,7 @@ def resolve_paired_settings(manifest, manifest_hash_value=None):
             metadata.update(policy.get("metadata", {}))
             setting = {
                 "study_name": manifest["name"],
+                "manifest_path": manifest.get("_path", ""),
                 "tier": manifest["tier"],
                 "run_mode": manifest["run_mode"],
                 "split_id": split_id,
@@ -242,6 +272,54 @@ def _first_value(*sources):
     return None
 
 
+def canonical_pricing_mode(args, menu_metadata=None, policy_metadata=None):
+    menu_metadata = menu_metadata or {}
+    policy_metadata = policy_metadata or {}
+    pricing_mode = _first_value(
+        menu_metadata.get("pricing_mode"),
+        args.get("pricing_mode"),
+        args.get("menu_pricing_mode"),
+        policy_metadata.get("pricing_mode"),
+        "no_pricing",
+    )
+    if pricing_mode == "constant":
+        return "flat_markdown"
+    if pricing_mode == "zero":
+        return "no_pricing"
+    return str(pricing_mode)
+
+
+def contract_modes(args, menu_metadata=None, policy_metadata=None):
+    menu_metadata = menu_metadata or {}
+    policy_metadata = policy_metadata or {}
+    product_mode = str(_first_value(
+        menu_metadata.get("product_mode"),
+        args.get("product_mode"),
+        policy_metadata.get("product_mode"),
+        "m+w+p",
+    ))
+    time_window_mode = str(_first_value(
+        menu_metadata.get("time_window_mode"),
+        args.get("time_window_mode"),
+        policy_metadata.get("time_window_mode"),
+        "adaptive_window",
+    ))
+    menu_mode = str(_first_value(
+        menu_metadata.get("menu_mode"),
+        args.get("menu_contract_mode"),
+        policy_metadata.get("menu_mode"),
+        "optimized_menu",
+    ))
+    pricing_mode = canonical_pricing_mode(args, menu_metadata, policy_metadata)
+    if product_mode != "m+w+p":
+        pricing_mode = "no_pricing"
+    return product_mode, time_window_mode, menu_mode, pricing_mode
+
+
+def canonical_method(product_mode, time_window_mode, menu_mode, pricing_mode):
+    return "__".join([str(product_mode), str(time_window_mode), str(menu_mode), str(pricing_mode)])
+
+
 def build_normalized_row(
     setting,
     run_id,
@@ -259,14 +337,27 @@ def build_normalized_row(
     provenance_metadata = provenance_metadata or {}
     checkpoint_metadata = checkpoint_metadata or checkpoint_row_metadata(args)
     policy_metadata = setting.get("policy_metadata", {})
+    product_mode, time_window_mode, menu_mode, pricing_mode = contract_modes(args, menu_metadata, policy_metadata)
+    method = _first_value(
+        menu_metadata.get("method"),
+        canonical_method(product_mode, time_window_mode, menu_mode, pricing_mode),
+    )
 
     row = {
-        "schema_version": "normalized-row-v1",
+        "schema_version": "normalized-row-v2",
+        "study_id": setting["study_name"],
         "study_name": setting["study_name"],
+        "manifest_path": setting.get("manifest_path", ""),
         "run_id": run_id,
         "tier": setting["tier"],
         "run_mode": setting["run_mode"],
         "policy_tag": setting["policy_tag"],
+        "candidate_id": _first_value(menu_metadata.get("candidate_id"), stats_metadata.get("candidate_id"), "aggregate"),
+        "method": method,
+        "product_mode": product_mode,
+        "time_window_mode": time_window_mode,
+        "menu_mode": menu_mode,
+        "pricing_mode": pricing_mode,
         "method_variant": _first_value(
             menu_metadata.get("method_variant"),
             args.get("method_variant"),
@@ -319,6 +410,11 @@ def build_normalized_row(
         "relative_optimality_gap": menu_metadata.get("relative_optimality_gap"),
         "menu_overlap_rate": menu_metadata.get("menu_overlap_rate"),
         "menu_build_time": menu_metadata.get("menu_build_time"),
+        "menu_utilization": menu_metadata.get("menu_utilization"),
+        "choice_entropy": menu_metadata.get("choice_entropy"),
+        "accepted_count": stats_metadata.get("accepted_count"),
+        "served_count": stats_metadata.get("served_count"),
+        "served_rate": stats_metadata.get("served_rate"),
         "acceptance_rate": stats_metadata.get("acceptance_rate"),
         "optout_rate": stats_metadata.get("optout_rate"),
         "home_share": stats_metadata.get("home_share"),
@@ -329,6 +425,9 @@ def build_normalized_row(
         "charge_revenue": stats_metadata.get("charge_revenue"),
         "discount_cost": stats_metadata.get("discount_cost"),
         "net_price_revenue": stats_metadata.get("net_price_revenue"),
+        "net_profit": stats_metadata.get("net_profit"),
+        "operational_cost": stats_metadata.get("operational_cost"),
+        "total_cost": stats_metadata.get("total_cost"),
         "net_objective_proxy": _first_value(
             stats_metadata.get("net_objective_proxy"),
             menu_metadata.get("net_objective_proxy"),
@@ -343,10 +442,39 @@ def build_normalized_row(
         "placeholder_only": bool(placeholder_only),
         "status": status,
         "execution_status": execution_status,
+        "error_type": _first_value(menu_metadata.get("error_type"), stats_metadata.get("error_type"), ""),
+        "error_message": _first_value(menu_metadata.get("error_message"), stats_metadata.get("error_message"), ""),
         "git_commit": provenance_metadata.get("git_commit", "unknown"),
         "git_dirty": bool(provenance_metadata.get("git_dirty", False)),
         "git_status_summary": provenance_metadata.get("git_status_summary", ""),
     }
+    accepted_count = _first_value(
+        row.get("accepted_count"),
+        (row.get("count_accepted_home") or 0) + (row.get("count_accepted_meeting_point") or 0)
+        if row.get("count_accepted_home") is not None and row.get("count_accepted_meeting_point") is not None
+        else None,
+    )
+    row["accepted_count"] = accepted_count
+    row["served_count"] = _first_value(row.get("served_count"), accepted_count)
+    total_choices = None
+    if accepted_count is not None and row.get("count_opted_out") is not None:
+        total_choices = float(accepted_count + row.get("count_opted_out"))
+    row["served_rate"] = _first_value(
+        row.get("served_rate"),
+        float(row["served_count"] / total_choices) if total_choices else None,
+    )
+    operational_cost = _first_value(row.get("operational_cost"), row.get("service_time_total"))
+    row["operational_cost"] = operational_cost
+    row["total_cost"] = _first_value(
+        row.get("total_cost"),
+        (operational_cost or 0.0) + (row.get("discount_cost") or 0.0) if operational_cost is not None else None,
+    )
+    row["net_profit"] = _first_value(
+        row.get("net_profit"),
+        (row.get("net_price_revenue") or 0.0) - (operational_cost or 0.0)
+        if row.get("net_price_revenue") is not None
+        else None,
+    )
     validate_normalized_row(row)
     return row
 

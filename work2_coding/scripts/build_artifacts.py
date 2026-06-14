@@ -25,6 +25,7 @@ def parse_args(argv=None):
     parser.add_argument("--default-mirror", action="store_true", help="Mirror to artifacts/work2_robust_menu")
     parser.add_argument("--allow-incomplete", action="store_true", help="Allow diagnostic/incomplete artifacts")
     parser.add_argument("--claim-ready", action="store_true", help="Require claim-ready artifact gates")
+    parser.add_argument("--readiness-json", default="", help="FORMAL_READINESS.json required for formal --claim-ready")
     return parser.parse_args(argv)
 
 
@@ -44,6 +45,7 @@ def main(argv=None):
         mirror_root=mirror_root or None,
         allow_incomplete=args.allow_incomplete,
         claim_ready=args.claim_ready,
+        readiness_json=args.readiness_json or None,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     return result

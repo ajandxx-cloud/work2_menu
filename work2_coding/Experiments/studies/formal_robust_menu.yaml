@@ -2,7 +2,15 @@ schema_version: 1
 name: formal_robust_menu
 tier: formal
 run_mode: formal
-description: Formal Work2 robust-menu contract for Phase 4 evidence generation.
+description: Formal V1 mainline comparison contract for Phase 4 evidence generation.
+required_policy_tags:
+  - mainline_no_menu
+  - mainline_fixed_menu
+  - mainline_random_menu
+  - mainline_optimized_m
+  - mainline_optimized_mw
+  - mainline_optimized_fixed_window
+  - mainline_optimized_adaptive
 shared_checkpoint:
   required: true
   path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
@@ -10,6 +18,10 @@ shared_checkpoint:
 base_args:
   algo_name: DSPO_Menu
   menu_mode: true
+  product_mode: m+w+p
+  time_window_mode: adaptive_window
+  menu_contract_mode: optimized_menu
+  menu_pricing_mode: lambertw
   run_mode: formal
   instance: RC
   load_data: true
@@ -28,7 +40,7 @@ base_args:
   require_checkpoint: true
   allow_checkpoint_mismatch: false
 splits:
-  - split_id: formal_rc_low_seed0
+  - split_id: formal_mainline_low_seed0
     seed: 301
     data_seed: 0
     data_seed_test: 1
@@ -37,7 +49,7 @@ splits:
       home_util: 3.8
       base_util: -2.8
       incentive_sens: -0.18
-  - split_id: formal_rc_low_seed1
+  - split_id: formal_mainline_low_seed1
     seed: 302
     data_seed: 1
     data_seed_test: 0
@@ -46,7 +58,7 @@ splits:
       home_util: 3.8
       base_util: -2.8
       incentive_sens: -0.18
-  - split_id: formal_rc_medium_seed0
+  - split_id: formal_mainline_medium_seed0
     seed: 303
     data_seed: 0
     data_seed_test: 1
@@ -55,7 +67,7 @@ splits:
       home_util: 3.2
       base_util: -2.0
       incentive_sens: -0.25
-  - split_id: formal_rc_medium_seed1
+  - split_id: formal_mainline_medium_seed1
     seed: 304
     data_seed: 1
     data_seed_test: 0
@@ -64,20 +76,23 @@ splits:
       home_util: 3.2
       base_util: -2.0
       incentive_sens: -0.25
+  - split_id: formal_mainline_medium_seed2
+    seed: 305
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
 policies:
-  - tag: full_display
-  - tag: home_only
-  - tag: nearest_heuristic
-  - tag: top_k_cheapest
-  - tag: min_lateness
-  - tag: hard_filter
-  - tag: no_filter_diagnostic
-    diagnostic: true
-    metadata:
-      diagnostic: true
-      note: Diagnostic upper-bound only; not an operational recommendation.
-  - tag: robust_risk_adjusted
-  - tag: robust_service_guarded
+  - tag: mainline_no_menu
+  - tag: mainline_fixed_menu
+  - tag: mainline_random_menu
+  - tag: mainline_optimized_m
+  - tag: mainline_optimized_mw
+  - tag: mainline_optimized_fixed_window
+  - tag: mainline_optimized_adaptive
 paired_fields:
   - seed
   - data_seed
@@ -100,6 +115,10 @@ paired_fields:
 varied_fields:
   - algo_name
   - menu_mode
+  - product_mode
+  - time_window_mode
+  - menu_contract_mode
+  - menu_pricing_mode
   - menu_policy
   - menu_eta_filter_mode
   - menu_time_filtering
@@ -113,20 +132,59 @@ varied_fields:
   - menu_selection_solver
   - menu_use_exact_eval
 output_schema:
-  normalized-row-v1: true
+  normalized-row-v2: true
   fields:
+    - schema_version
+    - study_id
     - study_name
+    - manifest_path
     - run_id
+    - tier
+    - run_mode
     - policy_tag
+    - product_mode
+    - time_window_mode
+    - menu_mode
+    - pricing_mode
+    - method
+    - candidate_id
     - seed
+    - data_seed
+    - data_seed_test
     - split_id
     - trace_id
+    - trace_hash
     - manifest_hash
+    - settings_hash
     - checkpoint_load_status
+    - checkpoint_path
+    - checkpoint_required
     - menu_k
+    - max_candidates
     - filter_mode
     - effective_policy
+    - accepted_count
+    - served_count
+    - served_rate
     - acceptance_rate
     - optout_rate
+    - home_share
+    - meeting_point_uptake_rate
+    - count_opted_out
+    - count_accepted_home
+    - count_accepted_meeting_point
+    - net_price_revenue
+    - net_profit
+    - operational_cost
+    - total_cost
+    - menu_build_time
+    - menu_utilization
+    - choice_entropy
+    - uptake_regime
+    - diagnostic
+    - comparison_role
     - placeholder_only
-
+    - status
+    - execution_status
+    - error_type
+    - error_message

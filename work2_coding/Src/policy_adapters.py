@@ -17,11 +17,32 @@ REQUIRED_POLICY_TAGS = [
 
 OPTIONAL_POLICY_TAGS = [
     "random_top_k",
+    "contract_no_menu",
+    "contract_fixed_menu",
+    "contract_random_menu",
+    "contract_optimized_menu",
+    "mainline_no_menu",
+    "mainline_fixed_menu",
+    "mainline_random_menu",
+    "mainline_optimized_m",
+    "mainline_optimized_mw",
+    "mainline_optimized_fixed_window",
+    "mainline_optimized_adaptive",
 ]
 
 ATTENTION_POLICY_TAGS = [
     "DSPO_original",
     "DSPO_attention",
+]
+
+MAINLINE_POLICY_TAGS = [
+    "mainline_no_menu",
+    "mainline_fixed_menu",
+    "mainline_random_menu",
+    "mainline_optimized_m",
+    "mainline_optimized_mw",
+    "mainline_optimized_fixed_window",
+    "mainline_optimized_adaptive",
 ]
 
 POLICY_ONLY_FIELDS = {
@@ -37,6 +58,10 @@ POLICY_ONLY_FIELDS = {
     "menu_optout_guardrail",
     "menu_selection_solver",
     "menu_use_exact_eval",
+    "product_mode",
+    "time_window_mode",
+    "menu_contract_mode",
+    "menu_pricing_mode",
     "method_variant",
     "attention_enabled",
     "attention_mode",
@@ -115,6 +140,162 @@ POLICY_ADAPTERS = {
         "optional": True,
         "overrides": {"menu_policy": "random_top_k", "menu_eta_filter_mode": "hard"},
     },
+    "contract_no_menu": {
+        "description": "Phase 2 no-menu contract: a single default home product plus outside option.",
+        "optional": True,
+        "comparison_role": "menu_mode",
+        "menu_mode": "no_menu",
+        "overrides": {
+            "menu_policy": "home_only",
+            "menu_eta_filter_mode": "hard",
+            "menu_contract_mode": "no_menu",
+            "product_mode": "m",
+            "time_window_mode": "no_time_window",
+            "menu_pricing_mode": "no_pricing",
+        },
+    },
+    "contract_fixed_menu": {
+        "description": "Phase 2 fixed-menu contract: nearest/top-k proximity baseline.",
+        "optional": True,
+        "comparison_role": "menu_mode",
+        "menu_mode": "fixed_menu",
+        "overrides": {
+            "menu_policy": "nearest_heuristic",
+            "menu_eta_filter_mode": "hard",
+            "menu_contract_mode": "fixed_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "fixed_window",
+        },
+    },
+    "contract_random_menu": {
+        "description": "Phase 2 random-menu contract: seeded random top-k from the same candidate pool.",
+        "optional": True,
+        "comparison_role": "menu_mode",
+        "menu_mode": "random_menu",
+        "overrides": {
+            "menu_policy": "random_top_k",
+            "menu_eta_filter_mode": "hard",
+            "menu_contract_mode": "random_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "fixed_window",
+        },
+    },
+    "contract_optimized_menu": {
+        "description": "Phase 2 optimized-menu contract: service-guarded expected-profit menu.",
+        "optional": True,
+        "comparison_role": "menu_mode",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+        },
+    },
+    "mainline_no_menu": {
+        "description": "V1 mainline no-menu baseline: default home product plus outside option.",
+        "optional": True,
+        "comparison_role": "menu_baseline",
+        "menu_mode": "no_menu",
+        "overrides": {
+            "menu_policy": "home_only",
+            "menu_eta_filter_mode": "hard",
+            "menu_contract_mode": "no_menu",
+            "product_mode": "m",
+            "time_window_mode": "no_time_window",
+            "menu_pricing_mode": "no_pricing",
+        },
+    },
+    "mainline_fixed_menu": {
+        "description": "V1 mainline fixed-menu proximity baseline.",
+        "optional": True,
+        "comparison_role": "menu_baseline",
+        "menu_mode": "fixed_menu",
+        "overrides": {
+            "menu_policy": "nearest_heuristic",
+            "menu_eta_filter_mode": "hard",
+            "menu_contract_mode": "fixed_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "fixed_window",
+            "menu_pricing_mode": "lambertw",
+        },
+    },
+    "mainline_random_menu": {
+        "description": "V1 mainline random-menu baseline: seeded random top-k from the shared pool.",
+        "optional": True,
+        "comparison_role": "menu_baseline",
+        "menu_mode": "random_menu",
+        "overrides": {
+            "menu_policy": "random_top_k",
+            "menu_eta_filter_mode": "hard",
+            "menu_contract_mode": "random_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "fixed_window",
+            "menu_pricing_mode": "lambertw",
+        },
+    },
+    "mainline_optimized_m": {
+        "description": "V1 mainline product ablation: meeting point only, no window or pricing.",
+        "optional": True,
+        "comparison_role": "product_ablation",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m",
+            "time_window_mode": "no_time_window",
+            "menu_pricing_mode": "no_pricing",
+        },
+    },
+    "mainline_optimized_mw": {
+        "description": "V1 mainline product ablation: meeting point plus adaptive time window, no pricing.",
+        "optional": True,
+        "comparison_role": "product_ablation",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "no_pricing",
+        },
+    },
+    "mainline_optimized_fixed_window": {
+        "description": "V1 mainline time-window ablation: optimized menu with fixed windows.",
+        "optional": True,
+        "comparison_role": "time_window_ablation",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "fixed_window",
+            "menu_pricing_mode": "lambertw",
+        },
+    },
+    "mainline_optimized_adaptive": {
+        "description": "V1 mainline primary method: optimized menu with adaptive window and Lambert-W pricing.",
+        "optional": True,
+        "comparison_role": "primary_method",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "lambertw",
+        },
+    },
     "DSPO_original": {
         "description": "Original no-attention DSPO menu method for paired attention comparison.",
         "comparison_role": "method",
@@ -158,6 +339,10 @@ def attention_policy_tags():
     return list(ATTENTION_POLICY_TAGS)
 
 
+def mainline_policy_tags():
+    return list(MAINLINE_POLICY_TAGS)
+
+
 def policy_adapter(tag):
     if tag not in POLICY_ADAPTERS:
         raise ValueError("unknown policy adapter tag: " + str(tag))
@@ -181,6 +366,7 @@ def adapter_metadata(tag):
         "diagnostic": bool(adapter.get("diagnostic", False)),
         "optional": bool(adapter.get("optional", False)),
         "comparison_role": adapter.get("comparison_role", "policy"),
+        "menu_mode": adapter.get("menu_mode"),
         "cost_bound": bool(adapter.get("cost_bound", False)),
         "description": adapter.get("description", ""),
     }

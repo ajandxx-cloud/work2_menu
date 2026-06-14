@@ -9,7 +9,18 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from Src.paired_replay import NORMALIZED_ROW_FIELDS, validate_normalized_row  # noqa: E402
-from Src.policy_adapters import required_policy_tags  # noqa: E402
+from Src.policy_adapters import mainline_policy_tags  # noqa: E402
+
+
+MAINLINE_METHODS = {
+    "mainline_no_menu": ("m", "no_time_window", "no_menu", "no_pricing"),
+    "mainline_fixed_menu": ("m+w+p", "fixed_window", "fixed_menu", "lambertw"),
+    "mainline_random_menu": ("m+w+p", "fixed_window", "random_menu", "lambertw"),
+    "mainline_optimized_m": ("m", "no_time_window", "optimized_menu", "no_pricing"),
+    "mainline_optimized_mw": ("m+w", "adaptive_window", "optimized_menu", "no_pricing"),
+    "mainline_optimized_fixed_window": ("m+w+p", "fixed_window", "optimized_menu", "lambertw"),
+    "mainline_optimized_adaptive": ("m+w+p", "adaptive_window", "optimized_menu", "lambertw"),
+}
 
 
 def run_smoke(output_root):
@@ -69,8 +80,8 @@ def test_required_policy_tags_are_emitted():
         run_dir = run_smoke(Path(tmp))
         rows, _, _ = load_rows(run_dir)
         tags = {row["policy_tag"] for row in rows}
-        assert set(required_policy_tags()).issubset(tags)
-        assert "random_top_k" in tags
+        assert tags == set(mainline_policy_tags())
+        assert len(rows) == 4 * len(mainline_policy_tags())
 
 
 def test_trace_id_shared_within_split():
@@ -93,18 +104,25 @@ def test_manifest_hash_and_required_fields_present():
             assert set(NORMALIZED_ROW_FIELDS).issubset(row.keys())
             assert row["manifest_hash"]
             assert row["settings_hash"]
-            assert row["schema_version"] == "normalized-row-v1"
+            assert row["schema_version"] == "normalized-row-v2"
+            assert row["study_id"] == "smoke_robust_menu"
+            assert row["candidate_id"] == "aggregate"
+            expected = MAINLINE_METHODS[row["policy_tag"]]
+            assert row["product_mode"] == expected[0]
+            assert row["time_window_mode"] == expected[1]
+            assert row["menu_mode"] == expected[2]
+            assert row["pricing_mode"] == expected[3]
+            assert row["method"] == "__".join(expected)
             validate_normalized_row(row)
 
 
-def test_no_filter_diagnostic_status():
+def test_mainline_menu_k_coverage():
     with TemporaryDirectory() as tmp:
         run_dir = run_smoke(Path(tmp))
         rows, _, _ = load_rows(run_dir)
-        row = [r for r in rows if r["policy_tag"] == "no_filter_diagnostic"][0]
-        assert row["diagnostic"] is True
-        assert row["filter_mode"] == "none"
-        assert row["effective_policy"] == "risk_adjusted_expected_profit"
+        assert {row["menu_k"] for row in rows} == {1, 2, 3, 5}
+        for menu_k in {1, 2, 3, 5}:
+            assert {row["policy_tag"] for row in rows if row["menu_k"] == menu_k} == set(mainline_policy_tags())
 
 
 def test_checkpoint_and_uptake_metadata_present():
@@ -152,7 +170,7 @@ def main():
         test_required_policy_tags_are_emitted,
         test_trace_id_shared_within_split,
         test_manifest_hash_and_required_fields_present,
-        test_no_filter_diagnostic_status,
+        test_mainline_menu_k_coverage,
         test_checkpoint_and_uptake_metadata_present,
         test_no_paper_artifacts_are_written,
         test_formal_placeholder_rows_are_rejected_by_runner,
@@ -164,4 +182,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

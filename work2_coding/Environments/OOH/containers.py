@@ -64,6 +64,129 @@ class ServiceBundle:
         return getattr(self, item)
 
 @dataclass
+class ServiceProduct:
+    product_id: str
+    product_mode: str
+    time_window_mode: str
+    menu_mode: str
+    location: Optional[Location]
+    window_start: Optional[float] = None
+    window_end: Optional[float] = None
+    window_center: Optional[float] = None
+    window_width: Optional[float] = None
+    price: float = 0.0
+    is_home: bool = False
+    parcelpoint_id: int = -1
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def window(self) -> Optional[Tuple[float, float]]:
+        if self.window_start is None or self.window_end is None:
+            return None
+        return (self.window_start, self.window_end)
+
+    @property
+    def is_opt_out(self) -> bool:
+        return self.location is None and self.metadata.get("outcome") == "opted_out"
+
+    @classmethod
+    def from_bundle(
+        cls,
+        bundle,
+        product_mode="m+w",
+        time_window_mode="fixed_window",
+        menu_mode="optimized_menu",
+        price=0.0,
+        metadata=None,
+    ):
+        return cls(
+            product_id=bundle.bundle_id,
+            product_mode=product_mode,
+            time_window_mode=time_window_mode,
+            menu_mode=menu_mode,
+            location=bundle.location,
+            window_start=bundle.window_start,
+            window_end=bundle.window_end,
+            window_center=bundle.window_center,
+            window_width=bundle.window_width,
+            price=float(price),
+            is_home=bool(bundle.is_home),
+            parcelpoint_id=int(bundle.parcelpoint_id),
+            metadata=dict(metadata or {}),
+        )
+
+    @classmethod
+    def from_offer(
+        cls,
+        offer,
+        product_mode=None,
+        time_window_mode=None,
+        menu_mode=None,
+    ):
+        metadata = dict(offer.metadata or {})
+        return cls.from_bundle(
+            offer.bundle,
+            product_mode=product_mode or metadata.get("product_mode", "m+w+p"),
+            time_window_mode=time_window_mode or metadata.get("time_window_mode", "fixed_window"),
+            menu_mode=menu_mode or metadata.get("menu_mode", "optimized_menu"),
+            price=offer.price,
+            metadata=metadata,
+        )
+
+    @classmethod
+    def opt_out(cls, metadata=None):
+        meta = dict(metadata or {})
+        meta.setdefault("outcome", "opted_out")
+        return cls(
+            product_id="opt_out",
+            product_mode="outside_option",
+            time_window_mode="no_time_window",
+            menu_mode="outside_option",
+            location=None,
+            price=0.0,
+            is_home=False,
+            parcelpoint_id=-1,
+            metadata=meta,
+        )
+
+    def to_bundle(self, remaining_capacity=0.0):
+        if self.location is None:
+            raise ValueError("opt-out service product cannot be converted to ServiceBundle")
+        window_start = 0.0 if self.window_start is None else float(self.window_start)
+        window_end = window_start if self.window_end is None else float(self.window_end)
+        window_center = (window_start + window_end) / 2.0 if self.window_center is None else float(self.window_center)
+        window_width = max(window_end - window_start, 0.0) if self.window_width is None else float(self.window_width)
+        return ServiceBundle(
+            bundle_id=self.product_id,
+            location=self.location,
+            is_home=bool(self.is_home),
+            parcelpoint_id=int(self.parcelpoint_id),
+            window_start=window_start,
+            window_end=window_end,
+            window_center=window_center,
+            window_width=window_width,
+            remaining_capacity=float(remaining_capacity),
+        )
+
+    def to_offer(self, predicted_cost=0.0, **kwargs):
+        metadata = dict(self.metadata or {})
+        metadata.update({
+            "product_mode": self.product_mode,
+            "time_window_mode": self.time_window_mode,
+            "menu_mode": self.menu_mode,
+        })
+        return MenuOffer(
+            bundle=self.to_bundle(remaining_capacity=kwargs.pop("remaining_capacity", 0.0)),
+            predicted_cost=float(predicted_cost),
+            price=float(self.price),
+            metadata=metadata,
+            **kwargs,
+        )
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+@dataclass
 class MenuOffer:
     bundle: ServiceBundle
     predicted_cost: float

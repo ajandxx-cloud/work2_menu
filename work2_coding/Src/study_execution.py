@@ -307,12 +307,18 @@ def _row_from_actual_replay(setting, run_id):
     accepted = totals["count_accepted_home"] + totals["count_accepted_meeting_point"]
     stats_metadata = {
         **totals,
+        "accepted_count": int(accepted),
+        "served_count": int(accepted),
         "acceptance_rate": float(accepted / total_choices) if total_choices else 0.0,
+        "served_rate": float(accepted / total_choices) if total_choices else 0.0,
         "optout_rate": float(totals["count_opted_out"] / total_choices) if total_choices else 0.0,
         "home_share": float(totals["count_accepted_home"] / total_choices) if total_choices else 0.0,
         "meeting_point_uptake_rate": float(totals["count_accepted_meeting_point"] / total_choices) if total_choices else 0.0,
         "net_price_revenue": float(totals["charge_revenue"] - totals["discount_cost"]),
+        "operational_cost": float(totals["service_time_total"]),
+        "total_cost": float(totals["service_time_total"] + totals["discount_cost"]),
     }
+    stats_metadata["net_profit"] = float(stats_metadata["net_price_revenue"] - stats_metadata["operational_cost"])
     menu_metadata = {
         "eta_filter_mode": args.get("menu_eta_filter_mode"),
         "effective_menu_policy": last_policy_diagnostic.get("effective_menu_policy", args.get("menu_policy")),
@@ -327,6 +333,13 @@ def _row_from_actual_replay(setting, run_id):
         "attention_mode": last_policy_diagnostic.get("attention_mode", args.get("attention_mode", "deterministic")),
         "attention_strength": last_policy_diagnostic.get("attention_strength", args.get("attention_strength", 1.0)),
         "attention_weight_summary": last_policy_diagnostic.get("attention_weight_summary", {}),
+        "product_mode": last_policy_diagnostic.get("product_mode", args.get("product_mode")),
+        "time_window_mode": last_policy_diagnostic.get("time_window_mode", args.get("time_window_mode")),
+        "menu_mode": last_policy_diagnostic.get("menu_mode", args.get("menu_contract_mode")),
+        "pricing_mode": last_policy_diagnostic.get("pricing_mode", args.get("menu_pricing_mode")),
+        "method": last_policy_diagnostic.get("method"),
+        "menu_utilization": last_policy_diagnostic.get("menu_utilization"),
+        "choice_entropy": last_policy_diagnostic.get("choice_entropy"),
         "net_objective_proxy": stats_metadata["net_price_revenue"] - stats_metadata["service_time_total"],
     }
 
@@ -343,10 +356,40 @@ def _row_from_actual_replay(setting, run_id):
     )
 
 
+def failed_row_for_setting(setting, run_id, exc, manifest=None, root=None):
+    args = setting["args"]
+    checkpoint = checkpoint_metadata_for_setting(setting, manifest or {}, root=root)
+    error_type = exc.__class__.__name__
+    return build_normalized_row(
+        setting,
+        run_id=run_id,
+        checkpoint_metadata=checkpoint,
+        stats_metadata={
+            "error_type": error_type,
+            "error_message": str(exc),
+        },
+        menu_metadata={
+            "eta_filter_mode": args.get("menu_eta_filter_mode"),
+            "effective_menu_policy": args.get("menu_policy"),
+            "menu_selection_solver_effective": "failed",
+            "solver_fallback_reason": error_type,
+            "error_type": error_type,
+            "error_message": str(exc),
+        },
+        provenance_metadata=collect_git_provenance(),
+        status="failed",
+        execution_status="failed",
+        placeholder_only=False,
+    )
+
+
 def actual_rows_for_manifest(manifest, run_id, manifest_hash_value, max_policies=None):
     rows = []
     for setting in _settings_for_manifest(manifest, manifest_hash_value, max_policies=max_policies):
-        rows.append(_row_from_actual_replay(setting, run_id))
+        try:
+            rows.append(_row_from_actual_replay(setting, run_id))
+        except Exception as exc:
+            rows.append(failed_row_for_setting(setting, run_id, exc, manifest=manifest))
     annotate_attention_pair_completeness(rows)
     validate_rows(rows)
     return rows

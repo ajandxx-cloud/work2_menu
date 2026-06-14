@@ -111,6 +111,23 @@ def _write_run_outputs(run_dir, manifest, rows, summary, blockers=None):
         write_json(run_dir / "blockers.json", {"blockers": blockers})
 
 
+def _failed_row_blockers(rows, manifest):
+    failed_rows = [row for row in rows if row.get("status") == "failed" or row.get("execution_status") == "failed"]
+    if not failed_rows:
+        return []
+    error_types = sorted({row.get("error_type") for row in failed_rows if row.get("error_type")})
+    return [
+        {
+            "code": "actual_replay_failed_rows",
+            "severity": "blocking",
+            "tier": manifest.get("tier", ""),
+            "message": "Actual replay completed with failed normalized rows.",
+            "failed_row_count": len(failed_rows),
+            "error_types": error_types,
+        }
+    ]
+
+
 def execute_study(manifest, output_root=None, contract_only=True, max_policies=None, actual_execution=False):
     if contract_only and manifest["tier"] == "formal":
         raise ValueError("formal studies cannot emit placeholder contract-only rows")
@@ -133,7 +150,9 @@ def execute_study(manifest, output_root=None, contract_only=True, max_policies=N
                 mh,
                 max_policies=max_policies,
             )
-            execution_status = "completed"
+            row_blockers = _failed_row_blockers(rows, manifest)
+            blockers.extend(row_blockers)
+            execution_status = "failed" if row_blockers else "completed"
             placeholder_only = False
         except Exception as exc:
             blockers = [

@@ -1,55 +1,90 @@
-# Akkerman RC No-Failure-Cost Reproduction
+# Work2 Robust Time-Window Service Menu Optimization
 
 ## What This Is
 
-This project reproduces the Akkerman DSPO synthetic RC experiment in the current `work2_coding/` runtime while removing home-delivery failure cost from the actual objective, training reward, evaluation metrics, and result summaries.
+This project builds the V1 mainline evidence pipeline for robust time-window
+service menu optimization in many-to-one DRT using the active `work2_coding/`
+runtime.
 
 ## Core Value
 
-Produce a defensible Table-2-style RC reproduction where failure cost is truly absent rather than subtracted after the fact.
+Produce defensible, paired-replay evidence for whether optimized service menus
+over `m`, `m+w`, and `m+w+p` products improve RC outcomes over no-menu,
+fixed-menu, random-menu, and fixed-window baselines.
 
 ## Requirements
 
 ### Validated
 
-(None yet - ship to validate)
+- [x] Confirm `work2_coding/` as the active importable runtime root.
+- [x] Audit stale `ooh_code/` codebase maps and document safe path mappings.
+- [x] Define explicit service product, product-mode, time-window-mode,
+  menu-mode, pricing-mode, row-v2, and artifact eligibility contracts.
+- [x] Migrate `work2_robust_menu` smoke, pilot, and formal manifests to the
+  seven-tag V1 mainline family.
+- [x] Verify smoke actual replay for all seven mainline policies across
+  `menu_k={1,2,3,5}`.
+- [x] Make artifact building mainline-aware for normalized-row-v2 outputs.
+- [x] Add claim guards for the seven-tag mainline family.
+- [x] Build mirrored artifact bundles and manuscript-facing tables/figures from
+  regenerated outputs.
+- [x] Implement formal readiness preflight, dependency snapshot reporting, and
+  formal claim-ready artifact gates.
 
 ### Active
 
-- [ ] Run the RC synthetic setting from `work2_coding/` without creating `ooh_code/`.
-- [ ] Support exact NoOOH and OnlyOOH baselines without price-only approximations.
-- [ ] Disable customer exit for the reproduction with `outside_option_util=None`.
-- [ ] Produce raw CSV, summary CSV, and summary JSON with failure costs fixed at zero.
-- [ ] Preserve manuscript, figures, revision notes, and historical result artifacts.
+- [ ] Preserve formal checkpoint provenance and dependency snapshots before any
+  formal rows are treated as claim-ready.
 
 ### Out of Scope
 
-- New DSPO methodology - this is a reproduction and accounting repair.
-- Attention, DRPO, SPO, Yanjiao/DRT extensions, and robust-menu claim generation.
-- Hand-editing generated result rows or paper artifacts.
+- Attention-based choice or scoring for V1.
+- Treating no-filter diagnostics as formal ranking evidence.
+- Hand-editing generated result rows, tables, figures, or manuscript claims.
+- Creating a parallel `ooh_code/` runtime root.
 
 ## Context
 
-The current runnable code lives in `work2_coding/`. Existing `.planning/codebase/` maps mention `ooh_code/`, but those references are stale for this reproduction. The relevant runtime files are parser/config, `run.py`, `run_ppo.py`, legacy algorithms, choice/environment code, and new experiment scripts/tests under `work2_coding/`.
+The active runtime lives in `work2_coding/`. Existing `.planning/codebase/`
+documents still contain many `ooh_code/` references; use
+`.planning/repository_audit.md` to map stale paths to current `work2_coding/`
+equivalents.
+
+The current V1 mainline policy family is:
+
+- `mainline_no_menu`
+- `mainline_fixed_menu`
+- `mainline_random_menu`
+- `mainline_optimized_m`
+- `mainline_optimized_mw`
+- `mainline_optimized_fixed_window`
+- `mainline_optimized_adaptive`
 
 ## Constraints
 
-- **Runtime root**: Use `work2_coding/` only.
-- **Accounting**: Home failure probability and cost must be zero in the real runtime configuration.
-- **Choice model**: No outside option or quit-threshold behavior in the reproduction.
-- **Artifacts**: Do not modify manuscript text, revision notes, figures, related-work files, or historical results.
+- Use `work2_coding/` as the runtime root.
+- Preserve paired replay fairness across policy comparisons.
+- Keep opt-out accounting separate from accepted home pickup.
+- Keep checkpoint load status explicit in result metadata.
+- Exclude diagnostic, failed, blocked, placeholder-only, no-filter-only, and
+  bad-checkpoint rows from formal claims.
+- Do not hand-edit generated paper artifacts.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
-|----------|-----------|---------|
-| Map `ooh_code/` scope to `work2_coding/` | Current filesystem has no `ooh_code/`; AGENTS says `work2_coding/` is active. | Pending |
-| Add exact service modes | NoOOH/OnlyOOH must be verified by behavior, not extreme prices. | Pending |
-| Keep PPO outside default table | Required for CLI compatibility, not for the requested minimum algorithm set. | Pending |
+| --- | --- | --- |
+| Use `work2_coding/` as runtime root | Current imports and smoke runs pass there; `ooh_code/` maps are stale. | Validated |
+| Use normalized-row-v2 | V1 needs product/time-window/menu/pricing/status/provenance fields. | Validated |
+| Keep seven mainline tags | Separates menu baselines, product ablations, and fixed/adaptive windows. | Validated |
+| Require checkpoint provenance for formal evidence | Prevents random or incompatible weights from becoming claim evidence. | Active |
+| Require passed readiness JSON for formal claim-ready artifacts | Keeps dependency snapshot, clean git, checkpoint hash, and manifest hash checks explicit before formal claims. | Validated |
+| Keep attention out of V1 | Attention artifacts are diagnostic/V2 only. | Active |
 
 ## Evolution
 
-Update this document only when the reproduction scope changes or after the experiment is verified.
+Update this document only when the Work2 V1 scope changes or a phase is
+verified.
 
 ---
-*Last updated: 2026-06-12 after reproduction initialization*
+*Last updated: 2026-06-14 after Phase 5 readiness gate verification*

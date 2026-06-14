@@ -40,7 +40,7 @@ REQUIRED_STUDY_FIELDS = {
     "paired_fields",
     "output_schema",
 }
-REQUIRED_OUTPUT_FIELDS = {"normalized-row-v1", "fields"}
+REQUIRED_OUTPUT_FIELDS = {"fields"}
 EXTRA_CONTRACT_ARG_FIELDS = {"uptake_regime"}
 
 
@@ -137,7 +137,9 @@ def validate_manifest(manifest):
 
     output_schema = manifest.get("output_schema") or {}
     if not REQUIRED_OUTPUT_FIELDS.issubset(set(output_schema.keys())):
-        raise ValueError("output_schema must include normalized-row-v1 and fields")
+        raise ValueError("output_schema must include fields")
+    if not (output_schema.get("normalized-row-v1") or output_schema.get("normalized-row-v2")):
+        raise ValueError("output_schema must include normalized-row-v1 or normalized-row-v2")
     if not output_schema.get("fields"):
         raise ValueError("output_schema.fields cannot be empty")
 

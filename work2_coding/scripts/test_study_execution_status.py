@@ -1,4 +1,5 @@
 import json
+import importlib.util
 import subprocess
 import sys
 from pathlib import Path
@@ -9,7 +10,14 @@ sys.path.insert(0, str(ROOT))
 
 from Src.experiment_contracts import load_manifest  # noqa: E402
 from Src.paired_replay import build_normalized_row, resolve_paired_settings, validate_normalized_row  # noqa: E402
-from Src.study_execution import inspect_manifest_prerequisites  # noqa: E402
+from Src.study_execution import failed_row_for_setting, inspect_manifest_prerequisites  # noqa: E402
+
+
+def load_run_study_module():
+    spec = importlib.util.spec_from_file_location("phase2_run_study", ROOT / "scripts" / "run_study.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def run_command(args):
@@ -140,13 +148,65 @@ def test_incomplete_or_blocked_row_cannot_look_completed():
     raise AssertionError("completed placeholder row should fail validation")
 
 
+def test_failed_row_records_error_and_validates():
+    manifest = load_manifest("smoke_robust_menu")
+    setting = resolve_paired_settings(manifest)[0]
+    row = failed_row_for_setting(setting, run_id="unit", exc=RuntimeError("boom"), manifest=manifest, root=ROOT)
+    validate_normalized_row(row)
+    assert row["status"] == "failed"
+    assert row["execution_status"] == "failed"
+    assert row["error_type"] == "RuntimeError"
+    assert row["error_message"] == "boom"
+    assert row["placeholder_only"] is False
+
+
+def test_actual_replay_failed_rows_mark_summary_failed():
+    manifest = load_manifest("smoke_robust_menu")
+    setting = resolve_paired_settings(manifest)[0]
+    run_study = load_run_study_module()
+    original = run_study.actual_rows_for_manifest
+
+    def fake_actual_rows(manifest_arg, run_id, manifest_hash_value, max_policies=None):
+        return [
+            failed_row_for_setting(
+                setting,
+                run_id=run_id,
+                exc=RuntimeError("boom"),
+                manifest=manifest_arg,
+                root=ROOT,
+            )
+        ]
+
+    with TemporaryDirectory() as tmp:
+        try:
+            run_study.actual_rows_for_manifest = fake_actual_rows
+            summary = run_study.execute_study(
+                manifest,
+                output_root=Path(tmp),
+                contract_only=False,
+                actual_execution=True,
+            )
+        finally:
+            run_study.actual_rows_for_manifest = original
+
+        run_dir = Path(summary["run_dir"])
+        rows = json.loads((run_dir / "normalized_rows.json").read_text(encoding="utf-8"))
+        blockers = json.loads((run_dir / "blockers.json").read_text(encoding="utf-8"))["blockers"]
+        assert summary["execution_status"] == "failed"
+        assert summary["placeholder_only"] is False
+        assert summary["blocker_count"] == 1
+        assert blockers[0]["code"] == "actual_replay_failed_rows"
+        assert rows[0]["status"] == "failed"
+        assert rows[0]["error_type"] == "RuntimeError"
+
+
 def test_no_filter_label_survives_public_runner():
     with TemporaryDirectory() as tmp:
         result = run_command([
             sys.executable,
             "scripts/run_study.py",
             "--study",
-            "smoke_robust_menu",
+            "diagnostic_actual_menu",
             "--contract-only",
             "--output-root",
             str(Path(tmp)),
@@ -174,6 +234,8 @@ def main():
         test_pilot_missing_checkpoint_writes_blockers,
         test_actual_smoke_writes_completed_rows,
         test_incomplete_or_blocked_row_cannot_look_completed,
+        test_failed_row_records_error_and_validates,
+        test_actual_replay_failed_rows_mark_summary_failed,
         test_no_filter_label_survives_public_runner,
         test_prerequisite_helper_reports_expected_checkpoint_status,
     ]

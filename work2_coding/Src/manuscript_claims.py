@@ -107,6 +107,7 @@ def build_claim_guard(status):
         set((status.get("artifact_status") or {}).get("diagnostic_policy_labels") or [])
         | {policy for policy in policies if "diagnostic" in str(policy)}
     )
+    readiness = status.get("formal_readiness") or (status.get("artifact_status") or {}).get("formal_readiness")
 
     conditional_claims = [
         {
@@ -158,6 +159,8 @@ def build_claim_guard(status):
         "uptake_regimes": sorted(status.get("uptake_regimes") or (status.get("artifact_status") or {}).get("uptake_regimes") or []),
         "source_run_id": status.get("run_id"),
         "source_study": status.get("study"),
+        "formal_readiness": readiness,
+        "formal_readiness_status": (readiness or {}).get("status"),
     }
 
 
@@ -199,15 +202,19 @@ def render_experiment_outline(guard):
             "",
             "## Scenarios",
             "",
-            "The study ladder is smoke, pilot, and formal. Smoke validates contracts and schema. Pilot and formal tiers require loaded checkpoint provenance before they can support manuscript claims.",
+            "The study ladder is smoke, pilot, and formal. Smoke validates contracts and schema and is diagnostic/status evidence only. Pilot rows may support claim-ready artifacts when row, checkpoint, and provenance gates pass. Formal rows require loaded checkpoint provenance plus a dependency snapshot before formal claims are allowed.",
             "",
-            "## Baselines",
+            "## Mainline Policies",
             "",
-            "Policy comparisons include full display, nearest heuristic, top-k cheapest, min-lateness, hard filter, robust risk-adjusted, robust service-guarded, optional random top-k, and diagnostic no-filter. Home-only and any meeting-point-only variants are reported as cost-approximation boundary references rather than recommended comparison policies.",
+            "The V1 mainline family compares no-menu, fixed-menu, random-menu, optimized location-only, optimized location-plus-window, optimized fixed-window full product, and optimized adaptive-window full product settings.",
+            "",
+            "## Ranking Boundary",
+            "",
+            "Recommended-policy ranking excludes the no-menu baseline and includes fixed-menu, random-menu, and the optimized product/time-window variants when source rows are otherwise eligible. no_filter_diagnostic remains diagnostic only.",
             "",
             "## Metrics",
             "",
-            "Metrics include expected or realized net profit, acceptance, opt-out, non-home uptake, ETA pruning behavior, service-quality diagnostics, solver build time, exact/greedy quality, and provenance/status fields.",
+            "Metrics include net profit, operational cost, total cost, acceptance, opt-out, home share, meeting-point uptake, menu utilization, choice entropy, solver build time, exact/greedy quality, and provenance/status fields when available.",
             "",
             "## Paired Replay",
             "",
@@ -240,11 +247,11 @@ def render_result_outline(guard):
             "",
             "## Result Families",
             "",
-            "- Exact-vs-greedy quality: report candidate counts, build time, gap/overlap diagnostics, and fallback reason.",
-            "- Robust filtering comparison: report pruning diagnostics, ETA-risk behavior, and feasibility-preserving no-filter diagnostics.",
-            "- Uptake-regime behavior: report low/medium regime coverage when available and avoid extrapolating beyond covered regimes.",
-            "- Cost-bound references: report home-only and meeting-point-only bounds separately from ranked policy comparisons.",
-            "- Profit decomposition: report profit, acceptance, opt-out, route/service cost, and uncertainty/gap outputs only when source rows are claim-ready.",
+            "- Mainline ranking: report eligible fixed, random, and optimized product/time-window variants only when source rows are claim-ready.",
+            "- Baseline and boundary rows: report no-menu separately from recommended-policy ranking.",
+            "- Product ablations: compare optimized m, m+w, and m+w+p variants without treating passenger-facing price as system profit.",
+            "- Time-window comparison: separate fixed-window and adaptive-window optimized full-product rows.",
+            "- Profit and service decomposition: report profit, operational cost, total cost, acceptance, opt-out, home share, meeting-point uptake, utilization, and choice entropy only when source rows are eligible.",
             "- External or semi-real checks: mark as unavailable unless new external validation data is added.",
             "",
             "## Limitations",

@@ -12,9 +12,11 @@ import yaml
 from Src.artifact_status import (
     classify_artifact,
     collect_environment_provenance,
+    validate_formal_readiness_for_run,
     utc_now_iso,
     write_json,
 )
+from Src.manuscript_claims import write_manuscript_frame
 from Src.study_execution import collect_git_provenance
 
 
@@ -22,6 +24,16 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_ROOT = ROOT / "artifacts" / "work2_robust_menu"
 DEFAULT_STUDY_OUTPUT_ROOT = ROOT / "outputs" / "studies"
 DEFAULT_MIRROR_ROOT = ROOT.parent / "artifacts" / "work2_robust_menu"
+
+MAINLINE_BASELINE_POLICIES = {"mainline_no_menu"}
+MAINLINE_RANK_ELIGIBLE_POLICIES = {
+    "mainline_fixed_menu",
+    "mainline_random_menu",
+    "mainline_optimized_m",
+    "mainline_optimized_mw",
+    "mainline_optimized_fixed_window",
+    "mainline_optimized_adaptive",
+}
 
 
 def load_json(path):
@@ -82,6 +94,12 @@ def aggregate_by_policy(rows):
         policy_rows = groups[policy_tag]
         cost_bound = any(bool(row.get("cost_bound")) for row in policy_rows) or policy_tag in {"home_only", "meeting_point_only"}
         diagnostic = any(bool(row.get("diagnostic")) for row in policy_rows)
+        mainline_policy = policy_tag.startswith("mainline_")
+        baseline_boundary = cost_bound or policy_tag in MAINLINE_BASELINE_POLICIES
+        if mainline_policy:
+            rank_eligible = policy_tag in MAINLINE_RANK_ELIGIBLE_POLICIES and not diagnostic and not cost_bound
+        else:
+            rank_eligible = not diagnostic and not cost_bound
         aggregates.append(
             {
                 "policy_tag": policy_tag,
@@ -90,7 +108,8 @@ def aggregate_by_policy(rows):
                 "diagnostic": diagnostic,
                 "comparison_role": _stable_join(row.get("comparison_role") for row in policy_rows),
                 "cost_bound": cost_bound,
-                "rank_eligible": not diagnostic and not cost_bound,
+                "baseline_boundary": baseline_boundary,
+                "rank_eligible": rank_eligible,
                 "placeholder_only": any(bool(row.get("placeholder_only")) for row in policy_rows),
                 "status": _stable_join(row.get("status") for row in policy_rows),
                 "checkpoint_statuses": _stable_join(row.get("checkpoint_load_status") for row in policy_rows),
@@ -166,6 +185,7 @@ def artifact_metadata(artifact_path, run_data, status_info, source_rows, artifac
         "diagnostic_policy_labels": status_info["diagnostic_policy_labels"],
         "row_count": len(rows),
         "git_provenance": summary.get("git_provenance") or collect_git_provenance(),
+        "formal_readiness": status_info.get("formal_readiness"),
     }
 
 
@@ -260,16 +280,31 @@ def mirror_lightweight_artifacts(src_root, mirror_root):
         shutil.copy2(path, dest)
 
 
-def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplete=False, claim_ready=False):
+def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplete=False, claim_ready=False, readiness_json=None):
     run_data = load_run(run_dir)
     rows = run_data["rows"]
     summary = run_data["summary"]
+    tiers = {row.get("tier") for row in rows if row.get("tier")} | {summary.get("tier")}
+    readiness_validation = None
+    dependency_snapshot = collect_environment_provenance(include_freeze=claim_ready)
+    if claim_ready and "formal" in tiers:
+        if not readiness_json:
+            raise ValueError("formal claim-ready artifacts require passed readiness JSON")
+        readiness_validation = validate_formal_readiness_for_run(readiness_json, rows, summary)
+        if not readiness_validation["valid"]:
+            raise ValueError(
+                "formal claim-ready artifacts require passed readiness JSON: "
+                + "; ".join(readiness_validation["reasons"])
+            )
+        dependency_snapshot = readiness_validation["dependency_snapshot"]
     status_info = classify_artifact(
         rows,
         summary,
         claim_ready_requested=claim_ready,
-        dependency_snapshot=collect_environment_provenance(include_freeze=claim_ready),
+        dependency_snapshot=dependency_snapshot,
     )
+    if readiness_validation:
+        status_info["formal_readiness"] = readiness_validation["metadata"]
     if claim_ready and not status_info["claim_ready"]:
         raise ValueError("claim-ready artifact generation blocked: " + "; ".join(status_info["reasons"]))
     if not allow_incomplete and not status_info["claim_ready"]:
@@ -307,6 +342,14 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
     write_json(ranking_path, ranking)
     artifacts.extend([ranking_path, write_sidecar(ranking_path, run_data, status_info, "ranking")])
 
+    baseline_boundary = [row for row in aggregates if row.get("baseline_boundary")]
+    baseline_json = output_root / "aggregates" / "baseline_boundary_policies.json"
+    baseline_csv = output_root / "aggregates" / "baseline_boundary_policies.csv"
+    write_json(baseline_json, baseline_boundary)
+    write_csv(baseline_csv, baseline_boundary)
+    artifacts.extend([baseline_json, write_sidecar(baseline_json, run_data, status_info, "baseline-boundary-json")])
+    artifacts.extend([baseline_csv, write_sidecar(baseline_csv, run_data, status_info, "baseline-boundary-csv")])
+
     status_path = output_root / "ARTIFACT_STATUS.json"
     top_status = {
         "artifact_status": status_info,
@@ -325,11 +368,16 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
         "manifest_hash": summary.get("manifest_hash"),
         "git_provenance": summary.get("git_provenance") or collect_git_provenance(),
         "environment_provenance": collect_environment_provenance(include_freeze=claim_ready),
+        "formal_readiness": status_info.get("formal_readiness"),
+        "dependency_snapshot": dependency_snapshot,
         "generated_artifacts": [str(path) for path in artifacts if Path(path).exists()],
         "blockers": status_info["blockers"],
     }
     write_json(status_path, top_status)
     artifacts.append(status_path)
+
+    manuscript_result = write_manuscript_frame(output_root)
+    artifacts.extend(manuscript_result["files"])
 
     readme_path = output_root / "README.md"
     readme_path.write_text(

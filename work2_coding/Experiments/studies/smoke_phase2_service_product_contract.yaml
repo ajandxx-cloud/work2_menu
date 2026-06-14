@@ -1,0 +1,154 @@
+schema_version: 1
+name: smoke_phase2_service_product_contract
+tier: smoke
+run_mode: smoke
+description: Phase 2 smoke contract for service product, time-window, menu-mode, and row-v2 fields.
+required_policy_tags:
+  - contract_no_menu
+  - contract_fixed_menu
+  - contract_random_menu
+  - contract_optimized_menu
+base_args:
+  algo_name: DSPO_Menu
+  menu_mode: true
+  product_mode: m+w+p
+  time_window_mode: adaptive_window
+  menu_contract_mode: optimized_menu
+  run_mode: smoke
+  instance: RC
+  load_data: true
+  pricing: true
+  max_episodes: 1
+  max_steps_r: 2
+  max_steps_p: 0.95
+  reopt: 10000000
+  hgs_reopt_time: 0.05
+  hgs_final_time: 0.05
+  menu_k: 3
+  max_candidates: 6
+  menu_exact_threshold: 6
+  menu_exact_gap_threshold: 6
+  checkpoint_path: ""
+  require_checkpoint: false
+  allow_checkpoint_mismatch: false
+splits:
+  - split_id: phase2_contract_k1
+    seed: 211
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      menu_k: 1
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+  - split_id: phase2_contract_k2
+    seed: 212
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      menu_k: 2
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+  - split_id: phase2_contract_k3
+    seed: 213
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      menu_k: 3
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+  - split_id: phase2_contract_k5
+    seed: 215
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      menu_k: 5
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+policies:
+  - tag: contract_no_menu
+  - tag: contract_fixed_menu
+  - tag: contract_random_menu
+  - tag: contract_optimized_menu
+paired_fields:
+  - seed
+  - data_seed
+  - data_seed_test
+  - instance
+  - load_data
+  - pricing
+  - hgs_reopt_time
+  - hgs_final_time
+  - reopt
+  - checkpoint_path
+  - require_checkpoint
+  - menu_k
+  - max_candidates
+  - max_steps_r
+  - max_steps_p
+  - home_util
+  - base_util
+  - incentive_sens
+varied_fields:
+  - algo_name
+  - menu_mode
+  - product_mode
+  - time_window_mode
+  - menu_contract_mode
+  - menu_pricing_mode
+  - menu_policy
+  - menu_eta_filter_mode
+  - menu_time_filtering
+  - menu_objective_mode
+  - menu_eta_chance_threshold
+  - menu_eta_soft_penalty_lambda
+  - service_quit_penalty
+  - service_quit_rate_guardrail
+  - menu_outside_penalty_lambda
+  - menu_optout_guardrail
+  - menu_selection_solver
+  - menu_use_exact_eval
+output_schema:
+  normalized-row-v2: true
+  fields:
+    - schema_version
+    - study_id
+    - study_name
+    - manifest_path
+    - run_id
+    - policy_tag
+    - product_mode
+    - time_window_mode
+    - menu_mode
+    - pricing_mode
+    - method
+    - candidate_id
+    - seed
+    - split_id
+    - trace_id
+    - manifest_hash
+    - checkpoint_load_status
+    - menu_k
+    - filter_mode
+    - effective_policy
+    - accepted_count
+    - served_count
+    - served_rate
+    - optout_rate
+    - home_share
+    - meeting_point_uptake_rate
+    - menu_utilization
+    - choice_entropy
+    - net_profit
+    - operational_cost
+    - total_cost
+    - status
+    - error_type
+    - error_message

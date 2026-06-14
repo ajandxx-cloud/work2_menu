@@ -40,6 +40,9 @@ class DSPO_Menu(DSPO):
         self.get_action = self.get_action_menu
         self.requested_menu_policy = config.menu_policy
         self.menu_policy = config.menu_policy
+        self.product_mode = str(getattr(config, "product_mode", "m+w+p"))
+        self.time_window_mode = str(getattr(config, "time_window_mode", "adaptive_window"))
+        self.menu_contract_mode = str(getattr(config, "menu_contract_mode", "optimized_menu"))
         self.menu_k = config.menu_k
         self.max_candidates = int(getattr(config, "max_candidates", 10))
         self.candidate_slots = self.max_candidates + 1
@@ -152,6 +155,45 @@ class DSPO_Menu(DSPO):
         self.last_policy_diagnostic = {}
         self.last_candidate_diagnostics = []
         self.freeze_learning = bool(getattr(config, "freeze_learning", False) or getattr(config, "eval_only", False))
+
+    def _product_uses_window(self):
+        product_mode = str(getattr(self, "product_mode", "m+w+p"))
+        time_window_mode = str(getattr(self, "time_window_mode", "adaptive_window"))
+        return product_mode in {"m+w", "m+w+p"} and time_window_mode != "no_time_window"
+
+    def _product_uses_price(self):
+        return str(getattr(self, "product_mode", "m+w+p")) == "m+w+p"
+
+    def _effective_pricing_mode(self):
+        if not self._product_uses_price():
+            return "no_pricing"
+        pricing_mode = str(getattr(self, "menu_pricing_mode", "lambertw"))
+        if pricing_mode == "constant":
+            return "flat_markdown"
+        if pricing_mode == "zero":
+            return "no_pricing"
+        return pricing_mode
+
+    def _contract_method(self):
+        return "__".join([
+            str(getattr(self, "product_mode", "m+w+p")),
+            str(getattr(self, "time_window_mode", "adaptive_window")),
+            str(getattr(self, "menu_contract_mode", "optimized_menu")),
+            str(self._effective_pricing_mode()),
+        ])
+
+    def _annotate_offer_contract(self, offer):
+        if offer.metadata is None:
+            offer.metadata = {}
+        offer.metadata.update({
+            "product_mode": str(getattr(self, "product_mode", "m+w+p")),
+            "time_window_mode": str(getattr(self, "time_window_mode", "adaptive_window")),
+            "menu_mode": str(getattr(self, "menu_contract_mode", "optimized_menu")),
+            "pricing_mode": str(self._effective_pricing_mode()),
+            "method": self._contract_method(),
+            "product_id": str(offer.bundle_id),
+        })
+        return offer
 
     def reset(self):
         super().reset()
@@ -477,13 +519,14 @@ class DSPO_Menu(DSPO):
 
     def _menu_utility(self, customer, offer, include_price):
         base = self.base_util + (customer.home_util if offer.is_home else 0.0)
+        pickup_term = self.menu_pickup_time_weight * float(offer.time_deviation) if self._product_uses_window() else 0.0
         utility = (
             base
             + self.menu_travel_time_weight * float(offer.predicted_in_vehicle_time)
-            + self.menu_pickup_time_weight * float(offer.time_deviation)
+            + pickup_term
             - (1.0 - np.exp(-float(offer.walk_distance) / max(self.dist_scaler, 1.0)))
         )
-        if include_price:
+        if include_price and self._product_uses_price():
             utility += customer.incentiveSensitivity * float(offer.price)
         return float(utility)
 
@@ -518,11 +561,7 @@ class DSPO_Menu(DSPO):
             return offers
 
         sens = float(customer.incentiveSensitivity)
-        pricing_mode = self.menu_pricing_mode
-        if pricing_mode == "constant":
-            pricing_mode = "flat_markdown"
-        elif pricing_mode == "zero":
-            pricing_mode = "no_pricing"
+        pricing_mode = self._effective_pricing_mode()
         cost_fn = self._system_eval_cost if use_system_eval else self._menu_eval_cost
         cost_kind = self._evaluation_cost_kind(use_system_eval)
 
@@ -601,7 +640,7 @@ class DSPO_Menu(DSPO):
         cost_fn = self._system_eval_cost if use_system_eval else self._menu_eval_cost
         margin = float(offer.price - cost_fn(offer))
         walk_pen = float(offer.walk_distance) / max(self.dist_scaler, 1.0)
-        time_pen = float(offer.time_deviation) / self.menu_time_scale
+        time_pen = float(offer.time_deviation) / self.menu_time_scale if self._product_uses_window() else 0.0
         ivt_pen = float(offer.predicted_in_vehicle_time) / self.menu_time_scale
         offer.score = float(
             self.menu_score_lambda_margin * margin
@@ -706,6 +745,10 @@ class DSPO_Menu(DSPO):
         denom = max(np.sum(probs) + outside_shifted, 1e-12)
         probs = probs / denom
         outside_probability = float(outside_shifted / denom)
+        positive_probs = [float(prob) for prob in probs if prob > 0.0]
+        if outside_probability > 0.0:
+            positive_probs.append(outside_probability)
+        choice_entropy = float(-sum(prob * np.log(max(prob, 1e-12)) for prob in positive_probs))
 
         total_value = 0.0
         cost_fn = self._system_eval_cost if use_system_eval else self._menu_eval_cost
@@ -722,6 +765,8 @@ class DSPO_Menu(DSPO):
                 offer.metadata = {}
             offer.metadata["choice_probability"] = float(prob)
             offer.metadata["menu_outside_probability"] = float(outside_probability)
+            offer.metadata["choice_entropy"] = float(choice_entropy)
+            offer.metadata["menu_utilization"] = float(1.0 - outside_probability)
             offer.metadata["expected_profit"] = float(offer.expected_profit)
             offer.metadata["evaluation_cost_kind"] = eval_cost_kind
             offer.metadata["menu_objective_mode"] = self.menu_objective_mode
@@ -739,6 +784,13 @@ class DSPO_Menu(DSPO):
             total_value += offer.expected_profit
         self._merge_policy_diagnostic({
             "method_variant": str(getattr(self, "method_variant", "DSPO_original")),
+            "product_mode": str(getattr(self, "product_mode", "m+w+p")),
+            "time_window_mode": str(getattr(self, "time_window_mode", "adaptive_window")),
+            "menu_mode": str(getattr(self, "menu_contract_mode", "optimized_menu")),
+            "pricing_mode": str(self._effective_pricing_mode()),
+            "method": self._contract_method(),
+            "choice_entropy": float(choice_entropy),
+            "menu_utilization": float(1.0 - outside_probability),
             "attention_enabled": bool(self._attention_is_active()),
             "attention_mode": str(getattr(self, "attention_mode", "deterministic")),
             "attention_strength": float(getattr(self, "attention_strength", 1.0)),
@@ -778,6 +830,7 @@ class DSPO_Menu(DSPO):
             if offer.metadata is None:
                 offer.metadata = {}
             offer.metadata["menu_objective_mode"] = self.menu_objective_mode
+            self._annotate_offer_contract(offer)
         return priced_menu
 
     def _singleton_offer_utility(self, customer, home_offer, offer):
@@ -1586,7 +1639,8 @@ class DSPO_Menu(DSPO):
             # Floor baseline: randomly sample k candidates for performance lower-bound context.
             import random
             k = min(self.menu_k, len(ooh_candidates))
-            selected = random.sample(ooh_candidates, k=k)
+            seed = int(getattr(self.config, "seed", 0)) + int(getattr(customer, "id_num", 0)) + int(getattr(customer.home, "time", 0))
+            selected = random.Random(seed).sample(ooh_candidates, k=k)
             menu = ([home_offer] if home_offer is not None and self.menu_keep_home else []) + selected
         elif self.menu_policy == "home_only":
             menu = [home_offer] if home_offer is not None else []
@@ -1724,8 +1778,14 @@ class DSPO_Menu(DSPO):
             offer.metadata["menu_policy"] = self.menu_policy
             offer.metadata["requested_menu_policy"] = self.requested_menu_policy
             offer.metadata["effective_menu_policy"] = self._effective_menu_policy()
+            offer.metadata["product_mode"] = str(getattr(self, "product_mode", "m+w+p"))
+            offer.metadata["time_window_mode"] = str(getattr(self, "time_window_mode", "adaptive_window"))
+            offer.metadata["menu_mode"] = str(getattr(self, "menu_contract_mode", "optimized_menu"))
+            offer.metadata["pricing_mode"] = str(self._effective_pricing_mode())
+            offer.metadata["method"] = self._contract_method()
             offer.metadata["menu_build_time"] = float(self.last_menu_build_time)
             offer.metadata["selected"] = True
+            self._annotate_offer_contract(offer)
 
         self.last_menu = list(menu)
         return list(menu)

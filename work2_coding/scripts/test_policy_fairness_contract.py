@@ -16,6 +16,7 @@ from Src.policy_adapters import (  # noqa: E402
     POLICY_ONLY_FIELDS,
     adapter_metadata,
     adapter_overrides,
+    mainline_policy_tags,
     required_policy_tags,
     validate_policy_only_overrides,
     validate_required_adapter_coverage,
@@ -41,15 +42,15 @@ def test_required_adapter_coverage_and_parser_compatibility():
         assert overrides["menu_eta_filter_mode"] in parser_choices()["menu_eta_filter_mode"]
 
 
-def test_required_baselines_present_in_smoke_manifest():
+def test_mainline_family_present_in_smoke_manifest():
     manifest = load_manifest("smoke_robust_menu")
     tags = {policy["tag"] for policy in manifest["policies"]}
-    assert set(required_policy_tags()).issubset(tags)
-    assert "random_top_k" in tags
+    assert set(mainline_policy_tags()).issubset(tags)
+    assert tags == set(mainline_policy_tags())
 
 
 def test_no_filter_diagnostic_flag_and_runtime_knobs():
-    manifest = load_manifest("smoke_robust_menu")
+    manifest = load_manifest("diagnostic_actual_menu")
     policy = [p for p in manifest["policies"] if p["tag"] == "no_filter_diagnostic"][0]
     args = resolve_policy_args(manifest, manifest["splits"][0], policy)
     metadata = adapter_metadata("no_filter_diagnostic")
@@ -66,7 +67,7 @@ def test_home_only_is_cost_bound_not_ranked_policy():
 
 
 def test_robust_policy_separation():
-    manifest = load_manifest("smoke_robust_menu")
+    manifest = load_manifest("diagnostic_actual_menu")
     split = manifest["splits"][0]
     risk = [p for p in manifest["policies"] if p["tag"] == "robust_risk_adjusted"][0]
     guarded = [p for p in manifest["policies"] if p["tag"] == "robust_service_guarded"][0]
@@ -93,7 +94,7 @@ def test_manifest_policy_drift_rejected():
 
 
 def test_allowed_filter_and_objective_drift_passes():
-    manifest = load_manifest("smoke_robust_menu")
+    manifest = load_manifest("diagnostic_actual_menu")
     split = manifest["splits"][0]
     hard = [p for p in manifest["policies"] if p["tag"] == "hard_filter"][0]
     robust = [p for p in manifest["policies"] if p["tag"] == "robust_risk_adjusted"][0]
@@ -109,7 +110,7 @@ def test_pricing_contract_is_paired_and_row_recorded():
     manifest = load_manifest("smoke_robust_menu")
     assert "pricing" in manifest["paired_fields"]
     assert "pricing" not in manifest["varied_fields"]
-    assert "menu_pricing_mode" not in manifest["varied_fields"]
+    assert "menu_pricing_mode" in manifest["varied_fields"]
     assert "menu_pricing_constant" not in manifest["varied_fields"]
 
     settings = resolve_paired_settings(manifest)
@@ -118,11 +119,30 @@ def test_pricing_contract_is_paired_and_row_recorded():
     pricing_constants = {setting["args"].get("menu_pricing_constant") for setting in settings}
 
     assert pricing_values == {True}
-    assert len(pricing_modes) == 1
+    assert pricing_modes == {"lambertw", "no_pricing"}
     assert len(pricing_constants) == 1
 
     row = build_normalized_row(settings[0], run_id="pricing-contract")
     assert row["pricing"] is True
+
+
+def test_mainline_policy_drift_is_limited_to_comparison_fields():
+    manifest = load_manifest("smoke_robust_menu")
+    split = manifest["splits"][0]
+    resolved = {
+        policy["tag"]: resolve_policy_args(manifest, split, policy)
+        for policy in manifest["policies"]
+    }
+    for tag, args in resolved.items():
+        assert args["seed"] == split["seed"]
+        assert args["data_seed"] == split["data_seed"]
+        assert args["hgs_final_time"] == manifest["base_args"]["hgs_final_time"]
+        assert args["checkpoint_path"] == manifest["base_args"]["checkpoint_path"]
+        assert args["menu_policy"] in {"home_only", "nearest_heuristic", "random_top_k", "service_guarded_expected_profit"}
+    assert resolved["mainline_no_menu"]["product_mode"] == "m"
+    assert resolved["mainline_optimized_mw"]["product_mode"] == "m+w"
+    assert resolved["mainline_optimized_adaptive"]["product_mode"] == "m+w+p"
+    assert resolved["mainline_optimized_adaptive"]["menu_policy"] == "service_guarded_expected_profit"
 
 
 def test_pilot_and_formal_uptake_regimes():
@@ -158,7 +178,7 @@ def test_row_ready_uptake_regime_metadata():
 def main():
     tests = [
         test_required_adapter_coverage_and_parser_compatibility,
-        test_required_baselines_present_in_smoke_manifest,
+        test_mainline_family_present_in_smoke_manifest,
         test_no_filter_diagnostic_flag_and_runtime_knobs,
         test_home_only_is_cost_bound_not_ranked_policy,
         test_robust_policy_separation,
@@ -166,6 +186,7 @@ def main():
         test_manifest_policy_drift_rejected,
         test_allowed_filter_and_objective_drift_passes,
         test_pricing_contract_is_paired_and_row_recorded,
+        test_mainline_policy_drift_is_limited_to_comparison_fields,
         test_pilot_and_formal_uptake_regimes,
         test_uptake_regime_is_split_level_not_policy_level,
         test_row_ready_uptake_regime_metadata,

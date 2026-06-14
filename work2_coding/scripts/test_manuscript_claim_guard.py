@@ -61,6 +61,13 @@ def claim_ready_status():
         "policies": ["robust_risk_adjusted", "hard_filter", "no_filter_diagnostic"],
         "run_id": "formal-test",
         "study": "formal_robust_menu",
+        "formal_readiness": {
+            "status": "passed",
+            "path": "outputs/formal_readiness/formal_robust_menu/FORMAL_READINESS.json",
+            "hash": "readiness-hash",
+            "dependency_snapshot_hash": "dependency-hash",
+            "checkpoint_hash": "abc123",
+        },
     }
 
 
@@ -92,6 +99,7 @@ def test_claim_ready_status_allows_effect_size_family_not_universal_claims():
     assert guard["claim_ready"] is True
     assert conditional["pilot_formal_effect_sizes"]["allowed"] is True
     assert conditional["formal_policy_ranking"]["allowed"] is True
+    assert guard["formal_readiness_status"] == "passed"
     assert "universal_dominance" in blocked_ids
     assert "real_passenger_validation" in blocked_ids
 

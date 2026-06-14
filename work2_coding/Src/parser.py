@@ -142,6 +142,15 @@ class Parser(object):
 
     def Menu_parameters(self, parser):
         parser.add_argument("--menu_mode", default=False, help="Enable Work2 service-menu runtime", type=self.str2bool)
+        parser.add_argument("--product_mode", default="m+w+p",
+                            choices=["m", "m+w", "m+w+p"],
+                            help="Displayed service-product feature set for j=(m,w,p)")
+        parser.add_argument("--time_window_mode", default="adaptive_window",
+                            choices=["no_time_window", "fixed_window", "adaptive_window"],
+                            help="Paper-facing time-window product semantics")
+        parser.add_argument("--menu_contract_mode", dest="menu_contract_mode", default="optimized_menu",
+                            choices=["no_menu", "fixed_menu", "random_menu", "optimized_menu"],
+                            help="Paper-facing menu baseline semantics")
         parser.add_argument("--menu_policy", default="menu_optimization",
                             choices=[
                                 "menu_optimization",

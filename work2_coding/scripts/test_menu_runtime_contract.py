@@ -21,9 +21,15 @@ def test_parser_menu_contract():
         "--algo_name", "DSPO_Menu",
         "--menu_mode", "True",
         "--menu_eta_filter_mode", "chance_constraint",
+        "--product_mode", "m+w",
+        "--time_window_mode", "fixed_window",
+        "--menu_contract_mode", "fixed_menu",
     ])
     assert args.algo_name == "DSPO_Menu"
     assert args.menu_mode is True
+    assert args.product_mode == "m+w"
+    assert args.time_window_mode == "fixed_window"
+    assert args.menu_contract_mode == "fixed_menu"
     assert args.menu_eta_filter_mode == "chance_constraint"
     assert args.menu_selection_solver == "auto"
     assert args.menu_exact_threshold > 0
