@@ -1,153 +1,139 @@
-# Work2 TR-C Paper Rewriting and Experiment Rebuild
+# Work2_TR_E_Service_Menu_Optimization_Final
 
 ## What This Is
 
-This project is a GSD-managed research workflow for a Transportation Research
-Part C manuscript on behavior-aware service-menu optimization in many-to-one
-demand-responsive transit. The active runtime remains `work2_coding/`, and the
-new milestone turns the completed V1 robust-menu evidence pipeline into a
-reviewer-ready paper and experiment rebuild plan centered on RC data.
+This is a GSD-managed brownfield research rebuild for Work2, focused on dynamic
+service menu optimization for many-to-one demand-responsive transit and
+last-mile mobility. The active runtime is `work2_coding/`, and the project
+turns the existing Work2 robust-menu implementation into a claim-ready
+Transportation Research Part E paper pipeline.
+
+The central object is the displayed service menu: for each sequential passenger
+request, the platform selects a limited set of service bundles combining a
+meeting point, pickup-time window, and price, with home service and the outside
+option handled explicitly.
 
 ## Core Value
 
-Produce a defensible TR-C manuscript whose DSPO, DSPO_PLUS, static-pricing, and
-no-pricing comparisons are reproducible, behaviorally coherent, and gated before
-any empirical superiority claim is made.
-
-## Current Milestone: v1.1 Work2_TR_PartC_Paper_Rewriting_and_Experiment_Rebuild_RC
-
-**Goal:** Rebuild the paper and experiment plan around TR-C expectations while
-preserving strict evidence gates for DSPO/DSPO_PLUS, menu, time-window, pricing,
-and passenger-choice claims.
-
-**Target features:**
-- Restructure the LaTeX manuscript into an Elsevier double-column TR-C format.
-- Audit the DSPO/DSPO_PLUS/menu/time-window code and RC dataset pipeline before
-  algorithm or experiment behavior changes.
-- Repair model and experiment inconsistencies around MNL choice, utility terms,
-  pricing modes, and opt-out accounting.
-- Validate no-pricing, static-pricing, DSPO, and DSPO_PLUS baselines under paired
-  replay before formal manuscript claims.
-- Add gated ablation and reviewer-risk sections for time windows, menu expansion,
-  and the DSPO-to-DSPO_PLUS gap.
+Produce credible, reproducible TR Part E evidence that optimized adaptive
+`m+w+p` service menus improve the profit-service-quality trade-off under paired
+RC replay, without overclaiming beyond artifact and readiness gates.
 
 ## Requirements
 
 ### Validated
 
-- [x] Confirm `work2_coding/` as the active importable runtime root.
-- [x] Audit stale `ooh_code/` codebase maps and document safe path mappings.
-- [x] Define explicit service product, product-mode, time-window-mode,
-  menu-mode, pricing-mode, row-v2, and artifact eligibility contracts.
-- [x] Migrate `work2_robust_menu` smoke, pilot, and formal manifests to the
-  seven-tag V1 mainline family.
-- [x] Verify smoke actual replay for all seven mainline policies across
-  `menu_k={1,2,3,5}`.
-- [x] Make artifact building mainline-aware for normalized-row-v2 outputs.
-- [x] Add claim guards for the seven-tag mainline family.
-- [x] Build mirrored artifact bundles and manuscript-facing tables/figures from
-  regenerated outputs.
-- [x] Implement formal readiness preflight, dependency snapshot reporting, and
-  formal claim-ready artifact gates.
-- [x] Audit current Work2 DSPO/menu/time-window/pricing/RC/readiness/artifact
-  surfaces before model or experiment behavior changes.
-- [x] Repair MNL outside-option, DSPO/DSPO_PLUS method-family, and
-  opt-out/home/meeting-point accounting contracts across rows, artifact gates,
-  and manuscript definitions.
-- [x] Validate no-pricing and static-pricing baselines under paired replay before
-  DSPO or DSPO_PLUS ladder claims are advanced.
+- [x] `work2_coding/` is the active importable runtime root.
+- [x] `DSPO_Menu.py` exists in `work2_coding/Src/Algorithms/`.
+- [x] Existing runtime imports pass with `python -c "import sys; sys.path.insert(0, 'work2_coding'); import Src.config; print('IMPORT_OK')"`.
+- [x] Existing code contains robust-menu manifests, study execution scripts,
+  artifact builders, formal readiness checks, and service-product tests.
+- [x] Previous `.planning/codebase/` maps are available but stale where they
+  reference `ooh_code/`.
 
 ### Active
 
-- [ ] Rebuild the main manuscript in Elsevier `cas-dc` double-column format.
-- [ ] Keep current non-claim-ready artifact status explicit until checkpoint and
-  formal evidence gates pass.
-- [ ] Preserve paired replay fairness across all policy comparisons.
-- [ ] Validate the RC-centered DSPO/DSPO_PLUS ladder before writing ranking
-  claims.
-- [ ] Add reviewer-facing risk analysis covering novelty, modeling weakness,
-  experiment weakness, and acceptance probability.
+- [ ] Lock the current repository state before algorithm behavior changes.
+- [ ] Reframe the paper from a TR-C / DSPO_PLUS ladder into a TR-E service-menu
+  optimization contribution.
+- [ ] Complete formal RC evidence for the seven-tag mainline family.
+- [ ] Diagnose whether formal RC results support strong, conditional, weak, or
+  unsupported paper claims.
+- [ ] If needed, calibrate through a documented pilot/final split rather than
+  test-set tuning.
+- [ ] Decide whether a real or semi-real case study is feasible and valuable.
+- [ ] Add sensitivity, exact-vs-greedy, artifact, manuscript, and final
+  readiness phases only after upstream evidence gates pass.
 
 ### Out of Scope
 
-- Attention-based choice or scoring for this milestone's v1 paper claims.
-- Treating no-filter diagnostics as formal ranking evidence.
-- Hand-editing generated result rows, generated tables, generated figures, or
-  formal claim outputs.
-- Creating a parallel `ooh_code/` runtime root.
-- Inventing experiment results or asserting the target ranking before the
-  required gate passes.
-- Introducing a new RL algorithm or otherwise changing the algorithm family
-  beyond the current DSPO/DSPO_PLUS/menu-time-window scope.
+- Making attention-based choice or scoring the V1 paper contribution.
+- Claiming universal dominance across every metric or setting.
+- Treating no-filter diagnostics as formal evidence without additional proof.
+- Hand-editing generated result rows, tables, figures, or claim outputs.
+- Creating or reviving a parallel `ooh_code/` runtime root.
+- Fabricating real data or describing simulated demand as real behavior.
+- Tuning directly on formal test results to force the target ranking.
 
 ## Context
 
-The active runtime lives in `work2_coding/`. Existing `.planning/codebase/`
-documents contain stale `ooh_code/` references and must be interpreted through
-`.planning/repository_audit.md` and the current `work2_coding/` filesystem.
+The file `工作二讨论6.14.txt` argues that Work2 should be positioned as a
+service-menu optimization paper rather than an attention paper or a
+pricing-only extension. Its strongest framing is:
 
-The previous milestone completed the V1 robust-menu pipeline and formal
-readiness gates, but real formal readiness still blocked on missing formal
-checkpoint provenance and local dirty-git provenance. The current artifact
-bundle `work2_coding/artifacts/work2_robust_menu/` reports blocked/non-claim-ready
-status, so the manuscript may describe implemented methods, diagnostics, and
-required gates but must not claim empirical DSPO_PLUS dominance until the
-formal evidence ladder passes.
+> Dynamic service menu optimization for many-to-one DRT with meeting-point,
+> pickup-time-window, and pricing choices.
 
-Phase 6 completed the code and experiment audit. The current factual policy
-classification remains the seven-tag mainline robust-menu family, attention
-tags remain V2/diagnostic, static pricing and DSPO_PLUS are downstream gaps, and
-formal claim readiness remains blocked by `dirty_git` despite loaded checkpoint
-and dependency snapshot provenance.
+The current repository is not empty. It already contains a Work2 implementation,
+service-product contracts, robust-menu manifests, smoke/pilot/formal study
+definitions, artifact builders, formal readiness checks, and manuscript-frame
+builders. The current Work2 V1 mainline family is:
 
-Phase 8 completed paired baseline validation for no-pricing and static-pricing
-baselines. Baseline execution passed and Phase 9 may proceed, but claim-ready
-ranking artifacts remain gated by formal provenance and downstream DSPO /
-DSPO_PLUS validation.
+1. `mainline_no_menu`
+2. `mainline_fixed_menu`
+3. `mainline_random_menu`
+4. `mainline_optimized_m`
+5. `mainline_optimized_mw`
+6. `mainline_optimized_fixed_window`
+7. `mainline_optimized_adaptive`
 
-Phase 9 completed paired DSPO validation for `dspo_clip` and `dspo_wide` across
-the five Phase 8-equivalent splits. The DSPO validation gate is open, but
-`claim_ready=false` remains explicit and no ranking or DSPO_PLUS claim is
-unlocked.
+The primary V1 method is `mainline_optimized_adaptive`: optimized menu,
+adaptive pickup-time window, and Lambert-W pricing, with product mode `m+w+p`,
+time-window mode `adaptive_window`, menu-contract mode `optimized_menu`, and
+pricing mode `lambertw`.
 
-The TR-C manuscript target structure is:
-Introduction, Literature Review, Problem Formulation, Methodology, Experimental
-Design, Results, Ablation Study, Conclusion, plus reviewer-risk and GSD
-execution-report appendices when useful.
+The 6.14 discussion also states a scientific status boundary: current smoke and
+pipeline evidence can show that the experiment framework works, but formal
+checkpoint training, formal replay, and claim-ready artifact gates must pass
+before any empirical superiority claim is made.
 
 ## Constraints
 
-- **Runtime root:** Use `work2_coding/` for Python checks and artifact inputs.
-- **Manuscript format:** Use Elsevier CAS double-column (`cas-dc`) format for
-  the main LaTeX manuscript.
+- **Runtime root:** Use `work2_coding/` for all Python commands.
+- **Path hygiene:** Treat `.planning/codebase/` `ooh_code/` references as stale
+  until Phase 1 verifies equivalent `work2_coding/` paths.
 - **Evidence integrity:** Preserve paired replay fairness across policy
   comparisons.
 - **Behavior accounting:** Keep opt-out separate from accepted home pickup.
-- **Checkpoint provenance:** Keep checkpoint load status explicit in result
-  metadata and manuscript status language.
-- **Claim gates:** Exclude diagnostic, failed, blocked, placeholder-only,
-  no-filter-only, contract-only, and bad-checkpoint rows from formal claims.
-- **Result integrity:** Do not hand-edit generated result rows, tables, figures,
-  or claim-ready artifacts.
+- **Checkpoint provenance:** Record checkpoint load status and checkpoint
+  provenance in result metadata.
+- **Claim gates:** Formal paper claims require readiness JSON, normalized rows,
+  artifact status, and claim guard approval.
+- **Research scope:** RC benchmark is primary. Real/semi-real case study is
+  optional and only after RC formal evidence is stable.
+- **Paper positioning:** Write for logistics, transportation optimization, and
+  service operations; do not frame V1 as an attention model paper.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 | --- | --- | --- |
-| Use `work2_coding/` as runtime root | Current imports and smoke runs passed there; `ooh_code/` maps are stale. | Validated |
-| Use normalized-row-v2 | V1 needs product/time-window/menu/pricing/status/provenance fields. | Validated |
-| Keep seven mainline tags | Separates menu baselines, product ablations, and fixed/adaptive windows. | Validated |
-| Require checkpoint provenance for formal evidence | Prevents random or incompatible weights from becoming claim evidence. | Active |
-| Require passed readiness JSON for formal claim-ready artifacts | Keeps dependency snapshot, checkpoint hash, manifest hash, and artifact gates explicit. | Validated |
-| Keep attention out of v1 paper claims | Attention artifacts are diagnostic/V2 only. | Active |
-| Use Elsevier `cas-dc` for the manuscript | The user requested Elsevier double-column format for the TR-C paper rewrite. | Active |
-| Treat DSPO_PLUS ranking as a gate, not an assumption | The target ranking must be verified, not written into the paper as fact before evidence passes. | Active |
-| Treat Phase 8 baseline validation separately from claim-ready artifacts | Baseline execution can pass while formal ranking artifacts remain blocked by provenance gates. | Validated |
+| Use `work2_coding/` as runtime root | Current import smoke passes there and `DSPO_Menu.py` exists. | Validated |
+| Rebuild planning around TR Part E | The 6.14 discussion identifies service-product menu optimization as the stronger contribution. | Active |
+| Keep seven mainline tags as V1 comparison family | They decompose menu optimization, product composition, pricing, and time-window value. | Active |
+| Keep `mainline_optimized_adaptive` as the primary method | It represents optimized `m+w+p` service menus with adaptive windows and Lambert-W pricing. | Active |
+| Keep attention diagnostic only | Existing discussion and prompt both exclude attention as the V1 contribution. | Active |
+| Require formal evidence before claims | Current pipeline status is not yet sufficient for TR-E empirical claims. | Active |
+| Separate calibration from final formal testing | Prevents p-hacking and protects paper credibility. | Active |
 
 ## Evolution
 
-Update this document only when the Work2 paper-rewrite scope changes or a phase
-is verified.
+This document evolves at phase transitions and milestone boundaries.
+
+After each phase transition:
+
+1. Requirements invalidated? Move to Out of Scope with reason.
+2. Requirements validated? Move to Validated with phase reference.
+3. New requirements emerged? Add to Active.
+4. Decisions to log? Add to Key Decisions.
+5. "What This Is" still accurate? Update if drifted.
+
+After each milestone:
+
+1. Full review of all sections.
+2. Core Value check: still the right priority?
+3. Audit Out of Scope: reasons still valid?
+4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-14 after Phase 9 DSPO family validation*
+*Last updated: 2026-06-14 after GSD new-project initialization for TR-E experimental refactoring*
