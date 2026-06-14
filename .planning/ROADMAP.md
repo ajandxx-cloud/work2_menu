@@ -95,7 +95,7 @@ provenance.
 **Goal:** Run and gate DSPO clip/wide configurations under the same paired
 replay contract as the baselines.
 
-**Status:** In Progress
+**Status:** Complete (2026-06-14)
 
 **Success Criteria**:
 1. DSPO clip and DSPO wide variants are executable.
@@ -105,6 +105,12 @@ replay contract as the baselines.
 4. Any failure enters a debug loop before Phase 10.
 
 **Requirements:** EXP-04, GATE-01, GATE-02, GATE-04
+
+**Phase 9 completion note:** Actual paired replay completed for `dspo_clip`
+and `dspo_wide` across the five Phase 8-equivalent splits. The Phase 9
+validation report passed with `phase9_gate=open`, `dspo_validation_status=passed`,
+and `claim_ready=false`, preserving the ranking-claim gate and avoiding artifact
+bundle generation.
 
 ## Phase 10: DSPO_PLUS Full Run
 

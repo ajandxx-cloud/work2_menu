@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Work2_TR_PartC_Paper_Rewriting_and_Experiment_Rebuild_RC
-status: executing
-last_updated: "2026-06-14T13:00:50.791Z"
+status: verifying
+last_updated: "2026-06-14T13:07:31.188Z"
 last_activity: 2026-06-14
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 12
-  completed_plans: 14
-  percent: 50
+  completed_plans: 15
+  percent: 67
 ---
 
 # State
@@ -29,7 +29,7 @@ coherent, and gated before empirical superiority claims are made.
 
 Phase: 09 (dspo-family-full-run) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-06-14
 
 ## Recent Verification
@@ -123,6 +123,16 @@ Phase 8 outputs:
 - `work2_coding/outputs/phase8_baseline_validation/PHASE8_BASELINE_VALIDATION.json`
 - `work2_coding/outputs/phase8_baseline_validation/PHASE8_BASELINE_VALIDATION.md`
 
+Phase 9 executed actual paired replay for `dspo_clip` and `dspo_wide` across
+the five Phase 8-equivalent splits. The Phase 9 report opened the DSPO
+validation gate while keeping `claim_ready=false` and ranking claims locked.
+
+Phase 9 outputs:
+
+- `work2_coding/outputs/studies/phase9_dspo_family_validation/phase9_dspo_family_validation-20260614T130443Z-0cf5543f`
+- `work2_coding/outputs/phase9_dspo_family_validation/PHASE9_DSPO_FAMILY_VALIDATION.json`
+- `work2_coding/outputs/phase9_dspo_family_validation/PHASE9_DSPO_FAMILY_VALIDATION.md`
+
 ## Current Notes
 
 - Active runtime root is `work2_coding/`.
@@ -137,16 +147,17 @@ Phase 8 outputs:
   claim-ready artifacts must not be hand-edited.
 
 - Attention artifacts remain V2/diagnostic and are not V1 ranking evidence.
-- Phase 8 baseline replay has been executed, but formal DSPO/DSPO_PLUS ladder
-  replay and formal checkpoint training have not been executed.
+- Phase 9 DSPO clip/wide replay has been executed, but final ranking claims
+  and claim-ready artifacts remain gated.
 
 - Real formal readiness report:
   `work2_coding/outputs/phase5_readiness/formal_robust_menu/FORMAL_READINESS.json`
 
 ## Next Step
 
-Plan Phase 9 DSPO family full run. Phase 9 should run and gate DSPO clip/wide
-configurations under the same paired replay contract as the Phase 8 baselines.
+Verify Phase 9 DSPO family full run, then proceed only to manuscript status
+and reviewer-risk language unless a later gate explicitly unlocks ranking
+claims.
 
 ---
-*Updated: 2026-06-14 after completing Phase 8 baseline validation*
+*Updated: 2026-06-14 after completing Phase 9 DSPO family validation*
