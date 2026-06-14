@@ -441,22 +441,22 @@ Source pattern: Phase 8 validator checks row completion, placeholder status, che
 | A3 | Add `service_quit_rate_guardrail` and `menu_optout_guardrail` to `varied_fields`. | Manifest / Report Shape | Medium: if `validate_manifest()` already permits these through policy-only overrides differently, planner should verify with tests. |
 | A4 | Report sanity comparison should use net objective/profit deltas only as status context. | Manifest / Report Shape | Medium: exact sanity metric is not locked, but ranking language must remain gated. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should Phase 9 split IDs remain `phase8_baseline_*` or be renamed while preserving split values?**
    - What we know: D-10 locks seed/data/uptake/util values exactly. [CITED: .planning/phases/09-dspo-family-full-run/09-CONTEXT.md]
-   - What's unclear: Whether split ID strings themselves must be identical.
-   - Recommendation: Preserve split IDs exactly unless implementation tests require Phase 9-specific IDs; if renamed, validator must record the Phase 8 source split mapping. [ASSUMED]
+   - RESOLVED: Preserve the Phase 8 split IDs exactly in the Phase 9 manifest. This keeps trace/status comparison simple and avoids introducing a second mapping layer.
+   - Implementation consequence: `phase9_dspo_family_validation.yaml` should copy the Phase 8 split objects exactly, changing only policy-level DSPO clip/wide settings outside the split definitions.
 
 2. **What exact sanity metric should the report summarize?**
    - What we know: Sanity comparison is allowed only as status context and cannot block Phase 9 merely because it does not support DSPO advantage. [CITED: .planning/phases/09-dspo-family-full-run/09-CONTEXT.md]
-   - What's unclear: Whether to compare `net_profit`, `net_objective_proxy`, `served_rate`, or a compact multi-metric summary.
-   - Recommendation: Use a small status summary over `net_profit`, `served_rate`, and `optout_rate`, with no ranking conclusion. [ASSUMED]
+   - RESOLVED: Use a compact status-only sanity summary over `net_profit`, `served_rate`, and `optout_rate` when Phase 8 reference data is available.
+   - Implementation consequence: The report may state whether these status indicators do or do not support an advantage conclusion, but it must not block Phase 9 or unlock manuscript ranking language on that basis.
 
 3. **Should existing DSPO_PLUS tests be rewritten now or only shielded from Phase 9?**
    - What we know: Phase 9 excludes DSPO_PLUS and treats it as stale planning residue. [CITED: .planning/phases/09-dspo-family-full-run/09-CONTEXT.md]
-   - What's unclear: Whether to remove existing DSPO_PLUS-focused assertions from `test_method_family_contract.py` during Phase 9 or leave them while adding DSPO-only Phase 9 assertions.
-   - Recommendation: Add Phase 9 DSPO-only assertions and avoid broad DSPO_PLUS cleanup unless tests conflict with the Phase 9 manifest/report. [ASSUMED]
+   - RESOLVED: Add Phase 9 DSPO-only assertions and shield the Phase 9 manifest/report path from DSPO_PLUS semantics. Do not perform broad DSPO_PLUS cleanup in Phase 9 unless an existing assertion directly blocks the Phase 9 DSPO-only contract.
+   - Implementation consequence: `test_method_family_contract.py` should validate `dspo_clip`/`dspo_wide` as DSPO-only and may leave unrelated historical DSPO_PLUS tests untouched if they do not leak into Phase 9.
 
 ## Environment Availability
 

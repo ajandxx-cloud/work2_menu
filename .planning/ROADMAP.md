@@ -1,4 +1,4 @@
-# Roadmap: Work2 Robust Time-Window Service Menu Optimization
+# Roadmap: Work2 TR-C Paper Rewriting and Experiment Rebuild
 
 ## Execution Policy: Local-Only
 
@@ -12,106 +12,136 @@ evidence, prefer local reproducibility artifacts such as readiness JSON,
 dependency snapshots, manifest hashes, checkpoint hashes, command logs, and
 output-directory archives.
 
-If a gate currently reports `dirty_git`, treat it as a local provenance warning
-to document unless a later roadmap phase explicitly reinstates clean-git as a
-hard requirement. Do not use `dirty_git` alone to force git commits or pushes.
+## Previous Milestone Summary
 
-## Phase 1: Repository Audit
+Phases 1-5 completed the V1 robust time-window service-menu pipeline, including
+runtime-root audit, service-product contracts, mainline comparison contracts,
+artifact pipeline and claim guards, and formal evidence readiness. The new
+milestone continues numbering from Phase 6 because existing phase directories
+are still present and no safe reset archive target is configured.
 
-**Goal:** Verify the active runtime root, audit stale planning/codebase references,
-and inventory reusable Work2 robust-menu code, manifests, tests, and artifacts.
+## Phase 6: Code And Experiment Audit
 
-**Status:** Complete
+**Goal:** Audit DSPO, DSPO_PLUS, menu, time-window, pricing, RC data, and
+artifact-state assumptions before changing behavior or making paper claims.
 
-**Evidence:** `.planning/repository_audit.md`
+**Status:** Complete (2026-06-14)
 
 **Success Criteria**:
 1. `work2_coding/` import smoke passes.
-2. Stale `ooh_code/` references are mapped or marked obsolete.
-3. Reusable robust-menu and attention/diagnostic assets are classified.
-4. Phase 2 risks and coverage gaps are documented.
+2. Current DSPO/DSPO_PLUS/static/no-pricing code paths and manifests are
+   located and classified.
+3. RC dataset loading and split/seeding contracts are documented.
+4. Current artifact claim blockers are summarized for the manuscript.
+5. Failure states include reason, minimal fix, and rerun command.
 
-**Requirements:** RUN-01, RUN-02, RUN-03
+**Requirements:** EXP-01, EXP-02, GATE-01, GATE-02, GATE-04
 
-## Phase 2: Service Product Contract
+**Phase 6 completion note:** Audit matrix, verification report, and downstream
+handoff are available in `.planning/phases/06-code-and-experiment-audit/` and
+`work2_coding/outputs/phase6_audit/`. Formal claim readiness remains blocked by
+`dirty_git`; Phase 6 did not run formal replay or advance manuscript ranking
+claims.
 
-**Goal:** Define and verify the explicit service product, product-mode,
-time-window-mode, menu-mode, pricing, normalized-row-v2, and artifact gate
-contracts.
+## Phase 7: Model Consistency Repair
 
-**Status:** Complete
+**Goal:** Align the paper and implementation around a single MNL-with-outside
+option model and consistent DSPO/DSPO_PLUS definitions.
 
-**Evidence:** `.planning/phases/02-service-product-contract/02-VERIFICATION.md`
-
-**Success Criteria**:
-1. Product modes `m`, `m+w`, and `m+w+p` are represented and tested.
-2. Time-window modes `no_time_window`, `fixed_window`, and `adaptive_window` are
-   represented and tested.
-3. Menu modes `no_menu`, `fixed_menu`, `random_menu`, and `optimized_menu` are
-   represented and tested.
-4. Row-v2 and failed-row contracts are validated.
-5. Phase 2 smoke replay completes.
-
-**Requirements:** SPC-01, SPC-02, SPC-03, SPC-04, SPC-05, ROW-01, ROW-02, ROW-03, ROW-04
-
-## Phase 3: Mainline Comparison Contract
-
-**Goal:** Migrate `work2_robust_menu` smoke, pilot, and formal manifests to the
-seven-tag V1 mainline comparison family and verify smoke actual replay.
-
-**Status:** Complete
-
-**Evidence:** `.planning/phases/03-mainline-comparison-contract/03-VERIFICATION.md`
+**Status:** Complete (2026-06-14)
 
 **Success Criteria**:
-1. Seven mainline adapter tags are implemented and tested.
-2. Smoke and pilot cover `menu_k={1,2,3,5}`.
-3. Formal fixes `menu_k=3`, declares at least five paired splits, and requires
-   checkpoint provenance.
-4. Row, failure, paired fairness, and eligibility tests cover the mainline family.
-5. Smoke actual replay completes with all seven policy tags.
+1. Utility terms for price, IVT, walking distance, pickup/time-window
+   feasibility, and outside option are consistent across manuscript, code, and
+   experiments.
+2. DSPO and DSPO_PLUS are distinguished without adding an out-of-scope
+   algorithm family.
+3. Opt-out is not counted as accepted home pickup.
+4. Focused tests or script checks cover the repaired contracts.
 
-**Requirements:** MLC-01, MLC-02, MLC-03, MLC-04, MLC-05, MLC-06, ROW-01, ROW-02, ROW-03, ROW-04, ROW-05
+**Requirements:** MODEL-01, MODEL-02, MODEL-03, MODEL-04, GATE-04
 
-## Phase 4: Mainline Artifact Pipeline And Claim Guard
+**Phase 7 completion note:** Runtime rows, artifact gates, and manuscript text
+now record the MNL outside-option utility, explicit DSPO/DSPO_PLUS
+`method_family`, and opt-out/home/meeting-point separation. Focused contract
+tests and the Phase 7 model-consistency report passed. Empirical baseline and
+DSPO/DSPO_PLUS ranking validation remains downstream in Phases 8-10.
 
-**Goal:** Make the artifact and claim pipeline consume normalized-row-v2
-mainline outputs from the seven-tag family and generate manuscript-facing
-evidence without hand-editing result rows or paper artifacts.
+## Phase 8: Baseline Validation
 
-**Status:** Complete
+**Goal:** Validate no-pricing and static-pricing baselines under stable paired
+replay before running the DSPO family ladder.
 
-**Evidence:** `.planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-VERIFICATION.md`
-
-**Success Criteria**:
-1. Artifact builder accepts mainline normalized-row-v2 study outputs.
-2. Claim guards exclude diagnostic, failed, blocked, placeholder-only,
-   no-filter-only, contract-only, and bad-checkpoint rows.
-3. Generated tables/figures include source run IDs, manifest hashes,
-   checkpoint status, and artifact status.
-4. Mirrored artifact bundles are generated from `work2_coding/` outputs.
-5. Phase 4 tests and smoke artifact build pass without formal replay.
-
-**Requirements:** ART-01, ART-02, ART-03, ART-04, RUN-04
-
-## Phase 5: Formal Evidence Readiness
-
-**Goal:** Prepare formal replay prerequisites and evidence gates for claim-ready
-V1 results.
-
-**Status:** Complete
-
-**Evidence:** `.planning/phases/05-formal-evidence-readiness/05-VERIFICATION.md`
+**Status:** Complete (2026-06-14)
 
 **Success Criteria**:
-1. Formal checkpoint provenance is available and explicit.
-2. Dependency snapshot and run provenance are archived.
-3. Formal replay plan is clear, reproducible, and gated.
-4. Formal rows become claim-ready only after artifact and checkpoint gates pass.
-5. Formal readiness supports local-only provenance without requiring git updates
-   or remote publication.
+1. No-pricing baseline runs without schema or checkpoint ambiguity.
+2. Static-pricing baseline runs without schema or checkpoint ambiguity.
+3. Baseline rows include source run IDs, manifest hashes, checkpoint status, and
+   opt-out/home-pickup separation.
+4. Baseline failure blocks Phase 9 and reports minimal repair steps.
 
-**Requirements:** MLC-05, ART-02, ART-03
+**Requirements:** EXP-03, GATE-01, GATE-02, GATE-04
+
+**Phase 8 completion note:** Paired actual replay completed for
+`mainline_optimized_mw` and `phase8_static_flat_markdown` across five
+formal-equivalent splits. The Phase 8 report passed baseline validation and
+opened the Phase 9 release gate, while keeping `claim_ready=false` because
+formal ranking artifacts still require dependency snapshot and clean git
+provenance.
+
+## Phase 9: DSPO Family Full Run
+
+**Goal:** Run and gate DSPO clip/wide configurations under the same paired
+replay contract as the baselines.
+
+**Status:** Pending
+
+**Success Criteria**:
+1. DSPO clip and DSPO wide variants are executable.
+2. DSPO runs share comparable request traces, seeds, pricing mode, and routing
+   settings with baselines.
+3. Ranking sanity checks are generated without manuscript overclaiming.
+4. Any failure enters a debug loop before Phase 10.
+
+**Requirements:** EXP-04, GATE-01, GATE-02, GATE-04
+
+## Phase 10: DSPO_PLUS Full Run
+
+**Goal:** Run and gate DSPO_PLUS clip/wide configurations, then verify whether
+the target ranking is actually reproduced.
+
+**Status:** Pending
+
+**Success Criteria**:
+1. DSPO_PLUS clip and DSPO_PLUS wide variants are executable.
+2. DSPO_PLUS comparisons share paired replay state with DSPO and baselines.
+3. The target ranking `DSPO_PLUS > DSPO > Static Pricing > No Pricing` is
+   verified or explicitly blocked.
+4. If DSPO_PLUS does not exceed DSPO, a debug report states failure reason,
+   minimal fix, and rerun instruction.
+
+**Requirements:** EXP-04, EXP-05, GATE-01, GATE-02, GATE-04
+
+## Phase 11: Paper Writing Generation And Reviewer Risk
+
+**Goal:** Generate the TR-C manuscript draft, tables, method comparison summary,
+GSD execution report, ablation plan/results, and reviewer-style risk analysis
+only after the experiment gates allow the corresponding claims.
+
+**Status:** Pending
+
+**Success Criteria**:
+1. The main manuscript uses Elsevier CAS double-column formatting.
+2. The paper follows the requested TR-C section structure.
+3. Results sections distinguish implemented framework, diagnostic evidence,
+   blocked evidence, and claim-ready evidence.
+4. Ablation sections cover time windows, menu expansion, and DSPO_PLUS gap
+   decomposition.
+5. Reviewer-style risk analysis covers novelty, modeling weakness, experiment
+   weakness, and acceptance probability.
+
+**Requirements:** PAPER-01, PAPER-02, PAPER-03, PAPER-04, ABL-01, ABL-02, ABL-03, REV-01, GATE-03, GATE-04
 
 ---
-*Roadmap updated: 2026-06-14 for local-only/offline execution policy*
+*Roadmap updated: 2026-06-14 for milestone v1.1 paper rewriting and experiment rebuild*
