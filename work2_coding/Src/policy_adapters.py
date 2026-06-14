@@ -28,6 +28,11 @@ OPTIONAL_POLICY_TAGS = [
     "mainline_optimized_mw",
     "mainline_optimized_fixed_window",
     "mainline_optimized_adaptive",
+    "phase8_static_flat_markdown",
+    "dspo_clip",
+    "dspo_wide",
+    "dspo_plus_clip",
+    "dspo_plus_wide",
 ]
 
 ATTENTION_POLICY_TAGS = [
@@ -45,6 +50,8 @@ MAINLINE_POLICY_TAGS = [
     "mainline_optimized_adaptive",
 ]
 
+METHOD_FAMILIES = {"DSPO", "DSPO_PLUS", "diagnostic"}
+
 POLICY_ONLY_FIELDS = {
     "menu_policy",
     "menu_eta_filter_mode",
@@ -58,6 +65,7 @@ POLICY_ONLY_FIELDS = {
     "menu_optout_guardrail",
     "menu_selection_solver",
     "menu_use_exact_eval",
+    "method_family",
     "product_mode",
     "time_window_mode",
     "menu_contract_mode",
@@ -78,6 +86,7 @@ POLICY_ONLY_FIELDS = {
 ADAPTER_DEFAULTS = {
     "algo_name": "DSPO_Menu",
     "menu_mode": True,
+    "method_family": "DSPO",
 }
 
 POLICY_ADAPTERS = {
@@ -113,10 +122,12 @@ POLICY_ADAPTERS = {
     "no_filter_diagnostic": {
         "description": "Diagnostic upper-bound setting with ETA pruning disabled only.",
         "diagnostic": True,
+        "method_family": "diagnostic",
         "overrides": {
             "menu_policy": "risk_adjusted_expected_profit",
             "menu_eta_filter_mode": "none",
             "menu_time_filtering": False,
+            "method_family": "diagnostic",
         },
     },
     "robust_risk_adjusted": {
@@ -296,13 +307,127 @@ POLICY_ADAPTERS = {
             "menu_pricing_mode": "lambertw",
         },
     },
+    "phase8_static_flat_markdown": {
+        "description": "Phase 8 static-pricing baseline: optimized m+w+p menu with flat markdown pricing.",
+        "optional": True,
+        "comparison_role": "static_pricing_baseline",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "flat_markdown",
+        },
+    },
+    "dspo_clip": {
+        "description": "Phase 9 DSPO clip variant: stricter service-risk threshold for the optimized m+w+p menu.",
+        "optional": True,
+        "comparison_role": "dspo_family",
+        "method_family": "DSPO",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "menu_optout_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "lambertw",
+            "method_family": "DSPO",
+            "method_variant": "DSPO_original",
+            "attention_enabled": False,
+        },
+    },
+    "dspo_wide": {
+        "description": "Phase 9 DSPO wide variant: looser service-risk threshold for the optimized m+w+p menu.",
+        "optional": True,
+        "comparison_role": "dspo_family",
+        "method_family": "DSPO",
+        "menu_mode": "optimized_menu",
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.45,
+            "menu_optout_guardrail": 0.45,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "lambertw",
+            "method_family": "DSPO",
+            "method_variant": "DSPO_original",
+            "attention_enabled": False,
+        },
+    },
+    "dspo_plus_clip": {
+        "description": "Phase 7 DSPO_PLUS contract tag: clipped behavior-gated menu objective.",
+        "optional": True,
+        "comparison_role": "dspo_plus_contract",
+        "method_family": "DSPO_PLUS",
+        "menu_mode": "optimized_menu",
+        "dspo_plus_contract": {
+            "outside_option_guardrail": True,
+            "service_quit_penalty": True,
+            "time_window_robustness": "interval_overlap",
+            "validation_status": "pending_phase_10",
+        },
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.35,
+            "service_quit_penalty": 100.0,
+            "menu_outside_penalty_lambda": 25.0,
+            "menu_optout_guardrail": 0.35,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "lambertw",
+            "method_family": "DSPO_PLUS",
+            "method_variant": "DSPO_original",
+            "attention_enabled": False,
+        },
+    },
+    "dspo_plus_wide": {
+        "description": "Phase 7 DSPO_PLUS contract tag: wider behavior-gated menu objective.",
+        "optional": True,
+        "comparison_role": "dspo_plus_contract",
+        "method_family": "DSPO_PLUS",
+        "menu_mode": "optimized_menu",
+        "dspo_plus_contract": {
+            "outside_option_guardrail": True,
+            "service_quit_penalty": True,
+            "time_window_robustness": "interval_overlap",
+            "validation_status": "pending_phase_10",
+        },
+        "overrides": {
+            "menu_policy": "service_guarded_expected_profit",
+            "menu_eta_filter_mode": "interval_overlap",
+            "service_quit_rate_guardrail": 0.45,
+            "service_quit_penalty": 100.0,
+            "menu_outside_penalty_lambda": 15.0,
+            "menu_optout_guardrail": 0.45,
+            "menu_contract_mode": "optimized_menu",
+            "product_mode": "m+w+p",
+            "time_window_mode": "adaptive_window",
+            "menu_pricing_mode": "lambertw",
+            "method_family": "DSPO_PLUS",
+            "method_variant": "DSPO_original",
+            "attention_enabled": False,
+        },
+    },
     "DSPO_original": {
         "description": "Original no-attention DSPO menu method for paired attention comparison.",
+        "diagnostic": True,
+        "method_family": "diagnostic",
         "comparison_role": "method",
         "overrides": {
             "menu_policy": "risk_adjusted_expected_profit",
             "menu_eta_filter_mode": "chance_constraint",
             "menu_eta_chance_threshold": 0.25,
+            "method_family": "diagnostic",
             "method_variant": "DSPO_original",
             "attention_enabled": False,
             "attention_mode": "deterministic",
@@ -310,11 +435,14 @@ POLICY_ADAPTERS = {
     },
     "DSPO_attention": {
         "description": "Attention-enhanced DSPO menu method with deterministic candidate attention.",
+        "diagnostic": True,
+        "method_family": "diagnostic",
         "comparison_role": "method",
         "overrides": {
             "menu_policy": "risk_adjusted_expected_profit",
             "menu_eta_filter_mode": "chance_constraint",
             "menu_eta_chance_threshold": 0.25,
+            "method_family": "diagnostic",
             "method_variant": "DSPO_attention",
             "attention_enabled": True,
             "attention_mode": "deterministic",
@@ -343,6 +471,10 @@ def mainline_policy_tags():
     return list(MAINLINE_POLICY_TAGS)
 
 
+def dspo_plus_policy_tags():
+    return ["dspo_plus_clip", "dspo_plus_wide"]
+
+
 def policy_adapter(tag):
     if tag not in POLICY_ADAPTERS:
         raise ValueError("unknown policy adapter tag: " + str(tag))
@@ -361,12 +493,17 @@ def adapter_overrides(tag):
 
 def adapter_metadata(tag):
     adapter = policy_adapter(tag)
+    method_family = adapter.get("method_family") or adapter["overrides"].get("method_family", "DSPO")
+    if method_family not in METHOD_FAMILIES:
+        raise ValueError("adapter " + tag + " uses unsupported method_family: " + str(method_family))
     return {
         "policy_tag": tag,
         "diagnostic": bool(adapter.get("diagnostic", False)),
         "optional": bool(adapter.get("optional", False)),
         "comparison_role": adapter.get("comparison_role", "policy"),
         "menu_mode": adapter.get("menu_mode"),
+        "method_family": method_family,
+        "dspo_plus_contract": deepcopy(adapter.get("dspo_plus_contract", {})),
         "cost_bound": bool(adapter.get("cost_bound", False)),
         "description": adapter.get("description", ""),
     }
