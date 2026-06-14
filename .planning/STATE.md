@@ -2,9 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
-status: ready_to_plan
-last_updated: 2026-06-14T00:00:00+08:00
-timestamp_policy: ISO-8601 with timezone; default planning timestamps use Beijing time unless a generated artifact states UTC
+status: planning
+last_updated: "2026-06-14T14:56:29.171Z"
 last_activity: 2026-06-14
 progress:
   total_phases: 12
@@ -12,7 +11,6 @@ progress:
   total_plans: 0
   completed_plans: 0
   percent: 0
-stopped_at: Project initialized; ready to plan Phase 1
 ---
 
 # State
@@ -61,18 +59,24 @@ Existing runtime files observed:
 
 - `.planning/codebase/` exists but was generated before the current
   `work2_coding/` runtime was locked. Treat `ooh_code/` references as stale.
+
 - Git status already contains many modified/deleted files outside this
   initialization. Do not revert unrelated user or prior workflow changes.
+
 - The 6.14 discussion says current smoke/pipeline results are not enough for
   TR-E empirical claims. Formal checkpoint, formal replay, and claim guard must
   pass first.
+
 - Attention artifacts and manifests remain V2/diagnostic unless a later phase
   explicitly upgrades them with independent evidence.
+
 - Phase 5 and Phase 7 are conditional. Record `skipped-by-gate` rather than
   executing them mechanically when Phase 4 or Phase 6 makes that appropriate.
+
 - If formal results do not support strong dominance, preserve the fallback path:
   write a conditional service-menu design contribution instead of forcing a
   universal superiority claim.
+
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
   so.
