@@ -19,6 +19,11 @@ Produce credible, reproducible TR Part E evidence that optimized adaptive
 `m+w+p` service menus improve the profit-service-quality trade-off under paired
 RC replay, without overclaiming beyond artifact and readiness gates.
 
+If formal evidence does not show strong dominance, reframe the paper as a
+conditional service-menu design study that identifies when menu optimization
+helps DRT operations and when it fails because of low uptake, excessive
+opt-out, ETA uncertainty, or capacity constraints.
+
 ## Requirements
 
 ### Validated
@@ -57,7 +62,7 @@ RC replay, without overclaiming beyond artifact and readiness gates.
 
 ## Context
 
-The file `工作二讨论6.14.txt` argues that Work2 should be positioned as a
+The 6.14 Work2 discussion note argues that Work2 should be positioned as a
 service-menu optimization paper rather than an attention paper or a
 pricing-only extension. Its strongest framing is:
 
@@ -103,6 +108,13 @@ before any empirical superiority claim is made.
   optional and only after RC formal evidence is stable.
 - **Paper positioning:** Write for logistics, transportation optimization, and
   service operations; do not frame V1 as an attention model paper.
+- **Phase gates:** Phase 5 and Phase 7 are conditional. Skip them by documented
+  gate decision when evidence or feasibility makes them unnecessary.
+- **Fallback contribution:** If `mainline_optimized_adaptive` does not strongly
+  dominate, do not force a superiority story; write a conditional diagnostic
+  contribution.
+- **Timestamp discipline:** Use ISO timestamps with timezone and record whether
+  timestamps are local machine time, Beijing time, or UTC.
 
 ## Key Decisions
 
@@ -115,6 +127,8 @@ before any empirical superiority claim is made.
 | Keep attention diagnostic only | Existing discussion and prompt both exclude attention as the V1 contribution. | Active |
 | Require formal evidence before claims | Current pipeline status is not yet sufficient for TR-E empirical claims. | Active |
 | Separate calibration from final formal testing | Prevents p-hacking and protects paper credibility. | Active |
+| Allow skipped-by-gate phases | Avoids mechanically executing optional heavy phases when evidence or feasibility says to stop or reframe. | Active |
+| Preserve a fallback claim path | Mixed results can still support a conditional service-menu design contribution. | Active |
 
 ## Evolution
 

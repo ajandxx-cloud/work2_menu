@@ -12,6 +12,32 @@ planning, manuscript, or root-level artifact files. Do not modify algorithm
 behavior before Phase 1 locks current state. Do not make manuscript claims from
 smoke-only, diagnostic-only, placeholder-only, blocked, or failed rows.
 
+## Additional Gate Rules
+
+1. Phase 5 is conditional. If Phase 4 shows that formal RC evidence supports at
+   least one central paper claim with stable paired differences, Phase 5 may be
+   marked `skipped-by-gate`. If Phase 4 evidence is weak, unstable, or
+   unsupported, Phase 5 becomes mandatory.
+2. Phase 7 is conditional. If Phase 6 decides that a real or semi-real case
+   study is infeasible or not valuable, Phase 7 is skipped and Phase 8 starts.
+   The manuscript must then state explicitly that external case validation is
+   deferred.
+3. If Phase 4 finds that RC formal evidence does not support any defensible
+   central claim, do not continue mechanically into case study and sensitivity.
+   First produce failure diagnosis and paper reframing guidance.
+4. Phase 2 must produce a paper-level mathematical model skeleton, not only a
+   prose research plan.
+5. Phase 4 must report paired differences by split and uptake regime. If seed
+   count is too small for formal statistical testing, report effect sizes and
+   confidence intervals where feasible and avoid strong significance language.
+6. Phase 8 sensitivity experiments are divided into must-have and nice-to-have
+   groups. Must-have: `menu_k`, ETA uncertainty/filter mode, uptake regime, and
+   opt-out guardrail. Nice-to-have: candidate pool size, fleet/capacity stress,
+   and pricing sensitivity.
+7. If optimized adaptive `m+w+p` does not strongly dominate, reframe the paper
+   as a conditional service-menu optimization study instead of forcing a
+   universal superiority claim.
+
 ## Phase 1: Repository Audit And State Locking
 
 **Goal:** Confirm current repository state, active runtime root, relevant
@@ -49,8 +75,12 @@ script collection.
    separated.
 3. Main tables and figures are defined before formal experiments.
 4. Every paper claim maps to a policy comparison and metric.
+5. The design includes a mathematical model skeleton with sets and indices,
+   service-bundle definition, menu decision variable, utility model, choice
+   probability, expected-profit objective, service guardrail, ETA/time-window
+   feasibility, and exact/greedy solver definitions.
 
-**Requirements:** PAPER-01, PAPER-02, PAPER-03, PAPER-04
+**Requirements:** PAPER-01, PAPER-02, PAPER-03, PAPER-04, PAPER-05
 
 ## Phase 3: Formal RC Evidence Pipeline Repair And Completion
 
@@ -88,13 +118,23 @@ python scripts/build_manuscript_frame.py --artifact-root <formal-artifact-root>
 3. Effect sizes and paired comparisons are reported.
 4. Claim matrix classifies each claim as strong, conditional, weak/diagnostic,
    or unsupported.
+5. Mean, standard deviation, paired differences, and confidence intervals are
+   reported where feasible.
+6. If seed count is small, split-level paired differences are reported and the
+   diagnosis avoids strong statistical-significance language.
+7. If no central claim is supported, the output includes failure diagnosis and
+   reframing guidance before downstream expansion.
 
-**Requirements:** CLAIM-01, CLAIM-02, CLAIM-03
+**Requirements:** CLAIM-01, CLAIM-02, CLAIM-03, CLAIM-04, CLAIM-05
 
 ## Phase 5: Calibration And Robustness Without P-Hacking
 
 **Goal:** If formal RC results are weak or unstable, improve experimental
 validity through pre-registered calibration rather than test-set tuning.
+
+**Gate:** Skip this phase only if Phase 4 supports at least one central claim
+with stable paired differences. Record the skip as `skipped-by-gate`; otherwise
+execute this phase before any final rerun or stronger manuscript claim.
 
 **Success Criteria:**
 1. `.planning/results/CALIBRATION_PROTOCOL.md` defines allowed and prohibited
@@ -104,8 +144,9 @@ validity through pre-registered calibration rather than test-set tuning.
    rerun.
 4. Changes are justified by realism and robustness, not ranking improvement
    alone.
+5. If skipped, a short gate note records why calibration was not needed.
 
-**Requirements:** CAL-01, CAL-02, CAL-03
+**Requirements:** CAL-01, CAL-02, CAL-03, CAL-04
 
 ## Phase 6: Real Or Semi-Real Case Study Feasibility Audit
 
@@ -118,21 +159,30 @@ validity through pre-registered calibration rather than test-set tuning.
 2. Decision is one of: add real case, add semi-real case, or defer case study.
 3. The decision includes data source, preprocessing plan, required code changes,
    and paper value.
+4. The feasibility report defines the minimum acceptable semi-real case:
+   documented real geography, realistic depot/destination and candidate meeting
+   points, real road distance or reproducible distance matrix, simulated demand
+   labeled as simulated, same seven-tag or reduced six-tag comparison, and no
+   use for tuning RC parameters.
 
-**Requirements:** CASE-01, CASE-02
+**Requirements:** CASE-01, CASE-02, CASE-04
 
 ## Phase 7: Case Study Implementation
 
 **Goal:** Implement the selected real/semi-real case reproducibly, if Phase 6
 approves it.
 
+**Gate:** If Phase 6 defers the case study, skip Phase 7 and proceed to Phase 8.
+The manuscript plan must state that external case validation is deferred.
+
 **Success Criteria:**
 1. Data ingestion and validation contracts are written.
 2. Case dataset build/validate/run scripts or manifest integration are added.
 3. Smoke and pilot case studies produce normalized rows.
 4. Formal case artifacts are built, or the case remains explicitly diagnostic.
+5. The case is not used to tune RC parameters.
 
-**Requirements:** CASE-03
+**Requirements:** CASE-03, CASE-05
 
 ## Phase 8: Sensitivity And Robustness Experiments
 
@@ -145,8 +195,12 @@ approves it.
 2. Outputs include normalized rows, aggregate tables, figures, and
    `.planning/results/SENSITIVITY_SUMMARY.md`.
 3. Conclusions identify where the method works best and where it fails.
+4. Must-have dimensions are `menu_k`, ETA uncertainty/filter mode, uptake
+   regime, and opt-out guardrail.
+5. Nice-to-have dimensions are candidate pool size, fleet/capacity stress, and
+   pricing bounds or price sensitivity.
 
-**Requirements:** SENS-01, SENS-02
+**Requirements:** SENS-01, SENS-02, SENS-03
 
 ## Phase 9: Exact Versus Greedy And Computational Tractability
 

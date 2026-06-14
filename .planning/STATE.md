@@ -4,6 +4,7 @@ milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
 status: ready_to_plan
 last_updated: 2026-06-14T00:00:00+08:00
+timestamp_policy: ISO-8601 with timezone; default planning timestamps use Beijing time unless a generated artifact states UTC
 last_activity: 2026-06-14
 progress:
   total_phases: 12
@@ -67,6 +68,14 @@ Existing runtime files observed:
   pass first.
 - Attention artifacts and manifests remain V2/diagnostic unless a later phase
   explicitly upgrades them with independent evidence.
+- Phase 5 and Phase 7 are conditional. Record `skipped-by-gate` rather than
+  executing them mechanically when Phase 4 or Phase 6 makes that appropriate.
+- If formal results do not support strong dominance, preserve the fallback path:
+  write a conditional service-menu design contribution instead of forcing a
+  universal superiority claim.
+- Timestamps should use ISO-8601 with timezone. Planning timestamps default to
+  Beijing time; generated run artifacts may use UTC if their own metadata says
+  so.
 
 ## Verification Baseline
 

@@ -1,9 +1,10 @@
 # Research Summary: Work2 TR-E Service Menu Optimization
 
 **Created:** 2026-06-14
-**Sources:** `工作二讨论6.14.txt`, attached GSD new-project prompt, current
+**Sources:** the 6.14 Work2 discussion note, attached GSD new-project prompt, current
 filesystem audit, existing `.planning/codebase/` maps, and deleted prior GSD
-core documents read from Git history for continuity.
+core documents read from Git history for continuity, plus the follow-up
+planning review that recommended additional gate/skip rules.
 
 ## Key Findings
 
@@ -81,6 +82,26 @@ Not allowed until gates pass:
 - RC-only evidence may look too synthetic for TR Part E without a semi-real
   case or strong robustness section.
 - Attention must not distract from the V1 service-menu contribution.
+
+## Added Planning Guardrails
+
+- Add explicit gate/skip rules so Phase 5 and Phase 7 are not executed
+  mechanically when evidence or feasibility says to skip.
+- Require Phase 2 to lock a mathematical model skeleton, including sets,
+  indices, service bundles, menu decision variables, utility and choice
+  probability, expected profit, service guardrails, ETA/window feasibility, and
+  exact/greedy solver definitions.
+- Require Phase 4 to report paired split-level differences, means, standard
+  deviations, and confidence intervals where feasible. If seed count is small,
+  avoid strong statistical-significance language.
+- Define a minimum acceptable semi-real case as real or documented geography
+  plus reproducible distances and simulated demand clearly labeled as
+  simulated.
+- Split Phase 8 sensitivity into must-have and nice-to-have groups to protect
+  scope and runtime.
+- Preserve a fallback claim path: if optimized adaptive `m+w+p` does not
+  dominate, write a conditional diagnostic contribution rather than forcing a
+  universal superiority claim.
 
 ## Planning Implication
 

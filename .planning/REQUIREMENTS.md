@@ -28,6 +28,11 @@ gates.
   metrics, and artifact evidence.
 - [ ] **PAPER-04**: The paper design distinguishes V1 main evidence, V2
   diagnostic attention evidence, appendix evidence, and non-claims.
+- [ ] **PAPER-05**: The paper design includes a mathematical model skeleton
+  with sets and indices, service-bundle definition, menu decision variable,
+  utility model, choice probability, expected-profit objective,
+  opt-out/service-quality guardrail, ETA/time-window feasibility, and
+  exact/greedy solver definitions.
 
 ### Formal RC Evidence
 
@@ -49,6 +54,13 @@ gates.
   conditional, weak/diagnostic, or unsupported.
 - [ ] **CLAIM-03**: Unsupported or mixed results trigger diagnosis rather than
   manual result editing or forced claims.
+- [ ] **CLAIM-04**: Formal result diagnosis reports mean, standard deviation,
+  paired differences, and confidence intervals where feasible; if seed count is
+  small, it reports split-level paired differences and avoids strong
+  significance language.
+- [ ] **CLAIM-05**: If optimized adaptive `m+w+p` does not strongly dominate,
+  the paper is reframed as a conditional service-menu optimization study rather
+  than a universal superiority claim.
 
 ### Calibration Integrity
 
@@ -58,6 +70,9 @@ gates.
   manifests, outputs, and documents.
 - [ ] **CAL-03**: Frozen final settings are documented before rerunning final
   evidence.
+- [ ] **CAL-04**: Phase 5 may be marked skipped-by-gate if Phase 4 supports at
+  least one central claim with stable paired differences; otherwise Phase 5 is
+  mandatory.
 
 ### Case Study
 
@@ -67,6 +82,13 @@ gates.
 - [ ] **CASE-02**: No fabricated real data is used or implied.
 - [ ] **CASE-03**: If feasible, the case study has a reproducible ingestion,
   validation, smoke, pilot, and formal/diagnostic execution contract.
+- [ ] **CASE-04**: A minimum acceptable semi-real case is defined as real or
+  manually documented geography, realistic depot/destination and candidate
+  meeting points, real road distance or reproducible distance matrix, simulated
+  sequential DRT demand clearly labeled as simulated, same seven-tag or reduced
+  six-tag comparison, and no use for tuning RC parameters.
+- [ ] **CASE-05**: If Phase 6 defers the case study, Phase 7 is skipped and the
+  manuscript explicitly states that external case validation is deferred.
 
 ### Sensitivity And Computation
 
@@ -75,6 +97,10 @@ gates.
   where computationally feasible.
 - [ ] **SENS-02**: Sensitivity outputs support conditional conclusions and
   explicitly identify where the method works or fails.
+- [ ] **SENS-03**: Phase 8 separates must-have sensitivity dimensions
+  (`menu_k`, ETA uncertainty/filter mode, uptake regime, opt-out guardrail)
+  from nice-to-have dimensions (candidate pool size, fleet/capacity stress,
+  pricing bounds or price sensitivity).
 - [ ] **COMP-01**: Exact-small versus greedy-large experiments report optimality
   gap, menu overlap, build time, candidate count, and enumerated menu count.
 - [ ] **COMP-02**: The solver is shown to be computationally credible for
@@ -120,20 +146,20 @@ gates.
 | Requirement | Phase | Status |
 | --- | --- | --- |
 | STATE-01..STATE-03 | Phase 1 | Pending |
-| PAPER-01..PAPER-04 | Phase 2 | Pending |
+| PAPER-01..PAPER-05 | Phase 2 | Pending |
 | RC-01..RC-05 | Phase 3 | Pending |
-| CLAIM-01..CLAIM-03 | Phase 4 | Pending |
-| CAL-01..CAL-03 | Phase 5 | Pending |
-| CASE-01..CASE-03 | Phase 6, Phase 7 | Pending |
-| SENS-01..SENS-02 | Phase 8 | Pending |
+| CLAIM-01..CLAIM-05 | Phase 4 | Pending |
+| CAL-01..CAL-04 | Phase 5 | Pending |
+| CASE-01..CASE-05 | Phase 6, Phase 7 | Pending |
+| SENS-01..SENS-03 | Phase 8 | Pending |
 | COMP-01..COMP-02 | Phase 9 | Pending |
 | ART-01..ART-02 | Phase 10 | Pending |
 | MS-01..MS-02 | Phase 11 | Pending |
 | FINAL-01 | Phase 12 | Pending |
 
 **Coverage:**
-- v1 requirements: 31 total
-- Mapped to phases: 31
+- v1 requirements: 39 total
+- Mapped to phases: 39
 - Unmapped: 0
 
 ---
