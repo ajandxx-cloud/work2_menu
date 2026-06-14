@@ -146,10 +146,150 @@ def test_mainline_policy_drift_is_limited_to_comparison_fields():
 
 
 def test_pilot_and_formal_uptake_regimes():
-    for name in ["pilot_robust_menu", "formal_robust_menu"]:
+    for name in ["pilot_robust_menu", "formal_robust_menu", "phase8_baseline_validation"]:
         manifest = load_manifest(name)
         regimes = {split["uptake_regime"] for split in manifest["splits"]}
         assert {"low", "medium"}.issubset(regimes)
+
+
+def test_phase8_baseline_pairing_and_pricing_contract():
+    manifest = load_manifest("phase8_baseline_validation")
+    settings = resolve_paired_settings(manifest)
+    assert len(settings) == 10
+
+    by_split = {}
+    for setting in settings:
+        by_split.setdefault(setting["split_id"], {})[setting["policy_tag"]] = setting
+    assert len(by_split) == 5
+
+    shared_fields = [
+        "seed",
+        "data_seed",
+        "data_seed_test",
+        "instance",
+        "load_data",
+        "pricing",
+        "checkpoint_path",
+        "require_checkpoint",
+        "allow_checkpoint_mismatch",
+        "hgs_reopt_time",
+        "hgs_final_time",
+        "reopt",
+        "menu_k",
+        "max_candidates",
+        "n_vehicles",
+        "veh_capacity",
+        "menu_pricing_constant",
+        "home_util",
+        "base_util",
+        "incentive_sens",
+    ]
+    for split_id, group in by_split.items():
+        assert set(group) == {"mainline_optimized_mw", "phase8_static_flat_markdown"}, split_id
+        no_pricing = group["mainline_optimized_mw"]["args"]
+        static = group["phase8_static_flat_markdown"]["args"]
+        for field in shared_fields:
+            assert no_pricing.get(field) == static.get(field), field
+        assert no_pricing["product_mode"] == "m+w"
+        assert no_pricing["menu_pricing_mode"] == "no_pricing"
+        assert static["product_mode"] == "m+w+p"
+        assert static["menu_pricing_mode"] == "flat_markdown"
+
+    static_row = build_normalized_row(
+        by_split[next(iter(by_split))]["phase8_static_flat_markdown"],
+        run_id="phase8",
+        checkpoint_metadata={
+            "checkpoint_load_status": "loaded",
+            "checkpoint_path": "synthetic.pt",
+            "checkpoint_hash": "hash",
+            "checkpoint_required": True,
+            "checkpoint_intentional_mismatch": False,
+        },
+        stats_metadata={
+            "count_opted_out": 1,
+            "count_accepted_home": 2,
+            "count_accepted_meeting_point": 3,
+        },
+        status="completed",
+        execution_status="completed",
+        placeholder_only=False,
+    )
+    assert static_row["pricing_mode"] == "flat_markdown"
+    assert static_row["comparison_role"] == "static_pricing_baseline"
+
+
+def test_phase9_dspo_family_pairing_and_threshold_contract():
+    manifest = load_manifest("phase9_dspo_family_validation")
+    settings = resolve_paired_settings(manifest)
+    assert len(settings) == 10
+
+    by_split = {}
+    for setting in settings:
+        by_split.setdefault(setting["split_id"], {})[setting["policy_tag"]] = setting
+    assert len(by_split) == 5
+
+    shared_fields = [
+        "seed",
+        "data_seed",
+        "data_seed_test",
+        "instance",
+        "load_data",
+        "pricing",
+        "checkpoint_path",
+        "require_checkpoint",
+        "allow_checkpoint_mismatch",
+        "hgs_reopt_time",
+        "hgs_final_time",
+        "reopt",
+        "menu_k",
+        "max_candidates",
+        "max_steps_r",
+        "max_steps_p",
+        "n_vehicles",
+        "veh_capacity",
+        "home_util",
+        "base_util",
+        "incentive_sens",
+    ]
+    for split_id, group in by_split.items():
+        assert set(group) == {"dspo_clip", "dspo_wide"}, split_id
+        clip = group["dspo_clip"]["args"]
+        wide = group["dspo_wide"]["args"]
+        for field in shared_fields:
+            assert clip.get(field) == wide.get(field), field
+        assert clip["menu_policy"] == "service_guarded_expected_profit"
+        assert wide["menu_policy"] == "service_guarded_expected_profit"
+        assert clip["service_quit_rate_guardrail"] == 0.35
+        assert clip["menu_optout_guardrail"] == 0.35
+        assert wide["service_quit_rate_guardrail"] == 0.45
+        assert wide["menu_optout_guardrail"] == 0.45
+        assert clip["method_family"] == "DSPO"
+        assert wide["method_family"] == "DSPO"
+        assert clip["attention_enabled"] is False
+        assert wide["attention_enabled"] is False
+
+    row = build_normalized_row(
+        by_split[next(iter(by_split))]["dspo_clip"],
+        run_id="phase9",
+        checkpoint_metadata={
+            "checkpoint_load_status": "loaded",
+            "checkpoint_path": "synthetic.pt",
+            "checkpoint_hash": "hash",
+            "checkpoint_required": True,
+            "checkpoint_intentional_mismatch": False,
+        },
+        stats_metadata={
+            "count_opted_out": 1,
+            "count_accepted_home": 2,
+            "count_accepted_meeting_point": 3,
+        },
+        status="completed",
+        execution_status="completed",
+        placeholder_only=False,
+    )
+    assert row["method_family"] == "DSPO"
+    assert row["comparison_role"] == "dspo_family"
+    assert row["policy_tag"] == "dspo_clip"
 
 
 def test_uptake_regime_is_split_level_not_policy_level():
@@ -188,6 +328,8 @@ def main():
         test_pricing_contract_is_paired_and_row_recorded,
         test_mainline_policy_drift_is_limited_to_comparison_fields,
         test_pilot_and_formal_uptake_regimes,
+        test_phase8_baseline_pairing_and_pricing_contract,
+        test_phase9_dspo_family_pairing_and_threshold_contract,
         test_uptake_regime_is_split_level_not_policy_level,
         test_row_ready_uptake_regime_metadata,
     ]

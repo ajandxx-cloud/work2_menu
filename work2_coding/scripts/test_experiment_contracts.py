@@ -41,12 +41,23 @@ def test_parser_choices_are_available():
 
 
 def test_valid_manifests_load():
-    for name in ["smoke_robust_menu", "diagnostic_actual_menu", "pilot_robust_menu", "formal_robust_menu"]:
+    for name in [
+        "smoke_robust_menu",
+        "diagnostic_actual_menu",
+        "pilot_robust_menu",
+        "formal_robust_menu",
+        "phase8_baseline_validation",
+        "phase9_dspo_family_validation",
+    ]:
         manifest = load_manifest(name)
         assert manifest["name"] == name
         assert manifest["output_schema"].get("normalized-row-v1") is True or manifest["output_schema"].get("normalized-row-v2") is True
         tags = {policy["tag"] for policy in manifest["policies"]}
-        if name == "diagnostic_actual_menu":
+        if name == "phase8_baseline_validation":
+            assert tags == {"mainline_optimized_mw", "phase8_static_flat_markdown"}
+        elif name == "phase9_dspo_family_validation":
+            assert tags == {"dspo_clip", "dspo_wide"}
+        elif name == "diagnostic_actual_menu":
             assert set(required_policy_tags()).issubset(tags)
         else:
             assert set(mainline_policy_tags()).issubset(tags)
@@ -104,6 +115,8 @@ def test_mainline_manifests_use_required_family_and_row_v2():
         assert tags == mainline_policy_tags()
         assert "no_filter_diagnostic" not in tags
         for field in [
+            "method_family",
+            "outside_option_util",
             "product_mode",
             "time_window_mode",
             "menu_mode",
@@ -130,11 +143,80 @@ def test_mainline_menu_k_contracts():
 
 
 def test_pilot_and_formal_require_checkpoint_contract():
-    for name in ["pilot_robust_menu", "formal_robust_menu"]:
+    for name in ["pilot_robust_menu", "formal_robust_menu", "phase8_baseline_validation"]:
         manifest = load_manifest(name)
         assert manifest["shared_checkpoint"]["required"] is True
         assert manifest["base_args"]["require_checkpoint"] is True
         assert manifest["base_args"]["checkpoint_path"]
+
+
+def test_phase8_baseline_manifest_contract():
+    manifest = load_manifest("phase8_baseline_validation")
+    assert manifest["tier"] == "formal"
+    assert manifest["run_mode"] == "formal"
+    assert manifest["required_policy_tags"] == ["mainline_optimized_mw", "phase8_static_flat_markdown"]
+    assert len(manifest["splits"]) == 5
+    assert {split["uptake_regime"] for split in manifest["splits"]} == {"low", "medium"}
+    assert manifest["base_args"]["menu_pricing_constant"] == -3.0
+    assert manifest["base_args"]["checkpoint_path"] == manifest["shared_checkpoint"]["path"]
+
+    no_pricing = resolve_policy_args(manifest, manifest["splits"][0], {"tag": "mainline_optimized_mw"})
+    static = resolve_policy_args(manifest, manifest["splits"][0], {"tag": "phase8_static_flat_markdown"})
+    assert no_pricing["product_mode"] == "m+w"
+    assert no_pricing["menu_pricing_mode"] == "no_pricing"
+    assert static["product_mode"] == "m+w+p"
+    assert static["menu_pricing_mode"] == "flat_markdown"
+    assert static["menu_pricing_constant"] == -3.0
+
+
+def test_phase9_dspo_family_manifest_contract():
+    phase8 = load_manifest("phase8_baseline_validation")
+    phase9 = load_manifest("phase9_dspo_family_validation")
+    assert phase9["tier"] == "formal"
+    assert phase9["run_mode"] == "formal"
+    assert phase9["required_policy_tags"] == ["dspo_clip", "dspo_wide"]
+    assert [policy["tag"] for policy in phase9["policies"]] == ["dspo_clip", "dspo_wide"]
+    assert "mainline_optimized_mw" not in phase9["required_policy_tags"]
+    assert "phase8_static_flat_markdown" not in phase9["required_policy_tags"]
+    assert all(not policy["tag"].startswith("dspo_plus_") for policy in phase9["policies"])
+    assert len(phase9["splits"]) == 5
+    assert phase9["shared_checkpoint"]["required"] is True
+    assert phase9["shared_checkpoint"]["expected_status"] == "loaded"
+    assert phase9["shared_checkpoint"]["path"] == "outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt"
+    assert phase9["base_args"]["checkpoint_path"] == phase9["shared_checkpoint"]["path"]
+    assert phase9["base_args"]["require_checkpoint"] is True
+    assert phase9["base_args"]["allow_checkpoint_mismatch"] is False
+
+    for field, expected in {
+        "menu_k": 3,
+        "max_candidates": 8,
+        "menu_exact_threshold": 8,
+        "menu_exact_gap_threshold": 8,
+        "hgs_reopt_time": 0.1,
+        "hgs_final_time": 0.1,
+        "max_episodes": 1,
+        "max_steps_r": 20,
+        "max_steps_p": 0.7,
+        "n_vehicles": 2,
+        "veh_capacity": 3,
+    }.items():
+        assert phase9["base_args"][field] == expected
+        assert phase9["base_args"][field] == phase8["base_args"][field]
+
+    split_fields = ["split_id", "seed", "data_seed", "data_seed_test", "uptake_regime"]
+    override_fields = ["home_util", "base_util", "incentive_sens"]
+    for split8, split9 in zip(phase8["splits"], phase9["splits"]):
+        for field in split_fields:
+            assert split9[field] == split8[field]
+        for field in override_fields:
+            assert split9["args_overrides"][field] == split8["args_overrides"][field]
+
+    clip = resolve_policy_args(phase9, phase9["splits"][0], {"tag": "dspo_clip"})
+    wide = resolve_policy_args(phase9, phase9["splits"][0], {"tag": "dspo_wide"})
+    assert clip["service_quit_rate_guardrail"] == 0.35
+    assert clip["menu_optout_guardrail"] == 0.35
+    assert wide["service_quit_rate_guardrail"] == 0.45
+    assert wide["menu_optout_guardrail"] == 0.45
 
 
 def test_duplicate_policy_rejected():
@@ -188,6 +270,8 @@ def main():
         test_mainline_manifests_use_required_family_and_row_v2,
         test_mainline_menu_k_contracts,
         test_pilot_and_formal_require_checkpoint_contract,
+        test_phase8_baseline_manifest_contract,
+        test_phase9_dspo_family_manifest_contract,
         test_duplicate_policy_rejected,
         test_invalid_filter_rejected,
         test_duplicate_split_rejected,
