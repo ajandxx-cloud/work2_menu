@@ -1,0 +1,111 @@
+schema_version: phase7-case-manifest-draft-v1
+name: semi_real_case_study_scaffold
+tier: scaffold
+run_mode: planning_contract_only
+execution_status: scaffolding_only_blocked_execution
+status: scaffolding_only_blocked_execution
+runtime_manifest_allowed: false
+runtime_manifest_path: null
+case_execution_allowed: false
+result_artifacts_allowed: false
+manuscript_claim_upgrade_allowed: false
+labels:
+  - semi-real
+  - real geography/network pending source pinning
+  - simulated demand
+  - simulated choice
+source_routes:
+  allowed_route_ids:
+    - public_osm_open_network
+    - yanjiao_beijing_motivated
+  default_selection_rule: route_selection_scorecard_no_result_based_selection
+  selected_route_id: null
+shared_checkpoint:
+  required: true
+  path_placeholder: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
+  status_placeholder: blocked_until_readiness_and_provenance_gates_pass
+hgs_settings_placeholders:
+  hgs_reopt_time: inherit_or_predeclare_before_execution
+  hgs_final_time: inherit_or_predeclare_before_execution
+  reopt: inherit_or_predeclare_before_execution
+choice_and_uptake_placeholders:
+  uptake_regime: predeclare_before_execution
+  home_util: predeclare_before_execution
+  base_util: predeclare_before_execution
+  incentive_sens: predeclare_before_execution
+  outside_option_util: predeclare_before_execution
+base_args_placeholders:
+  algo_name: DSPO_Menu
+  menu_mode: true
+  run_mode: case_diagnostic_or_formal_future_only
+  instance_or_source_route: selected_route_id_placeholder
+  load_data: true
+  pricing: true
+  max_steps_r: inherit_or_predeclare_before_execution
+  max_steps_p: inherit_or_predeclare_before_execution
+  menu_k: inherit_or_predeclare_before_execution
+  max_candidates: inherit_or_predeclare_before_execution
+policies:
+  - tag: mainline_no_menu
+  - tag: mainline_fixed_menu
+  - tag: mainline_random_menu
+  - tag: mainline_optimized_m
+  - tag: mainline_optimized_mw
+  - tag: mainline_optimized_fixed_window
+  - tag: mainline_optimized_adaptive
+paired_fields:
+  - seed
+  - data_seed
+  - data_seed_test
+  - instance
+  - source_route_id
+  - load_data
+  - pricing
+  - hgs_reopt_time
+  - hgs_final_time
+  - reopt
+  - checkpoint_path
+  - checkpoint_load_status
+  - checkpoint_hash
+  - require_checkpoint
+  - menu_k
+  - max_candidates
+  - max_steps_r
+  - max_steps_p
+  - home_util
+  - base_util
+  - incentive_sens
+  - outside_option_util
+  - uptake_regime
+varied_fields:
+  - algo_name
+  - menu_mode
+  - product_mode
+  - time_window_mode
+  - menu_contract_mode
+  - menu_pricing_mode
+  - menu_policy
+  - menu_eta_filter_mode
+  - menu_time_filtering
+  - menu_objective_mode
+  - service_quit_rate_guardrail
+reduced_family_gate:
+  required_before_any_tag_removal: true
+  phase7_removed_tags: []
+blockers:
+  case_execution_allowed: false
+  result_artifacts_allowed: false
+  manuscript_claim_upgrade_allowed: false
+  unlock_conditions:
+    - provenance gate cleanup
+    - readiness gate cleanup
+    - artifact gate cleanup
+    - claim guard cleanup
+non_actions:
+  - no runtime manifest under work2_coding/Experiments/studies
+  - no external data fetch
+  - no matrix build
+  - no demand rows
+  - no policy replay
+  - no normalized rows
+  - no manuscript claim upgrade
