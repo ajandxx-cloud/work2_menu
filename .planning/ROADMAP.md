@@ -153,6 +153,16 @@ validity through pre-registered calibration rather than test-set tuning.
 with stable paired differences. Record the skip as `skipped-by-gate`; otherwise
 execute this phase before any final rerun or stronger manuscript claim.
 
+**Phase 4 Gate Result:** Not eligible for `skipped-by-gate` yet. The selected
+formal RC run is useful diagnostically, but strong central dominance is not
+supported: random menu has better mean net profit, adaptive loses to random on
+3/5 paired profit splits, and adaptive ties optimized fixed-window across
+tracked metrics. Dirty-git readiness and artifact gates also block final claim
+classification. Resolve provenance first; if a strong empirical claim is still
+desired, Phase 5 calibration is mandatory before any final rerun or stronger
+manuscript claim. Otherwise preserve the conditional service-menu design
+framing.
+
 **Success Criteria:**
 1. `.planning/results/CALIBRATION_PROTOCOL.md` defines allowed and prohibited
    tuning.

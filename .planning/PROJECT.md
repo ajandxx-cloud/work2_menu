@@ -43,13 +43,17 @@ opt-out, ETA uncertainty, or capacity constraints.
   readiness/checkpoint status is explicit, the selected formal run has 35
   comparable completed rows across the seven-tag family, and artifact/claim
   gates block claim-ready manuscript use until residual gates are resolved.
+- [x] Phase 4 diagnosed the selected 35-row formal RC run: adaptive `m+w+p`
+  improves several service metrics but does not support a strong universal
+  dominance claim; all positive empirical classifications remain provisional
+  while dirty-git readiness and artifact gates are blocked.
 
 ### Active
 
-- [ ] Diagnose whether formal RC results support strong, conditional, weak, or
-  unsupported paper claims.
-- [ ] If needed, calibrate through a documented pilot/final split rather than
-  test-set tuning.
+- [ ] Resolve provenance/artifact gates or keep the evidence explicitly
+  diagnostic before any manuscript claim upgrade.
+- [ ] If a strong central claim is still desired, calibrate through a documented
+  pilot/final split rather than test-set tuning.
 - [ ] Decide whether a real or semi-real case study is feasible and valuable.
 - [ ] Add sensitivity, exact-vs-greedy, artifact, manuscript, and final
   readiness phases only after upstream evidence gates pass.
@@ -136,6 +140,8 @@ before any empirical superiority claim is made.
 | Use `.planning/STATE_LOCK.md` as the Phase 1 baseline | Phase 1 verified `work2_coding/`, current evidence blockers, and stale `ooh_code/` mappings before behavior changes. | Validated |
 | Use `.planning/paper/TR_E_RESEARCH_DESIGN.md` as the Phase 2 paper contract | Phase 2 defined service-bundle semantics, model skeleton, claim ladder, evidence gates, and table/figure plans. | Validated |
 | Use the 35-row formal RC run as Phase 4 diagnostic input | Phase 3 validated `formal_robust_menu-20260614T032323Z-c672286a` as comparable candidate evidence while preserving readiness/artifact blockers. | Validated |
+| Do not claim strong adaptive-menu dominance from the selected formal RC run | Phase 4 found random menu has better mean net profit, adaptive loses to random on 3/5 paired profit splits, and adaptive equals optimized fixed-window across tracked metrics. | Validated |
+| Do not skip Phase 5 while provenance and central-claim evidence remain weak | Phase 4 recommends provenance cleanup first, then Phase 5 calibration if the project still wants a strong central empirical claim; otherwise reframe as conditional service-menu design. | Active |
 
 ## Evolution
 
@@ -157,4 +163,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-15 after Phase 3 formal RC evidence pipeline completion*
+*Last updated: 2026-06-15 after Phase 4 RC claim diagnosis*
