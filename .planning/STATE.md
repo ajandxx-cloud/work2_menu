@@ -3,35 +3,35 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
 status: executing
-last_updated: "2026-06-15T08:45:32.187Z"
-last_activity: 2026-06-15 -- Phase 05 planning complete
+last_updated: "2026-06-15T14:32:21.776Z"
+last_activity: 2026-06-15
 progress:
   total_phases: 12
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 7
-  percent: 33
+  completed_phases: 6
+  total_plans: 12
+  completed_plans: 11
+  percent: 50
 ---
 
 # State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-14)
+See: `.planning/PROJECT.md` (updated 2026-06-15)
 
 **Core value:** Produce credible, reproducible TR Part E evidence that
 optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 5 - calibration and robustness without p-hacking
+**Current focus:** Phase 07 — case-study-implementation
 
 ## Current Position
 
-Phase: 5
-Plan: 2 plans ready
+Phase: 07 (case-study-implementation) — EXECUTING
+Plan: 2 of 2
 Status: Ready to execute
-Last activity: 2026-06-15 -- Phase 05 planning complete
+Last activity: 2026-06-15
 
 ## Initialization Evidence
 
@@ -77,6 +77,24 @@ Existing runtime files observed:
   write a conditional service-menu design contribution instead of forcing a
   universal superiority claim.
 
+- Phase 5 completed a process lock, not new empirical evidence. Calibration
+  and final manifests exist, but `FROZEN_FINAL_SETTINGS.md` marks final rerun
+  `blocked_pending_gate_cleanup` until provenance/readiness/artifact/claim
+  gates are resolved.
+
+- Phase 6 approved a semi-real case route with decision
+  `approved_blocked_pending_gate_cleanup`. Default to a public OSM/open-network
+  reproducibility route; use Yanjiao/Beijing commuting material as narrative
+  support unless it can be documented with equal reproducibility.
+
+- Before gate cleanup, Phase 7 may build ingestion/validation scaffolding and
+  reproducibility checks only. Do not run semi-real case experiments, generate
+  case-study result artifacts, or upgrade manuscript claims.
+
+- Future case-study tables, figures, artifact metadata, and manuscript language
+  must label semi-real geography/network, simulated demand, and simulated
+  choice. Do not claim real passenger behavior, acceptance, opt-out, or profit.
+
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
   so.
@@ -105,16 +123,15 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 5 is planned. Execute the two calibration and robustness plans:
+Phase 7 is planned. Execute the gated semi-real case scaffolding plans:
 
 ```text
-$gsd-execute-phase 5
+$gsd-execute-phase 7
 ```
 
-Preserve the Phase 5 boundary: lock the calibration protocol before any pilot,
-keep provenance and artifact gates visible, require explicit user approval
-before broad git cleanup, freeze final settings before final rerun, and do not
-tune on final formal results or edit generated evidence.
+Do not run calibration pilot or final replay until Phase 5 gate cleanup
+conditions are explicitly resolved. Do not run semi-real case experiments or
+generate case-study result claims until upstream gates pass.
 
 ---
-*Updated: 2026-06-15 after Phase 5 planning*
+*Updated: 2026-06-15 after Phase 6 feasibility decision*

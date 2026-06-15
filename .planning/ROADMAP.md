@@ -148,6 +148,14 @@ python scripts/build_manuscript_frame.py --artifact-root <formal-artifact-root>
 
 ## Phase 5: Calibration And Robustness Without P-Hacking
 
+**Status:** Complete (2026-06-15)
+
+**Gate Result:** Completed as a process-integrity lock, not as empirical
+evidence. Calibration/final manifests and frozen settings are documented, but
+final rerun is `blocked_pending_gate_cleanup` until dirty-git provenance,
+checkpoint hash/sidecar, readiness, artifact metadata, and claim guard gates
+are resolved.
+
 **Goal:** If formal RC results are weak or unstable, improve experimental
 validity through pre-registered calibration rather than test-set tuning.
 
@@ -179,6 +187,15 @@ framing.
 
 ## Phase 6: Real Or Semi-Real Case Study Feasibility Audit
 
+**Status:** Complete (2026-06-15)
+
+**Gate Result:** Add a semi-real case in principle with decision
+`approved_blocked_pending_gate_cleanup`. Phase 7 may prepare ingestion,
+validation, manifest scaffolding, source-cache checks, and reproducibility
+contracts, but may not run case experiments, generate case-study result
+artifacts, or upgrade manuscript claims while provenance/readiness/artifact/
+claim gates remain blocked.
+
 **Goal:** Decide whether to add a real or semi-real dataset case for TR Part E.
 
 **Success Criteria:**
@@ -203,6 +220,12 @@ approves it.
 
 **Gate:** If Phase 6 defers the case study, skip Phase 7 and proceed to Phase 8.
 The manuscript plan must state that external case validation is deferred.
+Phase 6 did not defer. It approved a semi-real route with
+`approved_blocked_pending_gate_cleanup`: before gate cleanup, Phase 7 is limited
+to scaffolding, validation contracts, source/matrix reproducibility checks, and
+manifest preparation. Case-study experiment execution, generated result
+artifacts, and manuscript claim upgrades remain blocked until upstream gates
+pass.
 
 **Success Criteria:**
 1. Data ingestion and validation contracts are written.
