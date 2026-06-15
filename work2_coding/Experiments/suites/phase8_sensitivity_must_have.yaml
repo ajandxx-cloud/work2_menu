@@ -1,0 +1,12 @@
+type: suite
+schema_version: 1
+name: phase8_sensitivity_must_have
+description: Phase 8 diagnostic suite for must-have sensitivity dimensions only.
+baseline_validation_required: outputs/phase8_baseline_validation/PHASE8_BASELINE_VALIDATION.json
+claim_ready: false
+output_intent: diagnostic_provisional_blocked
+members:
+  - study: phase8_sensitivity_menu_k
+  - study: phase8_sensitivity_eta_filter
+  - study: phase8_sensitivity_uptake_regime
+  - study: phase8_sensitivity_guardrail

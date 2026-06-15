@@ -218,6 +218,29 @@ def test_phase8_baseline_pairing_and_pricing_contract():
     assert static_row["comparison_role"] == "static_pricing_baseline"
 
 
+def test_phase8_sensitivity_manifests_keep_single_policy_and_shared_checkpoint():
+    for name in [
+        "phase8_sensitivity_menu_k",
+        "phase8_sensitivity_eta_filter",
+        "phase8_sensitivity_uptake_regime",
+        "phase8_sensitivity_guardrail",
+    ]:
+        manifest = load_manifest(name)
+        settings = resolve_paired_settings(manifest)
+        assert {setting["policy_tag"] for setting in settings} == {"mainline_optimized_adaptive"}
+        checkpoint_paths = {setting["args"]["checkpoint_path"] for setting in settings}
+        assert checkpoint_paths == {"outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt"}
+        for setting in settings:
+            args = setting["args"]
+            assert args["pricing"] is True
+            assert args["max_candidates"] == 10
+            assert args["hgs_reopt_time"] == 0.1
+            assert args["hgs_final_time"] == 0.1
+            assert args["product_mode"] == "m+w+p"
+            assert args["time_window_mode"] == "adaptive_window"
+            assert args["menu_pricing_mode"] == "lambertw"
+
+
 def test_phase9_dspo_family_pairing_and_threshold_contract():
     manifest = load_manifest("phase9_dspo_family_validation")
     settings = resolve_paired_settings(manifest)
@@ -329,6 +352,7 @@ def main():
         test_mainline_policy_drift_is_limited_to_comparison_fields,
         test_pilot_and_formal_uptake_regimes,
         test_phase8_baseline_pairing_and_pricing_contract,
+        test_phase8_sensitivity_manifests_keep_single_policy_and_shared_checkpoint,
         test_phase9_dspo_family_pairing_and_threshold_contract,
         test_uptake_regime_is_split_level_not_policy_level,
         test_row_ready_uptake_regime_metadata,

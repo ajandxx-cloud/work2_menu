@@ -47,6 +47,10 @@ def test_valid_manifests_load():
         "pilot_robust_menu",
         "formal_robust_menu",
         "phase8_baseline_validation",
+        "phase8_sensitivity_menu_k",
+        "phase8_sensitivity_eta_filter",
+        "phase8_sensitivity_uptake_regime",
+        "phase8_sensitivity_guardrail",
         "phase9_dspo_family_validation",
     ]:
         manifest = load_manifest(name)
@@ -55,6 +59,8 @@ def test_valid_manifests_load():
         tags = {policy["tag"] for policy in manifest["policies"]}
         if name == "phase8_baseline_validation":
             assert tags == {"mainline_optimized_mw", "phase8_static_flat_markdown"}
+        elif name.startswith("phase8_sensitivity_"):
+            assert tags == {"mainline_optimized_adaptive"}
         elif name == "phase9_dspo_family_validation":
             assert tags == {"dspo_clip", "dspo_wide"}
         elif name == "diagnostic_actual_menu":
@@ -169,6 +175,26 @@ def test_phase8_baseline_manifest_contract():
     assert static["menu_pricing_constant"] == -3.0
 
 
+def test_phase8_sensitivity_suite_contract():
+    suite = load_suite("phase8_sensitivity_must_have")
+    assert suite_members(suite) == [
+        "phase8_sensitivity_menu_k",
+        "phase8_sensitivity_eta_filter",
+        "phase8_sensitivity_uptake_regime",
+        "phase8_sensitivity_guardrail",
+    ]
+    assert suite["claim_ready"] is False
+    for name in suite_members(suite):
+        manifest = load_manifest(name)
+        assert manifest["tier"] == "pilot"
+        assert manifest["run_mode"] == "diagnostic"
+        assert manifest["claim_ready"] is False
+        assert manifest["baseline_validation_required"].endswith("PHASE8_BASELINE_VALIDATION.json")
+        assert manifest["shared_checkpoint"]["required"] is True
+        assert manifest["base_args"]["require_checkpoint"] is True
+        assert manifest["base_args"]["checkpoint_path"] == manifest["shared_checkpoint"]["path"]
+
+
 def test_phase9_dspo_family_manifest_contract():
     phase8 = load_manifest("phase8_baseline_validation")
     phase9 = load_manifest("phase9_dspo_family_validation")
@@ -271,6 +297,7 @@ def main():
         test_mainline_menu_k_contracts,
         test_pilot_and_formal_require_checkpoint_contract,
         test_phase8_baseline_manifest_contract,
+        test_phase8_sensitivity_suite_contract,
         test_phase9_dspo_family_manifest_contract,
         test_duplicate_policy_rejected,
         test_invalid_filter_rejected,
