@@ -97,12 +97,16 @@ gates.
 
 ### Sensitivity And Computation
 
-- [ ] **SENS-01**: Sensitivity experiments cover menu size, candidate pool size,
-  ETA uncertainty, uptake regime, opt-out guardrail, and fleet/capacity stress
-  where computationally feasible.
-- [ ] **SENS-02**: Sensitivity outputs support conditional conclusions and
-  explicitly identify where the method works or fails.
-- [ ] **SENS-03**: Phase 8 separates must-have sensitivity dimensions
+- [x] **SENS-01**: Phase 8 diagnostic sensitivity experiments cover the
+  executable must-have dimensions: menu size, ETA uncertainty/filter mode,
+  uptake regime, and opt-out/service guardrail. Candidate pool size,
+  fleet/capacity stress, pricing bounds, and price sensitivity remain deferred
+  nice-to-have dimensions.
+- [x] **SENS-02**: `.planning/results/SENSITIVITY_SUMMARY.md` supports
+  conditional diagnostic conclusions and identifies where the method works,
+  fails, or exposes profit-service-quality trade-offs, without upgrading
+  manuscript claims.
+- [x] **SENS-03**: Phase 8 separates must-have sensitivity dimensions
   (`menu_k`, ETA uncertainty/filter mode, uptake regime, opt-out guardrail)
   from nice-to-have dimensions (candidate pool size, fleet/capacity stress,
   pricing bounds or price sensitivity).
@@ -157,7 +161,7 @@ gates.
 | CAL-01..CAL-04 | Phase 5 | Complete |
 | CASE-01, CASE-02, CASE-04 | Phase 6 | Complete |
 | CASE-03, CASE-05 | Phase 7 | Complete - scaffold contracts only; no case evidence rows |
-| SENS-01..SENS-03 | Phase 8 | Pending |
+| SENS-01..SENS-03 | Phase 8 | Complete - diagnostic/provisional; nice-to-have axes deferred |
 | COMP-01..COMP-02 | Phase 9 | Pending |
 | ART-01..ART-02 | Phase 10 | Pending |
 | MS-01..MS-02 | Phase 11 | Pending |
@@ -170,4 +174,4 @@ gates.
 
 ---
 *Requirements defined: 2026-06-14*
-*Last updated: 2026-06-15 after Phase 7 scaffold-only case-study contract closeout*
+*Last updated: 2026-06-15 after Phase 8 diagnostic sensitivity closeout*

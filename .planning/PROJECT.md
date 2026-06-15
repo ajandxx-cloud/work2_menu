@@ -63,6 +63,11 @@ opt-out, ETA uncertainty, or capacity constraints.
   reduced-family gate, prohibitive claim placeholders, and a validator. This is
   contract coverage only; no case rows, result artifacts, runtime manifest, or
   claim upgrade were produced.
+- [x] Phase 8 ran `phase8_baseline_validation`, executed the four must-have
+  diagnostic sensitivity studies, generated sensitivity artifacts under
+  `work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/`, and wrote
+  `.planning/results/SENSITIVITY_SUMMARY.md` with
+  `status: diagnostic_provisional_blocked` and `claim_ready: false`.
 
 ### Active
 
@@ -74,8 +79,9 @@ opt-out, ETA uncertainty, or capacity constraints.
 - [ ] Keep case-study execution blocked until upstream provenance, readiness,
   artifact, and claim gates pass; preserve semi-real geography/network,
   simulated demand, and simulated choice labels in any future case outputs.
-- [ ] Add sensitivity, exact-vs-greedy, artifact, manuscript, and final
-  readiness phases only after upstream evidence gates pass.
+- [ ] Add exact-vs-greedy, artifact, manuscript, and final readiness phases
+  only after upstream evidence gates pass or explicitly preserve diagnostic
+  claim boundaries.
 
 ### Out of Scope
 
@@ -164,6 +170,7 @@ before any empirical superiority claim is made.
 | Lock calibration before any rerun | Phase 5 created pre-registered calibration and final manifests plus frozen settings, but marked final execution blocked until gate cleanup passes. | Validated |
 | Add a semi-real case only behind gates | Phase 6 found public OSM/open-network data is reproducible enough for a supplemental semi-real external scenario, but no real passenger behavior, acceptance, opt-out, or profit may be claimed from simulated demand/choice. | Validated |
 | Close Phase 7 as scaffold-only | Phase 7 created reproducible planning contracts and validation checks, but upstream gates still block case execution, result artifacts, and manuscript claim upgrades. | Validated |
+| Treat Phase 8 sensitivity as diagnostic boundary evidence | Phase 8 generated 50 completed rows across the four must-have axes, but artifacts and summary remain `diagnostic_provisional_blocked` with `claim_ready=false`; candidate pool, fleet/capacity stress, and pricing sensitivity stay deferred. | Validated |
 
 ## Evolution
 
@@ -185,4 +192,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-15 after Phase 7 scaffold-only case-study contract closeout*
+*Last updated: 2026-06-15 after Phase 8 diagnostic sensitivity closeout*

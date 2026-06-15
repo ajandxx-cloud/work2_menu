@@ -251,19 +251,28 @@ pass.
 
 ## Phase 8: Sensitivity And Robustness Experiments
 
+**Status:** Complete (2026-06-15)
+
+**Gate Result:** Baseline validation passed, then the four must-have diagnostic
+sensitivity studies executed successfully. Generated artifacts and
+`.planning/results/SENSITIVITY_SUMMARY.md` remain
+`diagnostic_provisional_blocked` with `claim_ready=false`; no manuscript claim
+upgrade is authorized.
+
 **Goal:** Add sensitivity analyses needed for a credible TR Part E paper.
 
 **Success Criteria:**
-1. Sensitivity manifests cover menu size, candidate pool size, ETA uncertainty,
-   preference/uptake regime, opt-out guardrail, and fleet/capacity stress where
-   feasible.
+1. Sensitivity manifests and replay cover the must-have executable dimensions:
+   `menu_k`, ETA uncertainty/filter mode, uptake regime, and opt-out/service
+   guardrail.
 2. Outputs include normalized rows, aggregate tables, figures, and
    `.planning/results/SENSITIVITY_SUMMARY.md`.
 3. Conclusions identify where the method works best and where it fails.
-4. Must-have dimensions are `menu_k`, ETA uncertainty/filter mode, uptake
-   regime, and opt-out guardrail.
-5. Nice-to-have dimensions are candidate pool size, fleet/capacity stress, and
-   pricing bounds or price sensitivity.
+4. Nice-to-have dimensions are candidate pool size, fleet/capacity stress, and
+   pricing bounds or price sensitivity, and remain deferred rather than
+   executed in Phase 8.
+5. Summary and artifact metadata keep diagnostic/provisional status and do not
+   upgrade abstract or conclusion-level claims.
 
 **Requirements:** SENS-01, SENS-02, SENS-03
 

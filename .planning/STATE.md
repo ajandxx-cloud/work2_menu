@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
 status: executing
-last_updated: "2026-06-15T15:58:51.584Z"
+last_updated: "2026-06-15T16:02:28Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 12
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 15
-  completed_plans: 14
-  percent: 58
+  completed_plans: 15
+  percent: 67
 ---
 
 # State
@@ -24,13 +24,13 @@ optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 08 — sensitivity-and-robustness-experiments
+**Current focus:** Phase 09 - exact-versus-greedy-and-computational-tractability
 
 ## Current Position
 
-Phase: 08 (sensitivity-and-robustness-experiments) — EXECUTING
-Plan: 3 of 3
-Status: Ready to execute
+Phase: 09 (exact-versus-greedy-and-computational-tractability) - READY
+Plan: discussion/planning pending
+Status: Ready to discuss
 Last activity: 2026-06-15
 
 ## Initialization Evidence
@@ -101,6 +101,18 @@ Existing runtime files observed:
   rows, case artifacts, external data download, matrix build, replay run, or
   manuscript claim upgrade was created.
 
+- Phase 8 completed the diagnostic must-have sensitivity suite after
+  `PHASE8_BASELINE_VALIDATION_STATUS=passed`. It generated 50 completed rows
+  across `menu_k`, `eta_filter_mode`, `uptake_regime`, and `guardrail`, plus
+  artifacts under
+  `work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/` and
+  `.planning/results/SENSITIVITY_SUMMARY.md`. Status remains
+  `diagnostic_provisional_blocked` with `claim_ready: false`; no abstract or
+  conclusion claim upgrade is authorized.
+
+- Phase 8 nice-to-have sensitivity dimensions remain deferred: candidate pool
+  size, fleet/capacity stress, pricing bounds, and price sensitivity.
+
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
   so.
@@ -129,19 +141,19 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 7 is verified and complete. Phase 8 is ready for discussion and planning:
+Phase 8 is verified and complete. Phase 9 is ready for discussion and planning:
 
 ```text
-$gsd-discuss-phase 8
+$gsd-discuss-phase 9
 ```
 
-Because Phase 8 has no context document yet, start with discussion before
-planning. Continue avoiding case-study experiments until upstream gates pass.
+Continue avoiding case-study experiments until upstream gates pass. Phase 9
+should focus on exact versus greedy and computational tractability; do not
+reinterpret Phase 8 diagnostic sensitivity artifacts as claim-ready evidence.
 
 Do not run calibration pilot or final replay until Phase 5 gate cleanup
 conditions are explicitly resolved. Do not run semi-real case experiments or
 generate case-study result claims until upstream gates pass.
 
 ---
-*Updated: 2026-06-15 after Phase 7 verification and Phase 8 handoff*
-d: 2026-06-15 after Phase 7 verification and Phase 8 handoff*
+*Updated: 2026-06-15 after Phase 8 diagnostic sensitivity closeout*
