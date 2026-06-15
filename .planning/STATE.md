@@ -24,14 +24,14 @@ optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 07 — case-study-implementation
+**Current focus:** Phase 07 - case-study-implementation scaffold validation closeout
 
 ## Current Position
 
-Phase: 07 (case-study-implementation) — EXECUTING
+Phase: 07 (case-study-implementation) - EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
-Last activity: 2026-06-15
+Status: Scaffold-only contracts and validator implemented; awaiting phase verification
+Last activity: 2026-06-15 -- Phase 7 contract pack and validator passed no-execution checks
 
 ## Initialization Evidence
 
@@ -95,6 +95,12 @@ Existing runtime files observed:
   must label semi-real geography/network, simulated demand, and simulated
   choice. Do not claim real passenger behavior, acceptance, opt-out, or profit.
 
+- Phase 7 produced planning-side contracts and validation only under
+  `.planning/data/case_studies/` with status
+  `scaffolding_only_blocked_execution`. No runtime case-study YAML, normalized
+  rows, case artifacts, external data download, matrix build, replay run, or
+  manuscript claim upgrade was created.
+
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
   so.
@@ -123,15 +129,19 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 7 is planned. Execute the gated semi-real case scaffolding plans:
+Phase 7 scaffold implementation is ready for verification:
 
 ```text
-$gsd-execute-phase 7
+$gsd-verify-work 7
 ```
+
+After Phase 7 verification passes, proceed to Phase 8 sensitivity and
+robustness planning without running case-study experiments until upstream gates
+pass.
 
 Do not run calibration pilot or final replay until Phase 5 gate cleanup
 conditions are explicitly resolved. Do not run semi-real case experiments or
 generate case-study result claims until upstream gates pass.
 
 ---
-*Updated: 2026-06-15 after Phase 6 feasibility decision*
+*Updated: 2026-06-15 after Phase 7 scaffold-only contract validation*

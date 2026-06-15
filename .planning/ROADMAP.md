@@ -215,6 +215,14 @@ claim gates remain blocked.
 
 ## Phase 7: Case Study Implementation
 
+**Status:** Complete (2026-06-15)
+
+**Gate Result:** Completed as scaffold-only case-study contract preparation.
+Phase 7 created planning-side contracts and validation checks under
+`.planning/data/case_studies/`; it did not create runtime case-study YAML, run
+smoke/pilot/formal case replay, generate normalized rows, build case artifacts,
+or upgrade manuscript claims.
+
 **Goal:** Implement the selected real/semi-real case reproducibly, if Phase 6
 approves it.
 
@@ -229,9 +237,14 @@ pass.
 
 **Success Criteria:**
 1. Data ingestion and validation contracts are written.
-2. Case dataset build/validate/run scripts or manifest integration are added.
-3. Smoke and pilot case studies produce normalized rows.
-4. Formal case artifacts are built, or the case remains explicitly diagnostic.
+2. Planning-side validation scripts and self-tests are added under
+   `.planning/data/case_studies/`; no runtime validation script is added under
+   `work2_coding/scripts/`.
+3. Smoke, pilot, and formal/diagnostic execution remain as blocked contract
+   fields only while upstream gates are unresolved; no case normalized rows are
+   produced in Phase 7.
+4. Formal case artifacts are not built in Phase 7; the case remains
+   `scaffolding_only_blocked_execution`.
 5. The case is not used to tune RC parameters.
 
 **Requirements:** CASE-03, CASE-05

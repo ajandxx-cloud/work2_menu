@@ -47,14 +47,33 @@ opt-out, ETA uncertainty, or capacity constraints.
   improves several service metrics but does not support a strong universal
   dominance claim; all positive empirical classifications remain provisional
   while dirty-git readiness and artifact gates are blocked.
+- [x] Phase 5 locked calibration integrity without p-hacking:
+  `.planning/results/CALIBRATION_PROTOCOL.md` defines allowed/prohibited
+  tuning, calibration/final manifests are separated, and
+  `.planning/results/FROZEN_FINAL_SETTINGS.md` records pre-run final settings
+  while final rerun remains blocked pending provenance/artifact gate cleanup.
+- [x] Phase 6 approved a semi-real case study in principle with decision
+  `approved_blocked_pending_gate_cleanup`: public OSM/open-network evidence is
+  the default route, Yanjiao/Beijing material is narrative support unless it can
+  be reproduced equally well, and Phase 7 may prepare scaffolding but may not
+  run case experiments or upgrade claims while gates remain blocked.
+- [x] Phase 7 delivered planning-side semi-real case scaffolding under
+  `.planning/data/case_studies/`: source contracts, route-selection scoring,
+  simulated-demand protocol placeholders, a non-executable manifest draft, a
+  reduced-family gate, prohibitive claim placeholders, and a validator. This is
+  contract coverage only; no case rows, result artifacts, runtime manifest, or
+  claim upgrade were produced.
 
 ### Active
 
 - [ ] Resolve provenance/artifact gates or keep the evidence explicitly
   diagnostic before any manuscript claim upgrade.
-- [ ] If a strong central claim is still desired, calibrate through a documented
-  pilot/final split rather than test-set tuning.
-- [ ] Decide whether a real or semi-real case study is feasible and valuable.
+- [ ] Before any calibration pilot or final rerun, resolve dirty-git
+  provenance, checkpoint sidecar/hash, readiness, artifact metadata, and claim
+  guard blockers.
+- [ ] Keep case-study execution blocked until upstream provenance, readiness,
+  artifact, and claim gates pass; preserve semi-real geography/network,
+  simulated demand, and simulated choice labels in any future case outputs.
 - [ ] Add sensitivity, exact-vs-greedy, artifact, manuscript, and final
   readiness phases only after upstream evidence gates pass.
 
@@ -142,6 +161,9 @@ before any empirical superiority claim is made.
 | Use the 35-row formal RC run as Phase 4 diagnostic input | Phase 3 validated `formal_robust_menu-20260614T032323Z-c672286a` as comparable candidate evidence while preserving readiness/artifact blockers. | Validated |
 | Do not claim strong adaptive-menu dominance from the selected formal RC run | Phase 4 found random menu has better mean net profit, adaptive loses to random on 3/5 paired profit splits, and adaptive equals optimized fixed-window across tracked metrics. | Validated |
 | Do not skip Phase 5 while provenance and central-claim evidence remain weak | Phase 4 recommends provenance cleanup first, then Phase 5 calibration if the project still wants a strong central empirical claim; otherwise reframe as conditional service-menu design. | Active |
+| Lock calibration before any rerun | Phase 5 created pre-registered calibration and final manifests plus frozen settings, but marked final execution blocked until gate cleanup passes. | Validated |
+| Add a semi-real case only behind gates | Phase 6 found public OSM/open-network data is reproducible enough for a supplemental semi-real external scenario, but no real passenger behavior, acceptance, opt-out, or profit may be claimed from simulated demand/choice. | Validated |
+| Close Phase 7 as scaffold-only | Phase 7 created reproducible planning contracts and validation checks, but upstream gates still block case execution, result artifacts, and manuscript claim upgrades. | Validated |
 
 ## Evolution
 
@@ -163,4 +185,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-15 after Phase 4 RC claim diagnosis*
+*Last updated: 2026-06-15 after Phase 7 scaffold-only case-study contract closeout*

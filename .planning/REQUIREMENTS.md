@@ -64,31 +64,36 @@ gates.
 
 ### Calibration Integrity
 
-- [ ] **CAL-01**: If results are weak or unstable, calibration parameters are
+- [x] **CAL-01**: If results are weak or unstable, calibration parameters are
   declared before final testing.
-- [ ] **CAL-02**: Calibration and formal testing are separated into distinct
+- [x] **CAL-02**: Calibration and formal testing are separated into distinct
   manifests, outputs, and documents.
-- [ ] **CAL-03**: Frozen final settings are documented before rerunning final
+- [x] **CAL-03**: Frozen final settings are documented before rerunning final
   evidence.
-- [ ] **CAL-04**: Phase 5 may be marked skipped-by-gate if Phase 4 supports at
+- [x] **CAL-04**: Phase 5 may be marked skipped-by-gate if Phase 4 supports at
   least one central claim with stable paired differences; otherwise Phase 5 is
   mandatory.
 
 ### Case Study
 
-- [ ] **CASE-01**: The project audits whether a real or semi-real case study is
+- [x] **CASE-01**: The project audits whether a real or semi-real case study is
   feasible from existing materials, public data, or real geography plus
   simulated demand.
-- [ ] **CASE-02**: No fabricated real data is used or implied.
-- [ ] **CASE-03**: If feasible, the case study has a reproducible ingestion,
-  validation, smoke, pilot, and formal/diagnostic execution contract.
-- [ ] **CASE-04**: A minimum acceptable semi-real case is defined as real or
+- [x] **CASE-02**: No fabricated real data is used or implied.
+- [x] **CASE-03**: If feasible, the case study has a reproducible ingestion,
+  validation, smoke, pilot, and formal/diagnostic execution contract. Phase 7
+  covers this as planning-side contract scaffolding only: source contracts,
+  validation checks, manifest draft, and execution gates exist, but no case
+  rows or runtime manifest were produced.
+- [x] **CASE-04**: A minimum acceptable semi-real case is defined as real or
   manually documented geography, realistic depot/destination and candidate
   meeting points, real road distance or reproducible distance matrix, simulated
   sequential DRT demand clearly labeled as simulated, same seven-tag or reduced
   six-tag comparison, and no use for tuning RC parameters.
-- [ ] **CASE-05**: If Phase 6 defers the case study, Phase 7 is skipped and the
-  manuscript explicitly states that external case validation is deferred.
+- [x] **CASE-05**: If Phase 6 defers the case study, Phase 7 is skipped and the
+  manuscript explicitly states that external case validation is deferred. Phase
+  6 did not defer; Phase 7 was not skipped, and case execution plus manuscript
+  external-validation claims remain blocked until upstream gates pass.
 
 ### Sensitivity And Computation
 
@@ -149,8 +154,9 @@ gates.
 | PAPER-01..PAPER-05 | Phase 2 | Complete |
 | RC-01..RC-05 | Phase 3 | Pending |
 | CLAIM-01..CLAIM-05 | Phase 4 | Complete |
-| CAL-01..CAL-04 | Phase 5 | Pending |
-| CASE-01..CASE-05 | Phase 6, Phase 7 | Pending |
+| CAL-01..CAL-04 | Phase 5 | Complete |
+| CASE-01, CASE-02, CASE-04 | Phase 6 | Complete |
+| CASE-03, CASE-05 | Phase 7 | Complete - scaffold contracts only; no case evidence rows |
 | SENS-01..SENS-03 | Phase 8 | Pending |
 | COMP-01..COMP-02 | Phase 9 | Pending |
 | ART-01..ART-02 | Phase 10 | Pending |
@@ -164,4 +170,4 @@ gates.
 
 ---
 *Requirements defined: 2026-06-14*
-*Last updated: 2026-06-14 after GSD new-project initialization*
+*Last updated: 2026-06-15 after Phase 7 scaffold-only case-study contract closeout*
