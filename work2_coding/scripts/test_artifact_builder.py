@@ -10,13 +10,13 @@ sys.path.insert(0, str(ROOT))
 from Src.artifact_builder import aggregate_by_policy, build_artifacts  # noqa: E402
 
 
-def run_smoke(output_root):
+def run_study(output_root, study="smoke_robust_menu"):
     result = subprocess.run(
         [
             sys.executable,
             "scripts/run_study.py",
             "--study",
-            "smoke_robust_menu",
+            study,
             "--contract-only",
             "--output-root",
             str(output_root),
@@ -29,13 +29,17 @@ def run_smoke(output_root):
     return Path(result.stdout.strip().splitlines()[-1])
 
 
+def run_smoke(output_root):
+    return run_study(output_root, study="smoke_robust_menu")
+
+
 def load_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def test_aggregate_preserves_counts_and_diagnostic_label():
     with TemporaryDirectory() as tmp:
-        run_dir = run_smoke(Path(tmp) / "outputs")
+        run_dir = run_study(Path(tmp) / "outputs", study="diagnostic_actual_menu")
         rows = load_json(run_dir / "normalized_rows.json")
         aggregates = aggregate_by_policy(rows)
         assert sum(row["row_count"] for row in aggregates) == len(rows)
@@ -47,7 +51,7 @@ def test_aggregate_preserves_counts_and_diagnostic_label():
 def test_build_writes_json_csv_tables_and_status_files():
     with TemporaryDirectory() as tmp:
         root = Path(tmp)
-        run_dir = run_smoke(root / "outputs")
+        run_dir = run_study(root / "outputs", study="diagnostic_actual_menu")
         result = build_artifacts(run_dir, output_root=root / "artifacts", allow_incomplete=True)
         output_root = Path(result["output_root"])
         assert (output_root / "aggregates" / "policy_summary.json").exists()
@@ -144,4 +148,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
