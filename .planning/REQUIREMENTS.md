@@ -41,7 +41,7 @@ gates.
 - [x] **RC-02**: The required shared checkpoint path is generated or verified:
   `outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt`.
 - [x] **RC-03**: Formal readiness passes without bypassing blockers.
-- [ ] **RC-04**: Formal RC replay produces completed or explicitly failed
+- [x] **RC-04**: Formal RC replay produces completed or explicitly failed
   normalized rows for comparable policy variants.
 - [ ] **RC-05**: Formal artifact generation produces readiness, row, summary,
   artifact-status, claim-guard, table, figure, and manuscript-frame outputs.
