@@ -95,6 +95,12 @@ script collection.
 
 ## Phase 3: Formal RC Evidence Pipeline Repair And Completion
 
+**Status:** Complete (2026-06-15)
+
+**Gate Result:** Completed comparable formal rows and diagnostic artifacts are
+available. Claim-ready manuscript use remains blocked by dirty-git readiness
+and generated artifact/claim-guard gates.
+
 **Goal:** Complete the existing RC formal benchmark pipeline and produce
 claim-ready formal artifacts if gates pass.
 

@@ -39,10 +39,13 @@ opt-out, ETA uncertainty, or capacity constraints.
   before algorithm behavior changes.
 - [x] Phase 2 locked the TR-E paper research design in
   `.planning/paper/TR_E_RESEARCH_DESIGN.md`.
+- [x] Phase 3 completed the formal RC evidence pipeline diagnostically:
+  readiness/checkpoint status is explicit, the selected formal run has 35
+  comparable completed rows across the seven-tag family, and artifact/claim
+  gates block claim-ready manuscript use until residual gates are resolved.
 
 ### Active
 
-- [ ] Complete formal RC evidence for the seven-tag mainline family.
 - [ ] Diagnose whether formal RC results support strong, conditional, weak, or
   unsupported paper claims.
 - [ ] If needed, calibrate through a documented pilot/final split rather than
@@ -132,6 +135,7 @@ before any empirical superiority claim is made.
 | Preserve a fallback claim path | Mixed results can still support a conditional service-menu design contribution. | Active |
 | Use `.planning/STATE_LOCK.md` as the Phase 1 baseline | Phase 1 verified `work2_coding/`, current evidence blockers, and stale `ooh_code/` mappings before behavior changes. | Validated |
 | Use `.planning/paper/TR_E_RESEARCH_DESIGN.md` as the Phase 2 paper contract | Phase 2 defined service-bundle semantics, model skeleton, claim ladder, evidence gates, and table/figure plans. | Validated |
+| Use the 35-row formal RC run as Phase 4 diagnostic input | Phase 3 validated `formal_robust_menu-20260614T032323Z-c672286a` as comparable candidate evidence while preserving readiness/artifact blockers. | Validated |
 
 ## Evolution
 
@@ -153,4 +157,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-15 after Phase 2 paper research design lock*
+*Last updated: 2026-06-15 after Phase 3 formal RC evidence pipeline completion*
