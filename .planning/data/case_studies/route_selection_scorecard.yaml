@@ -1,0 +1,56 @@
+schema_version: phase7-route-selection-scorecard-v1
+status: scaffolding_only_blocked_execution
+case_execution_allowed: false
+result_artifacts_allowed: false
+manuscript_claim_upgrade_allowed: false
+no_result_based_selection: true
+selection_rule: "Select the future main route only from predeclared reproducibility, license, matrix, DRT plausibility, and paper-value criteria."
+forbidden_outcome_inputs:
+  - net_profit
+  - acceptance
+  - opt_out
+  - service_rate
+  - policy_ranking
+  - dominance_result
+criteria:
+  reproducibility:
+    weight: 0.30
+    score_description: "Pinned public source, access date, raw cache path, hash, and deterministic rebuild instructions."
+  license_clarity:
+    weight: 0.20
+    score_description: "Clear right to use source data and publish derived documentation with required attribution."
+  matrix_rebuildability:
+    weight: 0.20
+    score_description: "Road-network distance/duration matrix can be rebuilt from pinned source and tool versions."
+  drt_scenario_plausibility:
+    weight: 0.15
+    score_description: "Depot, destination, candidate meeting points, and OD/time design are plausible for many-to-one DRT."
+  paper_value:
+    weight: 0.15
+    score_description: "Scenario helps readers understand external robustness without overstating simulated behavior."
+candidate_routes:
+  public_osm_open_network:
+    provisional_scores:
+      reproducibility: 5
+      license_clarity: 4
+      matrix_rebuildability: 5
+      drt_scenario_plausibility: 4
+      paper_value: 4
+    phase7_decision: default_future_candidate_if_gates_unlock
+  yanjiao_beijing_motivated:
+    provisional_scores:
+      reproducibility: 3
+      license_clarity: 3
+      matrix_rebuildability: 4
+      drt_scenario_plausibility: 5
+      paper_value: 5
+    phase7_decision: motivation_route_until_equal_reproducibility_is_documented
+blockers:
+  case_execution_allowed: false
+  result_artifacts_allowed: false
+  manuscript_claim_upgrade_allowed: false
+  unlock_conditions:
+    - provenance gate cleanup
+    - readiness gate cleanup
+    - artifact gate cleanup
+    - claim guard cleanup
