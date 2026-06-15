@@ -1,0 +1,62 @@
+{
+  "artifact_gate_status": "diagnostic",
+  "artifact_kind": "aggregate-csv",
+  "artifact_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv",
+  "baseline_report_hash": "7ea004eb4f8478c502acb6b0b71223aa703de6ae98bb906b0c0975a912fa08f8",
+  "baseline_report_path": "work2_coding/outputs/phase8_baseline_validation/PHASE8_BASELINE_VALIDATION.json",
+  "baseline_validation_status": "passed",
+  "claim_ready": false,
+  "diagnostic_provisional": true,
+  "generated_at_utc": "2026-06-15T16:01:01+00:00",
+  "git_provenance": {
+    "phase8_sensitivity_eta_filter": {
+      "git_commit": "3d98d87aff6d7ec159feae638f061fea869d4e92",
+      "git_dirty": true,
+      "git_status_summary": "D .planning/phases/01-repository-audit/01-PLAN.md;  D .planning/phases/01-repository-audit/01-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-CONTEXT.md;  D .planning/phases/02-service-product-contract/02-DISCUSSION-LOG.md;  D .planning/phases/02-service-product-contract/02-PLAN.md;  D .planning/phases/02-service-product-contract/02-REVIEW.md;  D .planning/phases/02-service-product-contract/02-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-VERIFICATION.md;  D .planning/phases/03-mainline-comparison-contract/03-CONTEXT.md;  D .planning/phases/03-mainline-comparison-contract/03-DISCUSSION-LOG.md;  D .planning/phases/03-mainline-comparison-contract/03-PLAN.md;  D .planning/phases/03-mainline-comparison-contract/03-RESEARCH.md;  D .planning/phases/03-mainline-comparison-contract/03-SUMMARY.md;  D .planning/phases/03-mainline-comparison-contract/03-VERIFICATION.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-SUMMARY.md"
+    },
+    "phase8_sensitivity_guardrail": {
+      "git_commit": "3d98d87aff6d7ec159feae638f061fea869d4e92",
+      "git_dirty": true,
+      "git_status_summary": "D .planning/phases/01-repository-audit/01-PLAN.md;  D .planning/phases/01-repository-audit/01-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-CONTEXT.md;  D .planning/phases/02-service-product-contract/02-DISCUSSION-LOG.md;  D .planning/phases/02-service-product-contract/02-PLAN.md;  D .planning/phases/02-service-product-contract/02-REVIEW.md;  D .planning/phases/02-service-product-contract/02-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-VERIFICATION.md;  D .planning/phases/03-mainline-comparison-contract/03-CONTEXT.md;  D .planning/phases/03-mainline-comparison-contract/03-DISCUSSION-LOG.md;  D .planning/phases/03-mainline-comparison-contract/03-PLAN.md;  D .planning/phases/03-mainline-comparison-contract/03-RESEARCH.md;  D .planning/phases/03-mainline-comparison-contract/03-SUMMARY.md;  D .planning/phases/03-mainline-comparison-contract/03-VERIFICATION.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-SUMMARY.md"
+    },
+    "phase8_sensitivity_menu_k": {
+      "git_commit": "3d98d87aff6d7ec159feae638f061fea869d4e92",
+      "git_dirty": true,
+      "git_status_summary": "D .planning/phases/01-repository-audit/01-PLAN.md;  D .planning/phases/01-repository-audit/01-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-CONTEXT.md;  D .planning/phases/02-service-product-contract/02-DISCUSSION-LOG.md;  D .planning/phases/02-service-product-contract/02-PLAN.md;  D .planning/phases/02-service-product-contract/02-REVIEW.md;  D .planning/phases/02-service-product-contract/02-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-VERIFICATION.md;  D .planning/phases/03-mainline-comparison-contract/03-CONTEXT.md;  D .planning/phases/03-mainline-comparison-contract/03-DISCUSSION-LOG.md;  D .planning/phases/03-mainline-comparison-contract/03-PLAN.md;  D .planning/phases/03-mainline-comparison-contract/03-RESEARCH.md;  D .planning/phases/03-mainline-comparison-contract/03-SUMMARY.md;  D .planning/phases/03-mainline-comparison-contract/03-VERIFICATION.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-SUMMARY.md"
+    },
+    "phase8_sensitivity_uptake_regime": {
+      "git_commit": "3d98d87aff6d7ec159feae638f061fea869d4e92",
+      "git_dirty": true,
+      "git_status_summary": "D .planning/phases/01-repository-audit/01-PLAN.md;  D .planning/phases/01-repository-audit/01-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-CONTEXT.md;  D .planning/phases/02-service-product-contract/02-DISCUSSION-LOG.md;  D .planning/phases/02-service-product-contract/02-PLAN.md;  D .planning/phases/02-service-product-contract/02-REVIEW.md;  D .planning/phases/02-service-product-contract/02-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-VERIFICATION.md;  D .planning/phases/03-mainline-comparison-contract/03-CONTEXT.md;  D .planning/phases/03-mainline-comparison-contract/03-DISCUSSION-LOG.md;  D .planning/phases/03-mainline-comparison-contract/03-PLAN.md;  D .planning/phases/03-mainline-comparison-contract/03-RESEARCH.md;  D .planning/phases/03-mainline-comparison-contract/03-SUMMARY.md;  D .planning/phases/03-mainline-comparison-contract/03-VERIFICATION.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-03-SUMMARY.md"
+    }
+  },
+  "manifest_hashes": {
+    "phase8_sensitivity_eta_filter": "a1a3724cdf6d89cdcad35d8b2968b701fdc8e3bb412aa93d1701e147e37451a9",
+    "phase8_sensitivity_guardrail": "9276956f1facc0b69d4cd960b642d7f9496a95c9eed6139055abe9ac894ec3c1",
+    "phase8_sensitivity_menu_k": "1dfd3737c021d43d8e70690037e5a13e7fe215c7b703f7e21bd1c3ee01b126d7",
+    "phase8_sensitivity_uptake_regime": "663b4ce0aca9e68ad56c5e02c356bcc01dc3ebf87add83d3bbcf0e6be89928a3"
+  },
+  "phase": "08",
+  "row_count": 50,
+  "schema_version": "phase8-sensitivity-artifact-metadata-v1",
+  "source_row_counts": {
+    "phase8_sensitivity_eta_filter": 15,
+    "phase8_sensitivity_guardrail": 10,
+    "phase8_sensitivity_menu_k": 15,
+    "phase8_sensitivity_uptake_regime": 10
+  },
+  "source_rows": 50,
+  "source_run_dirs": [
+    "work2_coding/outputs/studies/phase8_sensitivity_eta_filter/phase8_sensitivity_eta_filter-20260615T160033Z-a1a3724c",
+    "work2_coding/outputs/studies/phase8_sensitivity_guardrail/phase8_sensitivity_guardrail-20260615T160036Z-9276956f",
+    "work2_coding/outputs/studies/phase8_sensitivity_menu_k/phase8_sensitivity_menu_k-20260615T160029Z-1dfd3737",
+    "work2_coding/outputs/studies/phase8_sensitivity_uptake_regime/phase8_sensitivity_uptake_regime-20260615T160035Z-663b4ce0"
+  ],
+  "source_run_ids": [
+    "phase8_sensitivity_eta_filter-20260615T160033Z-a1a3724c",
+    "phase8_sensitivity_guardrail-20260615T160036Z-9276956f",
+    "phase8_sensitivity_menu_k-20260615T160029Z-1dfd3737",
+    "phase8_sensitivity_uptake_regime-20260615T160035Z-663b4ce0"
+  ],
+  "status": "diagnostic_provisional_blocked"
+}
