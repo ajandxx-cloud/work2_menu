@@ -48,13 +48,13 @@ gates.
 
 ### Claim Diagnosis
 
-- [ ] **CLAIM-01**: Formal results are diagnosed by effect size, paired split,
+- [x] **CLAIM-01**: Formal results are diagnosed by effect size, paired split,
   uptake regime, and metric trade-off rather than ranking alone.
 - [ ] **CLAIM-02**: The project classifies each planned claim as strong,
   conditional, weak/diagnostic, or unsupported.
 - [ ] **CLAIM-03**: Unsupported or mixed results trigger diagnosis rather than
   manual result editing or forced claims.
-- [ ] **CLAIM-04**: Formal result diagnosis reports mean, standard deviation,
+- [x] **CLAIM-04**: Formal result diagnosis reports mean, standard deviation,
   paired differences, and confidence intervals where feasible; if seed count is
   small, it reports split-level paired differences and avoids strong
   significance language.

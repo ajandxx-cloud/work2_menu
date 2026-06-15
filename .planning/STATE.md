@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
-status: ready_to_plan
-last_updated: 2026-06-15T03:57:23.537Z
+status: executing
+last_updated: "2026-06-15T06:01:19.039Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 12
   completed_phases: 3
-  total_plans: 5
-  completed_plans: 5
+  total_plans: 7
+  completed_plans: 6
   percent: 25
-stopped_at: Phase 03 complete (3/3) — ready to discuss Phase 4
 ---
 
 # State
@@ -25,13 +24,13 @@ optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 4 — rc result diagnosis and paper claim validation
+**Current focus:** Phase 04 — rc-result-diagnosis-and-paper-claim-validation
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
-Status: Ready to plan
+Phase: 04 (rc-result-diagnosis-and-paper-claim-validation) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
 Last activity: 2026-06-15
 
 ## Initialization Evidence
@@ -106,17 +105,18 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 3 is planned. Execute the three formal RC evidence pipeline plans:
+Phase 4 is planned. Execute the two RC result diagnosis and paper-claim
+validation plans:
 
 ```text
-$gsd-execute-phase 3
+$gsd-execute-phase 4
 ```
 
-Use `.planning/STATE_LOCK.md` and
-`.planning/paper/TR_E_RESEARCH_DESIGN.md` as the baseline. Preserve the Phase 3
-plan boundary: diagnose dirty-git/readiness blockers first, validate or rerun
-formal paired rows next, and build artifacts only through readiness and claim
-guard gates.
+Use the selected formal run and Phase 3 handoff as the diagnostic baseline.
+Preserve the Phase 4 boundary: produce blocker-first row diagnostics and claim
+classification, keep dirty-git and artifact gates visible, do not rerun formal
+experiments or tune parameters, and do not upgrade manuscript claims while
+claim-ready gates remain blocked.
 
 ---
-*Updated: 2026-06-15 after Phase 3 planning*
+*Updated: 2026-06-15 after Phase 4 planning*
