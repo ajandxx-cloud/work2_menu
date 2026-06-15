@@ -125,6 +125,8 @@ python scripts/build_manuscript_frame.py --artifact-root <formal-artifact-root>
 
 ## Phase 4: RC Result Diagnosis And Paper-Claim Validation
 
+**Status:** Complete (2026-06-15)
+
 **Goal:** Determine what formal RC results actually support.
 
 **Success Criteria:**

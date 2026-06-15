@@ -148,7 +148,7 @@ gates.
 | STATE-01..STATE-03 | Phase 1 | Complete |
 | PAPER-01..PAPER-05 | Phase 2 | Complete |
 | RC-01..RC-05 | Phase 3 | Pending |
-| CLAIM-01..CLAIM-05 | Phase 4 | Pending |
+| CLAIM-01..CLAIM-05 | Phase 4 | Complete |
 | CAL-01..CAL-04 | Phase 5 | Pending |
 | CASE-01..CASE-05 | Phase 6, Phase 7 | Pending |
 | SENS-01..SENS-03 | Phase 8 | Pending |
