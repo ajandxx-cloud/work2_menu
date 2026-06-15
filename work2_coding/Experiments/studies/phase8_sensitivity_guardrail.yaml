@@ -1,0 +1,248 @@
+schema_version: 1
+name: phase8_sensitivity_guardrail
+tier: pilot
+run_mode: diagnostic
+description: Phase 8 diagnostic one-factor sensitivity for opt-out and service guardrails.
+output_intent: diagnostic_provisional_blocked
+claim_ready: false
+baseline_validation_required: outputs/phase8_baseline_validation/PHASE8_BASELINE_VALIDATION.json
+required_policy_tags:
+  - mainline_optimized_adaptive
+shared_checkpoint:
+  required: true
+  path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
+  expected_status: loaded
+sensitivity_axis: guardrail
+center_value: "0.35"
+guardrail_fields:
+  - service_quit_rate_guardrail
+  - menu_optout_guardrail
+sensitivity_contract:
+  status: diagnostic_provisional_blocked
+  claim_ready: false
+  one_factor_at_a_time: true
+  allowed_values: ["0.35", "0.40"]
+  guardrail_fields:
+    - service_quit_rate_guardrail
+    - menu_optout_guardrail
+  deferred_dimensions:
+    - max_candidates
+    - fleet_capacity_stress
+    - pricing_bounds
+    - price_sensitivity
+  baseline_validation_required: outputs/phase8_baseline_validation/PHASE8_BASELINE_VALIDATION.json
+base_args:
+  algo_name: DSPO_Menu
+  menu_mode: true
+  product_mode: m+w+p
+  time_window_mode: adaptive_window
+  menu_contract_mode: optimized_menu
+  menu_pricing_mode: lambertw
+  run_mode: diagnostic
+  instance: RC
+  load_data: true
+  pricing: true
+  menu_k: 3
+  max_candidates: 10
+  menu_eta_filter_mode: interval_overlap
+  service_quit_rate_guardrail: 0.35
+  menu_optout_guardrail: 0.35
+  max_episodes: 1
+  max_steps_r: 20
+  max_steps_p: 0.7
+  n_vehicles: 2
+  veh_capacity: 3
+  reopt: 10000000
+  hgs_reopt_time: 0.1
+  hgs_final_time: 0.1
+  menu_exact_threshold: 8
+  menu_exact_gap_threshold: 8
+  checkpoint_path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
+  require_checkpoint: true
+  allow_checkpoint_mismatch: false
+splits:
+  - split_id: phase8_guardrail_035_low_seed0
+    seed: 401
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: low
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.35"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_low_seed0
+    args_overrides: {service_quit_rate_guardrail: 0.35, menu_optout_guardrail: 0.35, home_util: 3.8, base_util: -2.8, incentive_sens: -0.18}
+  - split_id: phase8_guardrail_035_low_seed1
+    seed: 402
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: low
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.35"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_low_seed1
+    args_overrides: {service_quit_rate_guardrail: 0.35, menu_optout_guardrail: 0.35, home_util: 3.8, base_util: -2.8, incentive_sens: -0.18}
+  - split_id: phase8_guardrail_035_medium_seed0
+    seed: 403
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.35"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_medium_seed0
+    args_overrides: {service_quit_rate_guardrail: 0.35, menu_optout_guardrail: 0.35, home_util: 3.2, base_util: -2.0, incentive_sens: -0.25}
+  - split_id: phase8_guardrail_035_medium_seed1
+    seed: 404
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: medium
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.35"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_medium_seed1
+    args_overrides: {service_quit_rate_guardrail: 0.35, menu_optout_guardrail: 0.35, home_util: 3.2, base_util: -2.0, incentive_sens: -0.25}
+  - split_id: phase8_guardrail_035_medium_seed2
+    seed: 405
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.35"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_medium_seed2
+    args_overrides: {service_quit_rate_guardrail: 0.35, menu_optout_guardrail: 0.35, home_util: 3.2, base_util: -2.0, incentive_sens: -0.25}
+  - split_id: phase8_guardrail_040_low_seed0
+    seed: 401
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: low
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.40"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_low_seed0
+    args_overrides: {service_quit_rate_guardrail: 0.40, menu_optout_guardrail: 0.40, home_util: 3.8, base_util: -2.8, incentive_sens: -0.18}
+  - split_id: phase8_guardrail_040_low_seed1
+    seed: 402
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: low
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.40"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_low_seed1
+    args_overrides: {service_quit_rate_guardrail: 0.40, menu_optout_guardrail: 0.40, home_util: 3.8, base_util: -2.8, incentive_sens: -0.18}
+  - split_id: phase8_guardrail_040_medium_seed0
+    seed: 403
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.40"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_medium_seed0
+    args_overrides: {service_quit_rate_guardrail: 0.40, menu_optout_guardrail: 0.40, home_util: 3.2, base_util: -2.0, incentive_sens: -0.25}
+  - split_id: phase8_guardrail_040_medium_seed1
+    seed: 404
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: medium
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.40"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_medium_seed1
+    args_overrides: {service_quit_rate_guardrail: 0.40, menu_optout_guardrail: 0.40, home_util: 3.2, base_util: -2.0, incentive_sens: -0.25}
+  - split_id: phase8_guardrail_040_medium_seed2
+    seed: 405
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    sensitivity_axis: guardrail
+    sensitivity_value: "0.40"
+    center_value: "0.35"
+    paired_group_id: phase8_guardrail_medium_seed2
+    args_overrides: {service_quit_rate_guardrail: 0.40, menu_optout_guardrail: 0.40, home_util: 3.2, base_util: -2.0, incentive_sens: -0.25}
+policies:
+  - tag: mainline_optimized_adaptive
+paired_fields:
+  - seed
+  - data_seed
+  - data_seed_test
+  - instance
+  - load_data
+  - pricing
+  - hgs_reopt_time
+  - hgs_final_time
+  - reopt
+  - checkpoint_path
+  - require_checkpoint
+  - allow_checkpoint_mismatch
+  - menu_k
+  - max_candidates
+  - max_steps_r
+  - max_steps_p
+  - n_vehicles
+  - veh_capacity
+  - home_util
+  - base_util
+  - incentive_sens
+varied_fields:
+  - algo_name
+  - menu_mode
+  - product_mode
+  - time_window_mode
+  - menu_contract_mode
+  - menu_pricing_mode
+  - menu_policy
+  - menu_eta_filter_mode
+  - menu_time_filtering
+  - menu_objective_mode
+  - menu_eta_chance_threshold
+  - menu_eta_soft_penalty_lambda
+  - service_quit_penalty
+  - service_quit_rate_guardrail
+  - menu_outside_penalty_lambda
+  - menu_optout_guardrail
+  - menu_selection_solver
+  - menu_use_exact_eval
+output_schema:
+  normalized-row-v2: true
+  fields:
+    - schema_version
+    - study_id
+    - study_name
+    - manifest_path
+    - run_id
+    - tier
+    - run_mode
+    - policy_tag
+    - method_family
+    - outside_option_util
+    - split_id
+    - seed
+    - data_seed
+    - data_seed_test
+    - trace_hash
+    - manifest_hash
+    - settings_hash
+    - checkpoint_load_status
+    - checkpoint_path
+    - checkpoint_required
+    - checkpoint_hash
+    - menu_k
+    - max_candidates
+    - filter_mode
+    - acceptance_rate
+    - optout_rate
+    - meeting_point_uptake_rate
+    - net_profit
+    - operational_cost
+    - total_cost
+    - menu_build_time
+    - uptake_regime
+    - diagnostic
+    - comparison_role
+    - placeholder_only
+    - status
+    - execution_status
+    - error_type
+    - error_message
