@@ -34,3 +34,21 @@ behavior, real acceptance, real opt-out, or real operating profit.
 Future case execution can begin only after upstream provenance, formal
 readiness, artifact-status, and claim-guard gates explicitly pass and a later
 phase creates executable runtime files.
+
+## Validation
+
+Run the planning-side self-test from the repository root:
+
+```powershell
+python .planning/data/case_studies/test_case_contracts.py
+```
+
+Run the live contract validator and refresh the validation summary:
+
+```powershell
+python .planning/data/case_studies/validate_case_contracts.py --root .planning/data/case_studies --write-summary
+```
+
+A `blocking` finding prevents later case execution. Warnings may remain only if
+they are documented and do not enable data download, runtime manifest creation,
+case replay, result artifacts, or manuscript claim upgrade.
