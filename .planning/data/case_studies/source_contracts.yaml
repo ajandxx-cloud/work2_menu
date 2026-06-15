@@ -1,0 +1,101 @@
+schema_version: phase7-case-source-contracts-v1
+status: scaffolding_only_blocked_execution
+case_execution_allowed: false
+result_artifacts_allowed: false
+manuscript_claim_upgrade_allowed: false
+unlock_conditions:
+  - upstream provenance gate passes with clean or intentionally snapshotted state
+  - formal readiness gate passes without diagnostic bypass
+  - artifact status gate permits non-placeholder case evidence
+  - claim guard permits any manuscript language beyond prohibitive placeholders
+routes:
+  - route_id: public_osm_open_network
+    route_role: default_public_reproducible_route
+    url: "https://download.geofabrik.de/"
+    access_date: "placeholder-unfetched-phase-7"
+    license_access_notes: "OSM/ODbL attribution and derived-database obligations must be reviewed before distributing data or matrices."
+    raw_cache_path_placeholder: ".planning/data/case_studies/raw/public-route/<pinned-extract>.osm.pbf"
+    hash_placeholder:
+      algorithm: sha256
+      value: "placeholder-unfetched-phase-7"
+    bbox_or_polygon:
+      type: placeholder
+      value: "future bounded service area polygon or bbox"
+    tool_versions:
+      osmnx: "placeholder"
+      osrm_backend: "placeholder"
+      python: "placeholder"
+      docker_image: "placeholder"
+    parameters:
+      network_type: "drive"
+      speed_profile: "placeholder"
+      candidate_point_rules:
+        - public POIs
+        - transit stops if licensed
+        - parking or community entrance candidates if documented
+      matrix_units:
+        - distance
+        - duration
+    rebuild_commands:
+      phase7_action: "no data download or build in Phase 7"
+      future_extract_command_placeholder: null
+      future_matrix_command_placeholder: null
+    labels:
+      - semi-real
+      - real geography/network candidate
+      - simulated demand
+      - simulated choice
+    blockers:
+      case_execution_allowed: false
+      result_artifacts_allowed: false
+      manuscript_claim_upgrade_allowed: false
+      unlock_conditions:
+        - provenance gate cleanup
+        - readiness gate cleanup
+        - artifact gate cleanup
+        - claim guard cleanup
+  - route_id: yanjiao_beijing_motivated
+    route_role: narrative_motivation_route_until_reproducible_network_is_pinned
+    url: "https://www.theworldofchinese.com/2022/05/how-the-pandemic-delayed-the-dreams-of-a-beijing-bedroom-community/"
+    access_date: "placeholder-unfetched-phase-7"
+    license_access_notes: "Narrative and academic materials may motivate geography only; they are not passenger microdata and cannot calibrate acceptance, opt-out, or profit."
+    raw_cache_path_placeholder: ".planning/data/case_studies/raw/yanjiao-route/<citation-or-network-cache>"
+    hash_placeholder:
+      algorithm: sha256
+      value: "placeholder-unfetched-phase-7"
+    bbox_or_polygon:
+      type: placeholder
+      value: "future Yanjiao/Beijing corridor polygon if reproducibly documented"
+    tool_versions:
+      osmnx: "placeholder"
+      osrm_backend: "placeholder"
+      citation_manager: "placeholder"
+      python: "placeholder"
+    parameters:
+      network_type: "drive"
+      speed_profile: "placeholder"
+      candidate_point_rules:
+        - corridor destinations from documented geography
+        - candidate meeting points from public map features if later fetched
+        - no anecdotal demand conversion
+      matrix_units:
+        - distance
+        - duration
+    rebuild_commands:
+      phase7_action: "no data download or build in Phase 7"
+      future_source_pin_command_placeholder: null
+      future_matrix_command_placeholder: null
+    labels:
+      - semi-real
+      - narrative geography support
+      - simulated demand
+      - simulated choice
+    blockers:
+      case_execution_allowed: false
+      result_artifacts_allowed: false
+      manuscript_claim_upgrade_allowed: false
+      unlock_conditions:
+        - provenance gate cleanup
+        - readiness gate cleanup
+        - artifact gate cleanup
+        - claim guard cleanup
