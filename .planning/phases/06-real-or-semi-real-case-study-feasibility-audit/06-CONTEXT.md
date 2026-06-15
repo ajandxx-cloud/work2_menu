@@ -1,6 +1,6 @@
 # Phase 6: Real Or Semi-Real Case Study Feasibility Audit - Context
 
-**Gathered:** 2026-06-15T20:45:31+08:00
+**Gathered:** 2026-06-15T21:12:11.9183949+08:00
 **Status:** Ready for planning
 **Language:** Chinese user-facing workflow; technical paths and commands stay in English.
 
@@ -15,9 +15,15 @@ runtime/gate audit evidence needed from `work2_coding/outputs/phase6_audit/`.
 This phase is a feasibility and decision phase. It should audit data/source
 options, define the minimum acceptable semi-real case, decide whether Phase 7
 is approved, blocked pending gate cleanup, or deferred, and record how the
-paper may describe the evidence. It must not implement new case-study
-ingestion or run code, run case experiments, tune RC settings, fabricate real
-data, or describe simulated demand/choice behavior as real passenger behavior.
+paper may describe the evidence. It must not run case experiments, tune RC
+settings, fabricate real data, or describe simulated demand/choice behavior as
+real passenger behavior.
+
+Phase 7 is approved in principle only under the decision label
+`approved_blocked_pending_gate_cleanup`. Before upstream gates are cleaned,
+Phase 7 may prepare ingestion, validation, manifest scaffolding, and
+reproducibility checks, but it must not execute formal/semi-real case
+experiments, generate case result artifacts, or upgrade manuscript claims.
 
 </domain>
 
@@ -35,61 +41,103 @@ data, or describe simulated demand/choice behavior as real passenger behavior.
 - **D-03:** The semi-real case is an external feasibility/robustness supplement
   for the paper. It must not be framed as real passenger choice validation and
   should not override the RC formal evidence ladder.
-- **D-04:** Phase 7 execution must wait for upstream provenance/readiness/
-  artifact gates to be cleaned, or the project must explicitly downgrade the
-  downstream case run to diagnostic use before running it.
+- **D-04:** Phase 6 should use the decision label
+  `approved_blocked_pending_gate_cleanup`: the semi-real case route is approved
+  in principle, but formal/semi-real case execution remains blocked until
+  upstream gate cleanup.
+- **D-05:** Do not automatically downgrade Phase 7 to diagnostic-only execution
+  if gates remain blocked. Without gate cleanup, Phase 7 must not run case
+  experiments or generate case result claims.
+- **D-06:** Before gate cleanup, Phase 7 may implement ingestion design,
+  validation scripts, manifest scaffolding, and reproducibility checks. It may
+  not run formal/semi-real case experiments, generate case artifacts, or
+  upgrade manuscript claims.
 
 ### Data Source Boundary
-- **D-05:** Phase 6 should prioritize public networks and public benchmark
-  sources for reproducibility and feasibility. Yanjiao/commuting materials are
-  a plus, not a hard dependency.
-- **D-06:** Only geography, road network, coordinates, and distance data may be
+- **D-07:** Phase 6 should use a dual-track source audit: public OSM/open
+  network sources and Yanjiao/Beijing commuting materials should both be
+  considered.
+- **D-08:** If both source routes are feasible, default the Phase 7 main route
+  to public OSM/open network data because reproducibility outranks regional
+  story value. Yanjiao/Beijing commuting materials remain useful as narrative
+  support or an alternate candidate.
+- **D-09:** Do not preset a city or region. Phase 6 should rank public-network
+  candidates by reproducibility, licensing/access, distance-matrix
+  rebuildability, DRT scenario plausibility, and paper value.
+- **D-10:** Phase 6 must conduct external public-data/public-network web search
+  and record source links, reproducibility paths, licensing or access
+  constraints, and limitations in `CASE_STUDY_FEASIBILITY.md`.
+- **D-11:** Only geography, road network, coordinates, and distance data may be
   described as real or semi-real foundations. Demand, choice behavior,
   acceptance, rejection, and opt-out behavior must be described as simulated
   unless actual audited passenger data is obtained in a future phase.
-- **D-07:** Existing `Amazon_data` and `HombergerGehring_data` style sources
+- **D-12:** Existing `Amazon_data` and `HombergerGehring_data` style sources
   may be used as public benchmarks or external scenarios, but they must not be
   packaged as a real-city DRT case study.
-- **D-08:** Phase 6 planning must include an external public-data/public-network
-  search and record candidate sources, reproducibility path, licensing or
-  access constraints, and limitations in `CASE_STUDY_FEASIBILITY.md`.
 
 ### Semi-Real Minimum Contract
-- **D-09:** The minimum acceptable semi-real case requires documented real
+- **D-13:** The minimum acceptable semi-real case requires documented real
   geography, a plausible depot/destination definition, candidate meeting
   points, real road-network distance or a reproducible distance matrix,
   simulated sequential demand, and explicit labels stating that choice behavior
   is simulated.
-- **D-10:** The default comparison family remains the seven mainline tags. If
-  the case runtime or data contract cannot support the full family, Phase 7 may
-  use a predefined six-tag reduced family, but the reduction must be justified
-  before execution and must not selectively remove unfavorable baselines.
-- **D-11:** Demand generation must be pre-registered before case experiments:
+- **D-14:** The default comparison family remains the seven mainline tags. Phase
+  6 should define a reduced-family gate rather than pre-approving arbitrary
+  reduction. If Phase 7 finds a tag cannot run fairly, it must document which
+  tag is infeasible, why the reason is a data/contract issue rather than an
+  unfavorable result, whether the reduced family can still answer the
+  case-study question, and why no unfavorable baseline is being selectively
+  removed.
+- **D-15:** Demand generation must be strongly pre-registered before case
+  experiments:
   parameters, seeds, OD/time pattern, scale/range, and any sampling rules must
   be written before results are known. Demand must not be tuned based on case
   outcomes.
-- **D-12:** Distance and road-network evidence should prioritize
-  reproducibility. If using an API, OSM extraction, or local routing tool,
-  record source, version/date, parameters, cache or matrix hash, and rebuild
-  instructions. Euclidean distance is allowed only as a diagnostic fallback,
-  not as strong case-study evidence.
+- **D-16:** Distance and road-network evidence should use a two-level standard:
+  formal/semi-real case evidence requires real road-network distance or a
+  reproducible distance matrix. If using an API, OSM extraction, or local
+  routing tool, record source, version/date, parameters, cache or matrix hash,
+  and rebuild instructions. Euclidean distance is allowed only as a diagnostic
+  fallback, not as strong case-study evidence.
+- **D-17:** Meeting-point candidates should use a mixed rule: prioritize public,
+  explainable points such as POIs, transit stops, community entrances, parking
+  areas, or pickup points. If those are insufficient, Phase 7 may add
+  pre-registered grid/cluster synthetic candidates and must label them as
+  synthetic candidate meeting points.
 
 ### Implementation And Gate Use
-- **D-13:** Existing `work2_coding/Src/phase6_audit.py` should be used as
+- **D-18:** Existing `work2_coding/Src/phase6_audit.py` should be used as
   supporting experiment-state evidence for runtime imports, manifests,
   readiness, artifact gates, and claim blockers. It is not the primary Phase 6
   case-feasibility report.
-- **D-14:** Phase 6 should not implement new case-study ingestion, validation,
+- **D-19:** Phase 6 should not implement new case-study ingestion, validation,
   manifests, or run code. Those belong to Phase 7 if Phase 6 approves the
   case-study route.
-- **D-15:** If upstream readiness/artifact gates remain blocked, Phase 6 may
-  approve a semi-real case only with status `blocked_pending_gate_cleanup`.
-  Phase 7 execution then waits for cleanup, unless the project explicitly
-  chooses a diagnostic-only downgrade.
-- **D-16:** Organize outputs as one primary planning report plus optional
+- **D-20:** If upstream readiness/artifact gates remain blocked, Phase 6 may
+  approve a semi-real case only with status
+  `approved_blocked_pending_gate_cleanup`. Phase 7 case execution then waits
+  for cleanup; diagnostic-only execution is not allowed as an automatic
+  fallback.
+- **D-21:** Organize outputs as one primary planning report plus optional
   supporting audit evidence: `.planning/data/CASE_STUDY_FEASIBILITY.md` is the
   main decision file, while `work2_coding/outputs/phase6_audit/PHASE6_AUDIT.md`
   and `.json` may be cited as runtime/gate evidence if generated.
+
+### Paper Narrative Boundary
+- **D-22:** The semi-real case should be positioned as supplemental
+  robustness/external scenario evidence. RC formal evidence remains the main
+  empirical ladder.
+- **D-23:** If semi-real case results conflict with RC formal evidence, report
+  the conflict honestly as a boundary condition in the Discussion rather than
+  hiding it or forcing a stronger claim.
+- **D-24:** Semi-real case evidence may support limited external-validity
+  language such as evaluation on a real road network or real geography. It may
+  not support claims about real passenger behavior, real acceptance/opt-out
+  rates, or real operating profit.
+- **D-25:** All case-study tables, figures, artifact metadata, and manuscript
+  text must clearly label `semi-real`, `simulated demand`, and `simulated
+  choice` status so readers cannot mistake the case for real passenger
+  validation.
 
 ### The Agent's Discretion
 - The planner may choose the exact structure of `CASE_STUDY_FEASIBILITY.md`,
@@ -102,6 +150,8 @@ data, or describe simulated demand/choice behavior as real passenger behavior.
 - The planner may decide whether to run the existing Phase 6 audit script as
   part of planning, but if it is used, it remains supporting evidence and must
   not replace the case-study feasibility report.
+- The planner may choose the exact web-search terms and candidate-source table,
+  but the final ranking must make reproducibility and evidence limits explicit.
 
 </decisions>
 
@@ -224,6 +274,22 @@ data, or describe simulated demand/choice behavior as real passenger behavior.
   benchmark audit first, Yanjiao/commuting materials as optional added value.
 - The locked report structure is one primary feasibility report plus optional
   supporting audit evidence.
+- The second discussion round selected all four new gray areas: case-study
+  decision strength, data-source priority, minimum acceptable semi-real case,
+  and paper narrative boundary.
+- The case-study decision label is locked as
+  `approved_blocked_pending_gate_cleanup`.
+- Phase 7 may build ingestion/validation scaffolding before gate cleanup, but
+  may not run case experiments or generate case claims.
+- Data-source audit is dual-track, with public OSM/open network as the default
+  Phase 7 route if both public-network and Yanjiao/Beijing routes are feasible.
+- Phase 6 must use web search and record public source links for the data-source
+  audit.
+- The semi-real case uses strong demand pre-registration, a reduced-family gate
+  if seven tags cannot run fairly, a two-level distance standard, and mixed
+  meeting-point candidate rules.
+- The semi-real case is supplemental robustness/external scenario evidence and
+  must carry explicit `semi-real / simulated demand / simulated choice` labels.
 
 </specifics>
 
@@ -237,4 +303,4 @@ None - discussion stayed within Phase 6 scope.
 ---
 
 *Phase: 6-Real Or Semi-Real Case Study Feasibility Audit*
-*Context gathered: 2026-06-15T20:45:31+08:00*
+*Context gathered: 2026-06-15T21:12:11.9183949+08:00*
