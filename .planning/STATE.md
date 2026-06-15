@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
-status: ready_to_plan
-last_updated: 2026-06-15T06:10:12.615Z
-last_activity: 2026-06-15
+status: executing
+last_updated: "2026-06-15T08:45:32.187Z"
+last_activity: 2026-06-15 -- Phase 05 planning complete
 progress:
   total_phases: 12
   completed_phases: 4
-  total_plans: 7
+  total_plans: 9
   completed_plans: 7
   percent: 33
-stopped_at: Phase 04 complete (2/2) — ready to discuss Phase 5
 ---
 
 # State
@@ -25,14 +24,14 @@ optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 5 — calibration and robustness without p hacking
+**Current focus:** Phase 5 - calibration and robustness without p-hacking
 
 ## Current Position
 
 Phase: 5
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-06-15
+Plan: 2 plans ready
+Status: Ready to execute
+Last activity: 2026-06-15 -- Phase 05 planning complete
 
 ## Initialization Evidence
 
@@ -106,18 +105,16 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 4 is planned. Execute the two RC result diagnosis and paper-claim
-validation plans:
+Phase 5 is planned. Execute the two calibration and robustness plans:
 
 ```text
-$gsd-execute-phase 4
+$gsd-execute-phase 5
 ```
 
-Use the selected formal run and Phase 3 handoff as the diagnostic baseline.
-Preserve the Phase 4 boundary: produce blocker-first row diagnostics and claim
-classification, keep dirty-git and artifact gates visible, do not rerun formal
-experiments or tune parameters, and do not upgrade manuscript claims while
-claim-ready gates remain blocked.
+Preserve the Phase 5 boundary: lock the calibration protocol before any pilot,
+keep provenance and artifact gates visible, require explicit user approval
+before broad git cleanup, freeze final settings before final rerun, and do not
+tune on final formal results or edit generated evidence.
 
 ---
-*Updated: 2026-06-15 after Phase 4 planning*
+*Updated: 2026-06-15 after Phase 5 planning*
