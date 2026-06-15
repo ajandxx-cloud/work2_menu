@@ -43,7 +43,7 @@ gates.
 - [x] **RC-03**: Formal readiness passes without bypassing blockers.
 - [x] **RC-04**: Formal RC replay produces completed or explicitly failed
   normalized rows for comparable policy variants.
-- [ ] **RC-05**: Formal artifact generation produces readiness, row, summary,
+- [x] **RC-05**: Formal artifact generation produces readiness, row, summary,
   artifact-status, claim-guard, table, figure, and manuscript-frame outputs.
 
 ### Claim Diagnosis
