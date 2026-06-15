@@ -101,7 +101,7 @@
     },
     {
       "acceptance_rate_mean": 0.6,
-      "boundary_interpretation": "potential_help",
+      "boundary_interpretation": "no_observed_change",
       "center_value": "interval_overlap",
       "checkpoint_statuses": "loaded",
       "claim_ready": false,
@@ -134,7 +134,7 @@
     },
     {
       "acceptance_rate_mean": 0.6,
-      "boundary_interpretation": "potential_help",
+      "boundary_interpretation": "no_observed_change",
       "center_value": "interval_overlap",
       "checkpoint_statuses": "loaded",
       "claim_ready": false,
@@ -299,7 +299,7 @@
     },
     {
       "acceptance_rate_mean": 0.6,
-      "boundary_interpretation": "potential_help",
+      "boundary_interpretation": "no_observed_change",
       "center_value": "0.35",
       "checkpoint_statuses": "loaded",
       "claim_ready": false,

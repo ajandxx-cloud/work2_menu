@@ -15,6 +15,7 @@ from Src.paired_replay import build_normalized_row, resolve_paired_settings  # n
 from Src.sensitivity_analysis import (  # noqa: E402
     ALLOWED_AXES,
     SensitivityValidationError,
+    aggregate_sensitivity_rows,
     annotate_rows,
     build_sensitivity_artifacts,
     load_sensitivity_run,
@@ -273,6 +274,40 @@ def test_guardrail_manifest_varying_one_field_fails():
     _assert_raises_validation(annotated, {manifest["name"]: manifest}, "guardrail_fields_incomplete")
 
 
+def test_equal_metrics_are_not_labeled_as_help():
+    rows = []
+    for value in ["3", "4"]:
+        rows.append(
+            {
+                "sensitivity_axis": "menu_k",
+                "sensitivity_value": value,
+                "center_value": "3",
+                "status": "completed",
+                "execution_status": "completed",
+                "source_study_name": "synthetic",
+                "source_run_id": "synthetic",
+                "source_run_dir": "synthetic",
+                "paired_group_id": "pair",
+                "policy_tag": "mainline_optimized_adaptive",
+                "filter_mode": "interval_overlap",
+                "uptake_regime": "medium",
+                "checkpoint_load_status": "loaded",
+                "net_profit": 10.0,
+                "optout_rate": 0.2,
+                "acceptance_rate": 0.8,
+                "count_accepted_home": 4,
+                "count_accepted_meeting_point": 4,
+                "count_opted_out": 2,
+                "accepted_count": 8,
+                "served_count": 8,
+            }
+        )
+    aggregates = aggregate_sensitivity_rows(rows)
+    labels = {row["sensitivity_value"]: row["boundary_interpretation"] for row in aggregates}
+    assert labels["3"] == "center_value"
+    assert labels["4"] == "no_observed_change"
+
+
 def main():
     tests = [
         test_missing_baseline_report_creates_blocked_summary,
@@ -281,6 +316,7 @@ def main():
         test_no_filter_row_is_flagged_not_promoted,
         test_bad_chance_constraint_threshold_fails,
         test_guardrail_manifest_varying_one_field_fails,
+        test_equal_metrics_are_not_labeled_as_help,
     ]
     for test in tests:
         test()

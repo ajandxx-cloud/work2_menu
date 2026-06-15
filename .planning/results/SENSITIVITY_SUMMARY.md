@@ -3,7 +3,7 @@ status: diagnostic_provisional_blocked
 claim_ready: false
 baseline_validation_status: passed
 artifact_root: artifacts\work2_robust_menu\phase8_sensitivity
-generated_at_utc: 2026-06-15T16:01:01+00:00
+generated_at_utc: 2026-06-15T16:08:53+00:00
 source_run_ids:
   - phase8_sensitivity_eta_filter-20260615T160033Z-a1a3724c
   - phase8_sensitivity_guardrail-20260615T160036Z-9276956f
@@ -26,26 +26,26 @@ Baseline validation status is `passed`; diagnostic sensitivity artifacts were ge
 | menu_k | 2 | 5 | 0.64 | 0.36 | -1315 | failure_or_lower_profit |
 | menu_k | 3 | 5 | 0.6 | 0.4 | -1104 | center_value |
 | menu_k | 4 | 5 | 0.64 | 0.36 | -1321 | failure_or_lower_profit |
-| eta_filter_mode | chance_constraint | 5 | 0.6 | 0.4 | -1104 | potential_help |
-| eta_filter_mode | hard | 5 | 0.6 | 0.4 | -1104 | potential_help |
+| eta_filter_mode | chance_constraint | 5 | 0.6 | 0.4 | -1104 | no_observed_change |
+| eta_filter_mode | hard | 5 | 0.6 | 0.4 | -1104 | no_observed_change |
 | eta_filter_mode | interval_overlap | 5 | 0.6 | 0.4 | -1104 | center_value |
 | uptake_regime | low | 5 | 0.6 | 0.4 | -1339 | failure_or_lower_profit |
 | uptake_regime | medium | 5 | 0.6 | 0.4 | -986 | center_value |
 | guardrail | 0.35 | 5 | 0.6 | 0.4 | -1104 | center_value |
-| guardrail | 0.40 | 5 | 0.6 | 0.4 | -1104 | potential_help |
+| guardrail | 0.40 | 5 | 0.6 | 0.4 | -1104 | no_observed_change |
 
 ## Conditional Boundary Map
 
 - `menu_k=2` is classified as `failure_or_lower_profit` relative to center `3`.
 - `menu_k=3` is classified as `center_value` relative to center `3`.
 - `menu_k=4` is classified as `failure_or_lower_profit` relative to center `3`.
-- `eta_filter_mode=chance_constraint` is classified as `potential_help` relative to center `interval_overlap`.
-- `eta_filter_mode=hard` is classified as `potential_help` relative to center `interval_overlap`.
+- `eta_filter_mode=chance_constraint` is classified as `no_observed_change` relative to center `interval_overlap`.
+- `eta_filter_mode=hard` is classified as `no_observed_change` relative to center `interval_overlap`.
 - `eta_filter_mode=interval_overlap` is classified as `center_value` relative to center `interval_overlap`.
 - `uptake_regime=low` is classified as `failure_or_lower_profit` relative to center `medium`.
 - `uptake_regime=medium` is classified as `center_value` relative to center `medium`.
 - `guardrail=0.35` is classified as `center_value` relative to center `0.35`.
-- `guardrail=0.40` is classified as `potential_help` relative to center `0.35`.
+- `guardrail=0.40` is classified as `no_observed_change` relative to center `0.35`.
 
 ## Deferred Nice-To-Have Dimensions
 

@@ -747,9 +747,12 @@ def _boundary_label(row):
     optout_delta = row.get("optout_rate_delta_vs_center")
     if profit_delta is None or optout_delta is None:
         return "diagnostic_metric_gap"
-    if profit_delta >= 0 and optout_delta <= 0:
+    tolerance = 1e-9
+    if abs(profit_delta) <= tolerance and abs(optout_delta) <= tolerance:
+        return "no_observed_change"
+    if profit_delta > tolerance and optout_delta <= tolerance:
         return "potential_help"
-    if profit_delta >= 0 and optout_delta > 0:
+    if profit_delta > tolerance and optout_delta > tolerance:
         return "profit_service_tradeoff"
     return "failure_or_lower_profit"
 
