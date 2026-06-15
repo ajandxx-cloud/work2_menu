@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
-status: verifying
-last_updated: "2026-06-15T02:35:45.157Z"
+status: ready_to_plan
+last_updated: 2026-06-15T02:36:46.342Z
 last_activity: 2026-06-15
 progress:
   total_phases: 12
@@ -11,6 +11,7 @@ progress:
   total_plans: 2
   completed_plans: 2
   percent: 17
+stopped_at: Phase 02 complete (1/1) — ready to discuss Phase 3
 ---
 
 # State
@@ -24,13 +25,13 @@ optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 02 — paper-level-research-design-lock
+**Current focus:** Phase 3 — formal rc evidence pipeline repair and completion
 
 ## Current Position
 
-Phase: 02 (paper-level-research-design-lock) — EXECUTING
-Plan: 1 of 1
-Status: Phase complete — ready for verification
+Phase: 3
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-06-15
 
 ## Initialization Evidence
@@ -105,14 +106,15 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Run Phase 2 discussion:
+Phase 2 is complete. Start Phase 3 from the formal RC evidence pipeline gate:
 
 ```text
-$gsd-discuss-phase 2
+$gsd-discuss-phase 3
 ```
 
-Phase 1 produced `.planning/STATE_LOCK.md`. Use it as the baseline before any
-algorithm behavior change or formal result claim.
+Use `.planning/STATE_LOCK.md` and
+`.planning/paper/TR_E_RESEARCH_DESIGN.md` as the baseline before any formal
+replay, artifact generation, or manuscript claim upgrade.
 
 ---
-*Updated: 2026-06-14 after GSD new-project initialization*
+*Updated: 2026-06-15 after Phase 2 completion*

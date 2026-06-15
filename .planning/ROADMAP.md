@@ -73,6 +73,8 @@ python -c "import sys; sys.path.insert(0, '.'); import Src.config; print('IMPORT
 
 ## Phase 2: Paper-Level Research Design Lock
 
+**Status:** Complete (2026-06-15)
+
 **Goal:** Turn the project into a TR Part E paper plan rather than an experiment
 script collection.
 

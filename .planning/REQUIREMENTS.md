@@ -146,7 +146,7 @@ gates.
 | Requirement | Phase | Status |
 | --- | --- | --- |
 | STATE-01..STATE-03 | Phase 1 | Complete |
-| PAPER-01..PAPER-05 | Phase 2 | Pending |
+| PAPER-01..PAPER-05 | Phase 2 | Complete |
 | RC-01..RC-05 | Phase 3 | Pending |
 | CLAIM-01..CLAIM-05 | Phase 4 | Pending |
 | CAL-01..CAL-04 | Phase 5 | Pending |

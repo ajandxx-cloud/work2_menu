@@ -35,12 +35,13 @@ opt-out, ETA uncertainty, or capacity constraints.
   artifact builders, formal readiness checks, and service-product tests.
 - [x] Previous `.planning/codebase/` maps are available but stale where they
   reference `ooh_code/`.
+- [x] Phase 1 locked the current repository state in `.planning/STATE_LOCK.md`
+  before algorithm behavior changes.
+- [x] Phase 2 locked the TR-E paper research design in
+  `.planning/paper/TR_E_RESEARCH_DESIGN.md`.
 
 ### Active
 
-- [ ] Lock the current repository state before algorithm behavior changes.
-- [ ] Reframe the paper from a TR-C / DSPO_PLUS ladder into a TR-E service-menu
-  optimization contribution.
 - [ ] Complete formal RC evidence for the seven-tag mainline family.
 - [ ] Diagnose whether formal RC results support strong, conditional, weak, or
   unsupported paper claims.
@@ -129,6 +130,8 @@ before any empirical superiority claim is made.
 | Separate calibration from final formal testing | Prevents p-hacking and protects paper credibility. | Active |
 | Allow skipped-by-gate phases | Avoids mechanically executing optional heavy phases when evidence or feasibility says to stop or reframe. | Active |
 | Preserve a fallback claim path | Mixed results can still support a conditional service-menu design contribution. | Active |
+| Use `.planning/STATE_LOCK.md` as the Phase 1 baseline | Phase 1 verified `work2_coding/`, current evidence blockers, and stale `ooh_code/` mappings before behavior changes. | Validated |
+| Use `.planning/paper/TR_E_RESEARCH_DESIGN.md` as the Phase 2 paper contract | Phase 2 defined service-bundle semantics, model skeleton, claim ladder, evidence gates, and table/figure plans. | Validated |
 
 ## Evolution
 
@@ -150,4 +153,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-14 after GSD new-project initialization for TR-E experimental refactoring*
+*Last updated: 2026-06-15 after Phase 2 paper research design lock*
