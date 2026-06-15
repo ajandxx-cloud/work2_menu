@@ -10,25 +10,25 @@ gates.
 
 ### State And Runtime
 
-- [ ] **STATE-01**: Phase 1 verifies `work2_coding/` as the active runtime root
+- [x] **STATE-01**: Phase 1 verifies `work2_coding/` as the active runtime root
   and records the result in `.planning/STATE_LOCK.md`.
-- [ ] **STATE-02**: Phase 1 inventories current manifests, tests, scripts,
+- [x] **STATE-02**: Phase 1 inventories current manifests, tests, scripts,
   artifacts, formal checkpoint status, and current blockers.
-- [ ] **STATE-03**: Phase 1 maps stale `ooh_code/` planning references to
+- [x] **STATE-03**: Phase 1 maps stale `ooh_code/` planning references to
   current `work2_coding/` paths or marks them obsolete.
 
 ### Paper Design
 
-- [ ] **PAPER-01**: The project defines a TR Part E research design centered on
+- [x] **PAPER-01**: The project defines a TR Part E research design centered on
   dynamic service menu optimization, not attention and not pricing-only.
-- [ ] **PAPER-02**: The paper design defines service bundles as
+- [x] **PAPER-02**: The paper design defines service bundles as
   `(meeting point, pickup time window, price)` and includes home service plus
   outside option semantics.
-- [ ] **PAPER-03**: Every planned paper claim maps to policy comparisons,
+- [x] **PAPER-03**: Every planned paper claim maps to policy comparisons,
   metrics, and artifact evidence.
-- [ ] **PAPER-04**: The paper design distinguishes V1 main evidence, V2
+- [x] **PAPER-04**: The paper design distinguishes V1 main evidence, V2
   diagnostic attention evidence, appendix evidence, and non-claims.
-- [ ] **PAPER-05**: The paper design includes a mathematical model skeleton
+- [x] **PAPER-05**: The paper design includes a mathematical model skeleton
   with sets and indices, service-bundle definition, menu decision variable,
   utility model, choice probability, expected-profit objective,
   opt-out/service-quality guardrail, ETA/time-window feasibility, and
@@ -145,7 +145,7 @@ gates.
 
 | Requirement | Phase | Status |
 | --- | --- | --- |
-| STATE-01..STATE-03 | Phase 1 | Pending |
+| STATE-01..STATE-03 | Phase 1 | Complete |
 | PAPER-01..PAPER-05 | Phase 2 | Pending |
 | RC-01..RC-05 | Phase 3 | Pending |
 | CLAIM-01..CLAIM-05 | Phase 4 | Pending |

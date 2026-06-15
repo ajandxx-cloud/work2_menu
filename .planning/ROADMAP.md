@@ -37,8 +37,17 @@ smoke-only, diagnostic-only, placeholder-only, blocked, or failed rows.
 7. If optimized adaptive `m+w+p` does not strongly dominate, reframe the paper
    as a conditional service-menu optimization study instead of forcing a
    universal superiority claim.
+8. If formal readiness is blocked by `dirty_git`, do not revert files automatically. Produce `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md` listing relevant modified/deleted files, blockers, and recommended cleanup/commit/stash actions. Request user confirmation before any destructive cleanup.
+
+9. If formal replay fails, save failed rows with `status`, `error_type`, and `error_message` metadata. Produce `.planning/results/FORMAL_FAILURE_DIAGNOSIS.md` before Phase 4 claim validation.
+
+10. If no suitable public real dataset is available, build a clearly labeled semi-real case using documented geography, a reproducible distance matrix, and simulated sequential demand. Do not describe simulated demand or simulated choice behavior as real observations.
+
+11. Every paper-facing table or figure must record its source artifact path and the exact manuscript claim it supports.
 
 ## Phase 1: Repository Audit And State Locking
+
+**Status:** Complete (2026-06-14)
 
 **Goal:** Confirm current repository state, active runtime root, relevant
 manifests, tests, artifact paths, and blockers before behavior changes.
