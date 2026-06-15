@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
-status: ready_to_plan
-last_updated: 2026-06-15T02:36:46.342Z
+status: executing
+last_updated: "2026-06-15T03:52:06.492Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 12
   completed_phases: 2
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
   percent: 17
-stopped_at: Phase 02 complete (1/1) — ready to discuss Phase 3
 ---
 
 # State
@@ -25,13 +24,13 @@ optimized adaptive `m+w+p` service menus improve the profit-service-quality
 trade-off under paired RC replay, without overclaiming beyond artifact and
 readiness gates.
 
-**Current focus:** Phase 3 — formal rc evidence pipeline repair and completion
+**Current focus:** Phase 03 — formal-rc-evidence-pipeline-repair-and-completion
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
-Status: Ready to plan
+Phase: 03 (formal-rc-evidence-pipeline-repair-and-completion) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-06-15
 
 ## Initialization Evidence
@@ -106,15 +105,17 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 2 is complete. Start Phase 3 from the formal RC evidence pipeline gate:
+Phase 3 is planned. Execute the three formal RC evidence pipeline plans:
 
 ```text
-$gsd-discuss-phase 3
+$gsd-execute-phase 3
 ```
 
 Use `.planning/STATE_LOCK.md` and
-`.planning/paper/TR_E_RESEARCH_DESIGN.md` as the baseline before any formal
-replay, artifact generation, or manuscript claim upgrade.
+`.planning/paper/TR_E_RESEARCH_DESIGN.md` as the baseline. Preserve the Phase 3
+plan boundary: diagnose dirty-git/readiness blockers first, validate or rerun
+formal paired rows next, and build artifacts only through readiness and claim
+guard gates.
 
 ---
-*Updated: 2026-06-15 after Phase 2 completion*
+*Updated: 2026-06-15 after Phase 3 planning*

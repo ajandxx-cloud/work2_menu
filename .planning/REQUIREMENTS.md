@@ -36,11 +36,11 @@ gates.
 
 ### Formal RC Evidence
 
-- [ ] **RC-01**: `formal_robust_menu.yaml` and related manifests are inspected
+- [x] **RC-01**: `formal_robust_menu.yaml` and related manifests are inspected
   before formal execution.
-- [ ] **RC-02**: The required shared checkpoint path is generated or verified:
+- [x] **RC-02**: The required shared checkpoint path is generated or verified:
   `outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt`.
-- [ ] **RC-03**: Formal readiness passes without bypassing blockers.
+- [x] **RC-03**: Formal readiness passes without bypassing blockers.
 - [ ] **RC-04**: Formal RC replay produces completed or explicitly failed
   normalized rows for comparable policy variants.
 - [ ] **RC-05**: Formal artifact generation produces readiness, row, summary,
