@@ -130,19 +130,18 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 7 scaffold implementation is ready for verification:
+Phase 7 is verified and complete. Phase 8 is ready for discussion and planning:
 
 ```text
-$gsd-verify-work 7
+$gsd-discuss-phase 8
 ```
 
-After Phase 7 verification passes, proceed to Phase 8 sensitivity and
-robustness planning without running case-study experiments until upstream gates
-pass.
+Because Phase 8 has no context document yet, start with discussion before
+planning. Continue avoiding case-study experiments until upstream gates pass.
 
 Do not run calibration pilot or final replay until Phase 5 gate cleanup
 conditions are explicitly resolved. Do not run semi-real case experiments or
 generate case-study result claims until upstream gates pass.
 
 ---
-*Updated: 2026-06-15 after Phase 7 scaffold-only contract validation*
+*Updated: 2026-06-15 after Phase 7 verification and Phase 8 handoff*
