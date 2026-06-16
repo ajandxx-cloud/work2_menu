@@ -30,7 +30,7 @@ repair, rerun, or manuscript writing.
 ## Current Position
 
 Phase: 13 - Evidence Boundary Reconstruction
-Plan: Not started
+Plan: 13-01 - Evidence Boundary Audit Deliverables
 Status: Ready to execute
 Last activity: 2026-06-16 -- Phase 13 planning complete
 
@@ -142,11 +142,12 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-The v1.1 claim-ready resolution milestone is initialized. Start by planning
-Phase 13 evidence boundary reconstruction.
+Phase 13 is planned and ready to execute. Execute the evidence boundary
+reconstruction plan before any gate repair, rerun, manuscript writing, or
+Path A/B/C decision.
 
 ```text
-$gsd-discuss-phase 13
+$gsd-execute-phase 13
 ```
 
 Do not run calibration pilot, final replay, semi-real case execution, or
@@ -154,4 +155,4 @@ manuscript claim upgrades until Phase 13-16 evidence and path decisions
 explicitly authorize them.
 
 ---
-*Updated: 2026-06-16 after v1.1 claim-ready resolution milestone initialization*
+*Updated: 2026-06-16 after Phase 13 planning*
