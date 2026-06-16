@@ -490,7 +490,7 @@ def render_artifact_to_section_map(indexes):
     return "\n".join(lines) + "\n"
 
 
-def render_claim_checklist(indexes):
+def render_claim_checklist(indexes, strict_guard=None):
     status = indexes["package_status"]
     lines = [
         "# Phase 10 Claim Checklist",
@@ -499,9 +499,28 @@ def render_claim_checklist(indexes):
         "- positive empirical manuscript claims: blocked pending strict claim guard and formal evidence",
         "- no-filter policy: diagnostic only",
         "- semi-real case scaffold: scaffold only; no validation claim authorized",
-        "",
-        "## Blocking Reasons",
     ]
+    if strict_guard:
+        lines.extend(
+            [
+                f"- strict_claim_guard_claim_ready: {str(strict_guard['claim_ready']).lower()}",
+                f"- manuscript_positive_claims_allowed: {str(strict_guard['manuscript_positive_claims_allowed']).lower()}",
+                "",
+                "## Strict Claims",
+            ]
+        )
+        for claim in strict_guard["claims"]:
+            lines.append(
+                f"- `{claim['claim_id']}`: {claim['support_status']}; "
+                f"manuscript_allowed={str(claim['manuscript_allowed']).lower()}; "
+                f"claim_ready={str(claim['claim_ready']).lower()}"
+            )
+    lines.extend(
+        [
+            "",
+            "## Blocking Reasons",
+        ]
+    )
     if not status["blockers"]:
         lines.append("- No source blockers were indexed, but Phase 10 remains claim_ready=false by policy.")
     else:
@@ -512,13 +531,33 @@ def render_claim_checklist(indexes):
     return "\n".join(lines) + "\n"
 
 
-def _write_markdown_outputs(output_root, indexes):
+def render_safe_language_boundaries(strict_guard):
+    lines = [
+        "# Safe Language Boundaries",
+        "",
+        f"- schema_version: {strict_guard['schema_version']}",
+        f"- claim_ready: {str(strict_guard['claim_ready']).lower()}",
+        f"- manuscript_positive_claims_allowed: {str(strict_guard['manuscript_positive_claims_allowed']).lower()}",
+    ]
+    for claim in strict_guard["claims"]:
+        lines.extend(["", f"## {claim['claim_id']}", "", "Allowed framing:"])
+        for text in claim["safe_language"]:
+            lines.append(f"- {text}")
+        lines.extend(["", "Forbidden framing:"])
+        for text in claim["forbidden_language"]:
+            lines.append(f"- {text}")
+    return "\n".join(lines) + "\n"
+
+
+def _write_markdown_outputs(output_root, indexes, strict_guard=None):
     paths = {}
     markdown = {
         "README.md": render_readme(indexes),
         "artifact_to_section_map.md": render_artifact_to_section_map(indexes),
-        "claim_checklist.md": render_claim_checklist(indexes),
+        "claim_checklist.md": render_claim_checklist(indexes, strict_guard=strict_guard),
     }
+    if strict_guard:
+        markdown["safe_language_boundaries.md"] = render_safe_language_boundaries(strict_guard)
     for name, text in markdown.items():
         path = output_root / name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -544,18 +583,31 @@ def write_phase10_package(output_root=None, mirror_root=DEFAULT_MIRROR_ROOT, sou
 
     entries = collect_phase10_sources(source_roots=source_roots)
     indexes = build_package_indexes(entries)
+    from Src.manuscript_claims import build_strict_claim_guard
+
+    strict_guard = build_strict_claim_guard(indexes)
+    claim_guard_path = output_root / "CLAIM_GUARD.json"
+    indexes["package_status"].update(
+        {
+            "strict_claim_guard_path": _rel(claim_guard_path),
+            "strict_claim_guard_claim_ready": bool(strict_guard["claim_ready"]),
+            "manuscript_positive_claims_allowed": bool(strict_guard["manuscript_positive_claims_allowed"]),
+            "blocked_claim_ids": list(strict_guard["blocked_claim_ids"]),
+        }
+    )
     json_outputs = {
         "PACKAGE_INDEX.json": indexes["package_index"],
         "SOURCE_INDEX.json": indexes["source_index"],
         "ARTIFACT_TO_SECTION_MAP.json": indexes["artifact_to_section_map"],
         "PACKAGE_STATUS.json": indexes["package_status"],
+        "CLAIM_GUARD.json": strict_guard,
     }
     paths = {}
     for name, payload in json_outputs.items():
         path = output_root / name
         write_json(path, payload)
         paths[name] = path
-    paths.update(_write_markdown_outputs(output_root, indexes))
+    paths.update(_write_markdown_outputs(output_root, indexes, strict_guard=strict_guard))
     mirror_path = _mirror_outputs(output_root, mirror_root) if mirror_enabled else None
     return {
         "output_root": str(output_root),

@@ -4,6 +4,18 @@
 - positive empirical manuscript claims: blocked pending strict claim guard and formal evidence
 - no-filter policy: diagnostic only
 - semi-real case scaffold: scaffold only; no validation claim authorized
+- strict_claim_guard_claim_ready: false
+- manuscript_positive_claims_allowed: false
+
+## Strict Claims
+- `C1_central_adaptive_menu_superiority`: unsupported_blocked; manuscript_allowed=false; claim_ready=false
+- `C2_product_ablation_value`: conditional_diagnostic_blocked; manuscript_allowed=false; claim_ready=false
+- `C3_adaptive_window_increment`: unsupported; manuscript_allowed=false; claim_ready=false
+- `C4_menu_construction_value`: conditional_diagnostic_blocked; manuscript_allowed=false; claim_ready=false
+- `C5_eta_robustness_boundary`: diagnostic_only; manuscript_allowed=true; claim_ready=false
+- `C6_exact_greedy_computational_credibility`: blocked_diagnostic; manuscript_allowed=false; claim_ready=false
+- `C7_provenance_status_transparency`: status_supported; manuscript_allowed=true; claim_ready=true
+- `C8_semi_real_case_validation`: scaffold_only_blocked; manuscript_allowed=false; claim_ready=false
 
 ## Blocking Reasons
 - `blocker_status:blocker_status:planning_results_computational_tractability_summary_md`: blocker/status document only

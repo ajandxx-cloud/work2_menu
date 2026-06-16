@@ -129,6 +129,7 @@ def test_writer_outputs_indexes_markdown_and_mirror():
         mirror_root = root / "mirror" / "phase10_paper_artifacts"
         result = write_phase10_package(output_root=output_root, mirror_root=mirror_root, source_roots=roots)
         for name in [
+            "CLAIM_GUARD.json",
             "PACKAGE_INDEX.json",
             "SOURCE_INDEX.json",
             "ARTIFACT_TO_SECTION_MAP.json",
@@ -136,22 +137,39 @@ def test_writer_outputs_indexes_markdown_and_mirror():
             "README.md",
             "artifact_to_section_map.md",
             "claim_checklist.md",
+            "safe_language_boundaries.md",
         ]:
             assert (output_root / name).exists()
             assert (mirror_root / name).exists()
         package_index = json.loads((output_root / "PACKAGE_INDEX.json").read_text(encoding="utf-8"))
         section_map = json.loads((output_root / "ARTIFACT_TO_SECTION_MAP.json").read_text(encoding="utf-8"))
         status = json.loads((output_root / "PACKAGE_STATUS.json").read_text(encoding="utf-8"))
+        guard = json.loads((output_root / "CLAIM_GUARD.json").read_text(encoding="utf-8"))
         assert result["claim_ready"] is False
         assert package_index["claim_ready"] is False
         assert status["claim_ready"] is False
+        assert status["strict_claim_guard_claim_ready"] is False
+        assert status["manuscript_positive_claims_allowed"] is False
+        assert status["strict_claim_guard_path"].endswith("CLAIM_GUARD.json")
         assert status["source_family_counts"]["case_scaffold"] >= 1
         assert "main_rc_results" in section_map["sections"]
         assert "case_scaffold_appendix" in section_map["sections"]
+        assert guard["schema_version"] == "phase10-strict-claim-guard-v1"
+        assert guard["claim_ready"] is False
+        assert len(guard["claims"]) == 8
+        claims = {claim["claim_id"]: claim for claim in guard["claims"]}
+        assert claims["C1_central_adaptive_menu_superiority"]["support_status"] == "unsupported_blocked"
+        assert claims["C8_semi_real_case_validation"]["support_status"] == "scaffold_only_blocked"
+        assert "C1_central_adaptive_menu_superiority" in status["blocked_claim_ids"]
+        assert "C8_semi_real_case_validation" in status["blocked_claim_ids"]
         assert not (mirror_root / "normalized_rows.json").exists()
         checklist = (output_root / "claim_checklist.md").read_text(encoding="utf-8")
+        boundaries = (output_root / "safe_language_boundaries.md").read_text(encoding="utf-8")
         assert "overall_claim_ready: false" in checklist
+        assert "C1_central_adaptive_menu_superiority" in checklist
         assert "semi-real case scaffold" in checklist
+        assert "case-study validation" in boundaries
+        assert "near-optimal greedy" in boundaries
 
 
 def test_public_script_builds_package_with_arguments():
@@ -188,7 +206,9 @@ def test_public_script_builds_package_with_arguments():
         assert payload["claim_ready"] is False
         assert payload["artifact_count"] > 0
         assert (output_root / "PACKAGE_STATUS.json").exists()
+        assert (output_root / "CLAIM_GUARD.json").exists()
         assert (mirror_root / "PACKAGE_STATUS.json").exists()
+        assert (mirror_root / "CLAIM_GUARD.json").exists()
 
 
 def main():

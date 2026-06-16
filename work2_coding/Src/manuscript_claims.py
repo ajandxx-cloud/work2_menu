@@ -4,6 +4,8 @@ import json
 import shutil
 from pathlib import Path
 
+from Src.artifact_status import utc_now_iso
+
 
 FRAME_FILES = (
     "method_outline.md",
@@ -38,7 +40,12 @@ ALWAYS_ALLOWED_CLAIMS = (
     {
         "id": "artifact_status_transparency",
         "label": "Artifact status and blockers are reported transparently",
-        "rationale": "Phase 4 status artifacts expose blocked, incomplete, placeholder, checkpoint, and provenance state.",
+        "rationale": "Status artifacts expose blocked, incomplete, placeholder, checkpoint, provenance, model-family, outside-option, and accounting state.",
+    },
+    {
+        "id": "model_consistency_contracts",
+        "label": "MNL outside-option and method-family contracts are generated metadata",
+        "rationale": "Normalized rows record outside_option_util and method_family, while opt-out remains separate from accepted home and meeting-point pickup.",
     },
 )
 
@@ -63,6 +70,182 @@ ALWAYS_BLOCKED_CLAIMS = (
         "id": "full_dynamic_exact_optimality",
         "label": "The full dynamic DRT system is solved exactly",
         "reason": "Exact enumeration is limited to small menu candidate sets, with greedy fallback for larger sets.",
+    },
+    {
+        "id": "ungated_dspo_plus_ranking",
+        "label": "DSPO_PLUS dominance is established before generated method_family evidence and downstream validation",
+        "reason": "DSPO_PLUS ranking is a Phase 10 validation gate, not a Phase 7 assumption.",
+    },
+)
+
+
+STRICT_CLAIM_SCHEMA_VERSION = "phase10-strict-claim-guard-v1"
+
+STRICT_CLAIM_DEFINITIONS = (
+    {
+        "claim_id": "C1_central_adaptive_menu_superiority",
+        "claim_text": "Adaptive robust-menu policy superiority over baselines",
+        "support_status": "unsupported_blocked",
+        "source_families": ("main_rc", "blocker_status"),
+        "blocker_reasons": (
+            "Main RC artifacts are blocked by checkpoint/formal readiness status.",
+            "Positive empirical superiority requires claim-ready generated rows.",
+        ),
+        "safe_language": (
+            "Report the adaptive robust-menu comparison as a generated artifact/status structure.",
+            "Describe blockers and required formal-readiness evidence before any superiority claim.",
+        ),
+        "forbidden_language": (
+            "adaptive menu dominates",
+            "universal dominance",
+            "claim-ready superiority",
+            "robust menu is better than all baselines",
+        ),
+        "manuscript_allowed": False,
+        "claim_ready": False,
+    },
+    {
+        "claim_id": "C2_product_ablation_value",
+        "claim_text": "Product and time-window ablations identify value drivers",
+        "support_status": "conditional_diagnostic_blocked",
+        "source_families": ("main_rc", "phase8_sensitivity", "blocker_status"),
+        "blocker_reasons": (
+            "Product/time-window ablation artifacts are diagnostic until the main RC claim gate is open.",
+            "Phase 8 sensitivity artifacts are appendix diagnostics, not claim-ready evidence.",
+        ),
+        "safe_language": (
+            "Use ablation tables as diagnostic structure and boundary evidence.",
+            "State that formal claim-ready interpretation is blocked pending evidence gates.",
+        ),
+        "forbidden_language": (
+            "product ablation proves",
+            "adaptive window increment is validated",
+            "claim-ready ablation value",
+        ),
+        "manuscript_allowed": False,
+        "claim_ready": False,
+    },
+    {
+        "claim_id": "C3_adaptive_window_increment",
+        "claim_text": "Adaptive time windows add a positive increment over fixed windows",
+        "support_status": "unsupported",
+        "source_families": ("main_rc", "phase8_sensitivity"),
+        "blocker_reasons": (
+            "Current generated artifacts do not provide claim-ready fixed-vs-adaptive increment evidence.",
+            "Adaptive-window increment must not be inferred from diagnostic appendices.",
+        ),
+        "safe_language": (
+            "List fixed-window and adaptive-window full-product rows as planned comparison slots.",
+            "Avoid directional effect language until claim-ready evidence exists.",
+        ),
+        "forbidden_language": (
+            "adaptive windows improve",
+            "adaptive window increment",
+            "adaptive window advantage",
+        ),
+        "manuscript_allowed": False,
+        "claim_ready": False,
+    },
+    {
+        "claim_id": "C4_menu_construction_value",
+        "claim_text": "Menu construction choices create measurable value",
+        "support_status": "conditional_diagnostic_blocked",
+        "source_families": ("main_rc", "phase8_sensitivity", "phase9_tractability"),
+        "blocker_reasons": (
+            "Menu construction diagnostics are available but not claim-ready.",
+            "Exact/greedy evidence is computational-boundary evidence only.",
+        ),
+        "safe_language": (
+            "Discuss menu construction as an auditable mechanism with diagnostic artifacts.",
+            "Frame exact/greedy rows as computational-boundary evidence.",
+        ),
+        "forbidden_language": (
+            "menu construction proves value",
+            "near-optimal greedy",
+            "greedy is optimal",
+        ),
+        "manuscript_allowed": False,
+        "claim_ready": False,
+    },
+    {
+        "claim_id": "C5_eta_robustness_boundary",
+        "claim_text": "ETA filter and robust time-window modes define diagnostic boundaries",
+        "support_status": "diagnostic_only",
+        "source_families": ("phase8_sensitivity", "blocker_status"),
+        "blocker_reasons": (
+            "ETA/no-filter evidence is diagnostic and cannot support operational recommendation language.",
+        ),
+        "safe_language": (
+            "Report ETA and no-filter variants as diagnostic boundary checks.",
+            "Keep no-filter as diagnostic-only unless separate formal evidence is produced.",
+        ),
+        "forbidden_language": (
+            "no-filter recommendation",
+            "no-filter is operationally recommended",
+            "no-filter policy should be deployed",
+        ),
+        "manuscript_allowed": True,
+        "claim_ready": False,
+    },
+    {
+        "claim_id": "C6_exact_greedy_computational_credibility",
+        "claim_text": "Exact-small and greedy-large solver behavior supports computational credibility",
+        "support_status": "blocked_diagnostic",
+        "source_families": ("phase9_tractability", "blocker_status"),
+        "blocker_reasons": (
+            "Phase 9 exact/greedy outputs are diagnostic computational boundary artifacts.",
+            "They cannot authorize near-optimality or full dynamic exact-optimality claims.",
+        ),
+        "safe_language": (
+            "Describe exact-small and greedy-large behavior as auditable computational diagnostics.",
+            "Report candidate counts, fallback reasons, build time, and relative gaps where generated.",
+        ),
+        "forbidden_language": (
+            "near-optimal greedy",
+            "full dynamic exact optimality",
+            "greedy optimality",
+        ),
+        "manuscript_allowed": False,
+        "claim_ready": False,
+    },
+    {
+        "claim_id": "C7_provenance_status_transparency",
+        "claim_text": "Artifact status, provenance, and claim gates are transparently reported",
+        "support_status": "status_supported",
+        "source_families": ("main_rc", "phase8_sensitivity", "phase9_tractability", "blocker_status", "case_scaffold"),
+        "blocker_reasons": (),
+        "safe_language": (
+            "State that generated status artifacts disclose blockers, diagnostic scope, scaffold scope, and claim gates.",
+            "Use this claim only for provenance/status transparency, not empirical effectiveness.",
+        ),
+        "forbidden_language": (
+            "status transparency proves effectiveness",
+            "provenance resolves empirical blockers",
+        ),
+        "manuscript_allowed": True,
+        "claim_ready": True,
+    },
+    {
+        "claim_id": "C8_semi_real_case_validation",
+        "claim_text": "Semi-real case study validates the robust-menu findings",
+        "support_status": "scaffold_only_blocked",
+        "source_families": ("case_scaffold", "blocker_status"),
+        "blocker_reasons": (
+            "Case-study files are scaffold-only and contain no validation evidence.",
+            "No real passenger behavior or external validation is part of v1.",
+        ),
+        "safe_language": (
+            "Describe the semi-real case materials as a future-study scaffold.",
+            "Keep case-study artifacts out of result-table or validation language.",
+        ),
+        "forbidden_language": (
+            "case-study validation",
+            "semi-real validation",
+            "real passenger behavior",
+            "validated on real data",
+        ),
+        "manuscript_allowed": False,
+        "claim_ready": False,
     },
 )
 
@@ -164,6 +347,125 @@ def build_claim_guard(status):
     }
 
 
+def _package_entries(package_indexes):
+    if not package_indexes:
+        return []
+    if "package_index" in package_indexes:
+        return list((package_indexes.get("package_index") or {}).get("entries") or [])
+    if "entries" in package_indexes:
+        return list(package_indexes.get("entries") or [])
+    return []
+
+
+def _package_status(package_indexes):
+    if not package_indexes:
+        return {}
+    if "package_status" in package_indexes:
+        return package_indexes.get("package_status") or {}
+    return package_indexes.get("status") or {}
+
+
+def _source_artifacts_for_claim(entries, source_families):
+    families = set(source_families)
+    artifacts = []
+    for entry in entries:
+        if entry.get("source_family") not in families:
+            continue
+        artifacts.append(
+            {
+                "artifact_id": entry.get("artifact_id"),
+                "source_family": entry.get("source_family"),
+                "source_path": entry.get("source_path"),
+                "package_tier": entry.get("package_tier"),
+                "package_role": entry.get("package_role"),
+                "status": entry.get("status"),
+                "claim_ready": bool(entry.get("claim_ready")),
+            }
+        )
+    return sorted(artifacts, key=lambda item: (item["source_family"] or "", item["source_path"] or "", item["artifact_id"] or ""))
+
+
+def _artifact_status_blockers(artifact_statuses):
+    reasons = []
+    if not artifact_statuses:
+        return reasons
+    for family, status in sorted(artifact_statuses.items()):
+        if not isinstance(status, dict):
+            continue
+        for blocker in _combined_blockers(status):
+            code = blocker.get("code", "blocker")
+            message = blocker.get("message", code)
+            reasons.append(f"{family}: {code}: {message}")
+        status_name = _status_name(status)
+        if status_name not in {"claim_ready", "completed", "passed", "diagnostic"}:
+            reasons.append(f"{family}: status is {status_name}")
+        if not _top_level_flag(status, "claim_ready") and family in {"main_rc", "case_scaffold"}:
+            reasons.append(f"{family}: claim_ready is false")
+    return reasons
+
+
+def build_strict_claim_guard(package_indexes, artifact_statuses=None):
+    """Build the Phase 10 strict per-claim guard without changing the legacy guard."""
+
+    entries = _package_entries(package_indexes)
+    package_status = _package_status(package_indexes)
+    package_blockers = [
+        f"{item.get('artifact_id', 'artifact')}: {item.get('reason', 'blocked')}"
+        for item in package_status.get("blockers", [])
+    ]
+    status_blockers = _artifact_status_blockers(artifact_statuses)
+    claims = []
+    overall_blockers = []
+
+    for definition in STRICT_CLAIM_DEFINITIONS:
+        source_artifacts = _source_artifacts_for_claim(entries, definition["source_families"])
+        source_blockers = []
+        for artifact in source_artifacts:
+            if not artifact["claim_ready"]:
+                source_blockers.append(
+                    f"{artifact['artifact_id']}: {artifact['package_tier']} artifact is not claim-ready"
+                )
+        blocker_reasons = sorted(
+            set(definition["blocker_reasons"]) | set(source_blockers)
+        )
+        claim = {
+            "claim_id": definition["claim_id"],
+            "claim_text": definition["claim_text"],
+            "support_status": definition["support_status"],
+            "source_artifacts": source_artifacts,
+            "blocker_reasons": blocker_reasons,
+            "safe_language": list(definition["safe_language"]),
+            "forbidden_language": list(definition["forbidden_language"]),
+            "manuscript_allowed": bool(definition["manuscript_allowed"]),
+            "claim_ready": bool(definition["claim_ready"]),
+        }
+        claims.append(claim)
+        overall_blockers.extend(blocker_reasons)
+
+    overall_blockers.extend(package_blockers)
+    overall_blockers.extend(status_blockers)
+    blocked_claim_ids = [
+        claim["claim_id"]
+        for claim in claims
+        if not claim["manuscript_allowed"] or claim["support_status"] in {"unsupported", "unsupported_blocked", "blocked_diagnostic", "scaffold_only_blocked"}
+    ]
+
+    return {
+        "schema_version": STRICT_CLAIM_SCHEMA_VERSION,
+        "claim_ready": False,
+        "generated_at_utc": utc_now_iso(),
+        "source_package_index": {
+            "schema_version": (package_indexes.get("package_index") or package_indexes).get("schema_version") if package_indexes else None,
+            "artifact_count": len(entries),
+            "package_claim_ready": bool(package_status.get("claim_ready", False)),
+        },
+        "claims": claims,
+        "overall_blocker_reasons": sorted(set(overall_blockers)),
+        "manuscript_positive_claims_allowed": False,
+        "blocked_claim_ids": blocked_claim_ids,
+    }
+
+
 def render_method_outline(guard):
     return "\n".join(
         [
@@ -183,7 +485,11 @@ def render_method_outline(guard):
             "",
             "## Choice And Pricing",
             "",
-            "Passenger selection is modeled with an MNL choice layer over displayed bundles plus an outside option. Pricing and system-aware cost definitions are held fixed across paired policy comparisons.",
+            "Passenger selection is modeled with an MNL choice layer over displayed bundles plus an outside option. Normalized rows record the runtime outside_option_util value, and pricing plus system-aware cost definitions are held fixed across paired policy comparisons.",
+            "",
+            "## Method-Family Metadata",
+            "",
+            "DSPO and DSPO_PLUS are separated by generated method_family metadata. Current mainline robust-menu rows remain DSPO-side evidence unless an explicit DSPO_PLUS policy tag and row contract are present; attention variants remain diagnostic/V2.",
             "",
             "## Solver",
             "",
@@ -206,7 +512,7 @@ def render_experiment_outline(guard):
             "",
             "## Mainline Policies",
             "",
-            "The V1 mainline family compares no-menu, fixed-menu, random-menu, optimized location-only, optimized location-plus-window, optimized fixed-window full product, and optimized adaptive-window full product settings.",
+            "The V1 mainline family compares no-menu, fixed-menu, random-menu, optimized location-only, optimized location-plus-window, optimized fixed-window full product, and optimized adaptive-window full product settings. These rows carry method_family metadata rather than relying on manual label interpretation.",
             "",
             "## Ranking Boundary",
             "",
@@ -214,7 +520,7 @@ def render_experiment_outline(guard):
             "",
             "## Metrics",
             "",
-            "Metrics include net profit, operational cost, total cost, acceptance, opt-out, home share, meeting-point uptake, menu utilization, choice entropy, solver build time, exact/greedy quality, and provenance/status fields when available.",
+            "Metrics include net profit, operational cost, total cost, acceptance, opt-out, home share with its total-choice denominator, meeting-point uptake, menu utilization, choice entropy, outside_option_util, method_family, solver build time, exact/greedy quality, and provenance/status fields when available.",
             "",
             "## Paired Replay",
             "",
@@ -252,6 +558,7 @@ def render_result_outline(guard):
             "- Product ablations: compare optimized m, m+w, and m+w+p variants without treating passenger-facing price as system profit.",
             "- Time-window comparison: separate fixed-window and adaptive-window optimized full-product rows.",
             "- Profit and service decomposition: report profit, operational cost, total cost, acceptance, opt-out, home share, meeting-point uptake, utilization, and choice entropy only when source rows are eligible.",
+            "- Model consistency: report outside_option_util and method_family only from generated rows, and keep opt-out separate from accepted home pickup.",
             "- External or semi-real checks: mark as unavailable unless new external validation data is added.",
             "",
             "## Limitations",

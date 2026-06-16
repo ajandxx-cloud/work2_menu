@@ -1,5 +1,13 @@
 {
   "artifact_count": 78,
+  "blocked_claim_ids": [
+    "C1_central_adaptive_menu_superiority",
+    "C2_product_ablation_value",
+    "C3_adaptive_window_increment",
+    "C4_menu_construction_value",
+    "C6_exact_greedy_computational_credibility",
+    "C8_semi_real_case_validation"
+  ],
   "blocker_count": 112,
   "blockers": [
     {
@@ -566,7 +574,8 @@
   "claim_ready": false,
   "claim_ready_reason": "Phase 10 package is a provenance and paper-artifact index; positive claims remain blocked unless strict guards allow them.",
   "existing_artifact_count": 74,
-  "generated_at_utc": "2026-06-16T05:40:24+00:00",
+  "generated_at_utc": "2026-06-16T05:45:47+00:00",
+  "manuscript_positive_claims_allowed": false,
   "missing_artifact_count": 4,
   "package_role_counts": {
     "aggregate": 14,
@@ -658,5 +667,7 @@
         "diagnostic_provisional_blocked"
       ]
     }
-  }
+  },
+  "strict_claim_guard_claim_ready": false,
+  "strict_claim_guard_path": "work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json"
 }
