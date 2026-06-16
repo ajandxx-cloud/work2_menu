@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
 status: executing
-last_updated: "2026-06-16T02:16:27.379Z"
-last_activity: 2026-06-16 -- Phase 09 planning complete
+last_updated: "2026-06-16T03:03:11.734Z"
+last_activity: 2026-06-16
 progress:
   total_phases: 12
   completed_phases: 8
   total_plans: 18
-  completed_plans: 15
+  completed_plans: 16
   percent: 67
 ---
 
@@ -20,18 +20,18 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-06-15)
 
 **Core value:** Produce credible, reproducible TR Part E evidence that
-optimized adaptive `m+w+p` service menus improve the profit-service-quality
-trade-off under paired RC replay, without overclaiming beyond artifact and
-readiness gates.
+optimized adaptive `m+w+p` service menus improve, match, or fail to improve
+the profit-service-quality trade-off under paired RC replay, without
+overclaiming beyond artifact and readiness gates.
 
-**Current focus:** Phase 09 - exact-versus-greedy-and-computational-tractability
+**Current focus:** Phase 09 — exact-versus-greedy-and-computational-tractability
 
 ## Current Position
 
-Phase: 09 (exact-versus-greedy-and-computational-tractability) - READY
-Plan: discussion/planning pending
+Phase: 09 (exact-versus-greedy-and-computational-tractability) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
-Last activity: 2026-06-16 -- Phase 09 planning complete
+Last activity: 2026-06-16
 
 ## Initialization Evidence
 
@@ -141,10 +141,11 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 8 is verified and complete. Phase 9 is ready for discussion and planning:
+Phase 8 is verified and complete. Phase 9 Plan 09-01 is complete; execute
+Phase 9 Plan 09-02 next:
 
 ```text
-$gsd-discuss-phase 9
+$gsd-execute-phase 9
 ```
 
 Continue avoiding case-study experiments until upstream gates pass. Phase 9
