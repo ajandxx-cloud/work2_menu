@@ -265,6 +265,7 @@ def _row_from_actual_replay(setting, run_id):
     relative_gaps = []
     overlap_rates = []
     enumerated_counts = []
+    candidate_counts = []
     last_policy_diagnostic = {}
 
     for _ in range(max_episodes):
@@ -295,6 +296,8 @@ def _row_from_actual_replay(setting, run_id):
                 overlap_rates.append(float(last_policy_diagnostic["menu_overlap_rate"]))
             if last_policy_diagnostic.get("exact_enumerated_menu_count") is not None:
                 enumerated_counts.append(float(last_policy_diagnostic["exact_enumerated_menu_count"]))
+            if last_policy_diagnostic.get("solver_candidate_count") is not None:
+                candidate_counts.append(float(last_policy_diagnostic["solver_candidate_count"]))
         for key in totals:
             if key in episode_totals:
                 totals[key] += episode_totals[key]
@@ -324,6 +327,7 @@ def _row_from_actual_replay(setting, run_id):
         "effective_menu_policy": last_policy_diagnostic.get("effective_menu_policy", args.get("menu_policy")),
         "menu_selection_solver_effective": last_policy_diagnostic.get("menu_selection_solver_effective", "actual_replay"),
         "solver_fallback_reason": last_policy_diagnostic.get("solver_fallback_reason"),
+        "solver_candidate_count": _mean(candidate_counts),
         "exact_enumerated_menu_count": _mean(enumerated_counts),
         "relative_optimality_gap": _mean(relative_gaps),
         "menu_overlap_rate": _mean(overlap_rates),

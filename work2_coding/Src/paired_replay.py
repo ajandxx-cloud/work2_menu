@@ -56,6 +56,7 @@ NORMALIZED_ROW_FIELDS = [
     "hgs_final_time",
     "menu_k",
     "max_candidates",
+    "solver_candidate_count",
     "filter_mode",
     "effective_policy",
     "menu_selection_solver_effective",
@@ -100,6 +101,7 @@ NORMALIZED_ROW_FIELDS = [
 
 OPTIONAL_ROW_FIELDS = {
     "checkpoint_hash",
+    "solver_candidate_count",
     "menu_selection_solver_effective",
     "solver_fallback_reason",
     "exact_enumerated_menu_count",
@@ -402,6 +404,7 @@ def build_normalized_row(
         "hgs_final_time": args.get("hgs_final_time"),
         "menu_k": args.get("menu_k"),
         "max_candidates": args.get("max_candidates"),
+        "solver_candidate_count": menu_metadata.get("solver_candidate_count"),
         "filter_mode": _first_value(menu_metadata.get("eta_filter_mode"), args.get("menu_eta_filter_mode")),
         "effective_policy": _first_value(menu_metadata.get("effective_menu_policy"), args.get("menu_policy")),
         "menu_selection_solver_effective": menu_metadata.get("menu_selection_solver_effective"),

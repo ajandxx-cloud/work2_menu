@@ -236,6 +236,7 @@ def test_solver_exact_and_threshold_fallback_diagnostics():
     exact_diag = exact_algo.last_policy_diagnostic
     assert [offer.bundle_id for offer in exact_menu if not offer.is_home] == ["a", "b"]
     assert exact_diag["menu_selection_solver_effective"] == "exact"
+    assert exact_diag["solver_candidate_count"] == 2
     assert exact_diag["exact_enumerated_menu_count"] == 3
 
     greedy_algo = make_algo("hard")
@@ -246,6 +247,7 @@ def test_solver_exact_and_threshold_fallback_diagnostics():
     greedy_diag = greedy_algo.last_policy_diagnostic
     assert len(greedy_menu) == 3
     assert greedy_diag["menu_selection_solver_effective"] == "greedy"
+    assert greedy_diag["solver_candidate_count"] == 2
     assert greedy_diag["solver_fallback_used"] is True
     assert greedy_diag["solver_fallback_reason"] == "above_exact_threshold"
 

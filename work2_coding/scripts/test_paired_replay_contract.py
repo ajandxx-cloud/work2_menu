@@ -134,6 +134,7 @@ def test_build_normalized_row_from_synthetic_metadata():
             "effective_menu_policy": "risk_adjusted_expected_profit",
             "menu_selection_solver_effective": "greedy",
             "solver_fallback_reason": "above_exact_threshold",
+            "solver_candidate_count": 12,
             "exact_enumerated_menu_count": 0,
             "relative_optimality_gap": None,
             "menu_overlap_rate": None,
@@ -160,6 +161,7 @@ def test_build_normalized_row_from_synthetic_metadata():
     assert row["served_count"] == 3
     assert row["served_rate"] == 0.75
     assert row["filter_mode"] == "chance_constraint"
+    assert row["solver_candidate_count"] == 12
     assert row["uptake_regime"] == "medium"
 
 
