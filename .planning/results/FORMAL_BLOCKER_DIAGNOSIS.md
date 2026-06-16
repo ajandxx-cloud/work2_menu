@@ -123,3 +123,43 @@ blocked by dirty git as expected.
 Formal rows may be validated as candidate evidence, but no claim-ready formal
 artifact or manuscript superiority language may be promoted while readiness
 reports `status: blocked` and `claim_ready_allowed: false`.
+
+## Phase 5 Addendum: Calibration Gate Snapshot
+
+**Recorded:** 2026-06-15T16:35:00+08:00
+
+Phase 5 rechecked the current gate artifacts before writing the calibration
+protocol. The formal run remains usable only as diagnostic input; it is not a
+tuning target and not claim-ready manuscript evidence.
+
+| Gate Input | Current State | Phase 5 Effect |
+| --- | --- | --- |
+| Readiness JSON | `status: blocked`; `claim_ready_allowed: false`; blocker `dirty_git` | Calibration design may be written, but pilot/final execution is not authorized. |
+| Checkpoint | `checkpoint_load_status: loaded`; SHA-256 `d351dd62c3b2cdb008d6952cf81b1b041b64244aa20b82fab9f742b502b7acf4` | Checkpoint provenance is explicit, but does not override dirty-git provenance. |
+| Dependency snapshot | `outputs/phase5_readiness/formal_robust_menu/DEPENDENCY_SNAPSHOT.json`; hash `ba7263a7513f1b2f61996eaddb0aabe3b472a3e072c4af1a8a5d7677bac69821` | Snapshot is recorded for traceability. |
+| Manifest hash | `4d4648bcbccc604b6fe50fa863286e66cbae021a18c108b7efa06ea40a94a675` in readiness; selected formal artifact manifest hash `c672286a45342771a92d28d14f8f7e85fd20dea9a5f89ab50a8aca375e54296c` | Hashes must be refreshed after any final manifest lock; stale hashes cannot support final claims. |
+| Artifact status | `status: blocked`; `claim_ready: false` | Artifact generation remains blocked for claim-ready use. |
+| Artifact reasons | Missing `outside_option_util` metadata and missing valid `method_family` metadata in pilot/formal rows | Future final rows must generate these fields; generated rows must not be hand-edited. |
+| Claim guard | `claim_ready: false`; `formal_claim_ready: false`; empirical superiority and formal ranking blocked | Manuscript claims remain diagnostic/status-only. |
+
+Current dirty worktree categories from `git status --short`:
+
+| Category | Count | Handling |
+| --- | ---: | --- |
+| Planning | 51 | Requires intentional commit/stash/preserve decision before claim-ready rerun. |
+| Runtime | 23 | Requires review because runtime changes affect replay provenance. |
+| Manuscript/paper | 33 | Does not justify readiness bypass; handle separately from evidence. |
+| Notes/legacy | 4 | Preserve unless user explicitly approves cleanup. |
+| Other | 1 | Review manually before provenance cleanup. |
+
+### Phase 5 Stop Condition
+
+Phase 5 may lock a calibration protocol and manifest contracts, but calibration
+pilot execution must stop until provenance/readiness and artifact foundations
+are intentionally resolved. Dirty-git cleanup is a human decision: do not
+automatically revert, stash, delete, stage, or commit unrelated files.
+
+If artifact blockers remain after clean provenance and rerun gates, diagnose
+row-generation metadata (`method_family`, `outside_option_util`) before any
+calibration pilot. Calibration cannot be used as a workaround for missing
+artifact metadata or blocked claim guards.

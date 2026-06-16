@@ -219,6 +219,9 @@ class Parser(object):
         parser.add_argument("--menu_quit_tolerance", default=0.01, type=float)
         parser.add_argument("--menu_profit_tolerance_fraction", default=0.05, type=float)
         parser.add_argument("--menu_optout_guardrail", default=0.4, type=float)
+        parser.add_argument("--method_family", default="DSPO",
+                            choices=["DSPO", "DSPO_PLUS", "diagnostic"],
+                            help="Generated model-family contract for rows and artifact gates")
         parser.add_argument("--method_variant", default="DSPO_original",
                             choices=["DSPO_original", "DSPO_attention"])
         parser.add_argument("--attention_enabled", default=False, type=self.str2bool)

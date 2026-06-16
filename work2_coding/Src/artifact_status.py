@@ -16,6 +16,7 @@ INCOMPLETE = "incomplete"
 BLOCKED = "blocked"
 ARTIFACT_STATUSES = {CLAIM_READY, DIAGNOSTIC, INCOMPLETE, BLOCKED}
 CLAIM_READY_CHECKPOINT_STATUSES = {"loaded"}
+VALID_METHOD_FAMILIES = {"DSPO", "DSPO_PLUS", "diagnostic"}
 
 
 def utc_now_iso():
@@ -24,6 +25,53 @@ def utc_now_iso():
 
 def _unique(rows, field):
     return sorted({row.get(field) for row in rows if row.get(field) not in (None, "")})
+
+
+def _invalid_model_metadata_rows(rows):
+    invalid = []
+    for row in rows:
+        family = row.get("method_family")
+        if family not in VALID_METHOD_FAMILIES:
+            invalid.append(row)
+            continue
+        if "outside_option_util" not in row:
+            invalid.append(row)
+    return invalid
+
+
+def _invalid_accounting_rows(rows):
+    invalid = []
+    for row in rows:
+        counts = [
+            row.get("count_accepted_home"),
+            row.get("count_accepted_meeting_point"),
+            row.get("count_opted_out"),
+        ]
+        if any(value is None for value in counts):
+            continue
+        accepted_expected = int(row.get("count_accepted_home")) + int(row.get("count_accepted_meeting_point"))
+        total_choices = accepted_expected + int(row.get("count_opted_out"))
+        accepted_count = row.get("accepted_count")
+        served_count = row.get("served_count")
+        if accepted_count is None or int(accepted_count) != accepted_expected:
+            invalid.append(row)
+            continue
+        if served_count is None or int(served_count) != int(accepted_count):
+            invalid.append(row)
+            continue
+        if total_choices <= 0:
+            continue
+        expected_rates = {
+            "optout_rate": float(row.get("count_opted_out")) / float(total_choices),
+            "home_share": float(row.get("count_accepted_home")) / float(total_choices),
+            "meeting_point_uptake_rate": float(row.get("count_accepted_meeting_point")) / float(total_choices),
+        }
+        for field, expected in expected_rates.items():
+            value = row.get(field)
+            if value is not None and abs(float(value) - expected) > 1e-9:
+                invalid.append(row)
+                break
+    return invalid
 
 
 def classify_artifact(rows, summary=None, claim_ready_requested=False, dependency_snapshot=None):
@@ -47,6 +95,14 @@ def classify_artifact(rows, summary=None, claim_ready_requested=False, dependenc
         for row in rows
         if row.get("checkpoint_required") and row.get("checkpoint_load_status") not in CLAIM_READY_CHECKPOINT_STATUSES
     ]
+    invalid_model_metadata = _invalid_model_metadata_rows(rows) if formal_or_pilot else []
+    missing_method_family = [
+        row for row in rows if formal_or_pilot and row.get("method_family") not in VALID_METHOD_FAMILIES
+    ]
+    missing_outside_option = [
+        row for row in rows if formal_or_pilot and "outside_option_util" not in row
+    ]
+    invalid_accounting = _invalid_accounting_rows(rows) if formal_or_pilot else []
     diagnostic_labels = sorted({row.get("policy_tag") for row in rows if row.get("diagnostic")})
     no_filter_only = bool(rows) and all(str(row.get("policy_tag", "")).find("no_filter") >= 0 for row in rows)
 
@@ -65,6 +121,15 @@ def classify_artifact(rows, summary=None, claim_ready_requested=False, dependenc
     if checkpoint_bad and formal_or_pilot:
         status = BLOCKED
         reasons.append("pilot/formal rows require loaded checkpoint provenance")
+    if invalid_model_metadata and formal_or_pilot:
+        status = BLOCKED
+    if missing_method_family:
+        reasons.append("pilot/formal rows require valid method_family metadata")
+    if missing_outside_option:
+        reasons.append("pilot/formal rows require outside_option_util metadata")
+    if invalid_accounting:
+        status = BLOCKED
+        reasons.append("pilot/formal rows have invalid accepted accounting or opt-out/home separation")
     if "formal" in tiers and status == CLAIM_READY and not dependency_snapshot:
         status = BLOCKED
         reasons.append("formal claim-ready artifacts require a dependency snapshot")
@@ -97,6 +162,8 @@ def classify_artifact(rows, summary=None, claim_ready_requested=False, dependenc
         "row_statuses": sorted(row_statuses),
         "execution_statuses": sorted(execution_statuses),
         "checkpoint_statuses": _unique(rows, "checkpoint_load_status"),
+        "method_families": _unique(rows, "method_family"),
+        "outside_option_utils": _unique(rows, "outside_option_util"),
         "uptake_regimes": _unique(rows, "uptake_regime"),
         "diagnostic_policy_labels": diagnostic_labels,
         "blockers": blockers,

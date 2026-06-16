@@ -82,6 +82,7 @@ class DSPO_Menu(DSPO):
         self.menu_profit_tolerance_fraction = float(getattr(config, "menu_profit_tolerance_fraction", 0.05))
         self.menu_optout_guardrail = float(getattr(config, "menu_optout_guardrail", 0.40))
         self.method_variant = str(getattr(config, "method_variant", "DSPO_original"))
+        self.method_family = str(getattr(config, "method_family", "DSPO"))
         self.attention_enabled = bool(getattr(config, "attention_enabled", False))
         self.attention_mode = str(getattr(config, "attention_mode", "deterministic"))
         self.attention_strength = float(getattr(config, "attention_strength", 1.0))
@@ -773,6 +774,7 @@ class DSPO_Menu(DSPO):
             offer.metadata["eta_risk_penalty"] = float(eta_risk_penalty)
             offer.metadata["eta_risk_penalty_weighted"] = float(prob * eta_risk_penalty)
             offer.metadata["method_variant"] = str(getattr(self, "method_variant", "DSPO_original"))
+            offer.metadata["method_family"] = str(getattr(self, "method_family", "DSPO"))
             offer.metadata["attention_enabled"] = bool(self._attention_is_active())
             offer.metadata["attention_mode"] = str(getattr(self, "attention_mode", "deterministic"))
             offer.metadata["attention_strength"] = float(getattr(self, "attention_strength", 1.0))
@@ -784,6 +786,7 @@ class DSPO_Menu(DSPO):
             total_value += offer.expected_profit
         self._merge_policy_diagnostic({
             "method_variant": str(getattr(self, "method_variant", "DSPO_original")),
+            "method_family": str(getattr(self, "method_family", "DSPO")),
             "product_mode": str(getattr(self, "product_mode", "m+w+p")),
             "time_window_mode": str(getattr(self, "time_window_mode", "adaptive_window")),
             "menu_mode": str(getattr(self, "menu_contract_mode", "optimized_menu")),

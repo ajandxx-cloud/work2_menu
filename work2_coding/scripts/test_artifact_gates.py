@@ -166,6 +166,33 @@ def test_bad_checkpoint_blocks_pilot_claim_ready():
     assert any("checkpoint" in reason for reason in status["reasons"])
 
 
+def test_missing_method_family_blocks_pilot_claim_ready():
+    manifest = load_manifest("pilot_robust_menu")
+    rows = synthetic_rows(manifest, manifest_hash(manifest))
+    rows[0].pop("method_family")
+    status = classify_artifact(rows, {"tier": "pilot", "execution_status": "completed"})
+    assert status["status"] == "blocked"
+    assert any("method_family" in reason for reason in status["reasons"])
+
+
+def test_missing_outside_option_blocks_pilot_claim_ready():
+    manifest = load_manifest("pilot_robust_menu")
+    rows = synthetic_rows(manifest, manifest_hash(manifest))
+    rows[0].pop("outside_option_util")
+    status = classify_artifact(rows, {"tier": "pilot", "execution_status": "completed"})
+    assert status["status"] == "blocked"
+    assert any("outside_option_util" in reason for reason in status["reasons"])
+
+
+def test_invalid_optout_home_accounting_blocks_pilot_claim_ready():
+    manifest = load_manifest("pilot_robust_menu")
+    rows = synthetic_rows(manifest, manifest_hash(manifest))
+    rows[0]["count_accepted_home"] += rows[0]["count_opted_out"]
+    status = classify_artifact(rows, {"tier": "pilot", "execution_status": "completed"})
+    assert status["status"] == "blocked"
+    assert any("accepted accounting" in reason for reason in status["reasons"])
+
+
 def test_failed_rows_block_claim_ready():
     manifest = load_manifest("smoke_robust_menu")
     rows = synthetic_rows(manifest, manifest_hash(manifest))
@@ -439,6 +466,9 @@ def main():
         test_clean_smoke_rows_are_diagnostic_only,
         test_placeholder_rows_are_not_claim_ready,
         test_bad_checkpoint_blocks_pilot_claim_ready,
+        test_missing_method_family_blocks_pilot_claim_ready,
+        test_missing_outside_option_blocks_pilot_claim_ready,
+        test_invalid_optout_home_accounting_blocks_pilot_claim_ready,
         test_failed_rows_block_claim_ready,
         test_no_filter_only_rows_are_diagnostic,
         test_diagnostic_run_mode_is_not_claim_ready,

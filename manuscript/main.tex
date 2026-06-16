@@ -1,81 +1,321 @@
-\documentclass[review]{elsarticle}
+\documentclass[a4paper,fleqn,review]{els-cas-dc}
 
-%% Packages
+\usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{bbm}
-\usepackage{hyperref}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{url}
 
-%% Journal: Transportation Research Part E
-\journal{Transportation Research Part E: Logistics and Transportation Review}
+\newcommand{\dspo}{\textsc{DSPO}}
+\newcommand{\dspoplus}{\textsc{DSPO\_PLUS}}
 
-%% ArtifactTable: include generated table or show placeholder
 \newcommand{\ArtifactTable}[2]{%
   \IfFileExists{#1}{\input{#1}}{%
     \begin{table}[t]
       \centering
       \caption{#2}
-      \begin{tabular}{l}
+      \begin{tabular}{@{}l@{}}
         \toprule
-        Pending artifact generation \\
+        Pending regenerated artifact \\
         \bottomrule
       \end{tabular}
     \end{table}
   }%
 }
 
-%% ArtifactFigure: include generated figure or show placeholder
-\newcommand{\ArtifactFigure}[4]{%
-  \begin{figure}[t]
-    \centering
-    \IfFileExists{#1}{\includegraphics[width=#2]{#1}}{%
-      \fbox{\parbox[c][2in][c]{0.8\linewidth}{\centering Pending artifact generation}}
-    }
-    \caption{#3}
-    \label{#4}
-  \end{figure}
-}
-
 \begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
 
-\begin{frontmatter}
+\shorttitle{Behavior-aware service menu optimization}
+\shortauthors{J. Ana}
 
-\title{Service Menu Optimization for Many-to-One Demand-Responsive Transit with Meeting Points and Pickup Time Windows}
+\title[mode=title]{Behavior-Aware Service Menu Optimization for Many-to-One Demand-Responsive Transit with Meeting Points and Time Windows}
 
-\author[inst1]{Jin Ana}
+\author[1]{Jin Ana}
 \ead{jandxx@buaa.edu.cn}
 
-\affiliation[inst1]{organization={MoE Key Laboratory of Complex System Analysis and Management Decision, School of Economics and Management, Beihang University},
-  city={Beijing 100191},
+\affiliation[1]{organization={MoE Key Laboratory of Complex System Analysis and Management Decision, School of Economics and Management, Beihang University},
+  city={Beijing},
+  postcode={100191},
   country={China}}
 
 \begin{abstract}
-\input{sections/abstract}
+This paper studies many-to-one demand-responsive transit in which the platform
+offers each passenger a limited service menu consisting of meeting-point,
+pickup-time-window, and price alternatives. The research objective is to
+compare no-pricing, static-pricing, \dspo, and \dspoplus{} policies under a
+shared multinomial-logit choice model with an outside option, paired replayed
+requests, and explicit provenance gates. The manuscript is currently written as
+a claim-gated TR-C draft: the method, experimental design, and artifact contract
+are specified, while empirical dominance claims remain blocked until checkpoint
+provenance and formal evidence gates pass. This separation is deliberate. It
+prevents diagnostic, placeholder, or failed rows from being converted into
+publication claims and makes the eventual ranking test reproducible.
 \end{abstract}
 
-\begin{keyword}
-demand-responsive transit \sep service menu optimization \sep assortment optimization \sep multinomial logit \sep robust filtering \sep pickup time windows
-\end{keyword}
+\begin{keywords}
+demand-responsive transit \sep meeting points \sep service menu optimization \sep multinomial logit \sep decision-focused learning \sep time windows
+\end{keywords}
 
-\end{frontmatter}
+\maketitle
 
-\input{sections/introduction}
-\input{sections/related_work}
-\input{sections/problem}
-\input{sections/method}
-\input{sections/experiments}
-\input{sections/results}
-\input{sections/managerial}
-\input{sections/limitations}
-\input{sections/conclusion}
+\section{Introduction}
 
-\bibliographystyle{elsarticle-harv}
+Demand-responsive transit (DRT) systems must balance operational efficiency with
+passenger acceptance. Meeting points can reduce routing cost and improve vehicle
+productivity, but they also impose walking and timing burdens on passengers
+\citep{stiglic2015benefits,fielbaum2021ondemand,cortenbach2024}. A platform
+therefore cannot treat a meeting-point assignment as a purely operational
+decision. It must decide which alternatives passengers see, how those
+alternatives are priced, and how time-window feasibility is communicated before
+the passenger chooses or opts out.
+
+We study this interaction as a behavior-aware service-menu problem. Each
+displayed alternative is a bundle containing a pickup location, a pickup
+time-window treatment, and a price. The platform selects a limited menu from a
+larger feasible candidate set; the passenger then chooses among displayed
+bundles and an outside option according to a multinomial-logit (MNL) model
+\citep{mcfadden1974conditional,ben1985discrete}. The central tension is that the
+menu should steer demand toward operationally efficient meeting points without
+manufacturing profit gains through unrealistic price manipulation or by hiding
+the opt-out channel.
+
+The paper is organized around three contributions. First, it formulates
+many-to-one DRT menu design as an assortment-style optimization problem with
+route-aware costs, time-window filters, prices, and passenger choice. Second, it
+positions \dspo{} and \dspoplus{} as decision-focused menu-learning policies
+whose differences must be visible in the objective, cost-learning, and behavior
+gating contracts rather than asserted post hoc. Third, it defines a reproducible
+experimental ladder on the RC benchmark: no pricing, static pricing, \dspo, and
+\dspoplus{} are compared under paired replay only after checkpoint provenance,
+row schema, and claim-readiness gates pass.
+
+The present draft intentionally separates manuscript structure from final
+claims. Current artifacts report a blocked claim state because pilot/formal
+checkpoint provenance is unavailable. As a result, the results section describes
+the evidence contract, current blockers, and planned ranking tests rather than
+claiming that \dspoplus{} already dominates the baselines.
+
+\section{Literature Review}
+
+\subsection{DRT, Dial-a-Ride, and Meeting Points}
+
+Classical dial-a-ride and pickup-and-delivery models provide the operational
+foundation for shared DRT systems \citep{cordeau2007dial,parragh2008survey,
+ho2018survey}. In these models, routing, capacity, and time-window constraints
+determine whether requests can be served. Recent work on meeting-point DRT
+extends this view by allowing passengers to walk to shared pickup locations,
+which can reduce vehicle distance and improve pooling efficiency
+\citep{stiglic2015benefits,zheng2019meeting,fielbaum2021ondemand}. Our focus is
+not only where meeting points are located, but which meeting-point alternatives
+are displayed to a passenger at the decision epoch.
+
+\subsection{Service Menus and Assortment Optimization}
+
+The displayed menu is closely related to assortment optimization under discrete
+choice \citep{talluri2004revenue,rusmevichientong2010dynamic,desir2022capacitated}.
+In classical assortment settings, products have known utilities and revenues.
+In DRT, each product is an endogenous service bundle whose cost depends on the
+current routing state and whose attractiveness depends on walking, in-vehicle
+time, time-window reliability, and price. This makes the menu problem both an
+assortment decision and an operational control problem.
+
+\subsection{SPO and Decision-Focused Learning}
+
+Decision-focused learning trains predictive models through the downstream
+optimization loss rather than through prediction error alone
+\citep{elmachtoub2022smart}. The \dspo{} family used here follows this logic:
+cost predictions matter because they change menus, prices, and passenger
+choices. The \dspoplus{} extension is treated as an enhanced decision-focused
+policy with behavior-gated menu objectives, opt-out guardrails, service-quit
+penalties, and robust time-window metadata. The manuscript requires the
+\dspo{}/\dspoplus{} distinction to be generated as \texttt{\detokenize{method_family}}
+metadata in experiment rows, not inferred manually from policy labels.
+
+\section{Problem Formulation}
+
+Consider a set of passenger requests $\mathcal{R}$ arriving over a planning
+horizon. For each request $r$, the platform constructs a feasible candidate set
+$\mathcal{B}(r)$. A service bundle is
+\begin{equation}
+  b = (m_b, [t_b^{\mathrm{lo}}, t_b^{\mathrm{hi}}], p_b),
+\end{equation}
+where $m_b$ is a home or meeting-point pickup location,
+$[t_b^{\mathrm{lo}}, t_b^{\mathrm{hi}}]$ is the pickup time window, and $p_b$
+is the displayed price. The platform chooses a displayed menu
+$\mathcal{M}(r) \subseteq \mathcal{B}(r)$ subject to a menu-size limit and
+feasibility checks.
+
+Passenger utility for a displayed bundle is modeled as
+\begin{equation}
+  U_{rb} = \alpha_0 + \beta_p p_b + \beta_{\mathrm{ivt}}\widehat{\tau}^{\mathrm{ivt}}_{rb}
+  + \beta_{\mathrm{walk}} d_{rb} + \beta_{\mathrm{tw}} q_{rb},
+  \label{eq:utility}
+\end{equation}
+where $d_{rb}$ is walking distance, $\widehat{\tau}^{\mathrm{ivt}}_{rb}$ is
+predicted in-vehicle time, and $q_{rb}$ summarizes pickup-time-window
+compatibility. In the implementation, $q_{rb}$ is the semantic counterpart of
+time deviation, ETA/window filtering, and \texttt{menu\_eta\_filter\_mode}
+diagnostics, not a second independent time-window model. The coefficient signs
+are interpreted semantically: price, in-vehicle time, walking distance, and
+time-window deviation reduce utility, while the base and home-pickup terms
+capture alternative-specific preference shifts. The outside option is
+normalized to $U_{r0}=0$ in the paper formula; generated rows still record the
+actual runtime \texttt{\detokenize{outside_option_util}} value, which defaults to 0 and may
+be disabled in diagnostic settings. The choice probability is
+\begin{equation}
+  P_{rb}(\mathcal{M}) =
+  \frac{\exp(U_{rb})}{\exp(U_{r0}) + \sum_{j \in \mathcal{M}(r)} \exp(U_{rj})}.
+  \label{eq:mnl}
+\end{equation}
+
+The platform's expected menu value is the MNL-weighted net contribution of the
+displayed bundles,
+\begin{equation}
+  \widehat{\Pi}(\mathcal{M}(r)) =
+  \sum_{b \in \mathcal{M}(r)} P_{rb}(\mathcal{M})
+  \left(p_b - \widehat{c}_{rb}^{\mathrm{route}} - \widehat{c}_{rb}^{\mathrm{risk}}\right).
+  \label{eq:menu_objective}
+\end{equation}
+Capacity, service feasibility, and time-window feasibility constrain which
+bundles enter $\mathcal{B}(r)$ and which bundles remain eligible for display.
+
+\section{Methodology}
+
+\subsection{\dspo{} Baseline}
+
+The \dspo{} baseline combines learned cost prediction with menu optimization.
+It estimates operational costs for feasible bundles, constructs a limited menu,
+and evaluates expected menu value under the MNL choice model. In the experiment
+contract, \dspo{} rows are identified by generated
+\texttt{\detokenize{method_family=DSPO}} metadata and must share request traces, seeds,
+pricing mode, routing settings, and checkpoint provenance with all baselines.
+
+\subsection{\dspoplus{} Extension}
+
+\dspoplus{} is defined as the enhanced decision-focused policy family only when
+the generated rows carry explicit \texttt{\detokenize{method_family=DSPO_PLUS}} metadata.
+Its minimum contract includes behavior-gated menu objectives, outside-option
+and opt-out guardrails, service-quit penalties, and robust time-window metadata.
+Attention-based variants remain diagnostic/V2 and do not satisfy the v1
+\dspoplus{} contract. Any intended advantage must come from the generated
+family contract and downstream validation, not from a price-only shortcut or a
+manual relabeling of current mainline rows.
+
+\subsection{Menu and Time-Window Extension}
+
+The Work2 contribution is the interaction of menus and time windows. A menu is
+the displayed subset of candidate meeting-point bundles. A time-window filter is
+an eligibility rule that can remove bundles before menu scoring. The no-filter
+case is a diagnostic endpoint: it disables ETA pruning but does not disable
+routing, capacity, or service feasibility. Formal claims must distinguish robust
+time-window handling from diagnostic no-filter exposure.
+
+\section{Experimental Design}
+
+\subsection{Dataset}
+
+The primary dataset is the RC benchmark because it is the controlled setting
+used by the current Work2 robust-menu pipeline. Yanjiao or additional external
+instances are future extensions unless the RC formal ladder passes first.
+
+\subsection{Baselines and Policies}
+
+The required comparison ladder is no pricing, static pricing, \dspo, and
+\dspoplus. The DSPO-family variants are further split into clip and wide
+configurations when the manifest supports both. The target ranking
+\begin{equation}
+  \dspoplus > \dspo > \text{Static Pricing} > \text{No Pricing}
+\end{equation}
+is a validation criterion, not an assumption. If the ranking fails, the workflow
+stops and reports the failure reason, minimal fix, and rerun command.
+
+\subsection{Metrics}
+
+The primary metric is realized net profit. Secondary metrics include served
+rate, accepted-home count, opt-out rate, meeting-point adoption rate,
+price-boundary diagnostics, checkpoint load status,
+\texttt{\detokenize{outside_option_util}}, \texttt{\detokenize{method_family}}, and artifact
+eligibility. \texttt{\detokenize{home_share}} is retained as a compatibility field with a
+total-choice denominator; it is not an accepted-home-only rate unless that
+denominator is stated explicitly. Opt-out, accepted home pickup, and accepted
+meeting-point pickup remain separate outcome states in simulator counters,
+normalized rows, artifact gates, and manuscript language.
+
+\section{Results}
+
+\subsection{Current Artifact Status}
+
+Current Work2 robust-menu artifacts are not claim-ready. The claim guard reports
+blocked status due to missing checkpoint provenance and formal evidence not yet
+completed. Therefore, this draft reports artifact status and planned result
+families rather than empirical dominance claims.
+
+\ArtifactTable{../work2_coding/artifacts/work2_robust_menu/tables/provenance_status.tex}{Current provenance and claim-gate status.}
+
+\subsection{Planned Ranking Validation}
+
+The formal result table will be generated only after no-pricing, static-pricing,
+\dspo, and \dspoplus{} rows are regenerated under paired replay with loaded
+checkpoint provenance. Until then, any ranking language remains conditional.
+
+\ArtifactTable{../work2_coding/artifacts/work2_robust_menu/tables/policy_summary.tex}{Diagnostic policy summary from the current artifact bundle.}
+
+\section{Ablation Study}
+
+The ablation section will be populated after the corresponding experiment gates
+pass. The required ablations are: (i) removing time-window filtering or
+time-window feasibility effects, (ii) removing menu expansion so that the policy
+cannot benefit from a richer candidate set, and (iii) decomposing the
+\dspo{}--\dspoplus{} gap into cost-learning, behavior-gating, and pricing/menu
+channels. Ablation outputs must be generated from artifacts, not edited by hand.
+
+\section{Conclusion}
+
+This draft reframes Work2 as a TR-C paper on behavior-aware service-menu
+optimization for many-to-one DRT. The contribution is the joint treatment of
+meeting points, time windows, pricing, and passenger choice under a
+claim-gated, paired-replay experiment design. The final empirical conclusion
+depends on passing the RC evidence ladder. Until those gates pass, the
+manuscript's defensible claim is that the framework, contracts, and artifact
+guards are in place; policy dominance remains to be verified.
+
+\section*{GSD Execution Report}
+
+Milestone v1.1 starts from the completed V1 robust-menu pipeline and continues
+phase numbering from Phase 6. The immediate manuscript action in this draft is
+format and structure scaffolding only. Formal paper claims are blocked until
+the code/experiment audit, model consistency repair, baseline validation,
+\dspo{} runs, and \dspoplus{} runs have passed.
+
+\section*{Reviewer-Style Risk Analysis}
+
+\textbf{Novelty risk.} The strongest novelty is the combination of
+behavior-aware service menus, meeting points, time windows, and decision-focused
+policy learning. The risk is that reviewers may see parts of the framework as
+known unless the \dspo{}/\dspoplus{} distinction and menu-time-window
+interaction are made concrete.
+
+\textbf{Modeling risk.} The MNL parameters and outside option must be framed as
+simulator design or calibrated inputs unless external passenger-demand
+estimation is added.
+
+\textbf{Experiment risk.} The target ranking cannot be asserted before
+checkpoint provenance, paired replay, and artifact gates pass. Missing
+checkpoint status is currently a blocking issue.
+
+\textbf{Acceptance probability.} At this draft stage the acceptance probability
+is low to medium because the paper structure is in place but formal empirical
+support is not yet claim-ready. It can improve only after the RC evidence ladder
+passes and reviewer-facing risks are addressed directly.
+
+\printcredits
+
+\bibliographystyle{cas-model2-names}
 \bibliography{references}
-
-\appendix
-\input{sections/appendix}
 
 \end{document}

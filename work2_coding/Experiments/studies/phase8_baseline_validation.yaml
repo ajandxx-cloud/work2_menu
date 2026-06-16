@@ -1,19 +1,14 @@
 schema_version: 1
-name: pilot_robust_menu
-tier: pilot
-run_mode: pilot
-description: Pilot contract for the V1 seven-tag mainline comparison with shared checkpoint provenance.
+name: phase8_baseline_validation
+tier: formal
+run_mode: formal
+description: Phase 8 paired baseline validation for no-pricing and static-pricing before DSPO ladder runs.
 required_policy_tags:
-  - mainline_no_menu
-  - mainline_fixed_menu
-  - mainline_random_menu
-  - mainline_optimized_m
   - mainline_optimized_mw
-  - mainline_optimized_fixed_window
-  - mainline_optimized_adaptive
+  - phase8_static_flat_markdown
 shared_checkpoint:
   required: true
-  path: outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt
+  path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
   expected_status: loaded
 base_args:
   algo_name: DSPO_Menu
@@ -21,73 +16,76 @@ base_args:
   product_mode: m+w+p
   time_window_mode: adaptive_window
   menu_contract_mode: optimized_menu
-  menu_pricing_mode: lambertw
-  run_mode: pilot
+  menu_pricing_mode: flat_markdown
+  menu_pricing_constant: -3.0
+  run_mode: formal
   instance: RC
   load_data: true
   pricing: true
-  max_episodes: 3
+  max_episodes: 1
   max_steps_r: 20
   max_steps_p: 0.7
+  n_vehicles: 2
+  veh_capacity: 3
   reopt: 10000000
-  hgs_reopt_time: 0.2
-  hgs_final_time: 0.2
+  hgs_reopt_time: 0.1
+  hgs_final_time: 0.1
   menu_k: 3
   max_candidates: 8
   menu_exact_threshold: 8
   menu_exact_gap_threshold: 8
-  checkpoint_path: outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt
+  checkpoint_path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
   require_checkpoint: true
   allow_checkpoint_mismatch: false
 splits:
-  - split_id: pilot_mainline_low_k1
-    seed: 201
+  - split_id: phase8_baseline_low_seed0
+    seed: 401
     data_seed: 0
     data_seed_test: 1
     uptake_regime: low
     args_overrides:
-      menu_k: 1
       home_util: 3.8
       base_util: -2.8
       incentive_sens: -0.18
-  - split_id: pilot_mainline_medium_k2
-    seed: 202
+  - split_id: phase8_baseline_low_seed1
+    seed: 402
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: low
+    args_overrides:
+      home_util: 3.8
+      base_util: -2.8
+      incentive_sens: -0.18
+  - split_id: phase8_baseline_medium_seed0
+    seed: 403
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+  - split_id: phase8_baseline_medium_seed1
+    seed: 404
     data_seed: 1
     data_seed_test: 0
     uptake_regime: medium
     args_overrides:
-      menu_k: 2
       home_util: 3.2
       base_util: -2.0
       incentive_sens: -0.25
-  - split_id: pilot_mainline_low_k3
-    seed: 203
-    data_seed: 2
+  - split_id: phase8_baseline_medium_seed2
+    seed: 405
+    data_seed: 0
     data_seed_test: 1
-    uptake_regime: low
-    args_overrides:
-      menu_k: 3
-      home_util: 3.8
-      base_util: -2.8
-      incentive_sens: -0.18
-  - split_id: pilot_mainline_medium_k5
-    seed: 205
-    data_seed: 3
-    data_seed_test: 0
     uptake_regime: medium
     args_overrides:
-      menu_k: 5
       home_util: 3.2
       base_util: -2.0
       incentive_sens: -0.25
 policies:
-  - tag: mainline_no_menu
-  - tag: mainline_fixed_menu
-  - tag: mainline_random_menu
-  - tag: mainline_optimized_m
   - tag: mainline_optimized_mw
-  - tag: mainline_optimized_fixed_window
-  - tag: mainline_optimized_adaptive
+  - tag: phase8_static_flat_markdown
 paired_fields:
   - seed
   - data_seed
@@ -100,10 +98,14 @@ paired_fields:
   - reopt
   - checkpoint_path
   - require_checkpoint
+  - allow_checkpoint_mismatch
   - menu_k
   - max_candidates
   - max_steps_r
   - max_steps_p
+  - n_vehicles
+  - veh_capacity
+  - menu_pricing_constant
   - home_util
   - base_util
   - incentive_sens
@@ -156,6 +158,10 @@ output_schema:
     - checkpoint_load_status
     - checkpoint_path
     - checkpoint_required
+    - checkpoint_hash
+    - pricing
+    - hgs_reopt_time
+    - hgs_final_time
     - menu_k
     - max_candidates
     - filter_mode

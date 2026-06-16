@@ -27,11 +27,13 @@ NORMALIZED_ROW_FIELDS = [
     "policy_tag",
     "candidate_id",
     "method",
+    "method_family",
     "product_mode",
     "time_window_mode",
     "menu_mode",
     "pricing_mode",
     "method_variant",
+    "outside_option_util",
     "attention_enabled",
     "attention_mode",
     "attention_strength",
@@ -130,6 +132,7 @@ OPTIONAL_ROW_FIELDS = {
     "error_type",
     "error_message",
     "git_status_summary",
+    "outside_option_util",
 }
 
 
@@ -322,6 +325,21 @@ def canonical_method(product_mode, time_window_mode, menu_mode, pricing_mode):
     return "__".join([str(product_mode), str(time_window_mode), str(menu_mode), str(pricing_mode)])
 
 
+def canonical_method_family(args, menu_metadata=None, policy_metadata=None):
+    menu_metadata = menu_metadata or {}
+    policy_metadata = policy_metadata or {}
+    family = _first_value(
+        menu_metadata.get("method_family"),
+        args.get("method_family"),
+        policy_metadata.get("method_family"),
+        "DSPO",
+    )
+    family = str(family)
+    if family not in {"DSPO", "DSPO_PLUS", "diagnostic"}:
+        raise ValueError("unsupported method_family: " + repr(family))
+    return family
+
+
 def build_normalized_row(
     setting,
     run_id,
@@ -344,6 +362,7 @@ def build_normalized_row(
         menu_metadata.get("method"),
         canonical_method(product_mode, time_window_mode, menu_mode, pricing_mode),
     )
+    method_family = canonical_method_family(args, menu_metadata, policy_metadata)
 
     row = {
         "schema_version": "normalized-row-v2",
@@ -356,6 +375,7 @@ def build_normalized_row(
         "policy_tag": setting["policy_tag"],
         "candidate_id": _first_value(menu_metadata.get("candidate_id"), stats_metadata.get("candidate_id"), "aggregate"),
         "method": method,
+        "method_family": method_family,
         "product_mode": product_mode,
         "time_window_mode": time_window_mode,
         "menu_mode": menu_mode,
@@ -365,6 +385,11 @@ def build_normalized_row(
             args.get("method_variant"),
             policy_metadata.get("method_variant"),
             "DSPO_original",
+        ),
+        "outside_option_util": _first_value(
+            menu_metadata.get("outside_option_util"),
+            stats_metadata.get("outside_option_util"),
+            args.get("outside_option_util", 0.0),
         ),
         "attention_enabled": bool(_first_value(
             menu_metadata.get("attention_enabled"),
@@ -462,6 +487,28 @@ def build_normalized_row(
     total_choices = None
     if accepted_count is not None and row.get("count_opted_out") is not None:
         total_choices = float(accepted_count + row.get("count_opted_out"))
+    row["acceptance_rate"] = _first_value(
+        row.get("acceptance_rate"),
+        float(accepted_count / total_choices) if total_choices else None,
+    )
+    row["optout_rate"] = _first_value(
+        row.get("optout_rate"),
+        float(row["count_opted_out"] / total_choices)
+        if total_choices and row.get("count_opted_out") is not None
+        else None,
+    )
+    row["home_share"] = _first_value(
+        row.get("home_share"),
+        float(row["count_accepted_home"] / total_choices)
+        if total_choices and row.get("count_accepted_home") is not None
+        else None,
+    )
+    row["meeting_point_uptake_rate"] = _first_value(
+        row.get("meeting_point_uptake_rate"),
+        float(row["count_accepted_meeting_point"] / total_choices)
+        if total_choices and row.get("count_accepted_meeting_point") is not None
+        else None,
+    )
     row["served_rate"] = _first_value(
         row.get("served_rate"),
         float(row["served_count"] / total_choices) if total_choices else None,

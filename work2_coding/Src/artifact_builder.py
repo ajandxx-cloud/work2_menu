@@ -104,6 +104,8 @@ def aggregate_by_policy(rows):
             {
                 "policy_tag": policy_tag,
                 "row_count": len(policy_rows),
+                "method_family": _stable_join(row.get("method_family") for row in policy_rows),
+                "outside_option_util": _stable_join(row.get("outside_option_util") for row in policy_rows),
                 "filter_mode": _stable_join(row.get("filter_mode") for row in policy_rows),
                 "diagnostic": diagnostic,
                 "comparison_role": _stable_join(row.get("comparison_role") for row in policy_rows),
@@ -181,6 +183,8 @@ def artifact_metadata(artifact_path, run_data, status_info, source_rows, artifac
         "reasons": status_info["reasons"],
         "placeholder_only": status_info["placeholder_only"],
         "checkpoint_summary": status_info["checkpoint_statuses"],
+        "method_families": status_info.get("method_families", []),
+        "outside_option_utils": status_info.get("outside_option_utils", []),
         "uptake_regimes": status_info["uptake_regimes"],
         "diagnostic_policy_labels": status_info["diagnostic_policy_labels"],
         "row_count": len(rows),
@@ -328,7 +332,7 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
         ("exact_greedy.tex", "Exact and greedy solver diagnostics", ["policy_tag", "menu_build_time_mean", "relative_optimality_gap_mean"]),
         ("profit_decomposition.tex", "Price revenue and service summary", ["policy_tag", "net_price_revenue_mean", "charge_revenue_mean", "discount_cost_mean", "service_time_total_mean"]),
         ("uptake_regime.tex", "Uptake regime coverage", ["policy_tag", "uptake_regimes", "row_count"]),
-        ("provenance_status.tex", "Provenance and status", ["policy_tag", "status", "placeholder_only", "checkpoint_statuses"]),
+        ("provenance_status.tex", "Provenance and status", ["policy_tag", "method_family", "outside_option_util", "status", "placeholder_only", "checkpoint_statuses"]),
     ]
     for filename, caption, columns in tables:
         path = output_root / "tables" / filename
@@ -361,6 +365,8 @@ def build_artifacts(run_dir, output_root=None, mirror_root=None, allow_incomplet
         "policies": sorted({row.get("policy_tag") for row in rows}),
         "uptake_regimes": status_info["uptake_regimes"],
         "checkpoint_statuses": status_info["checkpoint_statuses"],
+        "method_families": status_info.get("method_families", []),
+        "outside_option_utils": status_info.get("outside_option_utils", []),
         "placeholder_only": status_info["placeholder_only"],
         "claim_ready": status_info["claim_ready"],
         "pilot_claim_ready": summary.get("tier") == "pilot" and status_info["claim_ready"],

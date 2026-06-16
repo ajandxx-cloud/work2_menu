@@ -9,6 +9,9 @@ import numpy as np
 from Environments.OOH.Parcelpoint_py import Parcelpoint_py
 from Environments.OOH.containers import ChoiceResult, Customer, Location, MenuOffer, ServiceBundle
 from Src.Utils.Utils import generate_demand_data
+from Src.artifact_status import classify_artifact
+from Src.experiment_contracts import load_manifest, manifest_hash
+from Src.paired_replay import build_normalized_row, resolve_paired_settings
 
 
 def make_env():
@@ -179,6 +182,50 @@ def test_mixed_acceptance_and_optout_rates():
     assert abs(stats[8]["acceptance_rate"] - (2.0 / 3.0)) < 1e-12
 
 
+def synthetic_completed_row(stats_updates=None):
+    manifest = load_manifest("pilot_robust_menu")
+    setting = resolve_paired_settings(manifest, manifest_hash_value=manifest_hash(manifest))[0]
+    stats = {
+        "count_opted_out": 2,
+        "count_accepted_home": 3,
+        "count_accepted_meeting_point": 5,
+    }
+    stats.update(stats_updates or {})
+    return build_normalized_row(
+        setting,
+        run_id="synthetic-run",
+        checkpoint_metadata={
+            "checkpoint_load_status": "loaded",
+            "checkpoint_path": "synthetic.pt",
+            "checkpoint_hash": "abc123",
+            "checkpoint_required": True,
+            "checkpoint_intentional_mismatch": False,
+        },
+        stats_metadata=stats,
+        status="completed",
+        execution_status="completed",
+        placeholder_only=False,
+    )
+
+
+def test_row_level_accounting_separates_accepted_and_optout():
+    row = synthetic_completed_row()
+    total_choices = row["count_accepted_home"] + row["count_accepted_meeting_point"] + row["count_opted_out"]
+    assert row["accepted_count"] == row["count_accepted_home"] + row["count_accepted_meeting_point"]
+    assert row["served_count"] == row["accepted_count"]
+    assert row["served_count"] != total_choices
+    assert abs(row["optout_rate"] - (row["count_opted_out"] / total_choices)) < 1e-12
+    assert abs(row["home_share"] - (row["count_accepted_home"] / total_choices)) < 1e-12
+
+
+def test_artifact_gate_detects_optout_mixed_into_accepted_home():
+    row = synthetic_completed_row()
+    row["count_accepted_home"] += row["count_opted_out"]
+    status = classify_artifact([row], {"tier": "pilot", "execution_status": "completed"})
+    assert status["status"] == "blocked"
+    assert any("accepted accounting" in reason for reason in status["reasons"])
+
+
 def main():
     tests = [
         test_choice_result_contract,
@@ -186,6 +233,8 @@ def main():
         test_accepted_home_mutates_service_accounting,
         test_accepted_meeting_point_decrements_capacity,
         test_mixed_acceptance_and_optout_rates,
+        test_row_level_accounting_separates_accepted_and_optout,
+        test_artifact_gate_detects_optout_mixed_into_accepted_home,
     ]
     for test in tests:
         test()

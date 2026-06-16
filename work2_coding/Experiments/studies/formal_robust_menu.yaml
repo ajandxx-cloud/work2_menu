@@ -142,6 +142,8 @@ output_schema:
     - tier
     - run_mode
     - policy_tag
+    - method_family
+    - outside_option_util
     - product_mode
     - time_window_mode
     - menu_mode

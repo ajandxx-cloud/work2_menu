@@ -1,8 +1,11 @@
 schema_version: 1
-name: pilot_robust_menu
-tier: pilot
-run_mode: pilot
-description: Pilot contract for the V1 seven-tag mainline comparison with shared checkpoint provenance.
+name: final_robust_menu
+tier: formal
+run_mode: formal
+description: Frozen final V1 mainline comparison contract; execution requires FROZEN_FINAL_SETTINGS.md and passing gates.
+output_intent: final_claim_candidate_after_gates
+calibration_protocol: ../../.planning/results/CALIBRATION_PROTOCOL.md
+frozen_settings_required: ../../.planning/results/FROZEN_FINAL_SETTINGS.md
 required_policy_tags:
   - mainline_no_menu
   - mainline_fixed_menu
@@ -13,7 +16,7 @@ required_policy_tags:
   - mainline_optimized_adaptive
 shared_checkpoint:
   required: true
-  path: outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt
+  path: outputs/shared_training/work2_robust_menu/final/supervised_ml.pt
   expected_status: loaded
 base_args:
   algo_name: DSPO_Menu
@@ -22,61 +25,81 @@ base_args:
   time_window_mode: adaptive_window
   menu_contract_mode: optimized_menu
   menu_pricing_mode: lambertw
-  run_mode: pilot
+  run_mode: formal
   instance: RC
   load_data: true
   pricing: true
-  max_episodes: 3
-  max_steps_r: 20
-  max_steps_p: 0.7
+  max_episodes: 10
+  max_steps_r: 100
+  max_steps_p: 0.55
   reopt: 10000000
-  hgs_reopt_time: 0.2
-  hgs_final_time: 0.2
+  hgs_reopt_time: 1.1
+  hgs_final_time: 1.5
   menu_k: 3
-  max_candidates: 8
+  max_candidates: 10
   menu_exact_threshold: 8
   menu_exact_gap_threshold: 8
-  checkpoint_path: outputs/shared_training/work2_robust_menu/pilot/supervised_ml.pt
+  checkpoint_path: outputs/shared_training/work2_robust_menu/final/supervised_ml.pt
   require_checkpoint: true
   allow_checkpoint_mismatch: false
+  menu_eta_filter_mode: interval_overlap
+  service_quit_rate_guardrail: 0.35
+  menu_optout_guardrail: 0.35
+selected_runtime_knobs:
+  source: CALIBRATION_PROTOCOL.md pre-run default; not selected from final rows
+  menu_k: 3
+  max_candidates: 10
+  menu_eta_filter_mode: interval_overlap
+  service_quit_rate_guardrail: 0.35
+  menu_optout_guardrail: 0.35
+rejected_alternatives:
+  menu_k: [2, 4]
+  max_candidates: [8, 12]
+  eta_filter_mode: [hard, chance_threshold_0.20, chance_threshold_0.25]
+  service_or_optout_guardrail: [0.40]
 splits:
-  - split_id: pilot_mainline_low_k1
-    seed: 201
+  - split_id: final_mainline_low_seed0
+    seed: 501
     data_seed: 0
     data_seed_test: 1
     uptake_regime: low
     args_overrides:
-      menu_k: 1
       home_util: 3.8
       base_util: -2.8
       incentive_sens: -0.18
-  - split_id: pilot_mainline_medium_k2
-    seed: 202
+  - split_id: final_mainline_low_seed1
+    seed: 502
+    data_seed: 1
+    data_seed_test: 0
+    uptake_regime: low
+    args_overrides:
+      home_util: 3.8
+      base_util: -2.8
+      incentive_sens: -0.18
+  - split_id: final_mainline_medium_seed0
+    seed: 503
+    data_seed: 0
+    data_seed_test: 1
+    uptake_regime: medium
+    args_overrides:
+      home_util: 3.2
+      base_util: -2.0
+      incentive_sens: -0.25
+  - split_id: final_mainline_medium_seed1
+    seed: 504
     data_seed: 1
     data_seed_test: 0
     uptake_regime: medium
     args_overrides:
-      menu_k: 2
       home_util: 3.2
       base_util: -2.0
       incentive_sens: -0.25
-  - split_id: pilot_mainline_low_k3
-    seed: 203
-    data_seed: 2
+  - split_id: final_mainline_medium_seed2
+    seed: 505
+    data_seed: 0
     data_seed_test: 1
-    uptake_regime: low
-    args_overrides:
-      menu_k: 3
-      home_util: 3.8
-      base_util: -2.8
-      incentive_sens: -0.18
-  - split_id: pilot_mainline_medium_k5
-    seed: 205
-    data_seed: 3
-    data_seed_test: 0
     uptake_regime: medium
     args_overrides:
-      menu_k: 5
       home_util: 3.2
       base_util: -2.0
       incentive_sens: -0.25
@@ -100,6 +123,7 @@ paired_fields:
   - reopt
   - checkpoint_path
   - require_checkpoint
+  - allow_checkpoint_mismatch
   - menu_k
   - max_candidates
   - max_steps_r
@@ -137,25 +161,31 @@ output_schema:
     - tier
     - run_mode
     - policy_tag
+    - candidate_id
+    - method
     - method_family
-    - outside_option_util
     - product_mode
     - time_window_mode
     - menu_mode
     - pricing_mode
-    - method
-    - candidate_id
+    - method_variant
+    - outside_option_util
+    - split_id
     - seed
     - data_seed
     - data_seed_test
-    - split_id
     - trace_id
     - trace_hash
     - manifest_hash
     - settings_hash
     - checkpoint_load_status
     - checkpoint_path
+    - checkpoint_hash
     - checkpoint_required
+    - checkpoint_intentional_mismatch
+    - pricing
+    - hgs_reopt_time
+    - hgs_final_time
     - menu_k
     - max_candidates
     - filter_mode

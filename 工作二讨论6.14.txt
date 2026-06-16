@@ -1,0 +1,129 @@
+结论先说清楚：**这份 Work2 实验设计的大方向是合理的，而且已经比“单纯加 attention”成熟很多；但目前仓库里的结果还不是 TR Part E 投稿级结果，只能说明工程管线和实验契约已经跑通，不能说明你的方法已经在实证上显著优于基线。**
+
+你的 Work2 最稳的论文定位应该是：
+
+> **面向多对一 DRT / on-demand mobility 的“接驳点 × 接车时间窗 × 价格”服务菜单优化问题。平台不是只决定价格，而是决定给乘客展示哪些服务产品。**
+
+这和你上传讨论稿中的判断一致：Work1 是 pricing layer，Work2 应该上升为 menu layer，也就是“系统给乘客看什么”本身成为决策变量。
+
+## 1. 当前实验设计是否合理？
+
+**总体合理。** 你现在不是在比较几个随便命名的算法，而是在做一个比较清楚的结构化实验：从无菜单、固定菜单、随机菜单，到不同产品组成的优化菜单，最后到完整的“接驳点 + 时间窗 + 价格”的自适应优化菜单。仓库中的 Phase 3 已经把 V1 主线定义成七个 policy tag：`mainline_no_menu`、`mainline_fixed_menu`、`mainline_random_menu`、`mainline_optimized_m`、`mainline_optimized_mw`、`mainline_optimized_fixed_window`、`mainline_optimized_adaptive`。
+
+这个设计的优点是：它不是只回答“我的方法比 baseline 好不好”，而是可以拆开回答三个更像论文的问题：第一，**优化菜单是否比固定/随机菜单好**；第二，**加入时间窗是否有额外价值**；第三，**加入价格以后，完整的 m+w+p 服务产品是否进一步提高系统收益**。在 policy adapter 里，你的主方法 `mainline_optimized_adaptive` 已经被定义为“optimized menu + adaptive window + Lambert-W pricing”，而 `mainline_optimized_m`、`mainline_optimized_mw`、`mainline_optimized_fixed_window` 分别承担产品消融和时间窗消融作用。
+
+从代码实现看，`DSPO_Menu` 也已经具备正式 Work2 的核心要素：菜单模式、产品模式、时间窗模式、菜单大小、候选点数量、exact/greedy 求解、ETA 过滤、Lambert-W 定价、服务退出概率约束、attention 开关等都已经在类初始化中显式配置。 代码里也实现了 ETA filter 的多种模式，包括 `hard`、`calibrated`、`interval_overlap`、`chance_constraint`、`soft_penalty` 和 `none`，这为“鲁棒时间窗菜单优化”提供了比较好的工程基础。
+
+所以，**作为博士大论文第二个工作，这个方向是成立的**。它比 Work1 更进一步：Work1 主要是“给定候选服务后如何定价”，Work2 则是“平台应该展示哪些服务 bundle”。这条主线是连贯的。
+
+## 2. 当前结果如何？
+
+这里必须严格区分两类结果。
+
+**第一类是工程验证结果。这个已经比较好。** Phase 2 通过了服务产品契约验证，证明当前实现已经支持 `m`、`m+w+p`、`no_time_window`、`fixed_window`、`adaptive_window`、`no_menu`、`fixed_menu`、`random_menu`、`optimized_menu` 等合同化字段，并且 smoke replay 生成了 16 行 completed 结果。 Phase 3 进一步完成了七类主线策略的 smoke replay，共 28 行，覆盖所有七个主线 policy tag，且所有行状态为 completed。
+
+**第二类是论文实证结果。这个目前还没有完成。** 仓库状态明确写着：Phase 5 虽然完成了 formal evidence readiness 的工具和门槛，但真实 formal readiness 仍然被 `dirty_git` 和 `missing_formal_checkpoint` 阻塞。 仓库当前状态也明确说明：formal replay 和 formal checkpoint training 尚未执行。 Phase 5 summary 也写得很清楚：formal replay was not run，no empirical superiority claims were made。
+
+因此，当前最准确的结论是：
+
+> **现在已经证明实验框架、数据行格式、策略映射、artifact gate 和 claim guard 基本可运行；但还没有形成可以写进 TR Part E 论文的正式数值结论。**
+
+换句话说，现在不能写“optimized adaptive menu 显著优于 fixed menu / random menu / no menu”。你现在最多能写成：“当前实验管线已支持这一比较，正式结果尚待 formal checkpoint + formal replay 后确认。”
+
+## 3. 现在的实验设计能否支撑 TR Part E？
+
+**有潜力，但还不够。**
+
+TR Part E 的官方定位是 Logistics and Transportation Review，它强调物流系统，也接受运筹优化、仿真、机器学习、AI 和网络分析等方法。([科学直通车][1]) 所以你的工作如果写成“on-demand mobility / last-mile DRT service menu optimization / pickup-point and time-window service design”，是可以向 TR-E 靠拢的。TR-E 不是只收传统物流配送，也接受运输与物流系统中的优化、仿真和 AI 方法。([科学直通车][2])
+
+但你需要注意一个定位风险：如果全文写成“公交 DRT 乘客服务体验”或者“乘客出行选择行为”，可能更像 TR-C / TR-B / TR-A；如果写成“动态服务菜单、接驳点、时间窗、价格、运营成本、接受率、系统收益”，就更适合 TR-E。也就是说，**TR-E 版本要突出 logistics / service operations / assortment optimization，而不是只突出 passenger choice。**
+
+目前离 TR-E 稿件还差四个核心东西。
+
+第一，**正式实验还没跑完**。formal manifest 已经设计了 5 个 split，覆盖 low 和 medium uptake regimes，并要求共享 checkpoint。 但 checkpoint 还没生成，formal replay 还没执行，所以现在没有投稿级统计结果。
+
+第二，**场景规模还不够强**。目前 formal manifest 主要是 RC instance，`max_episodes=10`、`max_steps_r=100`、`menu_k=3`、`max_candidates=10`。 这可以作为主实验起点，但 TR-E 论文最好还要有更大规模或半真实案例，比如你之前说的燕郊通勤/半真实数据。否则 reviewer 可能会说：这只是一个 RC 上的小型算法诊断，不足以证明方法在真实 DRT/物流场景中的价值。
+
+第三，**行为模型仍然偏仿真化**。当前 `customerchoice_menu` 是基于 MNL/Gumbel 随机效用进行选择，并包含 outside option。 这在仿真研究里可以接受，但不能过度声称“真实乘客行为”。你应该写成“under simulated heterogeneous preferences” 或 “behaviorally motivated choice simulation”，并通过敏感性分析证明不同偏好区间下结论稳定。
+
+第四，**attention 目前不能作为主贡献。** 仓库 audit 明确写着 attention 是 V2/diagnostic，不应作为 V1 ranking evidence。 而且从代码看，当前 attention 更像一个 deterministic feature-weight score delta，不是真正的 self-attention choice model。它对每个 offer 的 ETA risk、walk、time、cost、route delay、capacity risk、price 做加权，然后把 score delta 加到 expected profit 中。 这可以作为诊断增强，但不能写成“本文提出 attention-based choice model 并验证有效”。
+
+## 4. 现在实验设计最强的地方
+
+你现在最强的是**实验结构已经从“算法比较”升级为“产品结构消融”**。
+
+七个主线策略非常适合写成论文里的三层比较：
+
+第一层是 menu mode 比较：`no_menu`、`fixed_menu`、`random_menu`、`optimized_menu`。这回答“平台是否应该优化展示菜单”。
+
+第二层是 product mode 比较：`m`、`m+w`、`m+w+p`。这回答“只推荐接驳点够不够，加入接车时间窗和价格有没有额外价值”。
+
+第三层是 time-window mode 比较：`fixed_window` versus `adaptive_window`。这回答“时间窗是不是应该随请求和车辆状态自适应生成”。
+
+这个设计比“DSPO_PLUS > DSPO > Static Pricing”更适合作为 Work2，因为 Work2 的核心不应再是 pricing algorithm ladder，而应该是 **service product / menu design ladder**。
+
+## 5. 当前设计最容易被 reviewer 攻击的地方
+
+第一个攻击点是：**你用同一个选择模型来优化菜单，又用类似的选择模型来仿真乘客选择，是否存在自我验证？** 当前系统在 `evaluate_menu` 中用 MNL 计算 outside probability、choice probability 和 expected profit。 如果仿真环境也使用同类 MNL，那么优化方法天然更适配这个环境。解决办法是增加 misspecification experiments，比如训练/优化用一种偏好参数，测试用另一组偏好参数；或者用 nested logit / random coefficient / 更强 outside option 做稳健性分析。
+
+第二个攻击点是：**RC 数据是否能代表真实 DRT？** 如果只是 RC 上的动态仿真，TR-E reviewer 可能认为应用价值不足。你最好增加一个半真实场景：真实地理点、真实道路距离或时间矩阵、真实/半真实需求分布、真实接驳点候选集。哪怕行为选择仍然是仿真，也能显著提高可信度。
+
+第三个攻击点是：**当前 product ablation 还不能完全分离“时间窗”和“价格”的作用。** 例如 `mainline_optimized_mw` 是 adaptive window + no pricing，而 `mainline_optimized_adaptive` 是 adaptive window + Lambert-W pricing。这个能说明加入价格后的总效果，但 reviewer 可能会问：有没有 `m+p`、`m+fixed_w no pricing`、`adaptive_w no pricing`、`fixed_w with pricing` 的完整矩阵？你现在有一部分，但还不是完全正交的 2×2 或 3×2 消融。
+
+第四个攻击点是：**formal evidence 目前为空。** 你现在的 formal manifest 很好，但没有跑。投稿前必须有正式 checkpoint、正式 replay、正式 artifact、claim-ready 结果。仓库已经把 formal 输出需要的字段列出来，包括 net profit、operational cost、served rate、acceptance rate、opt-out rate、home share、meeting-point uptake、menu utilization、choice entropy 等。 这些字段够用，但还需要真实 formal rows。
+
+## 6. 我建议你最终的 TR-E 实验结构
+
+你的论文实验最好不要只放“一个主表”。建议按下面结构组织。
+
+**实验一：主线性能比较。** 比较七个 mainline policies。核心表格报告 net profit、operational cost、acceptance rate、opt-out rate、home share、meeting-point uptake rate、menu utilization、choice entropy。主结论应该是：完整的 optimized adaptive `m+w+p` 菜单在收益和服务质量之间取得最好或最稳健的平衡。
+
+**实验二：产品组成消融。** 比较 `m`、`m+w`、`m+w+p`。这个实验回答 Work2 的核心贡献：不是单纯推荐 meeting point，而是把 meeting point、pickup time window 和 price 共同作为 service bundle 设计。
+
+**实验三：时间窗机制消融。** 比较 fixed window 和 adaptive window，同时加入 hard filter、interval overlap、chance constraint 或 soft penalty。这个实验要证明：ETA 不确定性不是细节，而是服务菜单可行性和菜单覆盖率的关键因素。
+
+**实验四：exact versus greedy。** 小候选集用 exact enumeration，大候选集用 greedy。你当前代码已经有 exact 和 greedy 分支，并能记录 solver diagnostic。 论文里必须报告 exact-greedy gap 和运行时间，否则 reviewer 会担心方法无法实时部署。
+
+**实验五：敏感性分析。** 至少做 menu size `k`、candidate count、ETA sigma、opt-out guardrail、乘客偏好强弱、车辆容量/车队规模。最重要的是证明方法不是只在某个调出来的参数下有效。
+
+**实验六：半真实案例。** 用一个更真实的通勤或城市 DRT 场景展示实际解释力。TR-E 更看重物流/运输系统应用价值，半真实案例能显著提高投稿质量。
+
+## 7. 你现在应该怎样解释“结果”
+
+当前不能写“结果表明我的方法最好”。应该这样写：
+
+> 当前代码层面已经完成 Work2 V1 的服务产品契约、七类主线策略定义、normalized-row-v2 输出、smoke replay 和 artifact/claim guard 管线。已有结果证明实验框架可执行、指标可记录、策略可成对比较，但 formal checkpoint 和 formal replay 尚未完成，因此尚不能形成投稿级 empirical superiority claim。
+
+等 formal run 完成后，理想的结果模式应该是：
+
+`mainline_optimized_adaptive` 在 net profit 上优于 `mainline_fixed_menu` 和 `mainline_random_menu`；相对 `mainline_no_menu`，它应该降低运营成本或提高 meeting-point uptake；相对 `mainline_optimized_m`，它应该说明时间窗和价格带来额外收益；相对 `mainline_optimized_fixed_window`，它应该说明 adaptive window 在接受率、opt-out 或时间窗可靠性上更稳健。
+
+如果结果不是这样，也不要强行写“全面最优”。更稳妥的 TR-E 结论可以写成：
+
+> optimized adaptive service menus do not universally dominate every baseline on every metric, but they provide the best profit–service-quality trade-off under moderate uptake regimes and reduce inefficient home-service reliance by coordinating pickup-point choice, pickup-time-window feasibility, and price incentives.
+
+这种结论更像高质量期刊，会比“我的方法所有指标都最好”可信。
+
+## 8. 最终判断
+
+我给你一个直接判断：
+
+| 方面                     | 当前评价                                                           |
+| ---------------------- | -------------------------------------------------------------- |
+| 研究方向                   | 合理，适合作为博士大论文第二个工作                                              |
+| 与 Work1 的连续性           | 较强，从 pricing layer 扩展到 menu layer                              |
+| 当前代码实现                 | 已有核心雏形，且工程契约明显进步                                               |
+| 当前实验设计                 | 主线合理，但还需要更强 formal evidence、半真实案例和敏感性分析                        |
+| 当前结果                   | 只能证明管线跑通，不能证明方法有效                                              |
+| TR Part E 潜力           | 有，但必须按 logistics/service operations/assortment optimization 来写 |
+| 是否现在能投稿                | 不能                                                             |
+| 完成 formal run + 半真实案例后 | 有机会形成 TR-E 或至少高质量交通/物流期刊稿件                                     |
+
+我建议你现在不要再把 Work2 说成“加入时间窗和 attention”。最合适的论文主线是：
+
+> **本文研究动态 DRT 服务中的前端服务菜单优化问题。平台面对顺序到达的乘客，从候选的“接驳点—接车时间窗—价格”服务 bundle 中选择有限菜单进行展示，并在乘客选择、ETA 不确定性、车辆容量风险和运营成本约束下最大化系统期望收益。**
+
+这条线是合理的，也比单纯 attention 更适合 TR Part E。
+
+[1]: https://www.sciencedirect.com/journal/transportation-research-part-e-logistics-and-transportation-review/about/aims-and-scope "Aims and scope - Transportation Research Part E: Logistics and Transportation Review | ScienceDirect.com by Elsevier"
+[2]: https://www.journals.elsevier.com/transportation-research-part-e-logistics-and-transportation-review "Transportation Research Part E: Logistics and Transportation Review | Journal | ScienceDirect.com by Elsevier"
