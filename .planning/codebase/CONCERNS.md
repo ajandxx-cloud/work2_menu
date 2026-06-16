@@ -1,207 +1,308 @@
+---
+last_mapped_commit: 97514c74f4d103ba31191ff047dacde1bac47551
+analysis_date: 2026-06-16
+focus: concerns
+active_runtime_root: work2_coding/
+---
+
 # Codebase Concerns
 
-**Analysis Date:** 2026-06-09
-**last_mapped_commit:** `37b20aa`
+**Analysis Date:** 2026-06-16
+
+**Active runtime root:** `work2_coding/`
+
+**Mapped HEAD:** `97514c74f4d103ba31191ff047dacde1bac47551`
 
 ## Tech Debt
 
-**Missing core menu algorithm module:**
-- Issue: The default algorithm import target is absent from the current worktree. `ooh_code/Src/config.py` imports `Src.Algorithms.DSPO_Menu`, and the default parser value routes `--menu_model cnn_2d` to `DSPO_Menu`, but `ooh_code/Src/Algorithms/DSPO_Menu.py` is not present.
-- Files: `ooh_code/Src/config.py`, `ooh_code/Src/parser.py`, `ooh_code/Src/Algorithms/CNN_SetMenu.py`, `ooh_code/Src/Algorithms/MLP_SetMenu.py`, `ooh_code/scripts/test_menu_objective_mode.py`, `ooh_code/scripts/test_phase6_redesign_policies.py`
-- Impact: `import Src.config` fails with `ModuleNotFoundError: No module named 'Src.Algorithms.DSPO_Menu'`; study execution, smoke tests, artifact gates that import the pipeline, and all CNN/MLP menu variants are blocked.
-- Fix approach: Restore or replace `ooh_code/Src/Algorithms/DSPO_Menu.py` before running any experiments. After restoration, run at minimum `python ooh_code/scripts/run_study.py --study smoke_rc --force_retrain` from `ooh_code/` plus the policy/unit smoke scripts that import `DSPO_Menu`.
+**Monolithic robust menu solver:**
+- Issue: Robust menu construction, ETA filtering, pricing/product scoring, exact/greedy menu selection, attention diagnostics, and training update behavior are concentrated in `work2_coding/Src/Algorithms/DSPO_Menu.py`.
+- Files: `work2_coding/Src/Algorithms/DSPO_Menu.py`, `work2_coding/Src/policy_adapters.py`, `work2_coding/Src/parser.py`
+- Impact: Small scientific-policy changes have broad blast radius across service menu behavior, diagnostics, and generated row contracts.
+- Fix approach: Keep Phase 11 writing-only. For implementation phases, split only behind existing public row/manifest contracts and preserve tests in `work2_coding/scripts/test_robust_menu_logic.py`, `work2_coding/scripts/test_policy_fairness_contract.py`, and `work2_coding/scripts/test_phase9_exact_greedy_contracts.py`.
 
-**Monolithic artifact builder:**
-- Issue: `ooh_code/scripts/build_artifacts.py` is a single large script that mixes data loading, classification, figure generation, LaTeX table rendering, Work2 formal summaries, robustness summaries, placeholder figures, and prose generation.
-- Files: `ooh_code/scripts/build_artifacts.py`
-- Impact: Changes to one artifact family can affect unrelated manuscript outputs. It is difficult to isolate tests, reason about fallback behavior, or review scientific claim wording independently from plotting/table code.
-- Fix approach: Split by artifact family into small modules under `ooh_code/scripts/` or a package such as `ooh_code/Src/artifacts/`; keep `build_artifacts.py` as a thin CLI orchestrator.
+**Duplicated claim and artifact gate logic:**
+- Issue: Claim readiness and diagnostic/blocker states are enforced in several modules and generated JSON summaries.
+- Files: `work2_coding/Src/artifact_status.py`, `work2_coding/Src/paper_artifacts.py`, `work2_coding/Src/manuscript_claims.py`, `work2_coding/Src/sensitivity_analysis.py`, `work2_coding/Src/computational_tractability.py`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/PACKAGE_STATUS.json`
+- Impact: A status rule can drift between runtime validation, artifact packaging, and manuscript claim guarding.
+- Fix approach: Treat `work2_coding/Src/manuscript_claims.py` as the manuscript boundary and `work2_coding/Src/artifact_status.py` as the row/artifact boundary. Update both with paired tests whenever a claim boundary changes.
 
-**Silent checkpoint/model mismatch handling:**
-- Issue: `Agent.load()` catches all exceptions from module loading and silently keeps random initialization when checkpoint files are missing or incompatible.
-- Files: `ooh_code/Src/Algorithms/Agent.py`, `ooh_code/Src/work2_runtime.py`, `ooh_code/run_menu_compare.py`, `ooh_code/Src/research_pipeline.py`
-- Impact: A run can report a checkpoint path while a variant evaluates with randomly initialized heads, especially across `cnn_2d`, `cnn_setmenu`, and `mlp_menu` model changes. This weakens scientific traceability of learned-baseline comparisons.
-- Fix approach: Replace the blanket `except (RuntimeError, Exception): pass` with explicit compatibility checks and a structured `checkpoint_load_status` written into normalized rows. Fail closed for default/shared predictor loads unless the manifest marks a model-architecture mismatch as intentional.
+**No configured project-wide test runner or CI gate:**
+- Issue: The repo has many script-style tests but no detected `pytest.ini`, `tox.ini`, `noxfile.py`, `pyproject.toml`, `setup.cfg`, or CI workflow tying the checks together.
+- Files: `work2_coding/scripts/test_artifact_gates.py`, `work2_coding/scripts/test_optout_accounting.py`, `work2_coding/scripts/test_formal_readiness.py`, `work2_coding/scripts/test_phase8_sensitivity_contracts.py`, `work2_coding/scripts/test_phase9_exact_greedy_contracts.py`, `work2_coding/tests/test_akkerman_rc_no_failure.py`
+- Impact: Phase gates depend on manual command selection, so critical regressions can pass if the relevant script is not run.
+- Fix approach: Add a canonical local check script or test runner configuration after the current writing-only phase. Include opt-out accounting, paired replay fairness, checkpoint metadata, artifact gates, Phase 8/9 contracts, and manuscript claim guard tests.
 
-**Legacy and new naming styles are tightly coupled:**
-- Issue: New orchestration code uses snake_case helpers while the simulator and containers preserve legacy attribute names such as `remainingCapacity`, `routePlan`, `newCustomer`, and `customerChoice`.
-- Files: `ooh_code/Environments/OOH/containers.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/Environments/OOH/env_utils.py`, `ooh_code/run_menu_compare.py`
-- Impact: New code can accidentally mix dict access, object attributes, and legacy camelCase names. Bugs in route mutation or capacity accounting are hard to catch because the same objects are passed through environment, HGS, logging, and metric extraction layers.
-- Fix approach: Add adapter helpers for route and capacity access in `ooh_code/Environments/OOH/env_utils.py` and use them from new code; do not introduce additional direct `routePlan` or `remainingCapacity` accesses outside the simulator layer.
+**Attention code exists inside the v1 runtime surface:**
+- Issue: Attention-related flags, policy tags, and scoring knobs remain available while the research guardrail keeps attention-based choice/scoring outside v1 scope.
+- Files: `work2_coding/Src/parser.py`, `work2_coding/Src/Algorithms/DSPO_Menu.py`, `work2_coding/Src/policy_adapters.py`, `work2_coding/Src/manuscript_claims.py`
+- Impact: Attention rows can be mistaken for mainline evidence if a future manifest or manuscript section ignores the diagnostic-only boundary.
+- Fix approach: Keep `DSPO_attention` and related settings diagnostic-only in `work2_coding/Src/policy_adapters.py` and blocked from manuscript upgrades in `work2_coding/Src/manuscript_claims.py`.
 
-**Many phase-specific scripts duplicate artifact gates:**
-- Issue: Multiple phase scripts implement similar row loading, gate errors, metric coercion, manifest snapshot handling, and Markdown output logic.
-- Files: `ooh_code/scripts/build_phase08_artifacts.py`, `ooh_code/scripts/build_phase08_gap_closure_artifacts.py`, `ooh_code/scripts/build_phase6_redesign_artifacts.py`, `ooh_code/scripts/build_work2_phase6_redesign_formal_artifacts.py`, `ooh_code/scripts/build_work2_phase6b_repaired_contract.py`, `ooh_code/scripts/diagnose_work2_phase6_primary_metric.py`
-- Impact: Gate semantics can drift across phases. A metric accepted by one artifact script can be rejected, reclassified, or described differently by another.
-- Fix approach: Move shared row validation, metric coercion, gate-state classification, and output-directory safety checks into reusable helpers, then keep phase scripts as thin configurations.
+**Legacy numeric approximation remains in utilities:**
+- Issue: A route-cost helper records an approximation TODO for an exact calculation.
+- Files: `work2_coding/Src/Utils/Utils.py`
+- Impact: Distance/cost-derived behavior may carry approximation error into optimization comparisons when that helper is used.
+- Fix approach: Localize the exact calculation behind tests before using it for claim-supporting evidence.
 
 ## Known Bugs
 
-**Project import is currently broken:**
-- Symptoms: Running `python -c "import sys; sys.path.insert(0, 'ooh_code'); import Src.config"` fails with `ModuleNotFoundError`.
-- Files: `ooh_code/Src/config.py`, `ooh_code/Src/Algorithms/DSPO_Menu.py`
-- Trigger: Any command that imports `Src.config`, including `ooh_code/scripts/run_study.py`, `ooh_code/scripts/build_artifacts.py`, and direct use of `ooh_code/run_menu_compare.py`.
-- Workaround: None in the current tree. Restore `ooh_code/Src/Algorithms/DSPO_Menu.py` or update every importer and manifest that assumes `DSPO_Menu`.
+**Formal claim readiness is blocked by dirty provenance:**
+- Symptoms: The readiness command completes but reports blocked status because `git_dirty=true`.
+- Files: `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md`, `.planning/STATE.md`, `.planning/STATE_LOCK.md`, `work2_coding/Src/formal_readiness.py`, `work2_coding/Src/study_execution.py`, `work2_coding/outputs/phase5_readiness/formal_robust_menu/FORMAL_READINESS.json`
+- Trigger: Formal readiness evaluation against the current dirty working tree.
+- Workaround: Keep results diagnostic/status-only until a clean, archived run has matching git metadata, dependency snapshot, manifest hash, and checkpoint hash.
 
-**Outside-option choice is logged through a home-offer fallback:**
-- Symptoms: When the outside option is chosen, `customerchoice_menu()` returns the home location and a home offer tagged with `metadata["opted_out"] = True`; `Parcelpoint_py.step()` then appends that home location to routing data and home-delivery service accounting.
-- Files: `ooh_code/Environments/OOH/customerchoice.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/run_menu_compare.py`
-- Trigger: Any menu episode where the MNL draw selects the outside option.
-- Workaround: Metric extraction reads `menu_log["opted_out"]`, but routing and service-time side effects still include the fallback location. Separate outside-option state transitions from accepted home-delivery state transitions before using opt-out runs as formal route-cost evidence.
+**Main artifact status includes blocked pilot provenance:**
+- Symptoms: The active artifact status at `work2_coding/artifacts/work2_robust_menu/ARTIFACT_STATUS.json` is blocked by pilot checkpoint failure, placeholder-only status, and skipped formal evidence.
+- Files: `work2_coding/artifacts/work2_robust_menu/ARTIFACT_STATUS.json`, `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md`, `work2_coding/Src/artifact_status.py`
+- Trigger: Artifact packaging that indexes the blocked pilot source instead of a fully claim-ready formal source.
+- Workaround: Use Phase 10 package status as a blocker index only. Do not upgrade manuscript claims from this artifact set.
 
-**Mojibake appears in source comments:**
-- Symptoms: Comments contain corrupted characters in source text.
-- Files: `ooh_code/Src/Algorithms/Agent.py`, `ooh_code/Environments/OOH/customerchoice.py`
-- Trigger: Opening or editing affected files with the wrong encoding, or regenerating comments from already-corrupted text.
-- Workaround: Use UTF-8 consistently and repair comments in-place when touching the affected files. Do not use corrupted comments as manuscript text.
+**Phase 9 exact-vs-greedy run does not exercise greedy fallback:**
+- Symptoms: The tractability summary has completed rows but `relative_optimality_gap` and overlap are unavailable because realized candidate counts do not exceed the exact threshold.
+- Files: `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md`, `work2_coding/artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json`, `work2_coding/Experiments/studies/phase9_exact_greedy_tractability.yaml`, `work2_coding/Src/computational_tractability.py`, `work2_coding/Src/Algorithms/DSPO_Menu.py`
+- Trigger: Configured large scales do not guarantee realized candidate counts above `menu_exact_threshold`.
+- Workaround: Treat Phase 9 as diagnostic and blocked for computational credibility claims.
+
+**Adaptive-window increment is unsupported by current formal diagnostics:**
+- Symptoms: The adaptive policy matches optimized fixed-window on tracked metrics in the formal diagnostic summary.
+- Files: `.planning/results/RC_FORMAL_DIAGNOSIS.md`, `work2_coding/Experiments/studies/formal_robust_menu.yaml`, `work2_coding/Src/policy_adapters.py`
+- Trigger: Formal diagnostic comparisons across paired replay splits.
+- Workaround: Manuscript language must not claim an adaptive-window increment.
+
+**Central superiority claim is unsupported by current formal diagnostics:**
+- Symptoms: Random menu has higher mean net profit than adaptive in the formal diagnostic summary, and adaptive loses to random on net profit in most paired splits.
+- Files: `.planning/results/RC_FORMAL_DIAGNOSIS.md`, `work2_coding/Experiments/studies/formal_robust_menu.yaml`, `work2_coding/Src/manuscript_claims.py`
+- Trigger: Phase 5 formal diagnostic source run summarized in `.planning/results/RC_FORMAL_DIAGNOSIS.md`.
+- Workaround: Keep central claims blocked or rewrite them as limited diagnostic observations with the current claim guard.
 
 ## Security Considerations
 
-**Unsafe checkpoint deserialization path:**
-- Risk: Several predictor `load()` methods call `torch.load(..., map_location='cpu')` without `weights_only=True`.
-- Files: `ooh_code/Src/Utils/Predictors.py`, `ooh_code/Src/Algorithms/Agent.py`, `ooh_code/Src/work2_runtime.py`
-- Current mitigation: Some newer set-menu utilities use `weights_only=True`, but the default `CNN_2d` and `LinReg` loaders do not.
-- Recommendations: Use `torch.load(filename, map_location='cpu', weights_only=True)` where supported, and load checkpoints only from trusted local experiment output directories. Record checkpoint file hashes in normalized study metadata for formal runs.
+**No runtime secrets are detected in the active project surface:**
+- Risk: Adding API keys or private data files would create a publication and repository leak risk.
+- Files: `.gitignore`, `AGENTS.md`, `work2_coding/README.md`
+- Current mitigation: No `.env` files are detected in the repo scan, and current integrations are local filesystem, git, Python packages, HGS routing, and LaTeX/artifact generation.
+- Recommendations: Keep credentials out of the repo and do not read or quote secret-like files in future mapping or phase work.
 
-**No secret-management surface detected:**
-- Risk: Not applicable for external API credentials. No `.env` files were detected at the repository root or under `ooh_code/`, and keyword search did not find credential variables.
-- Files: `ooh_code/.gitignore`, `ooh_code/Src/research_pipeline.py`, `ooh_code/scripts/build_manuscript.py`
-- Current mitigation: Runtime configuration is CLI/YAML based and output paths are local.
-- Recommendations: Keep generated credentials, if any are added later, out of manifests and out of committed artifacts. Extend `ooh_code/.gitignore` before adding any service integration.
+**Checkpoint loading is intentionally fail-closed for formal evidence:**
+- Risk: Loading arbitrary PyTorch checkpoints can be unsafe or scientifically invalid if source, hash, or architecture compatibility is unclear.
+- Files: `work2_coding/Src/Algorithms/Agent.py`, `work2_coding/Src/Utils/Utils.py`, `work2_coding/Src/formal_readiness.py`, `work2_coding/Src/study_execution.py`
+- Current mitigation: Checkpoint metadata includes load status and hashes, and formal/pilot paths reject missing or incompatible required checkpoints.
+- Recommendations: Use only local, expected checkpoints with recorded SHA-256 hashes and sidecar metadata for claim-supporting runs.
 
-**Subprocess calls are local tooling only:**
-- Risk: LaTeX and Git subprocesses execute local binaries. They do not use `shell=True`, but they still depend on the local toolchain and local manuscript inputs.
-- Files: `ooh_code/Src/research_pipeline.py`, `ooh_code/scripts/build_manuscript.py`, `ooh_code/scripts/run_work2_robustness_closure.py`, `ooh_code/scripts/test_work2_no_paper_changes.py`
-- Current mitigation: Commands are passed as argument lists, not shell strings.
-- Recommendations: Keep subprocess inputs as fixed command arrays. Do not pass manifest-controlled values into shell commands.
+**Case-study data boundaries remain unresolved:**
+- Risk: Semi-real case study materials can be over-claimed as real passenger behavior, real acceptance, or real opt-out evidence.
+- Files: `.planning/data/CASE_STUDY_FEASIBILITY.md`, `.planning/data/case_studies/VALIDATION_SUMMARY.md`, `work2_coding/Src/case_study_validation.py`
+- Current mitigation: Case study status is scaffold-only and execution is blocked.
+- Recommendations: Keep all Yanjiao/OSM/GTFS case material as scaffold or context until source licensing, cache contracts, generated matrices, and runtime manifests are approved.
 
 ## Performance Bottlenecks
 
-**HGS route optimization dominates runtime:**
-- Problem: HGS is invoked during final evaluation and optionally during environment re-optimization; each solver has a time limit from parser settings.
-- Files: `ooh_code/Src/Algorithms/DSPO.py`, `ooh_code/Environments/OOH/env_utils.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/Src/parser.py`
-- Cause: `solve_cvrp()` is called for route-cost feedback and final costs, and the solver is configured with `hgs_reopt_time` / `hgs_final_time`.
-- Improvement path: Keep smoke and pilot manifests with short HGS limits. For formal runs, report HGS timing and fixed solver parameters in run metadata, and cache deterministic route evaluations only when the full route input and solver parameters match.
+**Exact menu enumeration is combinatorial:**
+- Problem: Exact menu selection scales poorly with candidate count and menu size.
+- Files: `work2_coding/Src/Algorithms/DSPO_Menu.py`, `work2_coding/Src/computational_tractability.py`, `work2_coding/Experiments/studies/phase9_exact_greedy_tractability.yaml`
+- Cause: Exact search enumerates candidate menu combinations, while the Phase 9 evidence run does not currently force candidate counts high enough to validate greedy fallback.
+- Improvement path: Add a tractability scenario that guarantees realized candidate counts above `menu_exact_threshold`, records fallback reason, and validates exact-vs-greedy metrics before any computational claim.
 
-**Exact menu enumeration can grow combinatorially:**
-- Problem: Exact subset enumeration is configured for small candidate sets, with greedy fallback controlled by parser settings.
-- Files: `ooh_code/Src/parser.py`, `ooh_code/scripts/test_phase6_redesign_policies.py`, `ooh_code/run_menu_compare.py`
-- Cause: Menu policies compare subsets of feasible meeting-point offers; exact enumeration is only tractable for limited candidate counts.
-- Improvement path: Keep `menu_exact_threshold` and `menu_exact_gap_threshold` low for pilots. Log candidate count, enumerated menu count, exact build time, greedy build time, and fallback status for every formal variant.
+**HGS routing and paired replay multiply runtime cost:**
+- Problem: Formal studies run multiple policies across paired splits and route evaluations.
+- Files: `work2_coding/Environments/OOH/Parcelpoint_py.py`, `work2_coding/Src/paired_replay.py`, `work2_coding/Src/study_execution.py`, `work2_coding/Experiments/studies/formal_robust_menu.yaml`
+- Cause: Fair policy comparison requires shared seeds, paired replay groups, checkpoint metadata, and per-policy execution over the same scenario structure.
+- Improvement path: Keep paired replay fairness intact and optimize only with measured profiling around route-cost calls and candidate generation.
 
-**Large scripts slow review and increase accidental rebuild cost:**
-- Problem: Artifact generation and formal diagnostics run through scripts with hundreds to thousands of lines.
-- Files: `ooh_code/scripts/build_artifacts.py`, `ooh_code/Src/research_pipeline.py`, `ooh_code/run_menu_compare.py`
-- Cause: Data normalization, plotting, table generation, and text generation are not separated into smaller testable units.
-- Improvement path: Extract pure aggregation and formatting helpers first; leave CLI behavior stable and add small tests for each extracted helper.
+**Artifact packaging carries a large blocker surface:**
+- Problem: Phase 10 package status indexes 74 artifacts and 108 blockers.
+- Files: `work2_coding/Src/paper_artifacts.py`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/PACKAGE_STATUS.json`, `artifacts/work2_robust_menu/phase10_paper_artifacts/PACKAGE_STATUS.json`
+- Cause: Diagnostic, scaffold, main RC, sensitivity, and tractability outputs are all packaged with explicit blocker metadata.
+- Improvement path: Keep package status as a generated index and avoid manual edits; regenerate after gate cleanup rather than patching rows.
+
+## Reproducibility Risks
+
+**Current working tree is dirty:**
+- Issue: The planning state and blocker diagnosis record dirty runtime, planning, and manuscript changes.
+- Files: `.planning/STATE.md`, `.planning/STATE_LOCK.md`, `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md`, `work2_coding/Src/study_execution.py`
+- Impact: Formal evidence cannot be treated as claim-ready because rows and reports cannot be tied to a clean source revision.
+- Fix approach: Finish or isolate the current phase, then regenerate readiness and artifact packages from a clean tree before changing claim status.
+
+**Generated artifacts exist in mirrored locations:**
+- Issue: Work2 artifacts appear under both `work2_coding/artifacts/` and root `artifacts/`.
+- Files: `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/PACKAGE_STATUS.json`, `artifacts/work2_robust_menu/phase10_paper_artifacts/PACKAGE_STATUS.json`, `work2_coding/Src/paper_artifacts.py`
+- Impact: A manuscript or planner can cite a stale mirror if the package index and root mirror drift.
+- Fix approach: Treat `PACKAGE_STATUS.json` as the source index and cite exact source artifact paths from it.
+
+**Dependency state is not locked for replay:**
+- Issue: Runtime requirements are listed, but no lockfile or CI-pinned environment is detected.
+- Files: `work2_coding/requirements.txt`, `work2_coding/outputs/phase5_readiness/formal_robust_menu/dependency_snapshot.json`, `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md`
+- Impact: Python, NumPy, PyTorch, HGS, or YAML version drift can change checkpoint compatibility, solver behavior, or artifact generation.
+- Fix approach: Keep dependency snapshots with every formal run and add a reproducible environment lock before final claim-ready reruns.
+
+**Output rows are generated evidence and must remain immutable:**
+- Issue: Research guardrails prohibit hand-editing generated result rows or paper artifacts.
+- Files: `work2_coding/outputs/`, `work2_coding/artifacts/`, `artifacts/`, `work2_coding/Src/artifact_builder.py`, `work2_coding/Src/paper_artifacts.py`
+- Impact: Manual row edits invalidate provenance and can bypass artifact gates.
+- Fix approach: Fix code or manifests, rerun generation scripts, and let `work2_coding/Src/artifact_status.py` classify the outputs.
 
 ## Fragile Areas
 
-**Experiment fairness depends on shared checkpoint reuse:**
-- Files: `ooh_code/Src/research_pipeline.py`, `ooh_code/run_menu_compare.py`, `ooh_code/Src/work2_runtime.py`, `ooh_code/Src/Algorithms/Agent.py`
-- Why fragile: The scientific comparison assumes one shared predictor and frozen policy variants, but checkpoint loading can silently fail and reuse decisions are path-based.
-- Safe modification: Any change to training, checkpoint paths, `menu_model`, or `freeze_learning` must update normalized metadata and include a smoke run proving each variant loaded the intended weights.
-- Test coverage: Existing scripts include manifest and gate tests under `ooh_code/scripts/test_*.py`, but no configured test runner or CI file is detected.
+**Paired replay fairness contract:**
+- Files: `work2_coding/Src/paired_replay.py`, `work2_coding/Src/study_execution.py`, `work2_coding/Src/policy_adapters.py`, `work2_coding/Experiments/studies/formal_robust_menu.yaml`, `work2_coding/scripts/test_paired_replay_contract.py`, `work2_coding/scripts/test_policy_fairness_contract.py`
+- Why fragile: Policy comparisons rely on shared replay groups, seeds, trace IDs, manifest hashes, and comparable policy tags.
+- Safe modification: Any change to policy tags, manifest paired fields, or row identity fields needs paired replay and policy fairness tests.
+- Test coverage: Script-style coverage exists, but there is no central runner enforcing it.
 
-**Choice-model opt-out accounting affects both service and routing metrics:**
-- Files: `ooh_code/Environments/OOH/customerchoice.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/run_menu_compare.py`
-- Why fragile: Outside-option draws are represented as an opted-out home offer for update/logging compatibility. This is convenient for metrics but can contaminate route-cost feedback if treated as an accepted home pickup.
-- Safe modification: Add explicit outcome states such as accepted-home, accepted-meeting-point, and opted-out. Keep `last_selected_offer` only for model update compatibility, and prevent opted-out requests from entering route data unless the scientific model intentionally penalizes them as service failures.
-- Test coverage: Add a deterministic customer-choice test that forces outside option selection and asserts route data, service time, opt-out count, and `acceptance_rate`.
+**Opt-out accounting must stay separate from accepted home pickup:**
+- Files: `work2_coding/Environments/OOH/customerchoice.py`, `work2_coding/Environments/OOH/Parcelpoint_py.py`, `work2_coding/Environments/OOH/containers.py`, `work2_coding/Src/paired_replay.py`, `work2_coding/Src/artifact_status.py`, `work2_coding/scripts/test_optout_accounting.py`
+- Why fragile: Opt-out, accepted home, and accepted meeting-point outcomes all feed service metrics and artifact validation.
+- Safe modification: Preserve `count_opted_out`, `count_accepted_home`, and `count_accepted_meeting_point` as separate row fields and validation inputs.
+- Test coverage: Dedicated opt-out accounting tests exist; include them in any gate that touches choice behavior or row normalization.
 
-**Global RNG mutation in capacity selection:**
-- Files: `ooh_code/Environments/OOH/env_utils.py`, `ooh_code/Src/config.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`
-- Why fragile: `generate_fixed_list()` calls `np.random.seed(seed)` and `np.random.shuffle(array)`, mutating NumPy global RNG during environment construction.
-- Safe modification: Use a local `np.random.RandomState(seed)` or `np.random.default_rng(seed)` inside `generate_fixed_list()` so constructing capacity masks does not affect training replay-buffer sampling or request generation.
-- Test coverage: Add a repeatability test that constructs two environments and verifies subsequent global NumPy draws are unchanged by capacity-mask generation.
+**Checkpoint load status is a formal evidence boundary:**
+- Files: `work2_coding/Src/Algorithms/Agent.py`, `work2_coding/Src/Utils/Utils.py`, `work2_coding/Src/formal_readiness.py`, `work2_coding/Src/study_execution.py`, `work2_coding/scripts/test_checkpoint_provenance.py`, `work2_coding/scripts/test_formal_readiness.py`
+- Why fragile: Claim readiness depends on explicit `loaded` status, checkpoint hash, sidecar metadata, and dependency snapshot matching.
+- Safe modification: Preserve fail-closed behavior for formal/pilot checkpoints and keep load status in generated rows and readiness reports.
+- Test coverage: Checkpoint provenance tests exist, but final claim-ready reruns need end-to-end readiness and artifact validation.
 
-**Artifact placeholders can look like outputs:**
-- Files: `ooh_code/scripts/build_artifacts.py`, `ooh_code/scripts/test_work2_robustness_artifacts.py`, `ooh_code/artifacts/figures/`, `ooh_code/artifacts/tables/`
-- Why fragile: The artifact builder can render placeholder figures and rows such as no-data states. These are useful for manuscript assembly but risky if mistaken for completed evidence.
-- Safe modification: Preserve explicit incomplete/status fields in every generated artifact and include source study run IDs. Formal manuscript inclusion should require completed study summaries and non-placeholder row counts.
-- Test coverage: Robustness artifact tests cover incomplete dimensions, but add a top-level check that formal tables/figures cannot be generated from placeholder-only inputs.
+**No-filter policy is diagnostic-only:**
+- Files: `work2_coding/Src/policy_adapters.py`, `work2_coding/Src/sensitivity_analysis.py`, `work2_coding/Src/manuscript_claims.py`, `.planning/results/SENSITIVITY_SUMMARY.md`
+- Why fragile: `no_filter_diagnostic` is useful for diagnosis but cannot support operational ETA-filter claims.
+- Safe modification: Keep `menu_eta_filter_mode: none` out of mainline policy evidence and manuscript upgrades.
+- Test coverage: Phase 8 sensitivity contract tests exist in `work2_coding/scripts/test_phase8_sensitivity_contracts.py`.
 
-**Generated outputs and committed artifacts have different trust levels:**
-- Files: `ooh_code/outputs/`, `ooh_code/artifacts/results_snapshot/`, `ooh_code/artifacts/tables/`, `ooh_code/artifacts/figures/`, `ooh_code/.gitignore`
-- Why fragile: Raw outputs are ignored, while lightweight snapshots are committed. Reviewers see committed artifacts but not the raw run directories unless they are preserved separately.
-- Safe modification: Keep `manifest_hash`, `code_version_marker`, checkpoint provenance, run ID, and source output path in every committed snapshot. For formal evidence, archive the exact `ooh_code/outputs/studies/...` run directory outside git or provide a reproducible rerun manifest.
-- Test coverage: Existing artifact tests inspect summaries, but formal reproducibility still depends on retaining raw outputs and checkpoint files.
+**Case study remains scaffold-only:**
+- Files: `.planning/data/CASE_STUDY_FEASIBILITY.md`, `.planning/data/case_studies/VALIDATION_SUMMARY.md`, `work2_coding/Src/case_study_validation.py`
+- Why fragile: The case study has documentation scaffolding without approved execution, runtime manifest, matrices, or replay outputs.
+- Safe modification: Do not generate or cite case result artifacts until the case gates explicitly allow execution.
+- Test coverage: Validation is document/scaffold oriented; runtime case execution tests are not active evidence.
+
+**Manuscript edits are claim-boundary sensitive:**
+- Files: `manuscript/main.tex`, `manuscript/references.bib`, `paper/`, `work2_coding/Src/manuscript_claims.py`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json`
+- Why fragile: The current state marks Phase 11 as writing-only with `claim_ready=false`; manuscript language must not imply claim-ready empirical support.
+- Safe modification: Use `CLAIM_GUARD.json`, `.planning/results/RC_FORMAL_DIAGNOSIS.md`, `.planning/results/SENSITIVITY_SUMMARY.md`, and `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md` as boundaries.
+- Test coverage: Claim guard tests exist in `work2_coding/scripts/test_manuscript_claim_guard.py`.
 
 ## Scaling Limits
 
-**Formal studies multiply by seeds, policies, traces, and HGS calls:**
-- Current capacity: Study manifests include one-seed smokes, three-seed pilots, and five-seed formal designs under `ooh_code/experiments/studies/`.
-- Limit: Runtime grows roughly with `splits * policies * eval_episodes * episode_length * route-solver cost`, and route-solver cost depends on HGS time limits.
-- Scaling path: Keep suite manifests under `ooh_code/experiments/suites/` for batching, use resumable run IDs in `ooh_code/scripts/run_study.py`, and make checkpoint provenance mandatory when reusing shared training.
+**Formal replay scale is bounded by paired split and policy count:**
+- Current capacity: The formal diagnostic summary uses 5 paired splits and 7 policy tags.
+- Files: `.planning/results/RC_FORMAL_DIAGNOSIS.md`, `work2_coding/Experiments/studies/formal_robust_menu.yaml`, `work2_coding/Src/study_execution.py`
+- Limit: Increasing splits, episodes, policies, or candidate count multiplies route and menu-selection work.
+- Scaling path: Profile first, preserve paired replay fields, and scale one axis at a time with artifact status validation.
 
-**Menu candidate tensor size is bounded by manifest/parser settings:**
-- Current capacity: `max_candidates`, `menu_k`, `menu_exact_threshold`, and `menu_exact_gap_threshold` are parser-level controls in `ooh_code/Src/parser.py`.
-- Limit: Learned set-menu models and exact policies become expensive as candidate count grows.
-- Scaling path: Increase candidate pools only with explicit profiling rows for build time, enumerated menu count, memory use, and exact/greedy fallback rate.
+**Exact-vs-greedy evidence depends on realized candidate counts:**
+- Current capacity: Phase 9 rows complete but do not cross the effective greedy fallback condition.
+- Files: `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md`, `work2_coding/Experiments/studies/phase9_exact_greedy_tractability.yaml`, `work2_coding/Src/Algorithms/DSPO_Menu.py`
+- Limit: Configured `max_candidates` alone does not prove the candidate pool exceeds `menu_exact_threshold`.
+- Scaling path: Add a deterministic stress setup or fixture that guarantees enough feasible candidates for greedy fallback.
 
 ## Dependencies at Risk
 
-**`hygese~=0.0.0.8`:**
-- Risk: The simulator warns that this package can assert on negative coordinates.
-- Impact: Route optimization can fail for coordinate data that violates Hygese assumptions.
-- Migration plan: Keep coordinate shifting in `ooh_code/Src/Utils/Utils.py` for Amazon instances, add a preflight data validation check, and document exact Hygese version and coordinate transform in formal run metadata.
+**HGS routing dependency:**
+- Risk: Route-cost behavior and installation compatibility depend on the local HGS/Hygese stack.
+- Impact: Replay results, menu feasibility, and service metrics can shift if route evaluation changes.
+- Files: `work2_coding/requirements.txt`, `work2_coding/Environments/OOH/Parcelpoint_py.py`, `work2_coding/Src/Utils/Utils.py`
+- Migration plan: Capture route dependency versions in dependency snapshots and add a route-cost smoke test to the canonical gate.
 
-**PyTorch checkpoint API:**
-- Risk: Old-style `torch.load()` calls may become warning-prone or unsafe compared with `weights_only=True`.
-- Impact: Checkpoint loading behavior can vary by PyTorch version and can carry deserialization risk for untrusted files.
-- Migration plan: Update loaders in `ooh_code/Src/Utils/Predictors.py` and legacy model utilities to `weights_only=True`, with version-guarded fallback if required.
+**PyTorch checkpoint compatibility:**
+- Risk: Model checkpoints can fail to load or silently mismatch if PyTorch defaults, architecture keys, or checkpoint schema changes.
+- Impact: Pilot/formal rows become blocked or invalid for claims.
+- Files: `work2_coding/requirements.txt`, `work2_coding/Src/Algorithms/Agent.py`, `work2_coding/Src/Utils/Utils.py`, `work2_coding/Src/formal_readiness.py`
+- Migration plan: Keep sidecar metadata and hashes mandatory for formal evidence and rerun readiness after dependency changes.
 
-**No dependency lockfile:**
-- Risk: `ooh_code/requirements.txt` pins broad versions but no lockfile is present.
-- Impact: Reproduced formal runs can vary across dependency resolver dates, especially for PyTorch, NumPy, Matplotlib, and Hygese behavior.
-- Migration plan: Generate and archive a lockfile or `pip freeze` snapshot for each formal evidence run, and write it under the run directory alongside `manifest_snapshot.yaml`.
+**LaTeX/manuscript toolchain:**
+- Risk: Manuscript artifacts and references can fail independently of Python evidence generation.
+- Impact: Phase 11 writing output can diverge from claim guard and artifact status.
+- Files: `manuscript/main.tex`, `manuscript/references.bib`, `paper/`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/MANUSCRIPT_INSERTS.md`
+- Migration plan: Add a manuscript build/check command only after claim-safe wording is settled.
 
 ## Missing Critical Features
 
-**Configured automated test runner:**
-- Problem: Test-like scripts exist under `ooh_code/scripts/test_*.py`, but no `pytest`, `unittest`, CI workflow, or test runner config is detected.
-- Blocks: Fast regression checks for imports, parser/manifests, artifact gates, and opt-out accounting.
+**Clean formal provenance gate:**
+- Problem: Claim-ready formal evidence requires a clean git state and matching readiness/artifact metadata.
+- Blocks: Empirical effectiveness claims, final RC claims, and final manuscript upgrades.
+- Files: `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md`, `.planning/STATE.md`, `.planning/STATE_LOCK.md`, `work2_coding/Src/formal_readiness.py`, `work2_coding/Src/artifact_status.py`
 
-**Formal run provenance hard gate:**
-- Problem: Normalized rows include provenance fields, but checkpoint load success, raw output retention, dependency snapshot, and source commit cleanliness are not enforced as a single formal gate.
-- Blocks: Defensible TR Part E reproducibility when results are regenerated from manifests.
+**Claim-ready final run execution:**
+- Problem: `final_robust_menu.yaml` defines a final candidate path, but current planning state keeps Phase 11 writing-only and final claims blocked.
+- Blocks: Final claim-ready replay and paper claims based on final settings.
+- Files: `work2_coding/Experiments/studies/final_robust_menu.yaml`, `.planning/results/FROZEN_FINAL_SETTINGS.md`, `.planning/results/CALIBRATION_PROTOCOL.md`, `.planning/STATE.md`
 
-**Explicit outside-option transition model:**
-- Problem: Opt-out is represented through metadata on a home offer.
-- Blocks: Clean separation between passenger refusal, accepted home pickup, route cost, service penalty, and learning update semantics.
+**Semi-real case execution artifacts:**
+- Problem: Case study validation permits scaffold only and records no runtime manifest, matrices, demand rows, replay outputs, or case results.
+- Blocks: Semi-real case validation claims and any real passenger behavior claims.
+- Files: `.planning/data/CASE_STUDY_FEASIBILITY.md`, `.planning/data/case_studies/VALIDATION_SUMMARY.md`, `work2_coding/Src/case_study_validation.py`
+
+**Canonical run-all verification command:**
+- Problem: Tests are present but not unified under a configured runner or CI workflow.
+- Blocks: Reliable regression gates across opt-out accounting, paired replay, artifact status, readiness, sensitivity, tractability, and manuscript claims.
+- Files: `work2_coding/scripts/`, `work2_coding/tests/test_akkerman_rc_no_failure.py`
+
+## Stale Docs and Path Risks
+
+**Previous codebase maps reference stale `ooh_code/` paths:**
+- Issue: Existing map documents in `.planning/codebase/` predate the active runtime lock and include stale `ooh_code/` references.
+- Files: `.planning/codebase/ARCHITECTURE.md`, `.planning/codebase/STRUCTURE.md`, `.planning/codebase/STACK.md`, `.planning/codebase/INTEGRATIONS.md`, `.planning/codebase/TESTING.md`, `.planning/codebase/CONVENTIONS.md`, `.planning/STATE_LOCK.md`, `AGENTS.md`
+- Impact: Future planning agents can navigate to obsolete paths or revive incorrect missing-file concerns.
+- Fix approach: Prefer `work2_coding/` paths and verify any `ooh_code/` reference against the current filesystem before use.
+
+**Current concern map supersedes obsolete missing-menu concern:**
+- Issue: The active runtime root contains `work2_coding/Src/Algorithms/DSPO_Menu.py`, so any concern that the menu algorithm file is missing under `ooh_code/` is stale for the active root.
+- Files: `work2_coding/Src/Algorithms/DSPO_Menu.py`, `.planning/STATE_LOCK.md`, `AGENTS.md`
+- Impact: Treating the stale concern as current can misdirect Phase 11 or follow-up work.
+- Fix approach: Use the active import smoke and `work2_coding/` file paths for runtime analysis.
+
+## Claim Boundary Risks
+
+**Most empirical claim IDs remain blocked:**
+- Issue: Phase 10 claim guard blocks central adaptive superiority, product ablation, adaptive window increment, menu construction value, exact-greedy computational credibility, and semi-real case validation.
+- Files: `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/PACKAGE_STATUS.json`, `work2_coding/Src/manuscript_claims.py`
+- Impact: Manuscript text can only state diagnostic/status-limited findings unless a future clean run changes the guard.
+- Fix approach: Keep `claim_ready=false` language and cite blockers explicitly.
+
+**Provenance/status transparency is the only supported strict claim class:**
+- Issue: The claim guard allows status transparency but not empirical effectiveness upgrades.
+- Files: `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json`, `.planning/results/FORMAL_BLOCKER_DIAGNOSIS.md`, `work2_coding/Src/manuscript_claims.py`
+- Impact: The paper can describe auditability, checkpoint metadata, and blocker states, but not superiority claims.
+- Fix approach: Phrase Phase 11 output around transparent diagnostic evidence and blocked claim boundaries.
+
+**No-filter can only support diagnostic interpretation:**
+- Issue: No-filter rows are explicitly diagnostic and cannot support operational recommendations.
+- Files: `work2_coding/Src/policy_adapters.py`, `work2_coding/Src/sensitivity_analysis.py`, `work2_coding/Src/manuscript_claims.py`, `.planning/results/SENSITIVITY_SUMMARY.md`
+- Impact: Any no-filter claim beyond diagnostic sensitivity violates the research guardrail.
+- Fix approach: Keep no-filter in appendix/status language only.
+
+**Attention-based choice/scoring is outside v1 scope:**
+- Issue: Attention implementation hooks exist, but v1 guardrails exclude attention-based choice/scoring from claim scope.
+- Files: `work2_coding/Src/parser.py`, `work2_coding/Src/Algorithms/DSPO_Menu.py`, `work2_coding/Src/policy_adapters.py`, `work2_coding/Src/manuscript_claims.py`
+- Impact: Including attention results in v1 would create a scope and evidence mismatch.
+- Fix approach: Keep attention policy tags diagnostic-only and outside v1 manuscript claims.
 
 ## Test Coverage Gaps
 
-**Core import and smoke execution:**
-- What's not tested: A single automated command that imports `Src.config`, constructs `Config`, and runs `smoke_rc`.
-- Files: `ooh_code/Src/config.py`, `ooh_code/scripts/run_study.py`, `ooh_code/experiments/studies/smoke_rc.yaml`
-- Risk: Missing modules or dependency regressions block all experiments before artifact tests run.
+**End-to-end greedy fallback coverage is missing for actual generated evidence:**
+- What's not tested: A full Phase 9 run that guarantees realized candidate counts above the exact threshold and validates greedy fallback metrics.
+- Files: `work2_coding/scripts/test_phase9_exact_greedy_contracts.py`, `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md`, `work2_coding/Experiments/studies/phase9_exact_greedy_tractability.yaml`
+- Risk: Synthetic or contract tests can pass while generated evidence remains invalid for computational claims.
 - Priority: High
 
-**Checkpoint compatibility and load status:**
-- What's not tested: Whether each variant actually loads intended checkpoint weights or intentionally starts with random/incompatible heads.
-- Files: `ooh_code/Src/Algorithms/Agent.py`, `ooh_code/Src/work2_runtime.py`, `ooh_code/run_menu_compare.py`, `ooh_code/Src/research_pipeline.py`
-- Risk: Learned baselines can be compared under different initialization conditions without visible row-level diagnostics.
+**Formal artifact rebuild coverage is incomplete:**
+- What's not tested: Full path from clean readiness pass to regenerated artifact package with loaded checkpoint, dependency snapshot, method metadata, outside option utility, and valid claim guard.
+- Files: `work2_coding/scripts/test_formal_readiness.py`, `work2_coding/scripts/test_artifact_gates.py`, `work2_coding/Src/formal_readiness.py`, `work2_coding/Src/artifact_status.py`, `work2_coding/Src/paper_artifacts.py`
+- Risk: Individual contracts pass but the final paper package remains blocked.
 - Priority: High
 
-**Opt-out route-state semantics:**
-- What's not tested: Deterministic outside-option choice behavior at the simulator transition level.
-- Files: `ooh_code/Environments/OOH/customerchoice.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/run_menu_compare.py`
-- Risk: Opt-out rates, route costs, adjusted profit, and service-constrained claims can diverge from the intended behavioral model.
-- Priority: High
-
-**Artifact placeholder blocking for formal evidence:**
-- What's not tested: A hard gate that prevents placeholder/no-data figures or rows from entering formal manuscript artifacts.
-- Files: `ooh_code/scripts/build_artifacts.py`, `ooh_code/scripts/test_work2_robustness_artifacts.py`, `ooh_code/artifacts/`
-- Risk: Incomplete outputs can look publication-ready.
+**Case-study execution tests are not active evidence:**
+- What's not tested: Runtime generation of case matrices, demand rows, paired replay outputs, and case artifact status.
+- Files: `.planning/data/case_studies/VALIDATION_SUMMARY.md`, `work2_coding/Src/case_study_validation.py`
+- Risk: Case-study manuscript language can exceed scaffold evidence.
 - Priority: Medium
 
-**RNG isolation:**
-- What's not tested: Environment construction and capacity-mask generation do not perturb unrelated NumPy random streams.
-- Files: `ooh_code/Environments/OOH/env_utils.py`, `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/Src/config.py`
-- Risk: Study reruns with the same manifest can differ if construction order changes.
+**Root/work2 artifact mirror drift is not centrally enforced:**
+- What's not tested: Consistency between root `artifacts/` mirrors and `work2_coding/artifacts/` source packages.
+- Files: `artifacts/`, `work2_coding/artifacts/`, `work2_coding/Src/paper_artifacts.py`
+- Risk: A stale mirrored artifact can be cited after regeneration under the runtime root.
 - Priority: Medium
 
 ---
 
-*Concerns audit: 2026-06-09*
+*Concerns audit: 2026-06-16*

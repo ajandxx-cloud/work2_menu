@@ -1,93 +1,114 @@
+---
+last_mapped_commit: 97514c7
+---
+
 # Testing Patterns
 
-**Analysis Date:** 2026-06-09
-**last_mapped_commit:** `37b20aa`
+**Analysis Date:** 2026-06-16
 
 ## Test Framework
 
 **Runner:**
-- Framework: executable Python scripts with direct `assert` statements and hand-written `main()` functions.
-- Version: Not applicable.
-- Config: Not detected. No `pytest.ini`, `tox.ini`, `noxfile.py`, `pyproject.toml`, `setup.cfg`, or dedicated test runner config exists.
-- Dependency: Not detected. `ooh_code/requirements.txt` declares `pyyaml`, `numpy`, `torch`, `hygese`, and `matplotlib`, but no `pytest`, `coverage`, `hypothesis`, or mocking framework.
+- Script-style Python tests using direct `assert` statements.
+- No `pytest`, `unittest`, `coverage.py`, `tox`, `nox`, or CI configuration is detected.
+- Test scripts are invoked directly with `python path/to/test_file.py`.
 
 **Assertion Library:**
-- Python built-in `assert` and explicit `AssertionError`.
-- Some manifest and gate tests use local assertion helpers such as `_assert(...)` in `ooh_code/scripts/test_work2_main_manifest.py` and `assert_true(...)` in `ooh_code/scripts/test_phase6_redesign_policies.py`.
+- Built-in Python `assert` is the standard assertion mechanism.
+- Helper functions such as `expect_value_error()` are used for negative-path tests in `work2_coding/scripts/test_paired_replay_contract.py` and `work2_coding/scripts/test_robust_menu_logic.py`.
 
 **Run Commands:**
-```bash
-cd ooh_code
-python scripts/test_option_features.py              # Run one utility smoke test
-python scripts/test_setmenunet.py                   # Run one neural model smoke test
-python scripts/test_menu_objective_mode.py          # Run one menu objective test script
-python scripts/test_work2_main_manifest.py          # Run one manifest contract test
-python scripts/test_phase08_artifact_gate.py        # Run one artifact gate test script
-python scripts/run_study.py --study smoke_rc        # Run workflow-level smoke verification
-python scripts/build_artifacts.py --study rc_paper_v1 # Regenerate artifact snapshots after study output exists
+```powershell
+cd work2_coding
+python -c "import sys; sys.path.insert(0, '.'); import Src.config"
+python scripts/test_paired_replay_contract.py
+python scripts/test_policy_fairness_contract.py
+python scripts/test_optout_accounting.py
+python scripts/test_artifact_gates.py
+python scripts/test_robust_menu_logic.py
+python scripts/test_service_product_contract.py
+python scripts/test_formal_readiness.py
+python scripts/test_checkpoint_provenance.py
+python scripts/test_study_execution_status.py
 ```
 
-- There is no repository-level "run all tests" command in `ooh_code/README.md`.
-- Watch mode: Not detected.
-- Coverage: Not detected.
+```powershell
+python scripts/test_phase8_sensitivity_contracts.py
+python scripts/test_phase8_sensitivity_summary.py
+python scripts/test_phase8_baseline_validation.py
+python scripts/test_phase9_dspo_family_validation.py
+python scripts/test_phase9_exact_greedy_contracts.py
+python scripts/test_phase9_tractability_summary.py
+python scripts/test_phase10_paper_artifacts.py
+python scripts/test_manuscript_claim_guard.py
+```
+
+```powershell
+cd ..
+python .planning/data/case_studies/test_case_contracts.py
+```
 
 ## Test File Organization
 
 **Location:**
-- Tests are colocated with executable workflow scripts under `ooh_code/scripts/`, not under a separate `tests/` package.
-- Model and utility tests live next to workflow scripts: `ooh_code/scripts/test_option_features.py`, `ooh_code/scripts/test_setmenunet.py`, `ooh_code/scripts/test_cnnsetmenunet.py`, `ooh_code/scripts/test_cnn_setmenu.py`, `ooh_code/scripts/test_mlp_setmenu.py`.
-- Manifest and artifact-gate tests live in the same directory: `ooh_code/scripts/test_work2_main_manifest.py`, `ooh_code/scripts/test_work2_formal_manifest.py`, `ooh_code/scripts/test_phase08_manifest.py`, `ooh_code/scripts/test_phase08_artifact_gate.py`, `ooh_code/scripts/test_work2_robustness_artifacts.py`.
+- Contract and workflow tests live in `work2_coding/scripts/test_*.py`.
+- Legacy package tests live in `work2_coding/tests/`.
+- Planning-only validation tests live beside planning validators, such as `.planning/data/case_studies/test_case_contracts.py`.
+- Study manifests used as fixtures live in `work2_coding/Experiments/studies/*.yaml`.
+- Generated artifacts are used as contract evidence through metadata and status files, not edited directly.
 
 **Naming:**
-- Use `test_<subject>.py` for executable test scripts.
-- Use `test_<behavior>` or `test_<contract>` for test functions: `test_home_only_candidate_slots` in `ooh_code/scripts/test_option_features.py`, `test_expected_profit_enumeration_counts_k10_l3` in `ooh_code/scripts/test_menu_objective_mode.py`, `test_duplicate_policy_seed_fails` in `ooh_code/scripts/test_phase08_artifact_gate.py`.
-- Use helper names with leading underscores for private test helpers: `_load_manifest` and `_assert` in `ooh_code/scripts/test_work2_main_manifest.py`; `_make_config` in `ooh_code/scripts/test_cnn_setmenu.py`.
+- Use `test_*.py` for executable test scripts.
+- Use `test_*` function names inside test scripts.
+- Use descriptive test names tied to contracts, for example `test_formal_placeholder_rejected`, `test_no_filter_only_is_diagnostic`, and `test_optout_does_not_mutate_route`.
 
 **Structure:**
 ```text
-ooh_code/
+work2_coding/
 ├── scripts/
-│   ├── test_option_features.py
-│   ├── test_setmenunet.py
-│   ├── test_cnnsetmenunet.py
-│   ├── test_cnn_setmenu.py
-│   ├── test_mlp_setmenu.py
-│   ├── test_menu_objective_mode.py
-│   ├── test_work2_main_manifest.py
-│   ├── test_work2_formal_manifest.py
-│   ├── test_work2_robustness_manifests.py
-│   ├── test_phase08_artifact_gate.py
-│   └── test_work2_no_paper_changes.py
-├── experiments/
-│   ├── studies/*.yaml
-│   └── suites/*.yaml
-└── artifacts/
-    ├── results_snapshot/
-    ├── tables/
-    └── figures/
+│   ├── test_paired_replay_contract.py
+│   ├── test_policy_fairness_contract.py
+│   ├── test_artifact_gates.py
+│   ├── test_optout_accounting.py
+│   ├── test_formal_readiness.py
+│   ├── test_phase8_sensitivity_contracts.py
+│   ├── test_phase9_exact_greedy_contracts.py
+│   └── test_phase10_paper_artifacts.py
+├── tests/
+│   └── test_akkerman_rc_no_failure.py
+└── Experiments/
+    └── studies/
+        ├── smoke_robust_menu.yaml
+        └── formal_robust_menu.yaml
+.planning/
+└── data/
+    └── case_studies/
+        ├── validate_case_contracts.py
+        └── test_case_contracts.py
 ```
-
-- Treat study manifests under `ooh_code/experiments/studies/` as test fixtures for manifest-contract tests.
-- Treat generated or committed artifact snapshots under `ooh_code/artifacts/` and root `artifacts/work2_cnn_setmenunet/` as inputs for artifact-summary and robustness tests when those tests validate output contracts.
 
 ## Test Structure
 
 **Suite Organization:**
 ```python
-def test_behavior_name():
-    # arrange
-    # act
-    # assert
-    assert condition, "actionable failure message"
+def test_contract_behavior():
+    # Arrange
+    row = build_normalized_row(...)
+
+    # Act
+    result = classify_artifact([row], ...)
+
+    # Assert
+    assert result["status"] == "diagnostic"
 
 
 def main():
     tests = [
-        test_behavior_name,
+        test_contract_behavior,
     ]
     for test in tests:
         test()
-    print(f"PASS: {len(tests)} tests")
+    print(f"PASS: {len(tests)} contract tests")
 
 
 if __name__ == "__main__":
@@ -95,137 +116,204 @@ if __name__ == "__main__":
 ```
 
 **Patterns:**
-- Use direct script execution with `if __name__ == "__main__": main()` in `ooh_code/scripts/test_menu_objective_mode.py`, `ooh_code/scripts/test_work2_main_manifest.py`, `ooh_code/scripts/test_phase08_artifact_gate.py`, and `ooh_code/scripts/test_work2_no_paper_changes.py`.
-- Use named test lists with PASS/FAIL accounting when individual test continuation is useful: `ooh_code/scripts/test_option_features.py` and `ooh_code/scripts/test_setmenunet.py`.
-- Use fail-fast `main()` loops when tests are deterministic and failures should stop the script: `ooh_code/scripts/test_menu_objective_mode.py`, `ooh_code/scripts/test_work2_artifact_summary.py`, and `ooh_code/scripts/test_phase08_artifact_gate.py`.
-- Keep tests deterministic where invariants depend on neural outputs: `torch.manual_seed(42)` appears in `ooh_code/scripts/test_setmenunet.py` and `ooh_code/scripts/test_cnnsetmenunet.py`.
-- Put `ooh_code/` on `sys.path` at the top of scripts that import `Src` or `Environments`: `ooh_code/scripts/test_option_features.py`, `ooh_code/scripts/test_menu_objective_mode.py`, `ooh_code/scripts/test_phase6_redesign_policies.py`, `ooh_code/scripts/test_work2_robustness_manifests.py`.
+- Build synthetic rows through contract helpers instead of manually filling all schema fields. Use `build_normalized_row()` in `work2_coding/Src/paired_replay.py`.
+- Load real manifest fixtures with `load_manifest()` from `work2_coding/Src/experiment_contracts.py`.
+- Use `TemporaryDirectory()` for artifact and readiness outputs in tests such as `work2_coding/scripts/test_artifact_gates.py`, `work2_coding/scripts/test_formal_readiness.py`, and `work2_coding/scripts/test_phase10_paper_artifacts.py`.
+- Assert explicit status strings, schema versions, blocker codes, and provenance fields instead of checking only file existence.
+- Print one `PASS` line at the end of each script.
 
 ## Mocking
 
-**Framework:** Not detected. No `unittest.mock`, pytest `monkeypatch`, or third-party mocking library is used.
+**Framework:** No mocking framework is used.
 
 **Patterns:**
 ```python
 from types import SimpleNamespace
+from tempfile import TemporaryDirectory
 
-algo = object.__new__(DSPO_Menu)
-algo.menu_policy = "menu_optimization"
-algo.config = SimpleNamespace(home_failure=0.0, failure_cost=0.0)
+cfg = SimpleNamespace(menu_time_filtering=True, eta_filter_mode="soft_penalty")
+with TemporaryDirectory() as tmp:
+    output_root = Path(tmp)
+    result = build_artifacts(run_root, output_root=output_root)
+    assert result["artifact_status"]["status"] in {"diagnostic", "incomplete"}
 ```
 
-- Use hand-built lightweight objects for isolated algorithm tests. `ooh_code/scripts/test_menu_objective_mode.py` constructs a `DSPO_Menu` instance with `object.__new__` and assigns only fields required by `_evaluate_menu_for_objective`.
-- Use synthetic domain containers as test fixtures: `Customer`, `Location`, `ServiceBundle`, and `MenuOffer` in `ooh_code/scripts/test_menu_objective_mode.py`; evaluated menu dictionaries in `ooh_code/scripts/test_phase6_redesign_policies.py`.
-- Use minimal real `Config` instances when integration with parser/config/algorithm wiring matters: `_make_config(...)` in `ooh_code/scripts/test_cnn_setmenu.py` and corresponding patterns in `ooh_code/scripts/test_mlp_setmenu.py`.
-- Use temporary filesystem fixtures through `TemporaryDirectory` for artifact and gate tests: `ooh_code/scripts/test_phase08_artifact_gate.py`, `ooh_code/scripts/test_phase08_gap_closure_artifact_gate.py`, `ooh_code/scripts/test_work2_artifact_summary.py`, `ooh_code/scripts/test_work2_robustness_artifacts.py`.
-- Use temporary files for model save/load round trips: `tempfile.NamedTemporaryFile` in `ooh_code/scripts/test_setmenunet.py` and `ooh_code/scripts/test_cnnsetmenunet.py`.
+```python
+model = object.__new__(DSPO_Menu)
+model.config = cfg
+model.solver_diagnostics = {}
+```
 
 **What to Mock:**
-- Mock or synthesize heavy environment state when unit-testing pure menu scoring and selection helpers: follow `ooh_code/scripts/test_menu_objective_mode.py` and `ooh_code/scripts/test_phase6_redesign_policies.py`.
-- Mock study output directories with minimal `study_summary.json` and `normalized_rows.json` when testing artifact gates: follow `write_study(...)` in `ooh_code/scripts/test_phase08_artifact_gate.py`.
-- Use simple dictionaries for normalized artifact rows when testing result classification: `make_rows(...)` in `ooh_code/scripts/test_work2_artifact_summary.py` and `ooh_code/scripts/test_work2_robustness_artifacts.py`.
+- Mock heavy solver state and environment objects with lightweight namespaces when testing parser flags, ETA filter diagnostics, solver fallback metadata, and artifact gates.
+- Use synthetic normalized rows for artifact classification, readiness, and claim-guard tests.
+- Use temporary output directories for file-producing tests.
 
 **What NOT to Mock:**
-- Do not mock parser/config wiring when testing algorithm registration or model-selection contracts; use `Parser` and `Config` as in `ooh_code/scripts/test_cnn_setmenu.py` and `ooh_code/scripts/test_mlp_setmenu.py`.
-- Do not mock manifest files when testing manifest contracts; read actual YAML manifests such as `ooh_code/experiments/studies/work2_main.yaml`, `ooh_code/experiments/studies/work2_formal_main.yaml`, and `ooh_code/experiments/studies/work2_phase08_pilot.yaml`.
-- Do not mock Git state in manuscript-change guard tests; `ooh_code/scripts/test_work2_no_paper_changes.py` intentionally shells out to `git diff --name-only` and `git ls-files --others --exclude-standard`.
+- Do not mock normalized row validation, manifest validation, artifact status classification, checkpoint readiness gates, or opt-out route mutation contracts.
+- Do not mock paired replay fairness checks when testing policy comparisons.
+- Do not mock generated artifact sidecar validation when testing claim readiness.
 
 ## Fixtures and Factories
 
 **Test Data:**
 ```python
-def make_rows(row_overrides=None, omit=None, duplicate=None):
-    rows = []
-    for seed in phase08.EXPECTED_SEEDS:
-        for tag in REQUIRED_TAGS:
-            rows.append(make_row(seed, tag, row_overrides.get(tag)))
-    return rows
+row = build_normalized_row(
+    study_id="smoke_robust_menu",
+    run_id="run_001",
+    policy_tag="mainline_optimized_mw",
+    split_id="split_001",
+    seed=123,
+    status="completed",
+    execution_status="completed",
+    checkpoint_load_status="loaded",
+    optout_count=2,
+    accepted_home_count=3,
+    accepted_meeting_point_count=5,
+)
+validate_normalized_row(row)
 ```
 
 **Location:**
-- Fixture factories are local to each test script rather than shared across modules.
-- Row factories: `make_rows` in `ooh_code/scripts/test_work2_artifact_summary.py`, `ooh_code/scripts/test_work2_formal_artifacts.py`, `ooh_code/scripts/test_phase08_artifact_gate.py`, and `ooh_code/scripts/test_work2_robustness_artifacts.py`.
-- Domain factories: `make_algo`, `make_customer`, and `make_offer` in `ooh_code/scripts/test_menu_objective_mode.py`; `fake_agent` and `evaluated` in `ooh_code/scripts/test_phase6_redesign_policies.py`.
-- Filesystem factories: `write_study` in `ooh_code/scripts/test_phase08_artifact_gate.py`; temporary diagnostic report writes in `ooh_code/scripts/test_work2_artifact_summary.py`.
-- Use actual YAML manifests as fixtures in manifest tests: `ooh_code/experiments/studies/work2_main.yaml`, `ooh_code/experiments/studies/work2_formal_main.yaml`, `ooh_code/experiments/studies/work2_phase08_smoke.yaml`, `ooh_code/experiments/suites/work2_robustness.yaml`.
+- Manifest fixtures: `work2_coding/Experiments/studies/*.yaml`.
+- Synthetic row factories and schema validation: `work2_coding/Src/paired_replay.py`.
+- Policy tag and override fixtures: `work2_coding/Src/policy_adapters.py`.
+- Planning case-study fixtures: `.planning/data/case_studies/test_case_contracts.py`.
 
 ## Coverage
 
-**Requirements:** None enforced. No coverage target, coverage command, or coverage configuration is detected.
+**Requirements:** No numeric coverage target is enforced.
 
 **View Coverage:**
-```bash
+```powershell
 # Not configured
 ```
 
-- Coverage is behavioral and contract-oriented rather than measured.
-- Current tests cover tensor feature construction (`ooh_code/scripts/test_option_features.py`), SetMenuNet/CNNSetMenuNet model invariants (`ooh_code/scripts/test_setmenunet.py`, `ooh_code/scripts/test_cnnsetmenunet.py`), algorithm integration (`ooh_code/scripts/test_cnn_setmenu.py`, `ooh_code/scripts/test_mlp_setmenu.py`), menu objective semantics (`ooh_code/scripts/test_menu_objective_mode.py`), manifest contracts (`ooh_code/scripts/test_work2_main_manifest.py`, `ooh_code/scripts/test_work2_formal_manifest.py`), artifact gates (`ooh_code/scripts/test_phase08_artifact_gate.py`, `ooh_code/scripts/test_work2_phase6_redesign_formal_gate.py`), and manuscript-change constraints (`ooh_code/scripts/test_work2_no_paper_changes.py`).
+**Effective Coverage Gates:**
+- Import smoke test for runtime package health: `python -c "import sys; sys.path.insert(0, '.'); import Src.config"` from `work2_coding/`.
+- Contract tests for normalized rows, paired replay, manifest fields, policy-only drift, checkpoint metadata, opt-out accounting, artifact eligibility, and paper claim guards.
+- Phase verification documents record the command sets used for phase-specific acceptance: `.planning/phases/08-sensitivity-and-robustness-experiments/08-VERIFICATION.md`, `.planning/phases/09-exact-versus-greedy-and-computational-tractability/09-VERIFICATION.md`, `.planning/phases/10-paper-artifact-generation/10-VERIFICATION.md`.
 
 ## Test Types
 
 **Unit Tests:**
-- Pure utility tests validate tensor normalization, padding, masks, NaN handling, and shape contracts in `ooh_code/scripts/test_option_features.py` against `ooh_code/Src/Utils/option_features.py`.
-- Menu scoring and selection tests validate isolated `DSPO_Menu` helper behavior with synthetic offers in `ooh_code/scripts/test_menu_objective_mode.py` and `ooh_code/scripts/test_phase6_redesign_policies.py`.
-- Artifact classifier tests validate row-level classification and generated diagnostic headings in `ooh_code/scripts/test_work2_artifact_summary.py`, `ooh_code/scripts/test_work2_formal_artifacts.py`, and `ooh_code/scripts/test_work2_robustness_artifacts.py`.
+- Contract helpers and validators: `work2_coding/scripts/test_paired_replay_contract.py`, `work2_coding/scripts/test_formal_readiness.py`, `work2_coding/scripts/test_checkpoint_provenance.py`.
+- Policy semantics and drift constraints: `work2_coding/scripts/test_policy_fairness_contract.py`.
+- Service product and opt-out semantics: `work2_coding/scripts/test_service_product_contract.py`, `work2_coding/scripts/test_optout_accounting.py`.
+- Parser and robust menu objective behavior: `work2_coding/scripts/test_robust_menu_logic.py`.
 
 **Integration Tests:**
-- Model integration tests build `Config` and algorithm instances to verify registration, buffers, forward passes, and finite loss behavior: `ooh_code/scripts/test_cnn_setmenu.py` and `ooh_code/scripts/test_mlp_setmenu.py`.
-- Manifest contract tests read real study manifests and validate method sets, split IDs, budget settings, candidate counts, and documented assumptions: `ooh_code/scripts/test_work2_main_manifest.py`, `ooh_code/scripts/test_work2_formal_manifest.py`, `ooh_code/scripts/test_phase08_manifest.py`, `ooh_code/scripts/test_phase08_gap_closure_manifest.py`, `ooh_code/scripts/test_work2_robustness_manifests.py`.
-- Artifact gate tests exercise CLI-like gate `run(...)` functions against temporary study directories: `ooh_code/scripts/test_phase08_artifact_gate.py`, `ooh_code/scripts/test_phase08_gap_closure_artifact_gate.py`, `ooh_code/scripts/test_phase6_redesign_artifact_gate.py`, `ooh_code/scripts/test_work2_phase6_redesign_formal_gate.py`.
+- Study execution status and blocked-row behavior: `work2_coding/scripts/test_study_execution_status.py`.
+- Artifact builder and artifact status gates: `work2_coding/scripts/test_artifact_builder.py`, `work2_coding/scripts/test_artifact_gates.py`.
+- Phase 8 sensitivity summaries and contracts: `work2_coding/scripts/test_phase8_sensitivity_contracts.py`, `work2_coding/scripts/test_phase8_sensitivity_summary.py`, `work2_coding/scripts/test_phase8_baseline_validation.py`.
+- Phase 9 DSPO family and exact-vs-greedy diagnostics: `work2_coding/scripts/test_phase9_dspo_family_validation.py`, `work2_coding/scripts/test_phase9_exact_greedy_contracts.py`, `work2_coding/scripts/test_phase9_tractability_summary.py`.
+- Phase 10 paper artifact package and claim guard: `work2_coding/scripts/test_phase10_paper_artifacts.py`, `work2_coding/scripts/test_manuscript_claim_guard.py`.
 
 **E2E Tests:**
-- No browser or hosted-app E2E framework is used.
-- Workflow-level smoke verification is performed by running manifest studies such as `python scripts/run_study.py --study smoke_rc`, documented in `ooh_code/README.md`.
-- Artifact-generation smoke verification is performed with commands such as `python scripts/build_artifacts.py --study rc_paper_v1` and `python scripts/build_manuscript.py --skip_compile`, documented in `ooh_code/README.md`.
+- No automated full end-to-end formal replay suite is configured.
+- CLI workflow checks exist for readiness, study execution, artifact building, and paper artifact package generation.
+- Formal empirical readiness depends on running the real commands against real checkpoints and generated rows, not only script-style unit tests.
+
+## Smoke, Pilot, And Formal Readiness Checks
+
+**Smoke Checks:**
+```powershell
+cd work2_coding
+python -c "import sys; sys.path.insert(0, '.'); import Src.config"
+python scripts/run_study.py --manifest Experiments/studies/smoke_robust_menu.yaml --output-root artifacts/work2_robust_menu/smoke --contract-only
+```
+
+**Pilot/Formal Prerequisites:**
+- Required checkpoint contracts are validated by `work2_coding/Src/experiment_contracts.py` and `work2_coding/Src/study_execution.py`.
+- Checkpoint load status must be explicit in rows and readiness metadata, using fields from `work2_coding/Src/paired_replay.py`.
+- Dependency snapshots and git state are checked by `work2_coding/Src/formal_readiness.py`.
+
+**Formal Readiness:**
+```powershell
+cd work2_coding
+python scripts/check_formal_readiness.py --manifest Experiments/studies/formal_robust_menu.yaml --output-root artifacts/work2_robust_menu/formal_readiness
+python scripts/run_study.py --manifest Experiments/studies/formal_robust_menu.yaml --output-root artifacts/work2_robust_menu/formal --execute
+python scripts/build_artifacts.py --run-root artifacts/work2_robust_menu/formal --output-root artifacts/work2_robust_menu/formal_artifacts --readiness-json artifacts/work2_robust_menu/formal_readiness/FORMAL_READINESS.json --claim-ready
+```
+
+**Formal Guardrails:**
+- Formal studies cannot emit placeholder contract-only rows. This is enforced by `work2_coding/scripts/run_study.py` and `work2_coding/Src/study_execution.py`.
+- Claim-ready artifacts require formal readiness JSON, dependency snapshot metadata, non-placeholder completed rows, checkpoint load status `loaded`, and artifact status `claim_ready`.
+- No-filter-only outputs are diagnostic. This is enforced by `work2_coding/Src/artifact_status.py` and tested by `work2_coding/scripts/test_artifact_gates.py`.
+- Attention-based policy outputs are out of v1 claim scope. Attention tags are centralized in `work2_coding/Src/policy_adapters.py`.
+
+## Artifact Gate Checks
+
+**Artifact Status:**
+- `work2_coding/Src/artifact_status.py` classifies artifacts as blocked, incomplete, diagnostic, pilot, or claim-ready.
+- `work2_coding/scripts/test_artifact_gates.py` checks no rows, placeholder rows, blocked/failed rows, incomplete rows, missing checkpoints, dependency snapshots, no-filter diagnostic status, no-menu ranking exclusion, sidecar provenance, and opt-out accounting blockers.
+
+**Artifact Builder:**
+- `work2_coding/Src/artifact_builder.py` builds aggregates, tables, figures, status files, sidecars, and claim-guard outputs.
+- `work2_coding/scripts/test_artifact_builder.py` checks generated artifact contracts and status metadata.
+
+**Paper Artifacts:**
+- `work2_coding/Src/paper_artifacts.py` writes the Phase 10 paper artifact package.
+- `work2_coding/Src/manuscript_claims.py` writes the strict manuscript claim guard.
+- `work2_coding/scripts/test_phase10_paper_artifacts.py` and `work2_coding/scripts/test_manuscript_claim_guard.py` validate the package and claim guard.
+- Phase 10 verification records `claim_ready=false` for current package status in `.planning/phases/10-paper-artifact-generation/10-VERIFICATION.md`.
+
+**Planning Artifact Gates:**
+- `.planning/data/case_studies/validate_case_contracts.py` verifies planning-only case scaffolds, blocker fields, labels, and absence of runtime case manifests.
+- `.planning/data/case_studies/test_case_contracts.py` verifies that invalid planning scaffolds fail validation.
 
 ## Common Patterns
 
 **Async Testing:**
 ```python
-# Not used. Tests are synchronous executable scripts.
+# Not used. Tests are synchronous script invocations.
 ```
 
 **Error Testing:**
 ```python
-def expect_gate_error(args):
+def expect_value_error(func, message_fragment):
     try:
-        phase08.run(args)
-    except phase08.GateError:
-        return
-    raise AssertionError("expected GateError")
+        func()
+    except ValueError as exc:
+        assert message_fragment in str(exc)
+    else:
+        raise AssertionError("expected ValueError")
 ```
-
-- Use helper functions that expect custom gate exceptions: `expect_gate_error(...)` in `ooh_code/scripts/test_phase08_artifact_gate.py`, `ooh_code/scripts/test_phase08_gap_closure_artifact_gate.py`, and `ooh_code/scripts/test_phase6_redesign_artifact_gate.py`.
-- Use `try/except SystemExit` to verify CLI argument validation when missing explicit inputs must fail: `test_missing_explicit_input_fails` in `ooh_code/scripts/test_phase08_artifact_gate.py`.
-- Use negative tests for missing seeds, missing policies, duplicate rows, missing metrics, null service profits, and forbidden output directories in artifact-gate tests: `ooh_code/scripts/test_phase08_artifact_gate.py` and `ooh_code/scripts/test_phase08_gap_closure_artifact_gate.py`.
 
 **Numerical Testing:**
-```python
-assert torch.allclose(out_orig, out_restored, atol=1e-5)
-assert abs(normed["predicted_ivt"][1] - 300.0 / 3600.0) < 1e-5
-```
-
-- Use `torch.no_grad()` and `model.eval()` for neural invariant checks in `ooh_code/scripts/test_setmenunet.py` and `ooh_code/scripts/test_cnnsetmenunet.py`.
-- Use tolerance-based assertions for floating-point normalization and neural outputs: `ooh_code/scripts/test_option_features.py`, `ooh_code/scripts/test_setmenunet.py`, `ooh_code/scripts/test_cnnsetmenunet.py`.
-- Use `np.isfinite(...)` checks for generated costs and losses in algorithm integration tests: `ooh_code/scripts/test_cnn_setmenu.py` and `ooh_code/scripts/test_mlp_setmenu.py`.
+- Use exact checks for counts and status fields.
+- Use tolerance checks for floating-point rates, utilities, and objective values when asserting derived metrics in `work2_coding/scripts/test_robust_menu_logic.py` and related policy tests.
 
 **Filesystem Testing:**
-```python
-with TemporaryDirectory() as tmp:
-    out_dir = Path(tmp) / "phase08_artifacts"
-    result = phase08.run(["--study-dir", str(study_dir), "--output-dir", str(out_dir)])
-    assert {path.name for path in out_dir.iterdir()} == expected
-```
+- Use `TemporaryDirectory()` and `Path` for generated outputs.
+- Assert both content and metadata sidecars when validating artifacts.
+- Do not modify committed generated rows or paper artifacts directly.
 
-- Use `TemporaryDirectory` for tests that write artifacts or study summaries.
-- Assert exact output filenames for gate outputs in `ooh_code/scripts/test_phase08_artifact_gate.py`.
-- Read generated Markdown or JSON back from disk and assert required headings or status fields in `ooh_code/scripts/test_work2_artifact_summary.py`, `ooh_code/scripts/test_work2_formal_artifacts.py`, and `ooh_code/scripts/test_work2_robustness_artifacts.py`.
+**Subprocess Testing:**
+- Use subprocess calls for CLI behavior only when the script boundary matters. Planning case-study tests exercise `.planning/data/case_studies/validate_case_contracts.py` as a command boundary.
 
-**Scientific Workflow Testing:**
-- Keep scientific tests tied to explicit contracts: candidate slot shape `K + 1`, home-first option tensors, exact enumeration counts, opt-out guardrails, manifest seed sets, and manuscript unlock decisions.
-- For new menu methods, add at least one isolated objective test under `ooh_code/scripts/test_menu_objective_mode.py` or a focused companion script, one manifest contract test if a YAML study changes, and one artifact/gate test if generated paper evidence changes.
-- For new study manifests, add assertions against actual files under `ooh_code/experiments/studies/` rather than duplicating the manifest as an in-test dictionary.
+## Known Coverage Gaps
+
+**Repo-Wide Runner:**
+- There is no single maintained command that discovers and runs every test under `work2_coding/scripts/`, `work2_coding/tests/`, and `.planning/data/`.
+- There is no committed CI workflow file detected for these checks.
+
+**Formal Replay:**
+- Automated tests validate contracts, readiness gates, and artifact blockers, but do not run the full expensive formal replay with trained checkpoints.
+- Formal empirical claims require external execution through `work2_coding/scripts/check_formal_readiness.py`, `work2_coding/scripts/run_study.py --execute`, and `work2_coding/scripts/build_artifacts.py --claim-ready`.
+
+**Generated Artifact Review:**
+- Tests validate artifact schemas, sidecars, statuses, and claim guards. Human review remains needed for figure/table presentation quality and manuscript integration.
+
+**Real Case Studies:**
+- Current case-study validation is scaffold-only. `.planning/data/case_studies/validate_case_contracts.py` explicitly does not execute runtime studies, fetch external data, validate road graphs, or import `Src.config`.
+
+**Attention-Based Policies:**
+- Attention policy tests and manifests are diagnostic/exploratory. They do not establish v1 claim readiness.
+
+**Legacy Runtime:**
+- Legacy Akkerman and OOH runtime behavior has limited automated coverage outside `work2_coding/tests/test_akkerman_rc_no_failure.py` and targeted Work2 contract tests.
 
 ---
 
-*Testing analysis: 2026-06-09*
+*Testing analysis: 2026-06-16*

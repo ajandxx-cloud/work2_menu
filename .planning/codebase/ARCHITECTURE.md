@@ -1,316 +1,357 @@
-<!-- refreshed: 2026-06-09 -->
-<!-- last_mapped_commit: 37b20aa -->
+<!-- refreshed: 2026-06-16 -->
+<!-- last_mapped_commit: 97514c7 -->
 # Architecture
 
-**Analysis Date:** 2026-06-09
+**Analysis Date:** 2026-06-16
 
 ## System Overview
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                 Research Workflow Entry Points              │
-├──────────────────┬──────────────────┬───────────────────────┤
-│ Direct runner    │ Study runner     │ Artifact/manuscript   │
-│ `ooh_code/run_   │ `ooh_code/       │ `ooh_code/scripts/    │
-│ menu_compare.py` │ scripts/run_     │ build_artifacts.py`,  │
-│                  │ study.py`        │ `build_manuscript.py` │
-└────────┬─────────┴────────┬─────────┴──────────┬────────────┘
-         │                  │                     │
-         ▼                  ▼                     ▼
-┌─────────────────────────────────────────────────────────────┐
-│             Manifest and Experiment Orchestration            │
-│ `ooh_code/Src/research_pipeline.py`                          │
-│ `ooh_code/experiments/studies/*.yaml`                        │
-│ `ooh_code/experiments/suites/*.yaml`                         │
-└────────────────────────────┬────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 Runtime Configuration and Solver             │
-│ `ooh_code/Src/parser.py`, `ooh_code/Src/config.py`,          │
-│ `ooh_code/Src/work2_runtime.py`                              │
-└────────────────────────────┬────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│             Algorithm, Simulator, Choice, and Routing         │
-│ `ooh_code/Src/Algorithms/*.py`                               │
-│ `ooh_code/Environments/OOH/*.py`                             │
-│ `ooh_code/Src/Utils/*.py`                                    │
-└────────────────────────────┬────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────┐
-│        Raw Outputs, Committed Artifacts, and Manuscript       │
-│ `ooh_code/outputs/`, `ooh_code/artifacts/`,                  │
-│ `artifacts/work2_cnn_setmenunet/`, `ooh_code/manuscript/`    │
-└─────────────────────────────────────────────────────────────┘
++------------------------------------------------------------------+
+|                    Planning and claim design                      |
+| `.planning/PROJECT.md` `.planning/REQUIREMENTS.md`                |
+| `.planning/ROADMAP.md` `.planning/paper/*` `.planning/results/*`  |
++-------------------------------+----------------------------------+
+                                |
+                                v
++------------------------------------------------------------------+
+|                  Manifest-driven execution layer                  |
+| `work2_coding/scripts/run_study.py`                               |
+| `work2_coding/Experiments/studies/*.yaml`                         |
+| `work2_coding/Experiments/suites/*.yaml`                          |
++-------------------+----------------------+-----------------------+
+                    |                      |
+                    v                      v
++--------------------------------+  +------------------------------+
+| Contract and fairness layer    |  | Runtime configuration layer  |
+| `work2_coding/Src/experiment_` |  | `work2_coding/Src/config.py` |
+| `contracts.py`                 |  | `work2_coding/Src/parser.py` |
+| `work2_coding/Src/policy_`     |  +---------------+--------------+
+| `adapters.py`                  |                  |
+| `work2_coding/Src/paired_`     |                  v
+| `replay.py`                    |  +------------------------------+
++-------------------+------------+  | Algorithm and simulator      |
+                    |               | `work2_coding/Src/Algorithms`|
+                    v               | `work2_coding/Environments`  |
++--------------------------------+  +---------------+--------------+
+| Study execution and row output |                  |
+| `work2_coding/Src/study_`      |                  v
+| `execution.py`                 |  +------------------------------+
+| `work2_coding/outputs/studies` |  | Evidence and artifact gates  |
++-------------------+------------+  | `work2_coding/Src/artifact_` |
+                    |               | `status.py`                  |
+                    v               | `work2_coding/Src/artifact_` |
++--------------------------------+  | `builder.py`                 |
+| Paper and package outputs      |  | `work2_coding/Src/manuscript`|
+| `work2_coding/artifacts/*`     |  | `_claims.py`                 |
+| `artifacts/*` mirror packages  |  | `work2_coding/Src/paper_`    |
+| `.planning/results/*`          |  | `artifacts.py`               |
++--------------------------------+  +------------------------------+
 ```
 
 ## Component Responsibilities
 
 | Component | Responsibility | File |
 |-----------|----------------|------|
-| Low-level comparison runner | Trains or loads a shared predictor, replays request traces, evaluates policies, aggregates paired metrics, and writes JSON comparison outputs. | `ooh_code/run_menu_compare.py` |
-| Study pipeline | Resolves study/suite manifests, creates parser namespaces, trains/reuses checkpoints, freezes policy variants, writes normalized rows, and persists resumable summaries. | `ooh_code/Src/research_pipeline.py` |
-| Study CLI | Parses `--study`, retrain, and resume flags, then delegates all execution to the study pipeline. | `ooh_code/scripts/run_study.py` |
-| Artifact builder | Loads latest study or suite summaries and writes JSON/CSV snapshots, LaTeX tables, PNG figures, and root standard artifacts. | `ooh_code/scripts/build_artifacts.py` |
-| Manuscript builder | Rebuilds artifacts, detects LaTeX tooling, runs `latexmk` or `pdflatex`, and writes build metadata. | `ooh_code/scripts/build_manuscript.py` |
-| Argument schema | Defines experiment, menu, pricing, choice, routing, model, and output flags; finalizes legacy aliases. | `ooh_code/Src/parser.py` |
-| Configuration factory | Builds output paths, loads demand data, creates train/test environments, selects algorithm class, and configures device/optimizer. | `ooh_code/Src/config.py` |
-| Runtime solver | Owns training episodes, model reset/action/update calls, checkpoint cadence, and learned model instantiation. | `ooh_code/Src/work2_runtime.py` |
-| Base DSPO algorithm | Provides legacy insertion-cost prediction, Lambert-W pricing, replay memory, HGS final re-optimization, and CNN/linear predictor training. | `ooh_code/Src/Algorithms/DSPO.py` |
-| Set-menu model algorithm | Intended CNN-SetMenuNet algorithm subclass that predicts per-candidate costs from spatial state plus set features. | `ooh_code/Src/Algorithms/CNN_SetMenu.py` |
-| MLP menu baseline | Intended MLP baseline subclass for option-feature-only cost prediction. | `ooh_code/Src/Algorithms/MLP_SetMenu.py` |
-| Agent base | Handles neural module initialization, save/load, train/eval mode, and generic optimizer helpers. | `ooh_code/Src/Algorithms/Agent.py` |
-| OOH simulator | Generates requests, applies passenger choice, mutates route/fleet/capacity state, logs menu decisions, and supports replay traces. | `ooh_code/Environments/OOH/Parcelpoint_py.py` |
-| Choice model | Applies Gumbel-noise MNL utility over displayed `MenuOffer` options plus the outside option. | `ooh_code/Environments/OOH/customerchoice.py` |
-| Routing utilities | Computes cheapest insertion, HGS re-optimization, fleet reset, parcel-point reset, and route travel cost. | `ooh_code/Environments/OOH/env_utils.py` |
-| Domain containers | Defines dataclasses for locations, vehicles, customers, service bundles, and menu offers. | `ooh_code/Environments/OOH/containers.py` |
-| Neural utilities | Provides CNN/MLP/set-menu models, option feature tensors, math fallback, data loading, logging, and replay memory. | `ooh_code/Src/Utils/` |
-| Study manifests | Declare study type, reference policy, base args, policy variants, splits, behavior gates, and suite membership. | `ooh_code/experiments/studies/*.yaml`, `ooh_code/experiments/suites/*.yaml` |
-| Manuscript and paper assets | Store generated artifact inputs and LaTeX source for the TR Part E paper draft. | `ooh_code/artifacts/`, `artifacts/work2_cnn_setmenunet/`, `ooh_code/manuscript/` |
+| Study CLI | Runs a single study or suite, writes manifest snapshots, normalized rows, summaries, and blockers. | `work2_coding/scripts/run_study.py` |
+| Manifest contracts | Resolves study and suite YAML, validates schema, paired settings, checkpoint contracts, policy tags, tiers, and run modes. | `work2_coding/Src/experiment_contracts.py` |
+| Policy adapters | Maps named policy tags to parser/runtime overrides while preserving paired replay fairness. | `work2_coding/Src/policy_adapters.py` |
+| Paired replay rows | Defines normalized row schema, paired setting hashes, checkpoint row metadata, and row validation. | `work2_coding/Src/paired_replay.py` |
+| Study execution | Executes actual replay rows, blocked rows, checkpoint metadata, git provenance, and row-level replay failure handling. | `work2_coding/Src/study_execution.py` |
+| Runtime config | Builds `Config`, seeds runtime state, redirects logs, loads algorithm and environment modules, and creates run folders. | `work2_coding/Src/config.py` |
+| CLI defaults | Owns runtime arguments for menu mode, product mode, ETA filters, pricing mode, method family, outside option, and attention diagnostics. | `work2_coding/Src/parser.py` |
+| Service menu policy | Builds service-menu candidates, filters ETA robustness, prices alternatives, selects menus, and records solver diagnostics. | `work2_coding/Src/Algorithms/DSPO_Menu.py` |
+| OOH simulator | Applies customer choices, route mutation, capacity updates, rewards, and separate opt-out/home/meeting-point counters. | `work2_coding/Environments/OOH/Parcelpoint_py.py` |
+| Choice model | Implements MNL menu, offer, and pricing choices with outside option mapped to opt-out rather than home pickup. | `work2_coding/Environments/OOH/customerchoice.py` |
+| Service contracts | Defines `ServiceBundle`, `ServiceProduct`, `MenuOffer`, and `ChoiceResult` domain objects. | `work2_coding/Environments/OOH/containers.py` |
+| Checkpoint utilities | Loads and inspects model checkpoints, dependency snapshots, and checkpoint metadata. | `work2_coding/Src/Utils/Utils.py` |
+| Formal readiness | Performs clean-git, dependency, checkpoint existence, hash, and smoke-load preflight for formal claims. | `work2_coding/Src/formal_readiness.py` |
+| Artifact gate | Classifies artifacts as claim-ready, diagnostic, incomplete, or blocked from rows and readiness metadata. | `work2_coding/Src/artifact_status.py` |
+| Main artifact builder | Aggregates run rows, writes status tables and figures, mirrors artifacts, and invokes manuscript frame output. | `work2_coding/Src/artifact_builder.py` |
+| Manuscript claim guard | Produces strict claim guards and manuscript frame files with blocked empirical claims recorded explicitly. | `work2_coding/Src/manuscript_claims.py` |
+| Phase 10 package builder | Indexes main RC, Phase 8, Phase 9, case scaffold, and blocker artifacts into the paper package. | `work2_coding/Src/paper_artifacts.py` |
+| Phase 8 sensitivity | Builds diagnostic/provisional sensitivity artifacts and summary status for ETA, uptake, menu-k, and guardrail axes. | `work2_coding/Src/sensitivity_analysis.py` |
+| Phase 9 tractability | Builds diagnostic/provisional exact-vs-greedy tractability artifacts and summary status. | `work2_coding/Src/computational_tractability.py` |
+| Baseline validation | Checks Phase 8 baseline pairing, accounting, checkpoint, and claim-readiness prerequisites. | `work2_coding/Src/baseline_validation.py` |
+| Model consistency | Checks Phase 7 method-family, outside-option, opt-out accounting, and artifact-gate consistency. | `work2_coding/Src/model_consistency_report.py` |
+| Planning state | Defines current milestone scope, guardrails, phase status, and paper claim boundaries. | `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`, `.planning/ROADMAP.md`, `.planning/STATE.md` |
 
 ## Pattern Overview
 
-**Overall:** Manifest-driven offline research pipeline around a stateful DRT simulator.
+**Overall:** Manifest-driven offline research pipeline with claim-gated evidence production around a stateful many-to-one DRT simulator.
 
 **Key Characteristics:**
-- Use YAML manifests in `ooh_code/experiments/studies/*.yaml` and `ooh_code/experiments/suites/*.yaml` as the source of truth for reproducible studies.
-- Use shared-predictor training followed by frozen replay evaluation through `ooh_code/Src/research_pipeline.py` and `ooh_code/run_menu_compare.py`.
-- Keep menu policy/model changes inside `ooh_code/Src/Algorithms/` and simulator/choice semantics inside `ooh_code/Environments/OOH/`.
-- Generate paper-facing artifacts from normalized outputs with `ooh_code/scripts/build_artifacts.py`; do not hand-edit generated result snapshots.
-- Treat `ooh_code/outputs/` as raw local run state and `ooh_code/artifacts/` plus `artifacts/work2_cnn_setmenunet/` as lightweight committed deliverables.
+- Use `work2_coding/` as the active runtime root; no `ooh_code/` directory is present in the current repository.
+- Treat `work2_coding/Experiments/studies/*.yaml` as executable contracts, not informal configuration.
+- Keep policy comparisons paired by deriving every policy row from shared split, demand, pricing, HGS, checkpoint, candidate, and utility settings in `work2_coding/Src/paired_replay.py`.
+- Keep opt-out accounting separate from accepted home pickup through `work2_coding/Environments/OOH/customerchoice.py`, `work2_coding/Environments/OOH/Parcelpoint_py.py`, and `work2_coding/Src/paired_replay.py`.
+- Require explicit checkpoint load status and checkpoint hashes for pilot/formal evidence through `work2_coding/Src/study_execution.py` and `work2_coding/Src/formal_readiness.py`.
+- Treat no-filter rows as diagnostic unless artifact gates in `work2_coding/Src/artifact_status.py` allow stronger use.
+- Keep attention-based choice/scoring in diagnostic or V2 paths such as `work2_coding/Src/attention_artifacts.py`, not in v1 claim-ready manuscript evidence.
 
 ## Layers
 
-**Repository Shell:**
-- Purpose: Holds GSD planning metadata, publication notes, legacy artifacts, and the runnable Work2 package.
-- Location: `.`
-- Contains: `AGENTS.md`, `CLAUDE.md`, `.planning/`, `ooh_code/`, `artifacts/`, `qi_wei/`, `2025.9.11-pom_big price/`, `实验讨论5.26.md`
-- Depends on: Local filesystem and git metadata.
-- Used by: Planning workflows and author-facing publication work.
+**Planning and Research Control:**
+- Purpose: Define project intent, phase order, research constraints, and claim boundaries.
+- Location: `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`, `.planning/ROADMAP.md`, `.planning/STATE.md`, `.planning/research/SUMMARY.md`, `.planning/paper/`
+- Contains: Roadmap state, requirements, manuscript structure, table/figure claim mapping, case-study scaffolds, and results summaries.
+- Depends on: Generated evidence under `work2_coding/artifacts/` and root `artifacts/`.
+- Used by: Phase planning, paper writing, codebase mapping, and artifact-package checks.
 
-**Research Package:**
-- Purpose: Provides the runnable Python/LaTeX project.
-- Location: `ooh_code/`
-- Contains: `ooh_code/README.md`, `ooh_code/requirements.txt`, `ooh_code/run_menu_compare.py`, `ooh_code/Src/`, `ooh_code/Environments/`, `ooh_code/experiments/`, `ooh_code/scripts/`, `ooh_code/artifacts/`, `ooh_code/manuscript/`
-- Depends on: Python, NumPy, PyTorch, Hygese, PyYAML, Matplotlib, optional LaTeX.
-- Used by: All experiment, artifact, and manuscript workflows.
+**Execution Entry Layer:**
+- Purpose: Provide script-style entry points for studies, checkpoints, readiness, artifacts, and phase reports.
+- Location: `work2_coding/scripts/`
+- Contains: `work2_coding/scripts/run_study.py`, `work2_coding/scripts/train_shared_checkpoint.py`, `work2_coding/scripts/check_formal_readiness.py`, `work2_coding/scripts/build_artifacts.py`, `work2_coding/scripts/build_phase10_paper_artifacts.py`
+- Depends on: `work2_coding/Src/` modules and YAML manifests under `work2_coding/Experiments/`.
+- Used by: Manual verification, GSD phase execution, and artifact refresh workflows.
 
-**CLI and Workflow Layer:**
-- Purpose: Gives users executable entry points for direct comparisons, manifest studies, artifact builds, and manuscript builds.
-- Location: `ooh_code/run_menu_compare.py`, `ooh_code/scripts/`
-- Contains: `ooh_code/scripts/run_study.py`, `ooh_code/scripts/build_artifacts.py`, `ooh_code/scripts/build_manuscript.py`, `ooh_code/scripts/check_manuscript.py`, `ooh_code/scripts/run_work2_robustness_closure.py`
-- Depends on: `ooh_code/Src/research_pipeline.py`, `ooh_code/Src/parser.py`, `ooh_code/Src/config.py`
-- Used by: README workflows in `ooh_code/README.md` and protocol docs in `ooh_code/docs/WORK2_EXPERIMENT_PROTOCOL.md`.
+**Manifest Contract Layer:**
+- Purpose: Convert YAML study and suite declarations into validated settings and policy overrides.
+- Location: `work2_coding/Experiments/studies/`, `work2_coding/Experiments/suites/`, `work2_coding/Src/experiment_contracts.py`, `work2_coding/Src/policy_adapters.py`
+- Contains: Formal, pilot, smoke, Phase 8, and Phase 9 manifests plus policy adapter catalog.
+- Depends on: Parser argument schema in `work2_coding/Src/parser.py`.
+- Used by: `work2_coding/scripts/run_study.py`, readiness checks, and phase artifact builders.
 
-**Orchestration Layer:**
-- Purpose: Converts manifest definitions into train/evaluate/output phases with normalized schemas.
-- Location: `ooh_code/Src/research_pipeline.py`
-- Contains: Manifest resolution, parser override validation, checkpoint reuse, request trace generation, variant loops, aggregate rows, suite runs, and resumable summaries.
-- Depends on: `ooh_code/Src/parser.py`, `ooh_code/Src/config.py`, `ooh_code/Src/work2_runtime.py`, `ooh_code/run_menu_compare.py`
-- Used by: `ooh_code/scripts/run_study.py`, `ooh_code/scripts/build_artifacts.py`, `ooh_code/scripts/build_manuscript.py`, and extraction scripts under `ooh_code/scripts/`.
+**Paired Replay and Row Layer:**
+- Purpose: Preserve replay fairness and emit a stable normalized-row-v2 evidence schema.
+- Location: `work2_coding/Src/paired_replay.py`, `work2_coding/Src/study_execution.py`
+- Contains: Paired setting hashes, checkpoint row metadata, blocked row builders, actual replay row builders, row validators.
+- Depends on: Study manifests, policy adapters, runtime config, environment counters, checkpoint metadata, and git provenance.
+- Used by: Study run outputs under `work2_coding/outputs/studies/` and artifact gates under `work2_coding/Src/artifact_status.py`.
 
-**Runtime Layer:**
-- Purpose: Builds configured environments and algorithms, then executes train/eval episode loops.
-- Location: `ooh_code/Src/config.py`, `ooh_code/Src/parser.py`, `ooh_code/Src/work2_runtime.py`
-- Contains: Argument defaults, derived aliases, output path construction, train/test environment construction, device and optimizer selection, solver loop.
-- Depends on: `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/Src/Algorithms/*.py`, `ooh_code/Src/Utils/Utils.py`
-- Used by: `ooh_code/run_menu_compare.py` and `ooh_code/Src/research_pipeline.py`.
+**Runtime Simulation Layer:**
+- Purpose: Execute DRT service-menu decisions and route/environment updates.
+- Location: `work2_coding/Src/config.py`, `work2_coding/Src/parser.py`, `work2_coding/Src/Algorithms/`, `work2_coding/Environments/OOH/`, `work2_coding/Src/Utils/`
+- Contains: Runtime args, `Config`, DSPO menu logic, OOH simulator, choice model, route/data utilities, checkpoint loading.
+- Depends on: Demand data under `work2_coding/Environments/OOH/`, model checkpoint paths under `work2_coding/outputs/shared_training/`, and runtime args from manifests.
+- Used by: Actual replay in `work2_coding/Src/study_execution.py`.
 
-**Algorithm Layer:**
-- Purpose: Builds service menus, predicts operational signals, trains predictors, computes prices, and selects displayed alternatives.
-- Location: `ooh_code/Src/Algorithms/`
-- Contains: `ooh_code/Src/Algorithms/DSPO.py`, `ooh_code/Src/Algorithms/CNN_SetMenu.py`, `ooh_code/Src/Algorithms/MLP_SetMenu.py`, `ooh_code/Src/Algorithms/Agent.py`
-- Depends on: `ooh_code/Src/Utils/`, `ooh_code/Environments/OOH/containers.py`, PyTorch, NumPy, Hygese.
-- Used by: `ooh_code/Src/config.py` through `Config.algo`.
+**Evidence Gate and Artifact Layer:**
+- Purpose: Convert rows into research artifacts only when provenance, accounting, readiness, and claim status permit it.
+- Location: `work2_coding/Src/artifact_status.py`, `work2_coding/Src/artifact_builder.py`, `work2_coding/Src/manuscript_claims.py`, `work2_coding/Src/paper_artifacts.py`, `work2_coding/Src/sensitivity_analysis.py`, `work2_coding/Src/computational_tractability.py`
+- Contains: Artifact classification, aggregate builders, strict claim guards, manuscript frames, Phase 8 and Phase 9 diagnostic summaries, Phase 10 package index.
+- Depends on: Normalized rows, readiness JSON, generated run directories, and case-study scaffolds.
+- Used by: `work2_coding/artifacts/work2_robust_menu/`, root `artifacts/work2_robust_menu/`, `.planning/results/`, and `.planning/paper/`.
 
-**Simulator and Routing Layer:**
-- Purpose: Encodes request generation, state transitions, MNL choice, capacity mutation, route insertion, and HGS route-cost realization.
-- Location: `ooh_code/Environments/OOH/`
-- Contains: `ooh_code/Environments/OOH/Parcelpoint_py.py`, `ooh_code/Environments/OOH/customerchoice.py`, `ooh_code/Environments/OOH/env_utils.py`, `ooh_code/Environments/OOH/containers.py`
-- Depends on: `ooh_code/Src/Utils/Utils.py`, Hygese, NumPy, bundled demand data.
-- Used by: `ooh_code/Src/config.py` and algorithm update/evaluation paths.
-
-**Utility and Model Layer:**
-- Purpose: Supplies reusable neural modules, option feature schema, numerical fallback, data loading, HGS helpers, logging, and replay buffers.
-- Location: `ooh_code/Src/Utils/`
-- Contains: `ooh_code/Src/Utils/Predictors.py`, `ooh_code/Src/Utils/CNNSetMenuNet.py`, `ooh_code/Src/Utils/SetMenuNet.py`, `ooh_code/Src/Utils/MLPMenuNet.py`, `ooh_code/Src/Utils/option_features.py`, `ooh_code/Src/Utils/MathUtils.py`, `ooh_code/Src/Utils/Utils.py`
-- Depends on: PyTorch, NumPy, Matplotlib, optional SciPy behavior in `ooh_code/Src/Utils/MathUtils.py`.
-- Used by: `ooh_code/Src/Algorithms/*.py`, `ooh_code/Src/config.py`, and environment utilities.
-
-**Output and Publication Layer:**
-- Purpose: Separates raw generated experiment state from committed summaries, figures, tables, and manuscript source.
-- Location: `ooh_code/outputs/`, `ooh_code/artifacts/`, `artifacts/work2_cnn_setmenunet/`, `ooh_code/manuscript/`
-- Contains: `ooh_code/outputs/studies/`, `ooh_code/outputs/shared_training/`, `ooh_code/artifacts/results_snapshot/`, `ooh_code/artifacts/tables/`, `ooh_code/artifacts/figures/`, `ooh_code/manuscript/main.tex`, `ooh_code/manuscript/sections/*.tex`
-- Depends on: `ooh_code/scripts/build_artifacts.py` and `ooh_code/scripts/build_manuscript.py`.
-- Used by: Paper writing, verification, and archival workflows.
+**Generated Output Layer:**
+- Purpose: Store run outputs and packaged evidence without manual row editing.
+- Location: `work2_coding/outputs/`, `work2_coding/artifacts/`, root `artifacts/`
+- Contains: `normalized_rows.json`, `normalized_rows.csv`, `study_summary.json`, `blockers.json`, `ARTIFACT_STATUS.json`, `CLAIM_GUARD.json`, `PACKAGE_STATUS.json`, package indexes, status tables, and mirrored artifact bundles.
+- Depends on: Script entry points in `work2_coding/scripts/`.
+- Used by: Planning summaries, paper artifact checks, and claim guards.
 
 ## Data Flow
 
-### Manifest-Driven Study Path
+### Primary Request Path
 
-1. User runs `python scripts/run_study.py --study <name>` from `ooh_code/` (`ooh_code/scripts/run_study.py:13`).
-2. `load_manifest()` resolves a study or suite from `ooh_code/experiments/studies/` or `ooh_code/experiments/suites/` (`ooh_code/Src/research_pipeline.py:321`).
-3. `execute_study_manifest()` creates or resumes `ooh_code/outputs/studies/<study>/<run_id>/` and writes `manifest_snapshot.yaml` (`ooh_code/Src/research_pipeline.py:684`).
-4. `build_study_args()` merges manifest `base_args`, split overrides, and variant overrides into parser args (`ooh_code/Src/research_pipeline.py:362`).
-5. `train_or_reuse_shared_model()` builds `Config`, runs `Solver.train()` if needed, and requires `supervised_ml.pt` under `ooh_code/outputs/shared_training/` (`ooh_code/Src/research_pipeline.py:390`).
-6. `generate_request_traces()` builds an eval solver and obtains replayable test-environment traces (`ooh_code/Src/research_pipeline.py:421`).
-7. Each variant builds a frozen solver and calls `evaluate_policy()` with a policy tag and `menu_k` (`ooh_code/Src/research_pipeline.py:819`).
-8. `aggregate_episode_metrics()` and `paired_summary()` produce per-variant and paired rows (`ooh_code/run_menu_compare.py:514`, `ooh_code/run_menu_compare.py:640`).
-9. The pipeline writes `normalized_rows.json`, `normalized_rows.csv`, `aggregate_variant_summary.json`, `aggregate_variant_summary.csv`, and `study_summary.json` (`ooh_code/Src/research_pipeline.py:719`).
+1. Run `work2_coding/scripts/run_study.py:259` from `work2_coding/` with a study name or suite name.
+2. Resolve and validate the manifest with `work2_coding/Src/experiment_contracts.py:53` and `work2_coding/Src/experiment_contracts.py:91`.
+3. Resolve policy overrides from `work2_coding/Src/policy_adapters.py:384` and paired settings from `work2_coding/Src/paired_replay.py:144`.
+4. `work2_coding/scripts/run_study.py:109` chooses contract-only, blocked, or actual replay output based on manifest mode and prerequisite status.
+5. `work2_coding/Src/study_execution.py:58` inspects prerequisites, including required checkpoints for pilot/formal manifests.
+6. `work2_coding/Src/study_execution.py:377` loops over paired settings and calls `work2_coding/Src/study_execution.py:217` for actual replay rows.
+7. `work2_coding/Src/config.py:8` builds runtime configuration and `work2_coding/Src/config.py:114` resolves the algorithm and environment.
+8. `work2_coding/Src/Algorithms/DSPO_Menu.py:1718` builds a service menu action and `work2_coding/Environments/OOH/Parcelpoint_py.py:240` applies the choice to simulator state.
+9. `work2_coding/Src/paired_replay.py:249` builds a normalized row and `work2_coding/Src/paired_replay.py:410` validates row contracts.
+10. `work2_coding/scripts/run_study.py` writes `manifest_snapshot.yaml`, `normalized_rows.json`, `normalized_rows.csv`, `study_summary.json`, and `blockers.json` under `work2_coding/outputs/studies/<study>/<run_id>/`.
 
-### Direct Low-Level Comparison
+### Artifact and Claim Gate Path
 
-1. User runs `python run_menu_compare.py` with CLI flags from `ooh_code/` (`ooh_code/run_menu_compare.py:717`).
-2. `Parser.finalize_args()` derives legacy aliases and selects `algo_name` from `menu_model` (`ooh_code/Src/parser.py:559`).
-3. `Config` loads train/test data, constructs train/test `Parcelpoint_py` environments, and selects `Config.algo` (`ooh_code/Src/config.py:14`).
-4. `Solver.train()` loops over environment episodes, calls `model.get_action()`, `env.step()`, and `model.update()` (`ooh_code/Src/work2_runtime.py:20`).
-5. `evaluate_policy()` replays the same request traces on `solver.test_env`, invokes `model.get_action()`, and evaluates final travel cost with `reopt_for_eval()` (`ooh_code/run_menu_compare.py:662`).
-6. JSON files are saved under `ooh_code/outputs/menu_compare/<run_name>/<seed>/` (`ooh_code/run_menu_compare.py:713`).
+1. Run `work2_coding/scripts/build_artifacts.py:32` against a run directory under `work2_coding/outputs/studies/`.
+2. `work2_coding/Src/artifact_builder.py:287` loads rows, aggregates policy metrics, writes table/figure data, and invokes artifact classification.
+3. `work2_coding/Src/artifact_status.py:53` classifies status from rows, readiness metadata, checkpoint metadata, accounting validity, and diagnostic boundaries.
+4. `work2_coding/Src/manuscript_claims.py:281` and `work2_coding/Src/manuscript_claims.py:407` build ordinary and strict claim guards.
+5. `work2_coding/Src/manuscript_claims.py:602` writes manuscript frame files when called by artifact builders.
+6. Outputs land in `work2_coding/artifacts/work2_robust_menu/` and may mirror to root `artifacts/work2_robust_menu/`.
 
-### Simulator Step Path
+### Phase 10 Paper Package Path
 
-1. `Solver` obtains a state from `Parcelpoint_py.reset()` as `[Customer, Fleet, ParcelPoints, steps]` (`ooh_code/Src/work2_runtime.py:10`, `ooh_code/Environments/OOH/Parcelpoint_py.py:124`).
-2. The algorithm returns a menu action, intended as a list of `MenuOffer` instances from `ooh_code/Environments/OOH/containers.py`.
-3. `Parcelpoint_py.step()` passes the action to `customerchoice_menu()`, logs displayed offers and the chosen offer, mutates price/discount arrays, route data, parcel-point capacity, and fleet route plans (`ooh_code/Environments/OOH/Parcelpoint_py.py:386`).
-4. `customerchoice_menu()` computes utilities for each displayed offer plus an outside option, samples Gumbel noise, and returns either home, a meeting point, or opt-out metadata (`ooh_code/Environments/OOH/customerchoice.py:24`).
-5. `utils_env.cheapestInsertionRoute()` inserts accepted locations into the current fleet and `utils_env.reopt_HGS()` periodically or finally re-optimizes routes with Hygese (`ooh_code/Environments/OOH/env_utils.py:61`, `ooh_code/Environments/OOH/env_utils.py:94`).
+1. Run `work2_coding/scripts/build_phase10_paper_artifacts.py:37`.
+2. `work2_coding/Src/paper_artifacts.py:291` collects source artifacts from main RC, Phase 8, Phase 9, case scaffold, and blocker-status roots.
+3. `work2_coding/Src/paper_artifacts.py:387` builds package indexes and source-family summaries.
+4. `work2_coding/Src/paper_artifacts.py:586` writes `PACKAGE_INDEX.json`, `PACKAGE_STATUS.json`, `CLAIM_GUARD.json`, and Markdown indexes under `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/`.
+5. The same package is mirrored under root `artifacts/work2_robust_menu/phase10_paper_artifacts/` for paper-facing consumption.
 
-### Artifact and Manuscript Path
+### Formal Readiness Path
 
-1. User runs `python scripts/build_artifacts.py --study <name>` from `ooh_code/` (`ooh_code/scripts/build_artifacts.py`).
-2. `pick_summary_bundle()` loads the latest study or suite summary through `load_study_summary()` (`ooh_code/scripts/build_artifacts.py:105`).
-3. Artifact code writes to `ooh_code/artifacts/results_snapshot/`, `ooh_code/artifacts/tables/`, `ooh_code/artifacts/figures/`, and mirrored standard artifacts under `artifacts/work2_cnn_setmenunet/` (`ooh_code/scripts/build_artifacts.py:35`).
-4. `python scripts/build_manuscript.py` runs artifact generation first, then compiles `ooh_code/manuscript/main.tex` when a LaTeX compiler is present (`ooh_code/scripts/build_manuscript.py:10`, `ooh_code/scripts/build_manuscript.py:85`).
+1. Run `work2_coding/scripts/check_formal_readiness.py:21` with a formal manifest and checkpoint path.
+2. `work2_coding/Src/formal_readiness.py:220` checks manifest validity, clean git policy, dependency snapshot, checkpoint existence, checkpoint hash, and checkpoint smoke-load status.
+3. Readiness output is consumed by `work2_coding/Src/artifact_status.py` before any formal artifact can be classified as claim-ready.
+
+### Phase-Specific Evidence Paths
+
+1. Phase 8 sensitivity artifacts use `work2_coding/Src/sensitivity_analysis.py` and script wrappers under `work2_coding/scripts/build_phase8_sensitivity_*.py`.
+2. Phase 9 tractability artifacts use `work2_coding/Src/computational_tractability.py` and script wrappers under `work2_coding/scripts/build_phase9_tractability_*.py`.
+3. Baseline and model-consistency gates use `work2_coding/Src/baseline_validation.py` and `work2_coding/Src/model_consistency_report.py`.
+4. Attention diagnostics use `work2_coding/Src/attention_artifacts.py` and `work2_coding/scripts/build_attention_artifacts.py`; these remain outside v1 claim-ready scope.
 
 **State Management:**
-- Simulator state is mutable and object-based in `ooh_code/Environments/OOH/Parcelpoint_py.py`.
-- Algorithm training state, replay buffers, and neural modules are mutable inside `ooh_code/Src/Algorithms/*.py`.
-- Study-level durable state is file-based under `ooh_code/outputs/studies/` and `ooh_code/outputs/shared_training/`.
-- Paper-facing state is generated into `ooh_code/artifacts/` and `artifacts/work2_cnn_setmenunet/`.
+- Runtime state is held in the simulator instance from `work2_coding/Environments/OOH/Parcelpoint_py.py` during each replay.
+- Experiment state is file-based under `work2_coding/outputs/studies/` and `work2_coding/artifacts/`.
+- Planning state is file-based under `.planning/` and should be updated only through phase workflows.
+- Generated rows and paper artifact packages are evidence outputs; do not hand-edit files under `work2_coding/outputs/`, `work2_coding/artifacts/`, or root `artifacts/` to change conclusions.
 
 ## Key Abstractions
 
-**Manifest:**
-- Purpose: Declarative experiment contract for studies and suites.
-- Examples: `ooh_code/experiments/studies/work2_main.yaml`, `ooh_code/experiments/studies/smoke_work2_main.yaml`, `ooh_code/experiments/suites/work2_robustness.yaml`
-- Pattern: Keep new study definitions in YAML and let `ooh_code/Src/research_pipeline.py` validate parser overrides.
+**Study Manifest:**
+- Purpose: Declares tier, run mode, paired splits, policy tags, checkpoint requirements, and output schema.
+- Examples: `work2_coding/Experiments/studies/formal_robust_menu.yaml`, `work2_coding/Experiments/studies/pilot_robust_menu.yaml`, `work2_coding/Experiments/studies/smoke_robust_menu.yaml`
+- Pattern: Validate through `work2_coding/Src/experiment_contracts.py` before runtime execution.
 
-**Parser Namespace:**
-- Purpose: Runtime configuration object shared by `Config`, `Solver`, and artifact metadata.
-- Examples: `ooh_code/Src/parser.py`, `ooh_code/Src/research_pipeline.py:334`
-- Pattern: Add CLI/runtime options to `Parser`, then use manifest `base_args` or `args_overrides` to set them.
+**Suite Manifest:**
+- Purpose: Groups study manifests for repeated diagnostic or phase execution.
+- Examples: `work2_coding/Experiments/suites/phase8_sensitivity_must_have.yaml`, `work2_coding/Experiments/suites/phase9_exact_greedy_tractability.yaml`
+- Pattern: `work2_coding/scripts/run_study.py` expands suites through `work2_coding/Src/experiment_contracts.py`.
 
-**Config:**
-- Purpose: Converts args into paths, data arrays, environments, algorithm class, device, and optimizer.
-- Examples: `ooh_code/Src/config.py`
-- Pattern: Keep environment construction in `Config.build_environment()` and avoid duplicating data loading in scripts.
+**Policy Adapter:**
+- Purpose: Maps stable policy tags to runtime args without changing non-policy paired settings.
+- Examples: `mainline_optimized_adaptive` and `MAINLINE_POLICY_TAGS` in `work2_coding/Src/policy_adapters.py`
+- Pattern: Add or change policies only through `work2_coding/Src/policy_adapters.py` plus parser support in `work2_coding/Src/parser.py`.
 
-**Solver:**
-- Purpose: Owns episode loops while delegating policy behavior to algorithms and transitions to environments.
-- Examples: `ooh_code/Src/work2_runtime.py`
-- Pattern: Add algorithm behavior to `ooh_code/Src/Algorithms/`; keep `Solver` as orchestration glue.
-
-**MenuOffer and ServiceBundle:**
-- Purpose: Typed contract between menu algorithms, MNL choice, simulator logging, and metric extraction.
-- Examples: `ooh_code/Environments/OOH/containers.py`
-- Pattern: Put new displayed-offer metadata into `MenuOffer.metadata` when it is diagnostic rather than core state.
-
-**Option Feature Tensor:**
-- Purpose: Central six-column candidate feature schema for SetMenuNet, CNN-SetMenuNet, and MLP-Menu style models.
-- Examples: `ooh_code/Src/Utils/option_features.py`, `ooh_code/Src/Utils/CNNSetMenuNet.py`
-- Pattern: Preserve row 0 as home and use `option_mask` for padding.
+**Paired Setting:**
+- Purpose: Captures all shared replay dimensions so policies remain comparable on identical splits and demand.
+- Examples: `work2_coding/Src/paired_replay.py:144`, `work2_coding/Src/paired_replay.py:177`
+- Pattern: Any new fairness dimension belongs in manifest paired fields and paired-setting validation before execution.
 
 **Normalized Row:**
-- Purpose: Stable machine-readable schema for studies, artifacts, and manuscript tables.
-- Examples: `ooh_code/Src/research_pipeline.py`, `ooh_code/scripts/build_artifacts.py`
-- Pattern: Add new metrics to `SUMMARY_NUMERIC_KEYS` and `CSV_FIELD_ORDER` in `ooh_code/Src/research_pipeline.py` before consuming them in artifacts.
+- Purpose: Stable evidence schema used by artifact builders, paper package indexes, and phase gates.
+- Examples: `NORMALIZED_ROW_FIELDS` in `work2_coding/Src/paired_replay.py`, generated `work2_coding/outputs/studies/*/*/normalized_rows.json`
+- Pattern: Add metrics through `work2_coding/Src/paired_replay.py` and `work2_coding/Src/study_execution.py`, then update artifact gates and script tests.
+
+**Checkpoint Metadata:**
+- Purpose: Records whether a checkpoint is `loaded`, `failed`, `missing`, or diagnostic-only, with path and hash when available.
+- Examples: `work2_coding/Src/study_execution.py:106`, `work2_coding/Src/Utils/Utils.py:141`, `work2_coding/Src/formal_readiness.py`
+- Pattern: Pilot/formal rows require explicit loaded checkpoint metadata for claim-bearing artifacts.
+
+**Service Menu Domain Objects:**
+- Purpose: Represent service bundles, products, offers, and customer outcomes.
+- Examples: `work2_coding/Environments/OOH/containers.py`
+- Pattern: Outside option maps to `ChoiceResult.opted_out`; do not encode outside option as accepted home pickup.
+
+**Artifact Status:**
+- Purpose: Encodes whether generated evidence supports claims or remains diagnostic, incomplete, or blocked.
+- Examples: `work2_coding/Src/artifact_status.py`, `work2_coding/artifacts/work2_robust_menu/ARTIFACT_STATUS.json`
+- Pattern: Artifact status is derived from source rows and readiness metadata; do not override generated status files manually.
+
+**Strict Claim Guard:**
+- Purpose: Records allowed and blocked paper claims using Phase 10 package evidence.
+- Examples: `work2_coding/Src/manuscript_claims.py:407`, `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json`
+- Pattern: Universal dominance, real passenger validation, no-filter operational recommendation, exact optimality, and ungated attention claims remain blocked unless the guard source evidence changes.
 
 ## Entry Points
 
-**Low-Level Comparison:**
-- Location: `ooh_code/run_menu_compare.py`
-- Triggers: `python run_menu_compare.py`
-- Responsibilities: Train or load one checkpoint, evaluate full display and optimized menus, run menu-size robustness, and write JSON outputs.
+**Study Runner:**
+- Location: `work2_coding/scripts/run_study.py`
+- Triggers: Manual command or phase execution from `work2_coding/`.
+- Responsibilities: Load manifests, validate contracts, produce normalized rows and run summaries.
 
-**Manifest Study Runner:**
-- Location: `ooh_code/scripts/run_study.py`
-- Triggers: `python scripts/run_study.py --study <study-or-suite>`
-- Responsibilities: Load manifests, resume or start runs, execute studies/suites, and print output roots.
+**Shared Checkpoint Trainer:**
+- Location: `work2_coding/scripts/train_shared_checkpoint.py`
+- Triggers: Checkpoint preparation for pilot or formal manifests.
+- Responsibilities: Train deterministic synthetic shared predictor checkpoints and write sidecar metadata.
 
-**Artifact Builder:**
-- Location: `ooh_code/scripts/build_artifacts.py`
-- Triggers: `python scripts/build_artifacts.py --study <study-or-suite>`
-- Responsibilities: Convert latest normalized outputs into committed snapshots, tables, figures, and summary prose.
+**Formal Readiness Checker:**
+- Location: `work2_coding/scripts/check_formal_readiness.py`
+- Triggers: Preflight before formal claim-ready artifacts.
+- Responsibilities: Validate clean git, dependency snapshot, checkpoint existence, hash, and load status.
 
-**Manuscript Builder:**
-- Location: `ooh_code/scripts/build_manuscript.py`
-- Triggers: `python scripts/build_manuscript.py`
-- Responsibilities: Refresh artifacts, compile `ooh_code/manuscript/main.tex`, and write `ooh_code/manuscript/build/build_status.json`.
+**Main Artifact Builder:**
+- Location: `work2_coding/scripts/build_artifacts.py`
+- Triggers: After a study run directory exists under `work2_coding/outputs/studies/`.
+- Responsibilities: Build aggregate metrics, tables, figure JSON, artifact status, and manuscript frame.
 
-**Smoke and Regression Scripts:**
-- Location: `ooh_code/scripts/test_*.py`, `ooh_code/scripts/run_baseline_smoke.py`
-- Triggers: Direct `python scripts/test_*.py` invocations.
-- Responsibilities: Validate manifests, artifact gates, model tensor behavior, and no-paper-change constraints.
+**Manuscript Frame Builder:**
+- Location: `work2_coding/scripts/build_manuscript_frame.py`
+- Triggers: Manual regeneration of manuscript frame files from artifact status.
+- Responsibilities: Write claim-bounded paper scaffolding through `work2_coding/Src/manuscript_claims.py`.
+
+**Phase 10 Package Builder:**
+- Location: `work2_coding/scripts/build_phase10_paper_artifacts.py`
+- Triggers: Paper package assembly.
+- Responsibilities: Index source artifacts, write package status, and strict claim guard.
+
+**Phase 8 Builders:**
+- Location: `work2_coding/scripts/build_phase8_sensitivity_artifacts.py`, `work2_coding/scripts/build_phase8_sensitivity_summary.py`, `work2_coding/scripts/build_phase8_baseline_validation_report.py`
+- Triggers: Sensitivity and baseline validation reporting.
+- Responsibilities: Produce diagnostic/provisional sensitivity and baseline validation outputs.
+
+**Phase 9 Builders:**
+- Location: `work2_coding/scripts/build_phase9_tractability_artifacts.py`, `work2_coding/scripts/build_phase9_tractability_summary.py`, `work2_coding/scripts/build_phase9_dspo_family_validation_report.py`
+- Triggers: Tractability and DSPO-family diagnostics.
+- Responsibilities: Produce exact-vs-greedy and family validation diagnostics.
+
+**Legacy Original Runtime:**
+- Location: `work2_coding/run.py`, `work2_coding/run_ppo.py`
+- Triggers: Original Akkerman-style runtime usage.
+- Responsibilities: Legacy experiment execution; do not use as the primary TR-E service-menu evidence path unless a phase explicitly requires legacy comparison.
 
 ## Architectural Constraints
 
-- **Threading:** Execution is single-process Python loops in `ooh_code/Src/work2_runtime.py`; Hygese calls in `ooh_code/Environments/OOH/env_utils.py` and `ooh_code/Src/Algorithms/DSPO.py` are synchronous.
-- **Global state:** `Config` redirects `sys.stdout` to `Utils.Logger` in `ooh_code/Src/config.py`; orchestration must call `restore_stdout()` from `ooh_code/run_menu_compare.py` after constructing configs.
-- **Mutable simulation state:** `Parcelpoint_py` mutates `fleet`, `parcelPoints`, `data`, `menu_history`, and RNGs in `ooh_code/Environments/OOH/Parcelpoint_py.py`; replay fairness depends on `set_request_trace()` and deterministic seeding.
-- **Import path:** Scripts under `ooh_code/scripts/` insert `ooh_code/` into `sys.path`; run Python commands from `ooh_code/` so imports like `Src.research_pipeline` and `run_menu_compare` resolve.
-- **Missing base menu module:** `ooh_code/Src/config.py`, `ooh_code/Src/Algorithms/CNN_SetMenu.py`, and `ooh_code/Src/Algorithms/MLP_SetMenu.py` import `Src.Algorithms.DSPO_Menu`, but `ooh_code/Src/Algorithms/DSPO_Menu.py` is not present in the current worktree. Any path importing `Config`, `CNN_SetMenu`, or `MLP_SetMenu` requires this module to exist or the imports to be repaired.
-- **Routing backend:** Route realization is HGS/Hygese-based in `ooh_code/Environments/OOH/env_utils.py` and `ooh_code/Src/Algorithms/DSPO.py`; do not replace routing semantics while changing menu policy logic.
-- **Choice backend:** Outside-option MNL behavior lives in `ooh_code/Environments/OOH/customerchoice.py`; keep choice semantics stable unless a phase explicitly changes them.
+- **Runtime root:** Execute active research commands from `work2_coding/`; do not create or target `ooh_code/`.
+- **Directory casing:** Current manifests live under `work2_coding/Experiments/`; `work2_coding/Src/experiment_contracts.py` contains a lowercase fallback only for compatibility.
+- **Threading:** The active pipeline is synchronous and single-process; simulator state mutates in `work2_coding/Environments/OOH/Parcelpoint_py.py` during each replay.
+- **Global state:** `work2_coding/Src/config.py` redirects `sys.stdout` through `work2_coding/Src/Utils/Utils.py` logging and seeds global numpy and torch RNGs.
+- **Checkpoint contract:** Pilot and formal evidence requires explicit checkpoint load status through `work2_coding/Src/study_execution.py` and `work2_coding/Src/formal_readiness.py`.
+- **Generated evidence boundary:** Files under `work2_coding/outputs/`, `work2_coding/artifacts/`, and root `artifacts/` are generated evidence; change builders or source rows instead of editing generated conclusions.
+- **Claim boundary:** No-filter, Phase 8, Phase 9, and attention outputs are diagnostic/provisional unless `work2_coding/Src/artifact_status.py` and `work2_coding/Src/manuscript_claims.py` mark them otherwise.
+- **Authentication:** Not applicable; this is a local research codebase without external auth integration.
+- **Circular imports:** No known circular import chain is part of the active manifest pipeline; preserve script wrappers as thin importers into `work2_coding/Src/`.
 
 ## Anti-Patterns
 
-### Bypassing Manifests For Paper Experiments
+### Targeting `ooh_code/`
 
-**What happens:** New comparisons are encoded directly in ad hoc scripts under `ooh_code/scripts/`.
-**Why it's wrong:** `ooh_code/Src/research_pipeline.py` is the source for shared-checkpoint, replay-trace, and normalized-row fairness.
-**Do this instead:** Add a study YAML in `ooh_code/experiments/studies/` or a suite YAML in `ooh_code/experiments/suites/`, then run `ooh_code/scripts/run_study.py`.
+**What happens:** New scripts, paths, or docs point to `ooh_code/`.
+**Why it's wrong:** The current repository has active runtime files under `work2_coding/` and no detected `ooh_code/` directory.
+**Do this instead:** Use `work2_coding/Src/`, `work2_coding/scripts/`, `work2_coding/Experiments/`, `work2_coding/outputs/`, and `work2_coding/artifacts/`.
 
-### Editing Generated Results By Hand
+### Bypassing Manifest Contracts
 
-**What happens:** Rows or tables under `ooh_code/artifacts/` or `artifacts/work2_cnn_setmenunet/` are changed directly.
-**Why it's wrong:** The manuscript pipeline expects artifacts to flow from `ooh_code/outputs/studies/` through `ooh_code/scripts/build_artifacts.py`.
-**Do this instead:** Change manifests, code, or artifact builders, rerun the study or builder, and let outputs regenerate.
+**What happens:** Code constructs runtime args directly for policy comparisons without updating `work2_coding/Experiments/studies/*.yaml` and `work2_coding/Src/policy_adapters.py`.
+**Why it's wrong:** Paired replay fairness depends on shared fields, trace hashes, required policy tags, and validated policy-only overrides in `work2_coding/Src/experiment_contracts.py`.
+**Do this instead:** Add study settings to `work2_coding/Experiments/studies/<name>.yaml`, add policy overrides to `work2_coding/Src/policy_adapters.py`, and validate through `work2_coding/scripts/test_experiment_contracts.py`.
 
-### Adding Menu Fields Outside `MenuOffer`
+### Collapsing Opt-Out Into Home Pickup
 
-**What happens:** Algorithms pass raw dicts or parallel arrays to the simulator.
-**Why it's wrong:** `customerchoice_menu()` and `_log_menu_decision()` expect `MenuOffer` attributes from `ooh_code/Environments/OOH/containers.py`.
-**Do this instead:** Extend `MenuOffer.metadata` for diagnostics or the dataclasses in `ooh_code/Environments/OOH/containers.py` for core contract changes.
+**What happens:** Outside-option choices are counted as accepted home service or included in accepted-home metrics.
+**Why it's wrong:** Research guardrails and artifact gates require separate `count_opted_out`, `count_accepted_home`, and `count_accepted_meeting_point` accounting.
+**Do this instead:** Preserve `ChoiceResult.opted_out` in `work2_coding/Environments/OOH/containers.py`, counter updates in `work2_coding/Environments/OOH/Parcelpoint_py.py`, and row validation in `work2_coding/Src/paired_replay.py`.
 
-### Relying On Missing `DSPO_Menu`
+### Upgrading Diagnostic Evidence By Wording
 
-**What happens:** New work assumes `menu_model: cnn_2d`, `cnn_setmenu`, or `mlp_menu` can instantiate while `ooh_code/Src/Algorithms/DSPO_Menu.py` is absent.
-**Why it's wrong:** `ooh_code/Src/config.py` imports `DSPO_Menu` at module import time, so the runtime can fail before a study starts.
-**Do this instead:** Restore or replace `ooh_code/Src/Algorithms/DSPO_Menu.py`, or change `ooh_code/Src/config.py`, `ooh_code/Src/Algorithms/CNN_SetMenu.py`, and `ooh_code/Src/Algorithms/MLP_SetMenu.py` to subclass an existing implemented base with equivalent menu methods.
+**What happens:** Paper text treats no-filter, attention, Phase 8, or Phase 9 diagnostic outputs as operational recommendations or claim-ready evidence.
+**Why it's wrong:** `work2_coding/Src/artifact_status.py`, `work2_coding/Src/manuscript_claims.py`, and `work2_coding/Src/paper_artifacts.py` encode blocked and diagnostic status.
+**Do this instead:** Keep manuscript claims aligned with `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json` and `.planning/paper/TABLE_FIGURE_CLAIM_MAP.md`.
+
+### Hand-Editing Generated Rows Or Artifact Status
+
+**What happens:** `normalized_rows.json`, `ARTIFACT_STATUS.json`, `CLAIM_GUARD.json`, or `PACKAGE_STATUS.json` is edited to change study results.
+**Why it's wrong:** Artifact status and claim guards must be reproducible from manifests, runtime code, and generated source rows.
+**Do this instead:** Update `work2_coding/Src/` builders, manifests in `work2_coding/Experiments/`, or source execution data, then rerun the appropriate script under `work2_coding/scripts/`.
 
 ## Error Handling
 
-**Strategy:** Fail fast for invalid configuration, tolerate optional tooling and resumable workflow state.
+**Strategy:** Fail fast on invalid contracts, represent blocked prerequisites as explicit row/status metadata, and keep diagnostic outputs labeled as diagnostic.
 
 **Patterns:**
-- Use `ValueError` for unknown manifest parser overrides in `ooh_code/Src/research_pipeline.py` and invalid optimizer names in `ooh_code/Src/config.py`.
-- Use `FileNotFoundError` when required manifests or checkpoints are absent in `ooh_code/Src/research_pipeline.py`.
-- Use `SystemExit` for missing LaTeX compiler conditions in `ooh_code/scripts/build_manuscript.py`.
-- Use tolerant `try/except Exception` only around optional stdout cleanup, git marker detection, resume scanning, and optional checkpoint warm-start behavior in `ooh_code/run_menu_compare.py`, `ooh_code/Src/research_pipeline.py`, and `ooh_code/Src/Algorithms/CNN_SetMenu.py`.
+- `work2_coding/Src/experiment_contracts.py` raises validation errors for invalid manifests, unsupported args, duplicate policy tags, unsupported tiers, and missing required fields.
+- `work2_coding/Src/study_execution.py` emits blocked rows when prerequisite artifacts such as required checkpoints are missing.
+- `work2_coding/Src/Utils/Utils.py` and `work2_coding/Src/Algorithms/Agent.py` record checkpoint load metadata and reject pilot/formal checkpoint mismatches.
+- `work2_coding/Src/artifact_status.py` blocks claim-ready classification for placeholder rows, invalid accounting, missing readiness, failed checkpoint metadata, no-filter-only diagnostics, and all-diagnostic policies.
+- Script tests under `work2_coding/scripts/test_*.py` return non-zero process status on contract failures.
 
 ## Cross-Cutting Concerns
 
-**Logging:** Use `print` for CLI status in `ooh_code/scripts/*.py`; runtime training logs are redirected by `Utils.Logger` from `ooh_code/Src/Utils/Utils.py` through `ooh_code/Src/config.py`.
+**Logging:** Runtime logs are written through `work2_coding/Src/Utils/Utils.py` logger redirection from `work2_coding/Src/config.py`; orchestration scripts also use stdout for status output.
 
-**Validation:** Use parser choices in `ooh_code/Src/parser.py` and manifest override validation in `ooh_code/Src/research_pipeline.py`; artifact gates live in `ooh_code/scripts/test_*artifact*py`.
+**Validation:** Manifest validation lives in `work2_coding/Src/experiment_contracts.py`; row validation lives in `work2_coding/Src/paired_replay.py`; artifact validation lives in `work2_coding/Src/artifact_status.py`; paper-claim validation lives in `work2_coding/Src/manuscript_claims.py`.
 
-**Authentication:** Not applicable. The codebase is a local/offline research pipeline with no detected auth layer.
+**Authentication:** Not applicable for active local execution; no external identity provider is part of the architecture.
 
-**Reproducibility:** Preserve shared checkpoint reuse, request trace replay, manifest snapshots, manifest hashes, and code version markers in `ooh_code/Src/research_pipeline.py`.
+**Provenance:** Git SHA, dirty flag, manifest snapshot, paired trace hash, dependency snapshot, checkpoint status, and checkpoint hash are recorded through `work2_coding/Src/study_execution.py`, `work2_coding/Src/formal_readiness.py`, and generated files under `work2_coding/outputs/`.
+
+**Research Scope:** V1 service-menu claims use robust time-window menu evidence from `work2_coding/Src/Algorithms/DSPO_Menu.py`; attention features in `work2_coding/Src/attention_artifacts.py` and parser attention flags in `work2_coding/Src/parser.py` remain diagnostic or future-scope unless the claim guard changes.
 
 ---
 
-*Architecture analysis: 2026-06-09*
+*Architecture analysis: 2026-06-16*

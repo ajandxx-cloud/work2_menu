@@ -1,100 +1,198 @@
+---
+last_mapped_commit: 97514c7
+---
+
 # Technology Stack
 
-**Analysis Date:** 2026-06-09
-**last_mapped_commit:** `37b20aa`
+**Analysis Date:** 2026-06-16
+
+**Active runtime root:** `work2_coding/`
 
 ## Languages
 
 **Primary:**
-- Python 3.10+ - Required runtime for the Work2 research pipeline under `ooh_code/`; the recommended version is documented in `ooh_code/README.md`.
+- Python 3.10 - Research runtime, simulation environment, menu policies, study execution, checkpoint training, artifact builders, and script-style tests under `work2_coding/`.
 
 **Secondary:**
-- LaTeX - Manuscript source under `ooh_code/manuscript/main.tex`, `ooh_code/manuscript/sections/*.tex`, `ooh_code/manuscript/references.bib`, and the Elsevier template `ooh_code/elsarticle-template-harv.tex`.
-- YAML - Study and suite manifests under `ooh_code/experiments/studies/*.yaml` and `ooh_code/experiments/suites/*.yaml`; loaded by `ooh_code/Src/research_pipeline.py`.
-- Markdown - Project documentation in `ooh_code/README.md`, `ooh_code/docs/*.md`, `ooh_code/experiments/README.md`, `ooh_code/artifacts/README.md`, and `ooh_code/manuscript/README.md`.
-- JSON/CSV/TEX/PNG - Generated research artifacts under `ooh_code/artifacts/results_snapshot/`, `ooh_code/artifacts/tables/`, `ooh_code/artifacts/figures/`, and raw outputs under `ooh_code/outputs/`.
-- Plain text and NumPy data files - Bundled benchmark coordinates, distance matrices, and adjacency files under `ooh_code/Environments/OOH/HombergerGehring_data/` and `ooh_code/Environments/OOH/Amazon_data/`.
+- YAML - Study and suite manifests in `work2_coding/Experiments/studies/*.yaml` and `work2_coding/Experiments/suites/*.yaml`.
+- JSON/CSV - Normalized study outputs, readiness snapshots, claim guards, package indexes, and aggregate artifacts under `work2_coding/outputs/`, `work2_coding/artifacts/`, and mirrored `artifacts/`.
+- LaTeX/BibTeX - Manuscript and paper-facing tables in `manuscript/main.tex`, `manuscript/references.bib`, `work2_coding/artifacts/work2_robust_menu/tables/*.tex`, and `artifacts/work2_robust_menu/phase10_paper_artifacts/`.
+- Markdown - Planning, audit, status, and package documentation under `.planning/`, `work2_coding/artifacts/`, and `artifacts/`.
 
 ## Runtime
 
 **Environment:**
-- CPython 3.10+ - Create and run the environment from `ooh_code/` using the workflow in `ooh_code/README.md`.
-- Optional CUDA through PyTorch - Enabled with `--gpu 1`; device selection is implemented in `ooh_code/Src/config.py`.
-- Optional LaTeX toolchain - `latexmk`, `pdflatex`, and optionally `bibtex` are detected by `ooh_code/scripts/build_manuscript.py`.
-- Optional Git executable - Used by `ooh_code/Src/research_pipeline.py` to stamp run metadata with `git rev-parse --short HEAD`.
+- CPython 3.10. Use `work2_coding/` as the import root. The minimum smoke import is:
+
+```bash
+cd work2_coding
+python -c "import sys; sys.path.insert(0, '.'); import Src.config"
+```
+
+- Local/offline research runtime. There is no hosted application server, web framework, database service, or HTTP API layer.
+- CPU execution is the default through `work2_coding/Src/parser.py` (`--device cpu`). CUDA is optional when PyTorch and hardware support it (`--device cuda`).
+- Development has been documented for Windows 11 and Linux cluster-style execution in `work2_coding/README.md`.
 
 **Package Manager:**
-- pip - Dependencies are declared in `ooh_code/requirements.txt`.
-- Lockfile: missing. No `requirements.lock`, `poetry.lock`, `Pipfile.lock`, `environment.yml`, or Conda lock file detected.
+- `pip` with `work2_coding/requirements.txt`.
+- Lockfile: missing. No `requirements.lock`, `pyproject.toml`, `poetry.lock`, or `conda` environment file is present.
+- A checked-in `work2_coding/venv/` directory exists. Treat it as a local developer environment artifact, not as the source of dependency truth.
 
 ## Frameworks
 
 **Core:**
-- PyTorch `>=2.0.1` - Neural predictors, replay buffers, optimizers, checkpoints, and optional CUDA execution in `ooh_code/Src/Algorithms/DSPO.py`, `ooh_code/Src/Algorithms/DSPO_Menu.py`, `ooh_code/Src/Algorithms/CNN_SetMenu.py`, `ooh_code/Src/Algorithms/MLP_SetMenu.py`, `ooh_code/Src/Utils/Predictors.py`, `ooh_code/Src/Utils/CNNSetMenuNet.py`, and `ooh_code/Src/Utils/MLPMenuNet.py`.
-- NumPy `~=1.25.1` - Numeric arrays, random sampling, route matrices, bootstrapping, aggregation, and artifact plotting throughout `ooh_code/Src/`, `ooh_code/Environments/OOH/`, and `ooh_code/scripts/`.
-- Hygese `~=0.0.0.8` - Hybrid genetic search routing solver used in `ooh_code/Src/Algorithms/DSPO.py` and `ooh_code/Environments/OOH/env_utils.py`.
-- PyYAML `>=6.0` - Reads study manifests and writes run snapshots in `ooh_code/Src/research_pipeline.py` and `ooh_code/Src/config.py`.
-- Matplotlib `~=3.7.2` - Training curves and paper figures in `ooh_code/Src/Utils/Utils.py` and `ooh_code/scripts/build_artifacts.py`; `ooh_code/scripts/build_artifacts.py` uses the noninteractive `Agg` backend.
+- PyTorch (`torch>=2.0.1`, README notes PyTorch 2.0.0) - Neural predictor modules, checkpoint training/loading, and DSPO model state in `work2_coding/Src/Utils/Predictors.py`, `work2_coding/Src/Algorithms/Agent.py`, `work2_coding/scripts/train_shared_checkpoint.py`, and `work2_coding/Src/formal_readiness.py`.
+- NumPy (`numpy~=1.25.1`) - Simulation state, dataset loading, random sampling, paired rows, and artifact calculations across `work2_coding/Src/`, `work2_coding/Environments/`, and `work2_coding/scripts/`.
+- Hygese (`hygese~=0.0.0.8`) - Hybrid Genetic Search routing solver used by `work2_coding/Environments/OOH/env_utils.py` and DSPO/baseline algorithms in `work2_coding/Src/Algorithms/`.
+- SciPy (`scipy~=1.11.1`) - Lambert W pricing support in `work2_coding/Src/Algorithms/DSPO.py`; `work2_coding/Src/Utils/MathUtils.py` provides a real-branch fallback used by menu pricing code.
+- PyYAML (`pyyaml>=6.0`) - Manifest and runtime argument snapshots through `work2_coding/Src/experiment_contracts.py`, `work2_coding/Src/config.py`, and study scripts.
+- Matplotlib (`matplotlib~=3.7.2`) - Noninteractive figure/status artifact generation in `work2_coding/Src/artifact_builder.py`, `work2_coding/Src/computational_tractability.py`, `work2_coding/Src/sensitivity_analysis.py`, and legacy plotting in `work2_coding/Src/Utils/Utils.py`.
 
 **Testing:**
-- No dedicated test runner dependency is declared in `ooh_code/requirements.txt`.
-- Script-style tests exist under `ooh_code/scripts/test_*.py`, including `ooh_code/scripts/test_menu_objective_mode.py`, `ooh_code/scripts/test_option_features.py`, `ooh_code/scripts/test_cnn_setmenu.py`, and `ooh_code/scripts/test_work2_robustness_manifests.py`.
-- Smoke verification is workflow-based through manifests such as `ooh_code/experiments/studies/smoke_rc.yaml`, `ooh_code/experiments/studies/smoke_austin.yaml`, and `ooh_code/experiments/studies/smoke_baselines.yaml`.
+- Script-style Python checks are used instead of a configured test runner. Test files live under `work2_coding/tests/`.
+- No `pytest.ini`, `tox.ini`, `noxfile.py`, `unittest` discovery config, or CI test runner config is present.
 
 **Build/Dev:**
-- `argparse` command-line interfaces - Main entry points are `ooh_code/run_menu_compare.py`, `ooh_code/scripts/run_study.py`, `ooh_code/scripts/build_artifacts.py`, `ooh_code/scripts/build_manuscript.py`, and `ooh_code/scripts/run_baseline_smoke.py`.
-- LaTeX build tools - `ooh_code/scripts/build_manuscript.py` runs `latexmk` when available, falls back to `pdflatex`, and runs `bibtex` when present.
-- Git metadata detection - `ooh_code/Src/research_pipeline.py` calls `git rev-parse --short HEAD`; when Git metadata is unavailable it hashes selected source files under `ooh_code/Src/`, `ooh_code/Environments/OOH/`, `ooh_code/run_menu_compare.py`, and `ooh_code/requirements.txt`.
-- Matplotlib artifact generation - `ooh_code/scripts/build_artifacts.py` writes committed figures under `ooh_code/artifacts/figures/` and mirrored Work2 standard artifacts under root `artifacts/work2_cnn_setmenunet/`.
+- `argparse` CLIs drive studies and artifact generation from `work2_coding/scripts/*.py`.
+- Git CLI is used for provenance by `work2_coding/Src/study_execution.py` and formal readiness checks in `work2_coding/Src/formal_readiness.py`.
+- `pip freeze` is used for dependency snapshots in `work2_coding/Src/artifact_status.py` and `work2_coding/Src/formal_readiness.py`.
+- LaTeX source exists under `manuscript/`; current Python artifact builders emit `.tex` fragments and manuscript frames but do not invoke `pdflatex` or `latexmk`.
 
 ## Key Dependencies
 
 **Critical:**
-- `torch>=2.0.1` - Required for CNN, SetMenuNet, MLP, and linear predictor implementations plus checkpoint save/load.
-- `numpy~=1.25.1` - Required for simulator state, bundled demand data loading, MNL metrics, rank diagnostics, and aggregation.
-- `hygese~=0.0.0.8` - Required for intermediate and final HGS route optimization in `ooh_code/Environments/OOH/env_utils.py` and `ooh_code/Src/Algorithms/DSPO.py`.
-- `pyyaml>=6.0` - Required for manifest execution and saved `args.yaml` / `manifest_snapshot.yaml` files.
-- `matplotlib~=3.7.2` - Required for generated training curves and publication figures.
+- `torch>=2.0.1` - Required for model modules, checkpoint files, and checkpoint load metadata. Formal/pilot work depends on explicit checkpoint status fields generated by `work2_coding/Src/study_execution.py`.
+- `hygese~=0.0.0.8` - Required for HGS route reoptimization and route cost evaluation. HGS time limits are configured by `--hgs_reopt_time` and `--hgs_final_time` in `work2_coding/Src/parser.py`.
+- `numpy~=1.25.1` - Required for data matrices, demand loading, choice simulation, objective calculations, and result aggregation.
+- `pyyaml>=6.0` - Required for the manifest contract system in `work2_coding/Src/experiment_contracts.py`.
+- `matplotlib~=3.7.2` - Required for generated diagnostic/status figures.
+- `scipy~=1.11.1` - Required by baseline DSPO pricing code that imports `scipy.special.lambertw`; menu pricing has a fallback but the declared environment still includes SciPy.
 
 **Infrastructure:**
-- Standard library `subprocess` - Used for Git marker detection in `ooh_code/Src/research_pipeline.py`, manuscript compilation in `ooh_code/scripts/build_manuscript.py`, robustness orchestration in `ooh_code/scripts/run_work2_robustness_closure.py`, and paper-change checks in `ooh_code/scripts/test_work2_no_paper_changes.py`.
-- Standard library `csv`, `json`, `hashlib`, `pathlib`, `datetime`, and `argparse` - Used for manifest hashes, run IDs, normalized summaries, command-line workflows, and reproducible artifact metadata in `ooh_code/Src/research_pipeline.py`, `ooh_code/run_menu_compare.py`, and `ooh_code/scripts/*.py`.
-- Optional SciPy - Not declared in `ooh_code/requirements.txt`; `ooh_code/Src/Utils/MathUtils.py` imports `scipy.special.lambertw` when installed and otherwise uses an internal principal-branch Lambert W implementation.
-- Optional LaTeX binaries - `latexmk`, `pdflatex`, and `bibtex` are external executables invoked from `ooh_code/scripts/build_manuscript.py`.
+- Python standard library `argparse`, `csv`, `json`, `hashlib`, `pathlib`, `subprocess`, `dataclasses`, and `statistics` - Used throughout script CLIs, artifact builders, provenance collection, and manifest validation.
+- Git executable - Required when collecting `git_commit`, dirty-state metadata, and formal readiness provenance.
+- `pip` executable via `python -m pip freeze` - Required for formal dependency snapshots.
 
 ## Configuration
 
 **Environment:**
-- Environment-variable configuration: Not detected.
-- `.env` files: Not detected in the repository root or `ooh_code/`.
-- Runtime configuration is CLI-driven in `ooh_code/Src/parser.py`; important options include `--instance`, `--data_seed`, `--data_seed_test`, `--max_episodes`, `--eval_episodes`, `--gpu`, `--menu_policy`, `--menu_k`, `--menu_model`, `--menu_pricing_mode`, `--hgs_reopt_time`, and `--hgs_final_time`.
-- Study configuration is YAML-driven through `ooh_code/experiments/studies/*.yaml`; suite configuration is YAML-driven through `ooh_code/experiments/suites/*.yaml`.
-- Run configuration snapshots are written under `ooh_code/outputs/` as `args.yaml`, `manifest_snapshot.yaml`, `study_summary.json`, `normalized_rows.json`, and related CSV/JSON outputs by `ooh_code/Src/config.py` and `ooh_code/Src/research_pipeline.py`.
+- No environment-variable configuration is detected. No `.env` files are present at the repository root or under `work2_coding/`.
+- Configure runtime behavior through CLI flags in `work2_coding/Src/parser.py`, study manifests in `work2_coding/Experiments/studies/*.yaml`, and suite manifests in `work2_coding/Experiments/suites/*.yaml`.
+- `work2_coding/Src/config.py` writes an `args.yaml` snapshot for each run under `work2_coding/Experiments/Parcelpoint_py/...`.
+
+**Study Contracts:**
+- Use `work2_coding/Src/experiment_contracts.py` for manifest loading and validation. It enforces parser choices, checkpoint contracts, required policy tags, paired replay fields, and diagnostic markings.
+- Use `work2_coding/Src/paired_replay.py` for normalized row schema `normalized-row-v2` and paired replay validation. Keep paired fields stable across policy comparisons.
+- Use `work2_coding/Src/artifact_status.py` for artifact readiness classification. Formal/pilot claim-ready rows require loaded checkpoint metadata and valid accounting.
+- Treat no-filter runs as diagnostic unless a manifest and artifact status explicitly support a stronger claim. `no_filter_diagnostic` is validated as diagnostic by `work2_coding/Src/experiment_contracts.py`.
+- Keep opt-out accounting separate from accepted home pickup. The accounting contract is implemented in `work2_coding/Environments/OOH/Parcelpoint_py.py`, `work2_coding/Environments/OOH/customerchoice.py`, and `work2_coding/Src/paired_replay.py`.
+- Keep attention-based choice/scoring outside v1 claims. Attention options exist in `work2_coding/Src/parser.py` and attention manifests, but Phase 10 claim guards in `work2_coding/Src/manuscript_claims.py` block ungated attention/DSPO_PLUS ranking claims.
 
 **Build:**
-- Dependency manifest: `ooh_code/requirements.txt`.
-- Main research runner: `ooh_code/run_menu_compare.py`.
-- Study orchestration: `ooh_code/scripts/run_study.py`.
-- Baseline smoke runner: `ooh_code/scripts/run_baseline_smoke.py`.
-- Artifact build: `ooh_code/scripts/build_artifacts.py`.
-- Manuscript build: `ooh_code/scripts/build_manuscript.py`.
-- Manuscript entry point: `ooh_code/manuscript/main.tex`.
-- Artifact outputs: `ooh_code/artifacts/results_snapshot/`, `ooh_code/artifacts/tables/`, `ooh_code/artifacts/figures/`, and root `artifacts/work2_cnn_setmenunet/`.
-- Raw run outputs: `ooh_code/outputs/studies/`, `ooh_code/outputs/shared_training/`, and `ooh_code/outputs/menu_compare/`; `ooh_code/.gitignore` excludes `outputs/`.
+- Dependency manifest: `work2_coding/requirements.txt`.
+- Runtime entry points: `work2_coding/run.py`, `work2_coding/run_ppo.py`, and `work2_coding/scripts/*.py`.
+- Study manifests: `work2_coding/Experiments/studies/*.yaml`.
+- Suite manifests: `work2_coding/Experiments/suites/*.yaml`.
+- Artifact roots: `work2_coding/artifacts/work2_robust_menu/` and mirror `artifacts/work2_robust_menu/`.
+- Planning context and status: `.planning/PROJECT.md`, `.planning/REQUIREMENTS.md`, `.planning/ROADMAP.md`, `.planning/STATE.md`, and `.planning/research/SUMMARY.md`.
+
+## Common Commands
+
+**Install dependencies:**
+
+```bash
+cd work2_coding
+python -m pip install -r requirements.txt
+```
+
+**Smoke import:**
+
+```bash
+cd work2_coding
+python -c "import sys; sys.path.insert(0, '.'); import Src.config"
+```
+
+**Run a study contract or actual study:**
+
+```bash
+cd work2_coding
+python scripts/run_study.py --study smoke_robust_menu --contract-only
+python scripts/run_study.py --study smoke_robust_menu --execute --max-policies 1
+python scripts/run_study.py --suite work2_robust_menu --execute
+```
+
+**Train or check formal checkpoint readiness:**
+
+```bash
+cd work2_coding
+python scripts/train_shared_checkpoint.py --study formal_robust_menu --checkpoint-path outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
+python scripts/check_formal_readiness.py --study formal_robust_menu --output-root outputs/formal_readiness --diagnostic-ok
+```
+
+**Build artifacts from normalized rows:**
+
+```bash
+cd work2_coding
+python scripts/build_artifacts.py --run-dir outputs/studies/<study>/<run_id> --allow-incomplete --default-mirror
+python scripts/build_manuscript_frame.py --artifact-root artifacts/work2_robust_menu --default-mirror
+python scripts/build_phase10_paper_artifacts.py --default-mirror
+```
+
+**Run script-style tests:**
+
+```bash
+cd work2_coding
+python tests/test_paired_replay.py
+python tests/test_artifact_status.py
+python tests/test_menu_contracts.py
+```
+
+## Key Package and Module Paths
+
+**Runtime and configuration:**
+- `work2_coding/Src/parser.py` - CLI surface for run modes, checkpoint behavior, menu modes, ETA filters, pricing modes, service guardrails, and attention diagnostics.
+- `work2_coding/Src/config.py` - Runtime initialization, output path construction, logging redirection, dataset loading, environment construction, and algorithm loading.
+- `work2_coding/Src/experiment_contracts.py` - Study/suite manifest contracts and checkpoint/diagnostic policy validation.
+
+**Algorithms and simulation:**
+- `work2_coding/Src/Algorithms/DSPO.py` - Base DSPO algorithm and route reoptimization integration.
+- `work2_coding/Src/Algorithms/DSPO_Menu.py` - Menu construction, robust ETA filtering, pricing variants, service guardrails, solver diagnostics, and method metadata.
+- `work2_coding/Src/Algorithms/Agent.py` - Model initialization and checkpoint save/load metadata.
+- `work2_coding/Environments/OOH/Parcelpoint_py.py` - Main many-to-one DRT environment and accounting counters.
+- `work2_coding/Environments/OOH/customerchoice.py` - Customer choice model, outside option, opt-out handling, and accepted service classification.
+- `work2_coding/Environments/OOH/env_utils.py` - HGS solver wrapper and route utilities.
+
+**Study execution and artifacts:**
+- `work2_coding/scripts/run_study.py` - Study/suite CLI that writes normalized rows, manifest snapshots, blockers, and summaries.
+- `work2_coding/Src/study_execution.py` - Contract execution, actual replay, checkpoint prerequisite handling, and provenance metadata.
+- `work2_coding/Src/paired_replay.py` - Normalized row schema and paired replay validation.
+- `work2_coding/Src/artifact_status.py` - Readiness classification and environment provenance.
+- `work2_coding/Src/artifact_builder.py` - Phase 4 aggregate/table/figure artifact builder.
+- `work2_coding/Src/formal_readiness.py` - Formal readiness, checkpoint smoke load, dependency snapshot, and dirty-git gate.
+- `work2_coding/Src/manuscript_claims.py` - Manuscript frame and strict claim guard logic.
+- `work2_coding/Src/paper_artifacts.py` - Phase 10 package index and mirrored paper artifact package.
+
+**Paper and planning outputs:**
+- `manuscript/main.tex` - Root manuscript source.
+- `manuscript/references.bib` - Bibliography.
+- `manuscript/els-cas-dc.cls` - Elsevier CAS document class.
+- `paper/` - Literature PDFs and notes used as research references.
+- `.planning/` - GSD project state, requirements, roadmap, phase outputs, and codebase maps.
 
 ## Platform Requirements
 
 **Development:**
-- Work from `ooh_code/` for documented commands so imports like `Src.research_pipeline`, `Src.config`, and `Environments.OOH.Parcelpoint_py` resolve consistently.
-- Create a virtual environment and install `ooh_code/requirements.txt` with `python -m pip install -r requirements.txt`.
-- Keep bundled benchmark data available under `ooh_code/Environments/OOH/HombergerGehring_data/` for `C`, `R`, and `RC` instances and under `ooh_code/Environments/OOH/Amazon_data/` for `Austin` and `Seattle` instances.
-- Install a LaTeX compiler only when compiling the manuscript PDF; `python scripts/build_manuscript.py --skip_compile` still refreshes linked artifacts and build metadata.
+- Python 3.10.
+- `pip` and dependencies from `work2_coding/requirements.txt`.
+- Git CLI available on PATH for provenance-aware runs and formal readiness.
+- Local filesystem write access to `work2_coding/outputs/`, `work2_coding/Experiments/Parcelpoint_py/`, `work2_coding/artifacts/`, and mirror `artifacts/`.
+- Optional CUDA-capable PyTorch stack for GPU execution.
+- Optional LaTeX distribution if manually compiling `manuscript/main.tex`.
 
 **Production:**
-- Not applicable as a hosted application. The repository is a local/offline research codebase.
-- Public-facing deliverables are committed research artifacts under `ooh_code/artifacts/`, mirrored Work2 artifacts under root `artifacts/work2_cnn_setmenunet/`, and manuscript files under `ooh_code/manuscript/`.
-- Raw generated outputs under `ooh_code/outputs/` are local experiment state and are excluded by `ooh_code/.gitignore`.
+- Not applicable. This repository is an offline research pipeline, not a deployed service.
+- Paper-facing outputs are generated files under `work2_coding/artifacts/work2_robust_menu/` and `artifacts/work2_robust_menu/`; regenerate them through scripts rather than editing result rows or paper artifacts by hand.
 
 ---
 
-*Stack analysis: 2026-06-09*
+*Stack analysis: 2026-06-16*
