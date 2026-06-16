@@ -1,0 +1,370 @@
+schema_version: 1
+name: phase9_exact_greedy_tractability
+tier: formal
+run_mode: diagnostic
+description: Phase 9 exact-small versus threshold-fallback greedy tractability diagnostic.
+output_intent: diagnostic_provisional_blocked
+claim_ready: false
+required_policy_tags:
+- mainline_optimized_adaptive
+shared_checkpoint:
+  required: true
+  path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
+  expected_status: loaded
+base_args:
+  algo_name: DSPO_Menu
+  menu_mode: true
+  product_mode: m+w+p
+  time_window_mode: adaptive_window
+  menu_contract_mode: optimized_menu
+  menu_pricing_mode: lambertw
+  run_mode: diagnostic
+  instance: RC
+  load_data: true
+  pricing: true
+  max_episodes: 1
+  max_steps_r: 20
+  max_steps_p: 0.7
+  n_vehicles: 2
+  veh_capacity: 3
+  reopt: 10000000
+  hgs_reopt_time: 0.1
+  hgs_final_time: 0.1
+  menu_k: 3
+  menu_exact_threshold: 8
+  menu_exact_gap_threshold: 8
+  checkpoint_path: outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt
+  require_checkpoint: true
+  allow_checkpoint_mismatch: false
+splits:
+- split_id: phase9_tractability_low_seed401_exact8
+  paired_group_id: phase9_tractability_low_seed401
+  solver_scale_variant: small_exact_8
+  solver_scale_value: '8'
+  seed: 401
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: low
+  args_overrides:
+    home_util: 3.8
+    base_util: -2.8
+    incentive_sens: -0.18
+    max_candidates: 8
+    menu_selection_solver: exact
+- split_id: phase9_tractability_low_seed401_fallback12
+  paired_group_id: phase9_tractability_low_seed401
+  solver_scale_variant: large_fallback_12
+  solver_scale_value: '12'
+  seed: 401
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: low
+  args_overrides:
+    home_util: 3.8
+    base_util: -2.8
+    incentive_sens: -0.18
+    max_candidates: 12
+    menu_selection_solver: exact
+- split_id: phase9_tractability_low_seed401_fallback16
+  paired_group_id: phase9_tractability_low_seed401
+  solver_scale_variant: large_fallback_16
+  solver_scale_value: '16'
+  seed: 401
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: low
+  args_overrides:
+    home_util: 3.8
+    base_util: -2.8
+    incentive_sens: -0.18
+    max_candidates: 16
+    menu_selection_solver: exact
+- split_id: phase9_tractability_low_seed402_exact8
+  paired_group_id: phase9_tractability_low_seed402
+  solver_scale_variant: small_exact_8
+  solver_scale_value: '8'
+  seed: 402
+  data_seed: 1
+  data_seed_test: 0
+  uptake_regime: low
+  args_overrides:
+    home_util: 3.8
+    base_util: -2.8
+    incentive_sens: -0.18
+    max_candidates: 8
+    menu_selection_solver: exact
+- split_id: phase9_tractability_low_seed402_fallback12
+  paired_group_id: phase9_tractability_low_seed402
+  solver_scale_variant: large_fallback_12
+  solver_scale_value: '12'
+  seed: 402
+  data_seed: 1
+  data_seed_test: 0
+  uptake_regime: low
+  args_overrides:
+    home_util: 3.8
+    base_util: -2.8
+    incentive_sens: -0.18
+    max_candidates: 12
+    menu_selection_solver: exact
+- split_id: phase9_tractability_low_seed402_fallback16
+  paired_group_id: phase9_tractability_low_seed402
+  solver_scale_variant: large_fallback_16
+  solver_scale_value: '16'
+  seed: 402
+  data_seed: 1
+  data_seed_test: 0
+  uptake_regime: low
+  args_overrides:
+    home_util: 3.8
+    base_util: -2.8
+    incentive_sens: -0.18
+    max_candidates: 16
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed403_exact8
+  paired_group_id: phase9_tractability_medium_seed403
+  solver_scale_variant: small_exact_8
+  solver_scale_value: '8'
+  seed: 403
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 8
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed403_fallback12
+  paired_group_id: phase9_tractability_medium_seed403
+  solver_scale_variant: large_fallback_12
+  solver_scale_value: '12'
+  seed: 403
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 12
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed403_fallback16
+  paired_group_id: phase9_tractability_medium_seed403
+  solver_scale_variant: large_fallback_16
+  solver_scale_value: '16'
+  seed: 403
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 16
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed404_exact8
+  paired_group_id: phase9_tractability_medium_seed404
+  solver_scale_variant: small_exact_8
+  solver_scale_value: '8'
+  seed: 404
+  data_seed: 1
+  data_seed_test: 0
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 8
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed404_fallback12
+  paired_group_id: phase9_tractability_medium_seed404
+  solver_scale_variant: large_fallback_12
+  solver_scale_value: '12'
+  seed: 404
+  data_seed: 1
+  data_seed_test: 0
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 12
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed404_fallback16
+  paired_group_id: phase9_tractability_medium_seed404
+  solver_scale_variant: large_fallback_16
+  solver_scale_value: '16'
+  seed: 404
+  data_seed: 1
+  data_seed_test: 0
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 16
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed405_exact8
+  paired_group_id: phase9_tractability_medium_seed405
+  solver_scale_variant: small_exact_8
+  solver_scale_value: '8'
+  seed: 405
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 8
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed405_fallback12
+  paired_group_id: phase9_tractability_medium_seed405
+  solver_scale_variant: large_fallback_12
+  solver_scale_value: '12'
+  seed: 405
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 12
+    menu_selection_solver: exact
+- split_id: phase9_tractability_medium_seed405_fallback16
+  paired_group_id: phase9_tractability_medium_seed405
+  solver_scale_variant: large_fallback_16
+  solver_scale_value: '16'
+  seed: 405
+  data_seed: 0
+  data_seed_test: 1
+  uptake_regime: medium
+  args_overrides:
+    home_util: 3.2
+    base_util: -2.0
+    incentive_sens: -0.25
+    max_candidates: 16
+    menu_selection_solver: exact
+policies:
+- tag: mainline_optimized_adaptive
+paired_fields:
+- seed
+- data_seed
+- data_seed_test
+- instance
+- load_data
+- pricing
+- hgs_reopt_time
+- hgs_final_time
+- reopt
+- checkpoint_path
+- require_checkpoint
+- allow_checkpoint_mismatch
+- menu_k
+- max_steps_r
+- max_steps_p
+- n_vehicles
+- veh_capacity
+- home_util
+- base_util
+- incentive_sens
+varied_fields:
+- max_candidates
+- menu_selection_solver
+- algo_name
+- menu_mode
+- product_mode
+- time_window_mode
+- menu_contract_mode
+- menu_pricing_mode
+- menu_policy
+- menu_eta_filter_mode
+- menu_time_filtering
+- menu_objective_mode
+- menu_eta_chance_threshold
+- menu_eta_soft_penalty_lambda
+- service_quit_penalty
+- service_quit_rate_guardrail
+- menu_outside_penalty_lambda
+- menu_optout_guardrail
+- menu_use_exact_eval
+- method_family
+- method_variant
+- attention_enabled
+output_schema:
+  normalized-row-v2: true
+  fields:
+  - schema_version
+  - study_id
+  - study_name
+  - manifest_path
+  - run_id
+  - tier
+  - run_mode
+  - policy_tag
+  - candidate_id
+  - method
+  - method_family
+  - product_mode
+  - time_window_mode
+  - menu_mode
+  - pricing_mode
+  - method_variant
+  - outside_option_util
+  - split_id
+  - seed
+  - data_seed
+  - data_seed_test
+  - trace_id
+  - trace_hash
+  - manifest_hash
+  - settings_hash
+  - checkpoint_load_status
+  - checkpoint_path
+  - checkpoint_hash
+  - checkpoint_required
+  - checkpoint_intentional_mismatch
+  - pricing
+  - hgs_reopt_time
+  - hgs_final_time
+  - menu_k
+  - max_candidates
+  - solver_candidate_count
+  - filter_mode
+  - effective_policy
+  - menu_selection_solver_effective
+  - solver_fallback_reason
+  - exact_enumerated_menu_count
+  - relative_optimality_gap
+  - menu_overlap_rate
+  - menu_build_time
+  - menu_utilization
+  - choice_entropy
+  - accepted_count
+  - served_count
+  - served_rate
+  - acceptance_rate
+  - optout_rate
+  - home_share
+  - meeting_point_uptake_rate
+  - count_opted_out
+  - count_accepted_home
+  - count_accepted_meeting_point
+  - charge_revenue
+  - discount_cost
+  - net_price_revenue
+  - net_profit
+  - operational_cost
+  - total_cost
+  - net_objective_proxy
+  - service_time_total
+  - uptake_regime
+  - diagnostic
+  - comparison_role
+  - placeholder_only
+  - status
+  - execution_status
+  - error_type
+  - error_message

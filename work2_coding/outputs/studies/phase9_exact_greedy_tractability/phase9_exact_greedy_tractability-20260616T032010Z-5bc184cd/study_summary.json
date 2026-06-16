@@ -1,0 +1,53 @@
+{
+  "blocker_count": 0,
+  "blockers": [],
+  "checkpoint_statuses": [
+    "loaded"
+  ],
+  "contract_only": false,
+  "execution_status": "completed",
+  "git_provenance": {
+    "git_commit": "5af441f01237037c06e36d392b8f1dd48b8b22e8",
+    "git_dirty": true,
+    "git_status_summary": "M .planning/PROJECT.md;  M .planning/REQUIREMENTS.md;  M .planning/ROADMAP.md;  D .planning/phases/01-repository-audit/01-PLAN.md;  D .planning/phases/01-repository-audit/01-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-CONTEXT.md;  D .planning/phases/02-service-product-contract/02-DISCUSSION-LOG.md;  D .planning/phases/02-service-product-contract/02-PLAN.md;  D .planning/phases/02-service-product-contract/02-REVIEW.md;  D .planning/phases/02-service-product-contract/02-SUMMARY.md;  D .planning/phases/02-service-product-contract/02-VERIFICATION.md;  D .planning/phases/03-mainline-comparison-contract/03-CONTEXT.md;  D .planning/phases/03-mainline-comparison-contract/03-DISCUSSION-LOG.md;  D .planning/phases/03-mainline-comparison-contract/03-PLAN.md;  D .planning/phases/03-mainline-comparison-contract/03-RESEARCH.md;  D .planning/phases/03-mainline-comparison-contract/03-SUMMARY.md;  D .planning/phases/03-mainline-comparison-contract/03-VERIFICATION.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-PLAN.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-01-SUMMARY.md;  D .planning/phases/04-mainline-artifact-pipeline-and-claim-guard/04-02-PLAN.md"
+  },
+  "manifest_hash": "5bc184cd319e43433231807f7754103ff66244000a90589930842aaf33afe08a",
+  "outputs": [
+    "manifest_snapshot.yaml",
+    "study_summary.json",
+    "normalized_rows.json",
+    "normalized_rows.csv"
+  ],
+  "placeholder_only": false,
+  "policy_tags": [
+    "mainline_optimized_adaptive"
+  ],
+  "row_count": 15,
+  "run_dir": "outputs\\studies\\phase9_exact_greedy_tractability\\phase9_exact_greedy_tractability-20260616T032010Z-5bc184cd",
+  "run_id": "phase9_exact_greedy_tractability-20260616T032010Z-5bc184cd",
+  "run_mode": "diagnostic",
+  "runtime_blocker": "",
+  "split_ids": [
+    "phase9_tractability_low_seed401_exact8",
+    "phase9_tractability_low_seed401_fallback12",
+    "phase9_tractability_low_seed401_fallback16",
+    "phase9_tractability_low_seed402_exact8",
+    "phase9_tractability_low_seed402_fallback12",
+    "phase9_tractability_low_seed402_fallback16",
+    "phase9_tractability_medium_seed403_exact8",
+    "phase9_tractability_medium_seed403_fallback12",
+    "phase9_tractability_medium_seed403_fallback16",
+    "phase9_tractability_medium_seed404_exact8",
+    "phase9_tractability_medium_seed404_fallback12",
+    "phase9_tractability_medium_seed404_fallback16",
+    "phase9_tractability_medium_seed405_exact8",
+    "phase9_tractability_medium_seed405_fallback12",
+    "phase9_tractability_medium_seed405_fallback16"
+  ],
+  "study_name": "phase9_exact_greedy_tractability",
+  "tier": "formal",
+  "uptake_regimes": [
+    "low",
+    "medium"
+  ]
+}

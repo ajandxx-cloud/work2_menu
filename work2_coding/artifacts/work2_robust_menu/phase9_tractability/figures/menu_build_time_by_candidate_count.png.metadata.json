@@ -1,7 +1,7 @@
 {
   "artifact_gate_status": "blocked",
-  "artifact_kind": "status",
-  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json",
+  "artifact_kind": "figure",
+  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/figures/menu_build_time_by_candidate_count.png",
   "checkpoint_statuses": [
     "loaded"
   ],

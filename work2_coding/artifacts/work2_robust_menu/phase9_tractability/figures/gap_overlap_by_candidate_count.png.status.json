@@ -1,12 +1,13 @@
 {
   "artifact_gate_status": "blocked",
-  "artifact_kind": "status",
-  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json",
+  "artifact_kind": "figure-status",
+  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/figures/gap_overlap_by_candidate_count.png.status.json",
   "checkpoint_statuses": [
     "loaded"
   ],
   "claim_ready": false,
   "diagnostic_provisional": true,
+  "figure_status": "incomplete",
   "generated_at_utc": "2026-06-16T03:22:21+00:00",
   "git_provenance": {
     "git_commit": "5af441f01237037c06e36d392b8f1dd48b8b22e8",
@@ -15,6 +16,7 @@
   },
   "manifest_hash": "5bc184cd319e43433231807f7754103ff66244000a90589930842aaf33afe08a",
   "manifest_snapshot_path": "outputs/studies/phase9_exact_greedy_tractability/phase9_exact_greedy_tractability-20260616T032010Z-5bc184cd/manifest_snapshot.yaml",
+  "missing_reason": "gap or overlap metrics are unavailable",
   "phase": "09",
   "phase9_gate_hash": "1c40c03460deb883ca7512c01f62ed0365a76e35ac0017a10dadc7353e9bbd8a",
   "phase9_gate_path": "outputs/phase9_dspo_family_validation/PHASE9_DSPO_FAMILY_VALIDATION.json",

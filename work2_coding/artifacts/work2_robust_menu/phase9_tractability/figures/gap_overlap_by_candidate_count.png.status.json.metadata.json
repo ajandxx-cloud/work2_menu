@@ -1,7 +1,7 @@
 {
   "artifact_gate_status": "blocked",
-  "artifact_kind": "status",
-  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json",
+  "artifact_kind": "figure-status",
+  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/figures/gap_overlap_by_candidate_count.png.status.json",
   "checkpoint_statuses": [
     "loaded"
   ],

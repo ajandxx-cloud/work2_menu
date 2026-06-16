@@ -797,13 +797,13 @@ def build_tractability_artifacts(
 
     rows = annotate_rows(run_data)
     validation = validate_tractability_rows(rows, manifest=run_data["manifest"], strict=False)
-    if not validation["valid"]:
-        return _blocked_artifact_result(output_root, status_gate_data, validation["failures"], run_data=run_data, rows=rows, validation=validation)
 
     output_root.mkdir(parents=True, exist_ok=True)
     aggregates = aggregate_tractability_rows(rows)
     status_info = _status_info(validation, status_gate_data, rows)
-    claim_boundary = claim_boundary_for_aggregates(aggregates)
+    claim_boundary = "blocked_diagnostic" if not validation["valid"] else claim_boundary_for_aggregates(aggregates)
+    for row in aggregates:
+        row["claim_boundary"] = claim_boundary
     artifacts = {}
     generated = []
 

@@ -1,0 +1,4 @@
+blocked_count,candidate_count_mean,checkpoint_statuses,claim_boundary,claim_ready,completed_count,effective_solvers,exact_enumerated_menu_count_mean,execution_status,fallback_reasons,max_candidates,menu_build_time_mean,menu_overlap_rate_mean,relative_optimality_gap_mean,row_count,solver_scale_value,solver_scale_variant,status,summary_status
+0,2.3600000000000003,loaded,blocked_diagnostic,False,5,exact,2.2800000000000002,completed,NA,8.0,0.005743899997323751,,,5,8,small_exact_8,completed,diagnostic_provisional_blocked
+0,2.7600000000000002,loaded,blocked_diagnostic,False,5,exact,3.3200000000000003,completed,NA,12.0,0.003700195997953415,,,5,12,large_fallback_12,completed,diagnostic_provisional_blocked
+0,2.7600000000000002,loaded,blocked_diagnostic,False,5,exact,3.3200000000000003,completed,NA,16.0,0.003196220025420189,,,5,16,large_fallback_16,completed,diagnostic_provisional_blocked

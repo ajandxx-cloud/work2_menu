@@ -1,13 +1,13 @@
 {
   "artifact_gate_status": "blocked",
-  "artifact_kind": "status",
-  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json",
+  "artifact_kind": "aggregate-csv",
+  "artifact_path": "artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv",
   "checkpoint_statuses": [
     "loaded"
   ],
   "claim_ready": false,
   "diagnostic_provisional": true,
-  "generated_at_utc": "2026-06-16T03:22:21+00:00",
+  "generated_at_utc": "2026-06-16T03:22:20+00:00",
   "git_provenance": {
     "git_commit": "5af441f01237037c06e36d392b8f1dd48b8b22e8",
     "git_dirty": true,

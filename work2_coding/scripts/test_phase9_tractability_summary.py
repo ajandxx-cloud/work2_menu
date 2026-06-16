@@ -227,6 +227,34 @@ def test_completed_large_row_without_fallback_fails_validation():
     _assert_validation_failure(rows, "large_fallback_reason_missing")
 
 
+def test_builder_preserves_aggregates_for_contract_invalid_rows():
+    with TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        rows = synthetic_rows()
+        for row in rows:
+            if row["max_candidates"] in {12, 16}:
+                row["menu_selection_solver_effective"] = "exact"
+                row["solver_fallback_reason"] = ""
+        run_dir = write_tractability_run(root / "studies", rows=rows)
+        status_gate = write_status_gate(root / "gate" / "PHASE9_DSPO_FAMILY_VALIDATION.json")
+        result = build_tractability_artifacts(
+            studies_root=root / "studies",
+            status_gate=status_gate,
+            output_root=root / "artifacts",
+            run_dir=run_dir,
+        )
+        assert result["builder_status"] == "blocked"
+        assert result["claim_boundary"] == "blocked_diagnostic"
+        aggregate_json = root / "artifacts" / "aggregates" / "exact_greedy_tractability_summary.json"
+        table = root / "artifacts" / "tables" / "exact_greedy_tractability.tex"
+        assert aggregate_json.exists()
+        assert table.exists()
+        aggregates = json.loads(aggregate_json.read_text(encoding="utf-8"))
+        assert [row["solver_scale_value"] for row in aggregates] == list(EXPECTED_SCALE_VALUES)
+        assert all(row["claim_boundary"] == "blocked_diagnostic" for row in aggregates)
+        assert aggregates[1]["candidate_count_mean"] == 12.0
+
+
 def test_completed_row_without_loaded_checkpoint_fails_validation():
     rows = synthetic_rows()
     rows[0]["checkpoint_load_status"] = "failed"
@@ -268,6 +296,7 @@ def main():
         test_completed_synthetic_rows_generate_artifacts_and_summary,
         test_missing_scale_variant_fails_validation,
         test_completed_large_row_without_fallback_fails_validation,
+        test_builder_preserves_aggregates_for_contract_invalid_rows,
         test_completed_row_without_loaded_checkpoint_fails_validation,
         test_large_gap_or_low_overlap_narrows_claim_boundary,
         test_summary_cli_writes_required_sections,
