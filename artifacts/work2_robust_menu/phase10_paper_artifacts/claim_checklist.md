@@ -1,0 +1,89 @@
+# Phase 10 Claim Checklist
+
+- overall_claim_ready: false
+- positive empirical manuscript claims: blocked pending strict claim guard and formal evidence
+- no-filter policy: diagnostic only
+- semi-real case scaffold: scaffold only; no validation claim authorized
+
+## Blocking Reasons
+- `blocker_status:blocker_status:planning_results_computational_tractability_summary_md`: blocker/status document only
+- `blocker_status:blocker_status:planning_results_formal_blocker_diagnosis_md`: blocker/status document only
+- `blocker_status:blocker_status:planning_results_formal_failure_diagnosis_md`: blocker/status document only
+- `blocker_status:blocker_status:planning_results_frozen_final_settings_md`: blocker/status document only
+- `blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md`: blocker/status document only
+- `blocker_status:blocker_status:planning_results_sensitivity_summary_md`: blocker/status document only
+- `case_scaffold:case_scaffold_config:planning_data_case_studies_case_manifest_draft_yaml`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml`: expected source pattern had no files
+- `case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml`: source file missing
+- `case_scaffold:case_scaffold_config:planning_data_case_studies_route_selection_scorecard_yaml`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_config:planning_data_case_studies_source_contracts_yaml`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json`: expected source pattern had no files
+- `case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json`: source file missing
+- `case_scaffold:case_scaffold_doc:planning_data_case_studies_claim_boundary_placeholders_md`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_doc:planning_data_case_studies_readme_md`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_doc:planning_data_case_studies_reduced_family_gate_md`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_doc:planning_data_case_studies_simulated_demand_protocol_md`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_doc:planning_data_case_studies_validation_summary_md`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_validator:planning_data_case_studies_test_case_contracts_py`: case-study inputs are scaffold-only and cannot validate results
+- `case_scaffold:case_scaffold_validator:planning_data_case_studies_validate_case_contracts_py`: case-study inputs are scaffold-only and cannot validate results
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png`: expected source pattern had no files
+- `main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png`: source file missing
+- `main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json`: expected source pattern had no files
+- `main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json`: source file missing
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_acceptance_optout_png_status_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_acceptance_optout_png_status_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_eta_pruning_png_status_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_eta_pruning_png_status_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_exact_greedy_time_png_status_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_exact_greedy_time_png_status_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_home_only_share_png_status_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_home_only_share_png_status_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_profit_gap_png_status_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_profit_gap_png_status_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_claim_checklist_md`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_claim_checklist_md`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_experiment_outline_md`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_experiment_outline_md`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_method_outline_md`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_method_outline_md`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_result_outline_md`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_result_outline_md`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:readme:work2_coding_artifacts_work2_robust_menu_readme_md`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:readme:work2_coding_artifacts_work2_robust_menu_readme_md`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:status:work2_coding_artifacts_work2_robust_menu_artifact_status_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:status:work2_coding_artifacts_work2_robust_menu_artifact_status_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json`: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.
+- `main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json`: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.
+- ... 32 additional blocker entries omitted from markdown

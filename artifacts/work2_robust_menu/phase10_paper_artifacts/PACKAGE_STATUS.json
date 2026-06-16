@@ -1,0 +1,662 @@
+{
+  "artifact_count": 78,
+  "blocker_count": 112,
+  "blockers": [
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_computational_tractability_summary_md",
+      "reason": "blocker/status document only",
+      "source_family": "blocker_status"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_formal_blocker_diagnosis_md",
+      "reason": "blocker/status document only",
+      "source_family": "blocker_status"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_formal_failure_diagnosis_md",
+      "reason": "blocker/status document only",
+      "source_family": "blocker_status"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_frozen_final_settings_md",
+      "reason": "blocker/status document only",
+      "source_family": "blocker_status"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md",
+      "reason": "blocker/status document only",
+      "source_family": "blocker_status"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_sensitivity_summary_md",
+      "reason": "blocker/status document only",
+      "source_family": "blocker_status"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_case_manifest_draft_yaml",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml",
+      "reason": "expected source pattern had no files",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml",
+      "reason": "source file missing",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_route_selection_scorecard_yaml",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_source_contracts_yaml",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json",
+      "reason": "expected source pattern had no files",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json",
+      "reason": "source file missing",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_claim_boundary_placeholders_md",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_readme_md",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_reduced_family_gate_md",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_simulated_demand_protocol_md",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_validation_summary_md",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_validator:planning_data_case_studies_test_case_contracts_py",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_validator:planning_data_case_studies_validate_case_contracts_py",
+      "reason": "case-study inputs are scaffold-only and cannot validate results",
+      "source_family": "case_scaffold"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png",
+      "reason": "expected source pattern had no files",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png",
+      "reason": "source file missing",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json",
+      "reason": "expected source pattern had no files",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json",
+      "reason": "source file missing",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_acceptance_optout_png_status_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_acceptance_optout_png_status_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_eta_pruning_png_status_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_eta_pruning_png_status_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_exact_greedy_time_png_status_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_exact_greedy_time_png_status_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_home_only_share_png_status_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_home_only_share_png_status_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_profit_gap_png_status_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_profit_gap_png_status_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_claim_checklist_md",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_claim_checklist_md",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_experiment_outline_md",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_experiment_outline_md",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_method_outline_md",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_method_outline_md",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_result_outline_md",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_result_outline_md",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:readme:work2_coding_artifacts_work2_robust_menu_readme_md",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:readme:work2_coding_artifacts_work2_robust_menu_readme_md",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:status:work2_coding_artifacts_work2_robust_menu_artifact_status_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:status:work2_coding_artifacts_work2_robust_menu_artifact_status_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json",
+      "reason": "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json",
+      "reason": "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+      "source_family": "main_rc"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_profit_service_tradeoff_png",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_profit_service_tradeoff_png_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:status:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_artifact_status_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:status_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_artifact_status_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_axis_summary_tex",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_axis_summary_tex_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase8_sensitivity"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_gap_overlap_by_candidate_count_png_status_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure_status:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_gap_overlap_by_candidate_count_png_status_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:status:work2_coding_artifacts_work2_robust_menu_phase9_tractability_artifact_status_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:status_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_artifact_status_json_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:table:work2_coding_artifacts_work2_robust_menu_phase9_tractability_tables_exact_greedy_tractability_tex",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    },
+    {
+      "artifact_id": "phase9_tractability:table_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_tables_exact_greedy_tractability_tex_metadata_json",
+      "reason": "diagnostic evidence only; not claim-ready",
+      "source_family": "phase9_tractability"
+    }
+  ],
+  "claim_ready": false,
+  "claim_ready_reason": "Phase 10 package is a provenance and paper-artifact index; positive claims remain blocked unless strict guards allow them.",
+  "existing_artifact_count": 74,
+  "generated_at_utc": "2026-06-16T05:40:24+00:00",
+  "missing_artifact_count": 4,
+  "package_role_counts": {
+    "aggregate": 14,
+    "aggregate_metadata": 4,
+    "blocker_status": 6,
+    "case_scaffold_config": 4,
+    "case_scaffold_contract": 1,
+    "case_scaffold_doc": 5,
+    "case_scaffold_validator": 2,
+    "claim_guard": 1,
+    "figure": 4,
+    "figure_metadata": 5,
+    "figure_status": 6,
+    "manuscript_frame": 4,
+    "readme": 1,
+    "status": 3,
+    "status_metadata": 2,
+    "table": 8,
+    "table_metadata": 8
+  },
+  "package_tier_counts": {
+    "blocked_status": 8,
+    "diagnostic_appendix": 30,
+    "main_paper_candidate": 28,
+    "scaffold_only": 12
+  },
+  "schema_version": "phase10-paper-artifact-package-v1",
+  "source_family_counts": {
+    "blocker_status": 6,
+    "case_scaffold": 12,
+    "main_rc": 30,
+    "phase8_sensitivity": 16,
+    "phase9_tractability": 14
+  },
+  "source_family_status": {
+    "blocker_status": {
+      "artifact_count": 6,
+      "claim_ready": false,
+      "existing_artifact_count": 6,
+      "package_tiers": [
+        "blocked_status"
+      ],
+      "statuses": [
+        "blocked"
+      ]
+    },
+    "case_scaffold": {
+      "artifact_count": 12,
+      "claim_ready": false,
+      "existing_artifact_count": 10,
+      "package_tiers": [
+        "scaffold_only"
+      ],
+      "statuses": [
+        "scaffold_only_no_result_evidence"
+      ]
+    },
+    "main_rc": {
+      "artifact_count": 30,
+      "claim_ready": false,
+      "existing_artifact_count": 28,
+      "package_tiers": [
+        "blocked_status",
+        "main_paper_candidate"
+      ],
+      "statuses": [
+        "blocked"
+      ]
+    },
+    "phase8_sensitivity": {
+      "artifact_count": 16,
+      "claim_ready": false,
+      "existing_artifact_count": 16,
+      "package_tiers": [
+        "diagnostic_appendix"
+      ],
+      "statuses": [
+        "diagnostic_provisional_blocked"
+      ]
+    },
+    "phase9_tractability": {
+      "artifact_count": 14,
+      "claim_ready": false,
+      "existing_artifact_count": 14,
+      "package_tiers": [
+        "diagnostic_appendix"
+      ],
+      "statuses": [
+        "diagnostic_provisional_blocked"
+      ]
+    }
+  }
+}

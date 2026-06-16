@@ -1,0 +1,1639 @@
+{
+  "claim_ready": false,
+  "entries": [
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_computational_tractability_summary_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "blocker/status document only"
+      ],
+      "claim_linkage": "formal blocker and claim-boundary provenance",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "blocker_status",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "blocker_status",
+      "source_path": ".planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_formal_blocker_diagnosis_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "blocker/status document only"
+      ],
+      "claim_linkage": "formal blocker and claim-boundary provenance",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "blocker_status",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "blocker_status",
+      "source_path": ".planning/results/FORMAL_BLOCKER_DIAGNOSIS.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_formal_failure_diagnosis_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "blocker/status document only"
+      ],
+      "claim_linkage": "formal blocker and claim-boundary provenance",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "blocker_status",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "blocker_status",
+      "source_path": ".planning/results/FORMAL_FAILURE_DIAGNOSIS.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_frozen_final_settings_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "blocker/status document only"
+      ],
+      "claim_linkage": "formal blocker and claim-boundary provenance",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "blocker_status",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "blocker_status",
+      "source_path": ".planning/results/FROZEN_FINAL_SETTINGS.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "blocker/status document only"
+      ],
+      "claim_linkage": "formal blocker and claim-boundary provenance",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "blocker_status",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "blocker_status",
+      "source_path": ".planning/results/RC_FORMAL_DIAGNOSIS.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "blocker_status:blocker_status:planning_results_sensitivity_summary_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "blocker/status document only"
+      ],
+      "claim_linkage": "formal blocker and claim-boundary provenance",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "blocker_status",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "blocker_status",
+      "source_path": ".planning/results/SENSITIVITY_SUMMARY.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_case_manifest_draft_yaml",
+      "artifact_kind": "yaml",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_config",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/case_manifest_draft.yaml",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_missing_yml",
+      "artifact_kind": "yaml",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results",
+        "expected source pattern had no files",
+        "source file missing"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": false,
+      "package_role": "case_scaffold_config",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/missing.yml",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_route_selection_scorecard_yaml",
+      "artifact_kind": "yaml",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_config",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/route_selection_scorecard.yaml",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_config:planning_data_case_studies_source_contracts_yaml",
+      "artifact_kind": "yaml",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_config",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/source_contracts.yaml",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_contract:planning_data_case_studies_missing_json",
+      "artifact_kind": "json",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results",
+        "expected source pattern had no files",
+        "source file missing"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": false,
+      "package_role": "case_scaffold_contract",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/missing.json",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_claim_boundary_placeholders_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_doc",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/claim_boundary_placeholders.md",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_readme_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_doc",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/README.md",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_reduced_family_gate_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_doc",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/reduced_family_gate.md",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_simulated_demand_protocol_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_doc",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/simulated_demand_protocol.md",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_doc:planning_data_case_studies_validation_summary_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_doc",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/VALIDATION_SUMMARY.md",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_validator:planning_data_case_studies_test_case_contracts_py",
+      "artifact_kind": "python",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_validator",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/test_case_contracts.py",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "case_scaffold:case_scaffold_validator:planning_data_case_studies_validate_case_contracts_py",
+      "artifact_kind": "python",
+      "blocker_reasons": [
+        "case-study inputs are scaffold-only and cannot validate results"
+      ],
+      "claim_linkage": "semi-real case scaffold; no empirical validation claim authorized",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "case_scaffold_validator",
+      "package_tier": "scaffold_only",
+      "section_targets": [
+        "case_scaffold_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "case_scaffold",
+      "source_path": ".planning/data/case_studies/validate_case_contracts.py",
+      "status": "scaffold_only_no_result_evidence"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv",
+      "artifact_kind": "aggregate-csv",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json",
+      "artifact_kind": "json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json",
+      "artifact_kind": "json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json",
+      "artifact_kind": "claim-guard-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "claim_guard",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/manuscript/CLAIM_GUARD.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png",
+      "artifact_kind": "figure",
+      "blocker_reasons": [
+        "expected source pattern had no files",
+        "source file missing"
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": false,
+      "package_role": "figure",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/missing.png",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "expected source pattern had no files",
+        "source file missing"
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": false,
+      "package_role": "figure_metadata",
+      "package_tier": "blocked_status",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/missing.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_acceptance_optout_png_status_json",
+      "artifact_kind": "figure-status-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_status",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/acceptance_optout.png.status.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_eta_pruning_png_status_json",
+      "artifact_kind": "figure-status-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_status",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/eta_pruning.png.status.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_exact_greedy_time_png_status_json",
+      "artifact_kind": "figure-status-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_status",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/exact_greedy_time.png.status.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_home_only_share_png_status_json",
+      "artifact_kind": "figure-status-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_status",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/home_only_share.png.status.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:figure_status:work2_coding_artifacts_work2_robust_menu_figures_profit_gap_png_status_json",
+      "artifact_kind": "figure-status-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_status",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/figures/profit_gap.png.status.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_claim_checklist_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "manuscript_frame",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/manuscript/claim_checklist.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_experiment_outline_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "manuscript_frame",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/manuscript/experiment_outline.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_method_outline_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "manuscript_frame",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/manuscript/method_outline.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:manuscript_frame:work2_coding_artifacts_work2_robust_menu_manuscript_result_outline_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "manuscript_frame",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/manuscript/result_outline.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:readme:work2_coding_artifacts_work2_robust_menu_readme_md",
+      "artifact_kind": "markdown",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "readme",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/README.md",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:status:work2_coding_artifacts_work2_robust_menu_artifact_status_json",
+      "artifact_kind": "status-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "status",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/ARTIFACT_STATUS.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/exact_greedy.tex",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/policy_summary.tex",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/provenance_status.tex",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/robust_filtering.tex",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/uptake_regime.tex",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_exact_greedy_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/exact_greedy.tex.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_policy_summary_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/policy_summary.tex.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_provenance_status_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/provenance_status.tex.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/robust_filtering.tex.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/tables/uptake_regime.tex.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv",
+      "artifact_kind": "aggregate-csv",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json",
+      "artifact_kind": "json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png",
+      "artifact_kind": "figure",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/figures/optout_acceptance_by_axis.png",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_profit_service_tradeoff_png",
+      "artifact_kind": "figure",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/figures/profit_service_tradeoff.png",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/figures/optout_acceptance_by_axis.png.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_profit_service_tradeoff_png_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/figures/profit_service_tradeoff.png.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:status:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_artifact_status_json",
+      "artifact_kind": "status-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "status",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/ARTIFACT_STATUS.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:status_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_artifact_status_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "status_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/ARTIFACT_STATUS.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_axis_summary_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/tables/sensitivity_axis_summary.tex",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/tables/sensitivity_boundary_map.tex",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_axis_summary_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/tables/sensitivity_axis_summary.tex.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "sensitivity_appendix",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase8_sensitivity",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/tables/sensitivity_boundary_map.tex.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv",
+      "artifact_kind": "aggregate-csv",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json",
+      "artifact_kind": "json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png",
+      "artifact_kind": "figure",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/figures/menu_build_time_by_candidate_count.png",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_gap_overlap_by_candidate_count_png_status_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/figures/gap_overlap_by_candidate_count.png.status.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/figures/menu_build_time_by_candidate_count.png.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:figure_status:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_gap_overlap_by_candidate_count_png_status_json",
+      "artifact_kind": "figure-status-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "figure_status",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/figures/gap_overlap_by_candidate_count.png.status.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:status:work2_coding_artifacts_work2_robust_menu_phase9_tractability_artifact_status_json",
+      "artifact_kind": "status-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "status",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:status_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_artifact_status_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "status_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:table:work2_coding_artifacts_work2_robust_menu_phase9_tractability_tables_exact_greedy_tractability_tex",
+      "artifact_kind": "latex-table",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/tables/exact_greedy_tractability.tex",
+      "status": "diagnostic_provisional_blocked"
+    },
+    {
+      "artifact_id": "phase9_tractability:table_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_tables_exact_greedy_tractability_tex_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "diagnostic evidence only; not claim-ready"
+      ],
+      "claim_linkage": "Phase 9 diagnostic computational appendix only",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "table_metadata",
+      "package_tier": "diagnostic_appendix",
+      "section_targets": [
+        "computational_performance_appendix",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "phase9_tractability",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/tables/exact_greedy_tractability.tex.metadata.json",
+      "status": "diagnostic_provisional_blocked"
+    }
+  ],
+  "generated_at_utc": "2026-06-16T05:40:24+00:00",
+  "schema_version": "phase10-paper-artifact-package-v1"
+}
