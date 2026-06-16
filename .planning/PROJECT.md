@@ -25,6 +25,39 @@ conditional service-menu design study that identifies when menu optimization
 helps DRT operations and when it fails because of low uptake, excessive
 opt-out, ETA uncertainty, or capacity constraints.
 
+## Current Milestone: v1.1 Resolve Claim-Ready Gate or Lock Conditional Diagnostic TR-E Paper
+
+**Goal:** Determine from current repository evidence and reproducible
+experiment gates whether Work2 can honestly upgrade any manuscript claim from
+`claim_ready=false` to `claim_ready=true`; if not, formally lock the paper as a
+conditional diagnostic TR-E manuscript.
+
+**Target features:**
+
+- Reconstruct the exact Phase 10 evidence boundary and all causes of
+  `claim_ready=false`.
+- Plan only legitimate gate, metadata, provenance, and artifact repairs without
+  changing empirical conclusions by hand.
+- Diagnose whether the random-menu profit advantage and adaptive/fixed-window
+  equality are real scientific results, configuration issues, modeling
+  mismatches, or implementation bugs.
+- Choose a gated path: gate-only repair, pre-registered final rerun, or
+  conditional diagnostic lock.
+- Execute only the selected path, with strict `CLAIM_GUARD.json` authority over
+  any claim upgrade.
+- Produce a final manuscript-path decision with explicit allowed and prohibited
+  claims.
+
+**Possible final outcomes:**
+
+- **Outcome A:** `claim_ready=true` for one or more clearly defined manuscript
+  claims, backed by passed readiness, completed paired rows, regenerated paper
+  artifacts, and strict claim-guard approval.
+- **Outcome B:** `claim_ready=false` remains, and the paper is locked as a
+  conditional diagnostic service-menu optimization paper with no adaptive-menu
+  superiority, adaptive-window value, near-optimal greedy, or case-validation
+  claims.
+
 ## Requirements
 
 ### Validated
@@ -92,25 +125,26 @@ opt-out, ETA uncertainty, or capacity constraints.
 
 ### Active
 
-- [ ] Resolve provenance/artifact gates or keep the evidence explicitly
-  diagnostic before any manuscript claim upgrade.
-- [ ] Before any calibration pilot or final rerun, resolve dirty-git
-  provenance, checkpoint sidecar/hash, readiness, artifact metadata, and claim
-  guard blockers.
-- [ ] Keep case-study execution blocked until upstream provenance, readiness,
-  artifact, and claim gates pass; preserve semi-real geography/network,
-  simulated demand, and simulated choice labels in any future case outputs.
-- [ ] Use Phase 9 tractability outputs only as diagnostic/provisional evidence
-  unless a future run actually exercises greedy fallback or further narrows the
-  solver contract.
-- [ ] Use Phase 10 paper artifacts as source mapping and claim-boundary
-  evidence only while `claim_ready=false`; do not upgrade empirical claims from
-  the generated package.
-- [ ] If retained, Phase 11 is manuscript structure and claim-boundary writing
-  only. It is not another experiment phase and must not change empirical
-  claims.
-- [ ] Continue to manuscript and final readiness phases only with claim gates
-  explicit and unresolved blockers visible.
+- [ ] Reconstruct the current Phase 10 evidence boundary before any repair,
+  rerun, or manuscript writing.
+- [ ] Classify every `claim_ready=false` cause into provenance/readiness,
+  artifact-generation, empirical-performance, adaptive-window,
+  random-baseline, sensitivity, tractability, semi-real-case, or
+  manuscript-language blockers.
+- [ ] Produce a safe gate repair plan that separates metadata/schema fixes from
+  experiment semantics and never changes empirical values by hand.
+- [ ] Diagnose why `mainline_random_menu` currently beats
+  `mainline_optimized_adaptive` on mean net profit and why adaptive and fixed
+  windows are identical across tracked metrics.
+- [ ] Choose and document exactly one path: gate-only repair, pre-registered
+  final rerun, or conditional diagnostic lock.
+- [ ] Regenerate readiness/artifacts or run final replay only when the selected
+  path authorizes it, preserving paired replay fairness, outside-option
+  accounting, checkpoint provenance, and the seven-tag mainline family unless
+  a reduction is formally justified.
+- [ ] Lock all manuscript claims to strict `CLAIM_GUARD.json` output and produce
+  a final decision on whether the manuscript path is claim-ready empirical,
+  conditional diagnostic, or not ready.
 
 ### Out of Scope
 
@@ -202,6 +236,7 @@ before any empirical superiority claim is made.
 | Treat Phase 8 sensitivity as diagnostic boundary evidence | Phase 8 generated 50 completed rows across the four must-have axes, but artifacts and summary remain `diagnostic_provisional_blocked` with `claim_ready=false`; candidate pool, fleet/capacity stress, and pricing sensitivity stay deferred. | Validated |
 | Treat Phase 9 exact-vs-greedy as blocked diagnostic evidence | The 15-row run completed, but realized candidate counts stayed below the greedy threshold on the configured large scales, so the effective exact solver was still used and gap/overlap evidence is unavailable. | Validated |
 | Treat Phase 10 paper artifacts as claim-boundary packaging | Phase 10 generated mirrored paper-facing artifact packages with a strict 8-claim guard and 74 unique indexed source artifacts, but overall `claim_ready=false` blocks manuscript claim upgrades. | Validated |
+| Start v1.1 claim-ready resolution before manuscript writing | Phase 10 leaves the paper artifact package draftable only under strict claim boundaries; the next milestone must either resolve the gate honestly or lock the diagnostic manuscript path. | Active |
 
 ## Evolution
 
@@ -223,4 +258,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-16 after Phase 10 verified paper-artifact closeout*
+*Last updated: 2026-06-16 after v1.1 claim-ready resolution milestone initialization*

@@ -1,192 +1,166 @@
 # Requirements: Work2_TR_E_Service_Menu_Optimization_Final
 
-**Defined:** 2026-06-14
+**Defined:** 2026-06-16
+**Milestone:** v1.1 Resolve Claim-Ready Gate or Lock Conditional Diagnostic TR-E Paper
 **Core Value:** Produce credible, reproducible TR Part E evidence on when and
 how optimized adaptive `m+w+p` service menus improve, match, or fail to improve
 the profit-service-quality trade-off under paired RC replay, without
 overclaiming beyond artifact and readiness gates.
 
-## v1 Requirements
+Previous v1.0 requirements and completed evidence remain recorded in
+`.planning/PROJECT.md` and the completed Phase 1-10 history in
+`.planning/ROADMAP.md`. This file now scopes the active v1.1 milestone.
 
-### State And Runtime
+## v1.1 Requirements
 
-- [x] **STATE-01**: Phase 1 verifies `work2_coding/` as the active runtime root
-  and records the result in `.planning/STATE_LOCK.md`.
-- [x] **STATE-02**: Phase 1 inventories current manifests, tests, scripts,
-  artifacts, formal checkpoint status, and current blockers.
-- [x] **STATE-03**: Phase 1 maps stale `ooh_code/` planning references to
-  current `work2_coding/` paths or marks them obsolete.
+### Evidence Boundary
 
-### Paper Design
+- [ ] **EVID-01**: The project reconstructs the exact current evidence boundary
+  from planning docs, result summaries, final readiness review, frozen final
+  settings, and the Phase 10 paper artifact package before any repair, rerun,
+  or manuscript writing.
+- [ ] **EVID-02**: The project identifies every concrete reason the current
+  Phase 10 `CLAIM_GUARD.json` keeps overall `claim_ready=false`.
+- [ ] **EVID-03**: The project classifies all blockers into provenance/readiness,
+  artifact-generation, empirical-performance, adaptive-window,
+  random-menu-baseline, sensitivity-robustness, computational-tractability,
+  semi-real-case, and manuscript-language categories.
+- [ ] **EVID-04**: The evidence boundary deliverables are written under
+  `.planning/milestones/claim_ready_resolution/` without editing generated
+  result rows or paper artifacts.
 
-- [x] **PAPER-01**: The project defines a TR Part E research design centered on
-  dynamic service menu optimization, not attention and not pricing-only.
-- [x] **PAPER-02**: The paper design defines service bundles as
-  `(meeting point, pickup time window, price)` and includes home service plus
-  outside option semantics.
-- [x] **PAPER-03**: Every planned paper claim maps to policy comparisons,
-  metrics, and artifact evidence.
-- [x] **PAPER-04**: The paper design distinguishes V1 main evidence, V2
-  diagnostic attention evidence, appendix evidence, and non-claims.
-- [x] **PAPER-05**: The paper design includes a mathematical model skeleton
-  with sets and indices, service-bundle definition, menu decision variable,
-  utility model, choice probability, expected-profit objective,
-  opt-out/service-quality guardrail, ETA/time-window feasibility, and
-  exact/greedy solver definitions.
+### Gate Repair Planning
 
-### Formal RC Evidence
+- [ ] **GATE-01**: The project inspects git status and identifies dirty-git
+  blockers without deleting, reverting, stashing, or overwriting unrelated
+  files.
+- [ ] **GATE-02**: The project determines whether readiness blockers come from
+  unrelated dirty files, missing metadata, missing checkpoint sidecar/hash,
+  missing result fields, or artifact schema issues.
+- [ ] **GATE-03**: The project diagnoses whether missing
+  `outside_option_util`, invalid or missing `method_family`, and related
+  artifact-status failures are metadata/reporting issues, artifact-builder
+  issues, true experiment-row issues, or evidence-quality issues.
+- [ ] **GATE-04**: The project produces a safe repair plan where every proposed
+  repair maps to a specific gate and is labeled as non-semantic metadata/schema
+  repair, code/builder repair, or new experiment path.
 
-- [x] **RC-01**: `formal_robust_menu.yaml` and related manifests are inspected
-  before formal execution.
-- [x] **RC-02**: The required shared checkpoint path is generated or verified:
-  `outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt`.
-- [x] **RC-03**: Formal readiness status is explicit; claim-ready readiness
-  remains blocked without bypassing blockers.
-- [x] **RC-04**: Formal RC replay produces completed or explicitly failed
-  normalized rows for comparable policy variants.
-- [x] **RC-05**: Formal artifact generation produces readiness, row, summary,
-  artifact-status, claim-guard, table, figure, and manuscript-frame outputs.
+### Empirical Failure Diagnosis
 
-### Claim Diagnosis
+- [ ] **DIAG-01**: The project diagnoses why `mainline_random_menu` has better
+  mean net profit than `mainline_optimized_adaptive` using source rows and code
+  paths rather than speculation.
+- [ ] **DIAG-02**: The project decomposes profit differences into revenue,
+  operating cost, discount or price effect, opt-out/lost-demand effect,
+  accepted home service, accepted meeting-point service, and service-cost
+  effect where data support it.
+- [ ] **DIAG-03**: The project diagnoses why `mainline_optimized_adaptive` and
+  `mainline_optimized_fixed_window` are identical across tracked metrics.
+- [ ] **DIAG-04**: The project states whether the central positive claim is
+  scientifically recoverable, conditionally recoverable, or unsupported.
 
-- [x] **CLAIM-01**: Formal results are diagnosed by effect size, paired split,
-  uptake regime, and metric trade-off rather than ranking alone.
-- [x] **CLAIM-02**: The project classifies each planned claim as strong,
-  conditional, weak/diagnostic, or unsupported.
-- [x] **CLAIM-03**: Unsupported or mixed results trigger diagnosis rather than
-  manual result editing or forced claims.
-- [x] **CLAIM-04**: Formal result diagnosis reports mean, standard deviation,
-  paired differences, and confidence intervals where feasible; if seed count is
-  small, it reports split-level paired differences and avoids strong
-  significance language.
-- [x] **CLAIM-05**: If optimized adaptive `m+w+p` does not strongly dominate,
-  the paper is reframed as a conditional service-menu optimization study rather
-  than a universal superiority claim.
+### Path Decision
 
-### Calibration Integrity
+- [ ] **PATH-01**: The project reads the calibration protocol and frozen final
+  settings before deciding whether a final rerun is legitimate.
+- [ ] **PATH-02**: The project chooses exactly one path: Path A gate-only repair,
+  Path B pre-registered final rerun, or Path C conditional diagnostic lock.
+- [ ] **PATH-03**: The selected path decision records reason, allowed actions,
+  prohibited actions, claim ceiling, whether a positive central claim is
+  allowed, whether a conditional claim is allowed, and whether the manuscript
+  must remain diagnostic.
+- [ ] **PATH-04**: The path decision forbids result-chasing, tuning on final
+  results, deleting inconvenient baselines, or upgrading diagnostic evidence by
+  wording.
 
-- [x] **CAL-01**: If results are weak or unstable, calibration parameters are
-  declared before final testing.
-- [x] **CAL-02**: Calibration and formal testing are separated into distinct
-  manifests, outputs, and documents.
-- [x] **CAL-03**: Frozen final settings are documented before rerunning final
-  evidence.
-- [x] **CAL-04**: Phase 5 may be marked skipped-by-gate if Phase 4 supports at
-  least one central claim with stable paired differences; otherwise Phase 5 is
-  mandatory.
+### Selected Path Execution
 
-### Case Study
+- [ ] **EXEC-01**: If Path A is selected, the project repairs only legitimate
+  metadata/provenance/artifact blockers and regenerates readiness, artifacts,
+  and strict claim guard without changing empirical rows or experiment
+  semantics.
+- [ ] **EXEC-02**: If Path B is selected, the project runs only the
+  pre-registered final experiment allowed by frozen settings, saving completed,
+  failed, timeout, infeasible, blocked, and missing rows as durable evidence.
+- [ ] **EXEC-03**: If Path C is selected, or if Path A/B still produce
+  `claim_ready=false`, the project formally locks the paper as a conditional
+  diagnostic TR-E service-menu optimization manuscript.
+- [ ] **EXEC-04**: Any regenerated artifact package records readiness JSON,
+  source rows, artifact status, table/figure/claim maps, and strict
+  `CLAIM_GUARD.json` as the only authority for claim upgrades.
+- [ ] **EXEC-05**: The seven mainline policy tags remain the primary policy
+  family unless a reduced family is formally justified and documented.
 
-- [x] **CASE-01**: The project audits whether a real or semi-real case study is
-  feasible from existing materials, public data, or real geography plus
-  simulated demand.
-- [x] **CASE-02**: No fabricated real data is used or implied.
-- [x] **CASE-03**: If feasible, the case study has a reproducible ingestion,
-  validation, smoke, pilot, and formal/diagnostic execution contract. Phase 7
-  covers this as planning-side contract scaffolding only: source contracts,
-  validation checks, manifest draft, and execution gates exist, but no case
-  rows or runtime manifest were produced.
-- [x] **CASE-04**: A minimum acceptable semi-real case is defined as real or
-  manually documented geography, realistic depot/destination and candidate
-  meeting points, real road distance or reproducible distance matrix, simulated
-  sequential DRT demand clearly labeled as simulated, same seven-tag or reduced
-  six-tag comparison, and no use for tuning RC parameters.
-- [x] **CASE-05**: If Phase 6 defers the case study, Phase 7 is skipped and the
-  manuscript explicitly states that external case validation is deferred. Phase
-  6 did not defer; Phase 7 was not skipped, and case execution plus manuscript
-  external-validation claims remain blocked until upstream gates pass.
+### Manuscript Claim Lock
 
-### Sensitivity And Computation
+- [ ] **LOCK-01**: The project converts every planned manuscript claim into a
+  supported status/provenance claim, conditional diagnostic claim, unsupported
+  claim, or future-work claim.
+- [ ] **LOCK-02**: The manuscript claim table prohibits adaptive-menu
+  dominance, adaptive-menu superiority, adaptive-window increment,
+  near-optimal greedy, online tractability, case-study validation, real
+  passenger behavior, and no-filter recommendations unless strict claim guard
+  evidence explicitly authorizes them.
+- [ ] **LOCK-03**: If the diagnostic path is selected, the paper thesis is
+  reframed around service-menu formulation, paired-replay evaluation, and
+  transparent claim-boundary analysis.
+- [ ] **LOCK-04**: Sensitivity, tractability, and semi-real case materials
+  retain diagnostic/provisional or scaffold-only labels unless regenerated
+  evidence and claim guard status change.
 
-- [x] **SENS-01**: Phase 8 diagnostic sensitivity experiments cover the
-  executable must-have dimensions: menu size, ETA uncertainty/filter mode,
-  uptake regime, and opt-out/service guardrail. Candidate pool size,
-  fleet/capacity stress, pricing bounds, and price sensitivity remain deferred
-  nice-to-have dimensions.
-- [x] **SENS-02**: `.planning/results/SENSITIVITY_SUMMARY.md` supports
-  conditional diagnostic conclusions and identifies where the method works,
-  fails, or exposes profit-service-quality trade-offs, without upgrading
-  manuscript claims.
-- [x] **SENS-03**: Phase 8 separates must-have sensitivity dimensions
-  (`menu_k`, ETA uncertainty/filter mode, uptake regime, opt-out guardrail)
-  from nice-to-have dimensions (candidate pool size, fleet/capacity stress,
-  pricing bounds or price sensitivity).
-- [x] **COMP-01**: Phase 9 exact-small versus configured greedy-large
-  experiments generated 15 completed rows and artifacts reporting candidate
-  count, enumerated menu count, and build time. Optimality gap and menu overlap
-  remain explicitly unavailable/blocked because the configured large scales did
-  not trigger greedy fallback.
-- [x] **COMP-02**: Phase 9 narrows the computational-credibility claim:
-  `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md` remains
-  `diagnostic_provisional_blocked` with `claim_ready: false`, and no
-  claim-ready online-tractability or near-optimal-greedy statement is
-  authorized.
+### Final Decision
 
-### Artifacts And Manuscript
-
-- [x] **ART-01**: Phase 10 generated paper-facing artifact packages from run
-  rows and artifact builders only under
-  `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/` and
-  `artifacts/work2_robust_menu/phase10_paper_artifacts/`. `PACKAGE_INDEX.json`
-  contains 74 unique source artifacts with no duplicate `source_path` values.
-- [x] **ART-02**: Phase 10 `CLAIM_GUARD.json` uses schema
-  `phase10-strict-claim-guard-v1`, contains 8 claims, and keeps overall
-  `claim_ready=false`; generated paper-facing artifacts do not authorize
-  manuscript claim upgrades.
-- [ ] **MS-01**: The manuscript plan follows the TR Part E structure:
-  Introduction, Literature Review, Problem Description, Model, Solution Method,
-  Experimental Design, Results, Discussion, Conclusion, and Appendix.
-- [ ] **MS-02**: Manuscript claims are traceable to source artifacts and avoid
-  overstating simulated passenger behavior.
-- [ ] **MS-03**: If retained, Phase 11 is manuscript structure and
-  claim-boundary writing only; it is not another experiment phase and must not
-  change empirical claims.
-- [ ] **FINAL-01**: A final TR Part E readiness review audits novelty, modeling
-  rigor, algorithmic contribution, experimental credibility, reproducibility,
-  and claim clarity.
+- [ ] **FINAL-01**: The milestone produces a final decision file stating
+  `final_claim_ready_status`, manuscript path, allowed claims by manuscript
+  section, prohibited claims, required next milestone, reviewer risks, and
+  final recommendation.
+- [ ] **FINAL-02**: The final decision runs the minimum import smoke from
+  `work2_coding/` and records any unavailable or failed verification commands.
+- [ ] **FINAL-03**: Relevant existing tests touched by this milestone are run
+  or explicitly documented if unavailable, including artifact gates, paired
+  replay, policy fairness, and manuscript claim guard tests.
+- [ ] **FINAL-04**: The milestone ends only with an explicit outcome:
+  claim-ready with authorized claims, claim-ready false with diagnostic lock,
+  or not ready for manuscript because unresolved blockers remain.
 
 ## Deferred Requirements
 
-- **ATT-01**: Attention-based choice or scoring may be revisited only as V2 or
-  appendix diagnostic evidence after V1 RC claims are stable.
-- **REAL-01**: A real passenger choice validation study is future work unless
-  actual choice data are obtained and documented.
-- **RL-01**: New RL methods or unrelated model families are outside this
-  refactoring plan unless a later milestone explicitly expands scope.
+- **MS-01**: Full manuscript drafting resumes only after v1.1 decides whether
+  the paper is claim-ready empirical, conditional diagnostic, or not ready.
+- **CASE-EXEC-01**: Semi-real case execution remains deferred unless upstream
+  gates and the selected path explicitly authorize runtime evidence.
+- **GREEDY-01**: New exact-vs-greedy stress evidence remains deferred unless
+  Path B or a future milestone pre-registers a legitimate tractability run.
 
 ## Out of Scope
 
 | Feature | Reason |
 | --- | --- |
-| Hand-edited generated evidence | Violates reproducibility and claim traceability. |
-| Attention as V1 main contribution | The current paper contribution is service menu optimization. |
-| Universal dominance claims | TR-E claims must reflect measured trade-offs and caveats. |
-| Formal claims from smoke-only runs | Smoke runs validate the pipeline, not empirical superiority. |
-| Fabricated real case study | Case data must be real, semi-real, or clearly synthetic. |
-| Parallel `ooh_code/` root | Active runtime is `work2_coding/`; stale maps are historical only. |
+| Hand-edited generated rows, tables, figures, or claim guards | Violates reproducibility and claim traceability. |
+| Tuning on final results to force the desired ranking | Would make any positive claim scientifically invalid. |
+| Removing `mainline_random_menu` because it outperforms adaptive on profit | The random baseline is a serious comparator and must stay visible. |
+| Claiming adaptive-window value while adaptive and fixed-window outputs remain identical | Current evidence blocks the increment claim. |
+| Treating no-filter variants as operational recommendations | No-filter is diagnostic unless formal evidence justifies stronger use. |
+| Describing simulated demand or simulated choice as real passenger behavior | The current case material is scaffold-only and simulated where applicable. |
+| Manuscript polishing before the claim path is decided | The milestone is about evidence gates and claim authority, not prose polish. |
 
 ## Traceability
 
 | Requirement | Phase | Status |
 | --- | --- | --- |
-| STATE-01..STATE-03 | Phase 1 | Complete |
-| PAPER-01..PAPER-05 | Phase 2 | Complete |
-| RC-01..RC-05 | Phase 3 | Complete - diagnostic pipeline complete; claim-ready blocked |
-| CLAIM-01..CLAIM-05 | Phase 4 | Complete |
-| CAL-01..CAL-04 | Phase 5 | Complete |
-| CASE-01, CASE-02, CASE-04 | Phase 6 | Complete |
-| CASE-03, CASE-05 | Phase 7 | Complete - scaffold contracts only; no case evidence rows |
-| SENS-01..SENS-03 | Phase 8 | Complete - diagnostic/provisional; nice-to-have axes deferred |
-| COMP-01..COMP-02 | Phase 9 | Complete - diagnostic/provisional; exact-vs-greedy claim blocked by realized candidate counts |
-| ART-01..ART-02 | Phase 10 | Complete - paper artifacts generated and verified; claim_ready remains false |
-| MS-01..MS-03 | Phase 11 | Pending - writing-only claim-boundary phase if retained |
-| FINAL-01 | Phase 12 | Pending |
+| EVID-01..EVID-04 | Phase 13 | Pending |
+| GATE-01..GATE-04 | Phase 14 | Pending |
+| DIAG-01..DIAG-04 | Phase 15 | Pending |
+| PATH-01..PATH-04 | Phase 16 | Pending |
+| EXEC-01..EXEC-05 | Phase 17 | Pending |
+| LOCK-01..LOCK-04 | Phase 17 | Pending |
+| FINAL-01..FINAL-04 | Phase 18 | Pending |
 
 **Coverage:**
-- v1 requirements: 40 total
-- Mapped to phases: 40
+- v1.1 requirements: 29 total
+- Mapped to phases: 29
 - Unmapped: 0
 
 ---
-*Requirements defined: 2026-06-14*
-*Last updated: 2026-06-16 after Phase 10 verified paper-artifact closeout*
+*Requirements defined: 2026-06-16*
+*Last updated: 2026-06-16 after v1.1 claim-ready resolution milestone initialization*

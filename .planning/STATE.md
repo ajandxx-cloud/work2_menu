@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
+milestone: v1.1
+milestone_name: Resolve Claim-Ready Gate or Lock Conditional Diagnostic TR-E Paper
 status: ready_to_plan
-last_updated: "2026-06-16T13:56:59+08:00"
-last_activity: 2026-06-16 -- Phase 10 executed, verified, committed, and synchronized
+last_updated: "2026-06-16T15:16:00+08:00"
+last_activity: 2026-06-16 -- v1.1 claim-ready resolution milestone initialized
 progress:
-  total_phases: 12
-  completed_phases: 10
-  total_plans: 20
-  completed_plans: 20
-  percent: 83
-stopped_at: "Phase 10 complete and verified - ready to discuss whether to retain Phase 11"
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
+stopped_at: "Ready to discuss Phase 13 evidence boundary reconstruction"
 ---
 
 # State
@@ -25,16 +25,15 @@ how optimized adaptive `m+w+p` service menus improve, match, or fail to improve
 the profit-service-quality trade-off under paired RC replay, without
 overclaiming beyond artifact and readiness gates.
 
-**Current focus:** Phase 11, if retained - manuscript structure and
-claim-boundary writing only
+**Current focus:** Phase 13 - evidence boundary reconstruction before any
+repair, rerun, or manuscript writing.
 
 ## Current Position
 
-Phase: 11, if retained
+Phase: 13 - Evidence Boundary Reconstruction
 Plan: Not started
-Status: Ready to plan writing-only manuscript structure; no experiments or
-claim upgrades
-Last activity: 2026-06-16 -- Phase 10 verified closeout synchronized
+Status: Ready to discuss and plan Phase 13
+Last activity: 2026-06-16 -- v1.1 claim-ready resolution milestone initialized
 
 ## Initialization Evidence
 
@@ -55,95 +54,65 @@ Existing runtime files observed:
 - `work2_coding/scripts/build_artifacts.py`
 - `work2_coding/scripts/build_manuscript_frame.py`
 - `work2_coding/Experiments/studies/formal_robust_menu.yaml`
+- `work2_coding/Experiments/studies/final_robust_menu.yaml`
 - `work2_coding/Experiments/studies/pilot_robust_menu.yaml`
 - `work2_coding/Experiments/studies/smoke_robust_menu.yaml`
 
 ## Current Notes
 
-- `.planning/codebase/` exists but was generated before the current
-  `work2_coding/` runtime was locked. Treat `ooh_code/` references as stale.
+- `.planning/codebase/` exists and has been refreshed for `work2_coding/`, but
+  any remaining `ooh_code/` references must still be treated as stale until
+  verified against the current filesystem.
 
-- Git status already contains many modified/deleted files outside this
-  initialization. Do not revert unrelated user or prior workflow changes.
+- Do not revert, delete, stash, or overwrite unrelated user or prior workflow
+  changes while resolving claim-ready gates.
 
-- The 6.14 discussion says current smoke/pipeline results are not enough for
-  TR-E empirical claims. Formal checkpoint, formal replay, and claim guard must
-  pass first.
-
-- Attention artifacts and manifests remain V2/diagnostic unless a later phase
-  explicitly upgrades them with independent evidence.
-
-- Phase 5 and Phase 7 are conditional. Record `skipped-by-gate` rather than
-  executing them mechanically when Phase 4 or Phase 6 makes that appropriate.
-
-- If formal results do not support strong dominance, preserve the fallback path:
-  write a conditional service-menu design contribution instead of forcing a
-  universal superiority claim.
-
-- Phase 5 completed a process lock, not new empirical evidence. Calibration
-  and final manifests exist, but `FROZEN_FINAL_SETTINGS.md` marks final rerun
-  `blocked_pending_gate_cleanup` until provenance/readiness/artifact/claim
-  gates are resolved.
-
-- Phase 6 approved a semi-real case route with decision
-  `approved_blocked_pending_gate_cleanup`. Default to a public OSM/open-network
-  reproducibility route; use Yanjiao/Beijing commuting material as narrative
-  support unless it can be documented with equal reproducibility.
-
-- Before gate cleanup, Phase 7 may build ingestion/validation scaffolding and
-  reproducibility checks only. Do not run semi-real case experiments, generate
-  case-study result artifacts, or upgrade manuscript claims.
-
-- Future case-study tables, figures, artifact metadata, and manuscript language
-  must label semi-real geography/network, simulated demand, and simulated
-  choice. Do not claim real passenger behavior, acceptance, opt-out, or profit.
-
-- Phase 7 produced planning-side contracts and validation only under
-  `.planning/data/case_studies/` with status
-  `scaffolding_only_blocked_execution`. No runtime case-study YAML, normalized
-  rows, case artifacts, external data download, matrix build, replay run, or
-  manuscript claim upgrade was created.
-
-- Phase 8 completed the diagnostic must-have sensitivity suite after
-  `PHASE8_BASELINE_VALIDATION_STATUS=passed`. It generated 50 completed rows
-  across `menu_k`, `eta_filter_mode`, `uptake_regime`, and `guardrail`, plus
-  artifacts under
-  `work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/` and
-  `.planning/results/SENSITIVITY_SUMMARY.md`. Status remains
-  `diagnostic_provisional_blocked` with `claim_ready: false`; no abstract or
-  conclusion claim upgrade is authorized.
-
-- Phase 8 nice-to-have sensitivity dimensions remain deferred: candidate pool
-  size, fleet/capacity stress, pricing bounds, and price sensitivity.
-
-- Phase 9 completed the `phase9_exact_greedy_tractability` diagnostic replay:
-  15 solver-scale rows completed, checkpoint load status was `loaded`, and
-  generated artifacts were written under
-  `work2_coding/artifacts/work2_robust_menu/phase9_tractability/`. The
-  planning summary is
-  `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md`.
-
-- Phase 9 did not establish an exact-vs-greedy quality comparison. The
-  configured large scales 12 and 16 used the effective `exact` solver because
-  realized candidate counts stayed below the greedy threshold; the generated
-  status therefore remains `diagnostic_provisional_blocked` with
-  `claim_ready=false`, and gap/overlap evidence is unavailable.
-
-- Phase 10 generated and verified the paper-facing artifact package under both
-  `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/` and
-  `artifacts/work2_robust_menu/phase10_paper_artifacts/`.
+- The v1.1 milestone supersedes the old writing-first next step. Manuscript
+  writing remains deferred until this milestone decides whether the paper is
+  claim-ready empirical, conditional diagnostic, or not ready.
 
 - Phase 10 `CLAIM_GUARD.json` uses schema
   `phase10-strict-claim-guard-v1`, contains 8 claims, and keeps overall
   `claim_ready=false`. The paper-facing artifacts do not authorize manuscript
   claim upgrades.
 
-- Phase 10 `PACKAGE_INDEX.json` contains 74 unique source artifacts with no
-  duplicate `source_path` values.
+- The current selected formal run has 35 completed comparable rows, 5 paired
+  splits, and 7 policy tags. It is diagnostic/provisional, not claim-ready.
 
-- The next step, if retained as Phase 11, is manuscript structure and
-  claim-boundary writing only. It is not another experiment phase and must not
-  change empirical claims.
+- `mainline_random_menu` currently has better mean net profit than
+  `mainline_optimized_adaptive`, and adaptive loses to random on net profit in
+  3 of 5 paired splits.
+
+- `mainline_optimized_adaptive` and
+  `mainline_optimized_fixed_window` are identical across tracked metrics, so
+  adaptive-window increment claims are blocked until evidence changes.
+
+- Phase 8 sensitivity evidence remains diagnostic/provisional with
+  `claim_ready=false`.
+
+- Phase 9 tractability evidence remains diagnostic/provisional because the
+  configured large scales did not exercise greedy fallback; near-optimal greedy
+  and online-tractability claims remain blocked.
+
+- Phase 7 semi-real case material remains scaffold-only. Do not claim case
+  validation or real passenger behavior from simulated demand or simulated
+  choice.
+
+- Phase 13 reconstructs the exact evidence boundary and current
+  `claim_ready=false` causes before any repair, rerun, or manuscript writing.
+
+- Phase 14 produces a gate repair plan without result manipulation.
+
+- Phase 15 diagnoses the random-menu baseline issue and adaptive/fixed-window
+  equality using source rows and code paths.
+
+- Phase 16 selects Path A gate-only repair, Path B pre-registered final rerun,
+  or Path C conditional diagnostic lock.
+
+- Phase 17 executes only the selected path, with strict `CLAIM_GUARD.json` as
+  the only authority for claim upgrades.
+
+- Phase 18 produces the final manuscript-path decision.
 
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
@@ -151,7 +120,7 @@ Existing runtime files observed:
 
 ## Verification Baseline
 
-Minimum checks after implementation phases:
+Minimum check after implementation phases:
 
 ```powershell
 cd work2_coding
@@ -170,24 +139,20 @@ Expected additional checks as phases implement them:
 - `python scripts/test_formal_readiness.py`
 - `python scripts/test_formal_replay_enablement.py`
 - `python scripts/test_study_execution_status.py`
+- `python scripts/test_manuscript_claim_guard.py`
 
 ## Next Step
 
-Phase 10 is verified and complete. The Phase 10 commits are preserved, and
-only planning synchronization remains in this closeout.
+The v1.1 claim-ready resolution milestone is initialized. Start by planning
+Phase 13 evidence boundary reconstruction.
 
 ```text
-$gsd-discuss-phase 11
+$gsd-discuss-phase 13
 ```
 
-Run Phase 11 only if it remains a manuscript structure and claim-boundary
-writing phase. Do not run new experiments, do not change empirical claims, and
-do not reinterpret Phase 8 sensitivity artifacts, Phase 9 tractability
-artifacts, or Phase 10 paper-facing artifacts as claim-ready evidence.
-
-Do not run calibration pilot or final replay until Phase 5 gate cleanup
-conditions are explicitly resolved. Do not run semi-real case experiments or
-generate case-study result claims until upstream gates pass.
+Do not run calibration pilot, final replay, semi-real case execution, or
+manuscript claim upgrades until Phase 13-16 evidence and path decisions
+explicitly authorize them.
 
 ---
-*Updated: 2026-06-16 after Phase 10 verified paper-artifact closeout*
+*Updated: 2026-06-16 after v1.1 claim-ready resolution milestone initialization*

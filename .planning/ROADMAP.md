@@ -334,40 +334,229 @@ manuscript claim upgrades.
 
 ## Phase 11: Manuscript Structure And Writing Plan
 
-**Status:** Not started; retain only if the next step is writing structure and
-claim-boundary language.
+**Status:** Deferred by v1.1 claim-ready resolution milestone (2026-06-16).
 
-**Gate Result:** Phase 11 is not another experiment phase. It must not run new
-experiments, alter empirical evidence, or upgrade manuscript claims while Phase
-10 `CLAIM_GUARD.json` remains overall `claim_ready=false`.
+**Gate Result:** The old writing-only Phase 11 is intentionally deferred until
+the v1.1 claim-ready resolution milestone determines whether the manuscript is
+claim-ready empirical, conditional diagnostic, or not ready. Existing Phase 11
+planning artifacts are preserved, but no manuscript claim should be upgraded
+from them while Phase 10 `CLAIM_GUARD.json` remains overall
+`claim_ready=false`.
 
-**Goal:** Prepare the final TR Part E manuscript structure and boundary-safe
-writing plan.
-
-**Success Criteria:**
-1. Manuscript plan covers Introduction, Literature Review, Problem Description,
-   Model, Solution Method, Experimental Design, Results, Discussion,
-   Conclusion, and Appendix.
-2. Every claim maps to artifact evidence.
-3. Every figure/table has a source artifact.
-4. Reviewer-risk section is included.
-5. No new experiments are run and no empirical claims are changed or upgraded.
-
-**Requirements:** MS-01, MS-02, MS-03
+**Requirements:** Deferred MS-01
 
 ## Phase 12: Final Quality Audit For TR Part E
 
-**Goal:** Audit whether the project is ready to become a high-quality TR Part E
-submission.
+**Status:** Deferred by v1.1 claim-ready resolution milestone (2026-06-16).
+
+**Gate Result:** The old final audit is superseded by Phase 18 below, which
+will review the selected claim path and produce the manuscript-path decision.
+
+**Requirements:** Deferred until Phase 18
+
+## v1.1 Milestone: Resolve Claim-Ready Gate Or Lock Diagnostic TR-E Paper
+
+**Milestone Goal:** Determine whether Work2 can honestly become claim-ready for
+one or more manuscript claims using current repository evidence and
+reproducible experiment gates. If not, formally lock the paper as a conditional
+diagnostic TR-E service-menu optimization manuscript.
+
+**Research Decision:** External ecosystem research is skipped for this
+milestone. The evidence source is the current repository, generated artifact
+packages, readiness outputs, result summaries, source rows, and reproducible
+study pipeline.
+
+**Final Outcomes:**
+
+1. `claim_ready=true` for specific authorized claims, backed by readiness,
+   completed paired rows, regenerated artifacts, and strict claim guard.
+2. `claim_ready=false` with a formal conditional diagnostic manuscript lock.
+3. Not ready for manuscript because unresolved blockers remain.
+
+## Phase 13: Evidence Boundary Reconstruction
+
+**Status:** Not started
+
+**Goal:** Reconstruct the exact current evidence boundary before any repair,
+rerun, or manuscript writing.
 
 **Success Criteria:**
-1. `.planning/final/TR_E_READINESS_REVIEW.md` audits novelty, modeling rigor,
-   algorithmic contribution, experimental credibility, case-study value,
-   reproducibility, and claim clarity.
-2. Fatal weaknesses are identified before submission.
-3. Final deliverables and next-step writing instructions are recorded.
+1. Planning, paper, result, readiness, frozen-setting, and Phase 10 artifact
+   files are read and summarized.
+2. Exact causes of `claim_ready=false` are identified from source artifacts.
+3. Blockers are classified into provenance/readiness, artifact-generation,
+   empirical-performance, adaptive-window, random-baseline, sensitivity,
+   tractability, semi-real-case, and manuscript-language categories.
+4. Deliverables are written under
+   `.planning/milestones/claim_ready_resolution/`.
 
-**Requirements:** FINAL-01
+**Deliverables:**
+- `.planning/milestones/claim_ready_resolution/01_EVIDENCE_BOUNDARY.md`
+- `.planning/milestones/claim_ready_resolution/01_CLAIM_READY_FALSE_CAUSES.md`
+- `.planning/milestones/claim_ready_resolution/01_BLOCKER_TAXONOMY.md`
+
+**Requirements:** EVID-01, EVID-02, EVID-03, EVID-04
+
+**Verification:**
+```powershell
+python -c "import sys; sys.path.insert(0, 'work2_coding'); import Src.config; print('IMPORT_OK')"
+```
+
+## Phase 14: Gate Repair Plan Without Result Manipulation
+
+**Status:** Not started
+
+**Goal:** Create a safe plan to repair readiness and artifact gates without
+changing empirical results or forcing positive conclusions.
+
+**Success Criteria:**
+1. Git status and dirty-git blockers are inspected without destructive cleanup.
+2. Readiness blockers are mapped to dirty files, metadata, checkpoint
+   sidecar/hash, missing result fields, or artifact schema issues.
+3. Artifact failures such as missing `outside_option_util` and invalid or
+   missing `method_family` are classified by root cause.
+4. Every proposed repair is tied to a gate and labeled as legitimate
+   metadata/schema repair, builder repair, true experiment-row issue, evidence
+   quality issue, or new experiment path.
+
+**Deliverables:**
+- `.planning/milestones/claim_ready_resolution/02_GATE_REPAIR_PLAN.md`
+- `.planning/milestones/claim_ready_resolution/02_DIRTY_GIT_ACTIONS_REQUIRED.md`
+- `.planning/milestones/claim_ready_resolution/02_ARTIFACT_SCHEMA_REPAIR_PLAN.md`
+- `.planning/milestones/claim_ready_resolution/02_CHECKPOINT_PROVENANCE_PLAN.md`
+
+**Requirements:** GATE-01, GATE-02, GATE-03, GATE-04
+
+## Phase 15: Main Result Failure Diagnosis
+
+**Status:** Not started
+
+**Goal:** Diagnose whether the weak central claim is a real scientific result,
+a configuration issue, a modeling mismatch, or an implementation bug.
+
+**Success Criteria:**
+1. The random-menu profit advantage is explained using source rows and code
+   paths.
+2. Profit is decomposed into revenue, operating cost, discount/price effect,
+   opt-out/lost demand, accepted home service, accepted meeting-point service,
+   and service-cost effects where available.
+3. Adaptive-window and optimized fixed-window equality is explained by code
+   path, generated window values, feasibility filtering, metric availability,
+   manifest configuration, or true equivalence.
+4. The phase states whether a strong central claim remains scientifically
+   plausible.
+
+**Deliverables:**
+- `.planning/milestones/claim_ready_resolution/03_RANDOM_BASELINE_DIAGNOSIS.md`
+- `.planning/milestones/claim_ready_resolution/03_ADAPTIVE_WINDOW_DIAGNOSIS.md`
+- `.planning/milestones/claim_ready_resolution/03_OBJECTIVE_EVALUATION_ALIGNMENT.md`
+- `.planning/milestones/claim_ready_resolution/03_RECOVERABILITY_DECISION.md`
+
+**Requirements:** DIAG-01, DIAG-02, DIAG-03, DIAG-04
+
+## Phase 16: Claim-Ready Path Decision
+
+**Status:** Not started
+
+**Goal:** Choose Path A, Path B, or Path C based on Phase 13-15 evidence.
+
+**Success Criteria:**
+1. `.planning/results/CALIBRATION_PROTOCOL.md` and
+   `.planning/results/FROZEN_FINAL_SETTINGS.md` are read.
+2. The phase determines whether frozen settings support a legitimate final
+   rerun under calibration/final-test separation.
+3. Additional experiments are classified as legitimate robustness evidence or
+   prohibited result-chasing.
+4. The decision uses the required fields: selected path, reason, allowed
+   actions, prohibited actions, claim ceiling, positive central claim status,
+   conditional claim status, and diagnostic status.
+
+**Path Options:**
+- **Path A:** Gate-only repair and artifact regeneration, only when empirical
+  evidence is already sufficient and blockers are repairable provenance or
+  artifact metadata issues.
+- **Path B:** Pre-registered final rerun, only when evidence is scientifically
+  recoverable and frozen final settings are valid without tuning on final
+  results.
+- **Path C:** Conditional diagnostic lock, when central superiority is not
+  recoverable, adaptive-window value is unsupported, a rerun would be
+  p-hacking, or claim readiness cannot be honestly upgraded.
+
+**Deliverable:**
+- `.planning/milestones/claim_ready_resolution/04_PATH_DECISION.md`
+
+**Requirements:** PATH-01, PATH-02, PATH-03, PATH-04
+
+## Phase 17: Execute Selected Claim Path
+
+**Status:** Not started; conditional on Phase 16
+
+**Goal:** Execute only the selected path and let strict `CLAIM_GUARD.json`
+determine whether any manuscript claim can be upgraded.
+
+**Success Criteria:**
+1. If Path A is selected, only non-semantic metadata/provenance/artifact
+   repairs approved by Phase 16 are applied and artifacts are regenerated.
+2. If Path B is selected, only pre-registered frozen final settings are used,
+   and completed, failed, timeout, infeasible, blocked, and missing rows are
+   all preserved.
+3. If Path C is selected, or Path A/B still produce `claim_ready=false`, the
+   paper is formally locked as conditional diagnostic.
+4. Every claim upgrade is authorized only by strict claim guard output.
+5. If the paper remains diagnostic, unsupported central superiority,
+   adaptive-window, greedy optimality, online tractability, and case-validation
+   claims are explicitly prohibited.
+
+**Conditional Deliverables:**
+- Path A:
+  - `.planning/milestones/claim_ready_resolution/05A_GATE_REPAIR_REPORT.md`
+  - new regenerated artifact package
+  - `.planning/milestones/claim_ready_resolution/05A_CLAIM_GUARD_COMPARISON.md`
+- Path B:
+  - `.planning/milestones/claim_ready_resolution/05B_FINAL_RERUN_PROTOCOL.md`
+  - `.planning/milestones/claim_ready_resolution/05B_FINAL_RERUN_REPORT.md`
+  - `.planning/milestones/claim_ready_resolution/05B_FINAL_CLAIM_CLASSIFICATION.md`
+  - final regenerated artifact package
+- Path C:
+  - `.planning/milestones/claim_ready_resolution/05C_DIAGNOSTIC_LOCK.md`
+  - `.planning/milestones/claim_ready_resolution/05C_SAFE_CLAIM_TABLE.md`
+  - `.planning/milestones/claim_ready_resolution/05C_PROHIBITED_LANGUAGE.md`
+  - `.planning/milestones/claim_ready_resolution/05C_MANUSCRIPT_POSITIONING.md`
+
+**Requirements:** EXEC-01, EXEC-02, EXEC-03, EXEC-04, EXEC-05, LOCK-01,
+LOCK-02, LOCK-03, LOCK-04
+
+## Phase 18: Final Milestone Readiness Review
+
+**Status:** Not started
+
+**Goal:** Produce the final evidence-based answer on whether the paper can move
+to manuscript writing.
+
+**Success Criteria:**
+1. All v1.1 deliverables are reviewed.
+2. Final `CLAIM_GUARD.json` status is reviewed.
+3. Allowed and prohibited claims are listed by abstract, introduction, results,
+   and conclusion sections.
+4. The manuscript path is classified as claim-ready empirical TR-E paper,
+   conditional diagnostic TR-E paper, or not ready for manuscript.
+5. Required verification commands are run or explicitly documented as
+   unavailable/failed.
+
+**Deliverable:**
+- `.planning/milestones/claim_ready_resolution/06_FINAL_DECISION.md`
+
+**Verification:**
+```powershell
+cd work2_coding
+python -c "import sys; sys.path.insert(0, '.'); import Src.config; print('IMPORT_OK')"
+python scripts/test_artifact_gates.py
+python scripts/test_paired_replay_contract.py
+python scripts/test_policy_fairness_contract.py
+python scripts/test_manuscript_claim_guard.py
+```
+
+**Requirements:** FINAL-01, FINAL-02, FINAL-03, FINAL-04
 
 ---
-*Roadmap initialized: 2026-06-14; updated 2026-06-16 after Phase 10 verified paper-artifact closeout*
+*Roadmap initialized: 2026-06-14; updated 2026-06-16 after v1.1 claim-ready resolution milestone initialization*
