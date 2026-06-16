@@ -1,0 +1,42 @@
+{
+  "artifact_gate_status": "blocked",
+  "artifact_kind": "status",
+  "artifact_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/ARTIFACT_STATUS.json",
+  "checkpoint_statuses": [],
+  "claim_ready": false,
+  "diagnostic_provisional": true,
+  "generated_at_utc": "2026-06-16T03:15:42+00:00",
+  "git_provenance": {},
+  "manifest_hash": "",
+  "manifest_snapshot_path": "",
+  "phase": "09",
+  "phase9_gate_hash": "1c40c03460deb883ca7512c01f62ed0365a76e35ac0017a10dadc7353e9bbd8a",
+  "phase9_gate_path": "work2_coding/outputs/phase9_dspo_family_validation/PHASE9_DSPO_FAMILY_VALIDATION.json",
+  "phase9_gate_status": "open",
+  "schema_version": "phase9-tractability-artifact-metadata-v1",
+  "source_row_count": 0,
+  "source_run_dir": "",
+  "source_run_id": "",
+  "status": "diagnostic_provisional_blocked",
+  "status_reasons": [
+    "Phase 9 tractability source run is missing or unreadable."
+  ],
+  "validation": {
+    "blocked_count": 0,
+    "checkpoint_statuses": [],
+    "completed_count": 0,
+    "failures": [
+      {
+        "code": "source_run_missing",
+        "error": "no completed source run found for study phase9_exact_greedy_tractability under work2_coding/outputs/studies/phase9_exact_greedy_tractability",
+        "path": "work2_coding/outputs/studies",
+        "reason": "Phase 9 tractability source run is missing or unreadable."
+      }
+    ],
+    "paired_group_ids": [],
+    "policy_tags": [],
+    "row_count": 0,
+    "solver_scale_values": [],
+    "valid": false
+  }
+}
