@@ -278,14 +278,25 @@ upgrade is authorized.
 
 ## Phase 9: Exact Versus Greedy And Computational Tractability
 
-**Goal:** Show the online menu solver is computationally credible.
+**Status:** Complete (2026-06-16)
+
+**Gate Result:** Completed as diagnostic/provisional tractability evidence.
+The `phase9_exact_greedy_tractability` replay produced 15 completed rows and
+generated aggregate/table/figure-status artifacts, but the configured large
+scales did not trigger greedy fallback because realized candidate counts stayed
+below the exact threshold. Exact-vs-greedy quality, gap/overlap, and
+claim-ready computational-credibility statements remain blocked/narrowed.
+
+**Goal:** Show the online menu solver is computationally credible, or narrow
+the claim if the exact-vs-greedy evidence is not established.
 
 **Success Criteria:**
-1. Small candidate sets compare exact enumeration and greedy selection.
-2. Large candidate sets report greedy runtime and exact infeasibility.
-3. Tables/figures report optimality gap, menu overlap, menu build time,
-   candidate count, and enumerated menu count.
-4. Claims are narrowed if greedy gaps are large.
+1. Small candidate sets report exact enumeration diagnostics.
+2. Large configured candidate sets are attempted and explicitly report whether
+   greedy fallback/exact infeasibility was exercised.
+3. Tables/figures report available candidate count, enumerated menu count, and
+   menu build time, plus explicit blocked status for unavailable gap/overlap.
+4. Claims are narrowed because exact-vs-greedy quality was not established.
 
 **Requirements:** COMP-01, COMP-02
 
@@ -333,4 +344,4 @@ submission.
 **Requirements:** FINAL-01
 
 ---
-*Roadmap initialized: 2026-06-14 for TR-E service menu optimization experimental refactoring*
+*Roadmap initialized: 2026-06-14; updated 2026-06-16 after Phase 9 diagnostic tractability closeout*

@@ -3,34 +3,34 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
 status: executing
-last_updated: "2026-06-16T03:18:08.649Z"
+last_updated: "2026-06-16T03:26:42.170Z"
 last_activity: 2026-06-16
 progress:
   total_phases: 12
-  completed_phases: 8
+  completed_phases: 9
   total_plans: 18
-  completed_plans: 17
-  percent: 67
+  completed_plans: 18
+  percent: 75
 ---
 
 # State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-15)
+See: `.planning/PROJECT.md` (updated 2026-06-16)
 
 **Core value:** Produce credible, reproducible TR Part E evidence that
 optimized adaptive `m+w+p` service menus improve, match, or fail to improve
 the profit-service-quality trade-off under paired RC replay, without
 overclaiming beyond artifact and readiness gates.
 
-**Current focus:** Phase 09 — exact-versus-greedy-and-computational-tractability
+**Current focus:** Phase 10 - paper-artifact-generation
 
 ## Current Position
 
-Phase: 09 (exact-versus-greedy-and-computational-tractability) — EXECUTING
-Plan: 3 of 3
-Status: Ready to execute
+Phase: 10 (paper-artifact-generation) - READY
+Plan: pending
+Status: Ready for Phase 10 planning
 Last activity: 2026-06-16
 
 ## Initialization Evidence
@@ -113,6 +113,19 @@ Existing runtime files observed:
 - Phase 8 nice-to-have sensitivity dimensions remain deferred: candidate pool
   size, fleet/capacity stress, pricing bounds, and price sensitivity.
 
+- Phase 9 completed the `phase9_exact_greedy_tractability` diagnostic replay:
+  15 solver-scale rows completed, checkpoint load status was `loaded`, and
+  generated artifacts were written under
+  `work2_coding/artifacts/work2_robust_menu/phase9_tractability/`. The
+  planning summary is
+  `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md`.
+
+- Phase 9 did not establish an exact-vs-greedy quality comparison. The
+  configured large scales 12 and 16 used the effective `exact` solver because
+  realized candidate counts stayed below the exact threshold; the generated
+  status therefore remains `diagnostic_provisional_blocked` with
+  `claim_ready=false`, and gap/overlap evidence is unavailable.
+
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
   so.
@@ -141,20 +154,20 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 8 is verified and complete. Phase 9 Plans 09-01 and 09-02 are complete;
-execute Phase 9 Plan 09-03 next:
+Phase 9 is verified and complete as diagnostic/provisional tractability
+evidence. Phase 10 is the next planned phase:
 
 ```text
-$gsd-execute-phase 9
+$gsd-execute-phase 10
 ```
 
-Continue avoiding case-study experiments until upstream gates pass. Phase 9
-should focus on exact versus greedy and computational tractability; do not
-reinterpret Phase 8 diagnostic sensitivity artifacts as claim-ready evidence.
+Continue avoiding case-study experiments until upstream gates pass. Do not
+reinterpret Phase 8 sensitivity artifacts or Phase 9 tractability artifacts as
+claim-ready evidence.
 
 Do not run calibration pilot or final replay until Phase 5 gate cleanup
 conditions are explicitly resolved. Do not run semi-real case experiments or
 generate case-study result claims until upstream gates pass.
 
 ---
-*Updated: 2026-06-15 after Phase 8 diagnostic sensitivity closeout*
+*Updated: 2026-06-16 after Phase 9 diagnostic tractability closeout*

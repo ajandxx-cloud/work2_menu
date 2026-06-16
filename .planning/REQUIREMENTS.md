@@ -110,10 +110,16 @@ gates.
   (`menu_k`, ETA uncertainty/filter mode, uptake regime, opt-out guardrail)
   from nice-to-have dimensions (candidate pool size, fleet/capacity stress,
   pricing bounds or price sensitivity).
-- [ ] **COMP-01**: Exact-small versus greedy-large experiments report optimality
-  gap, menu overlap, build time, candidate count, and enumerated menu count.
-- [ ] **COMP-02**: The solver is shown to be computationally credible for
-  online DRT, or the claim is narrowed.
+- [x] **COMP-01**: Phase 9 exact-small versus configured greedy-large
+  experiments generated 15 completed rows and artifacts reporting candidate
+  count, enumerated menu count, and build time. Optimality gap and menu overlap
+  remain explicitly unavailable/blocked because the configured large scales did
+  not trigger greedy fallback.
+- [x] **COMP-02**: Phase 9 narrows the computational-credibility claim:
+  `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md` remains
+  `diagnostic_provisional_blocked` with `claim_ready: false`, and no
+  claim-ready online-tractability or near-optimal-greedy statement is
+  authorized.
 
 ### Artifacts And Manuscript
 
@@ -162,7 +168,7 @@ gates.
 | CASE-01, CASE-02, CASE-04 | Phase 6 | Complete |
 | CASE-03, CASE-05 | Phase 7 | Complete - scaffold contracts only; no case evidence rows |
 | SENS-01..SENS-03 | Phase 8 | Complete - diagnostic/provisional; nice-to-have axes deferred |
-| COMP-01..COMP-02 | Phase 9 | Pending |
+| COMP-01..COMP-02 | Phase 9 | Complete - diagnostic/provisional; exact-vs-greedy claim blocked by realized candidate counts |
 | ART-01..ART-02 | Phase 10 | Pending |
 | MS-01..MS-02 | Phase 11 | Pending |
 | FINAL-01 | Phase 12 | Pending |
@@ -174,4 +180,4 @@ gates.
 
 ---
 *Requirements defined: 2026-06-14*
-*Last updated: 2026-06-15 after Phase 8 diagnostic sensitivity closeout*
+*Last updated: 2026-06-16 after Phase 9 diagnostic tractability closeout*
