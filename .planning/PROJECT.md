@@ -5,7 +5,7 @@
 This is a GSD-managed brownfield research rebuild for Work2, focused on dynamic
 service menu optimization for many-to-one demand-responsive transit and
 last-mile mobility. The active runtime is `work2_coding/`, and the project
-turns the existing Work2 robust-menu implementation into a claim-ready
+turns the existing Work2 robust-menu implementation into a claim-gated
 Transportation Research Part E paper pipeline.
 
 The central object is the displayed service menu: for each sequential passenger
@@ -15,9 +15,10 @@ option handled explicitly.
 
 ## Core Value
 
-Produce credible, reproducible TR Part E evidence that optimized adaptive
-`m+w+p` service menus improve the profit-service-quality trade-off under paired
-RC replay, without overclaiming beyond artifact and readiness gates.
+Produce credible, reproducible TR Part E evidence on when and how optimized
+adaptive `m+w+p` service menus improve, match, or fail to improve the
+profit-service-quality trade-off under paired RC replay, without overclaiming
+beyond artifact and readiness gates.
 
 If formal evidence does not show strong dominance, reframe the paper as a
 conditional service-menu design study that identifies when menu optimization
@@ -68,14 +69,26 @@ opt-out, ETA uncertainty, or capacity constraints.
   `work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/`, and wrote
   `.planning/results/SENSITIVITY_SUMMARY.md` with
   `status: diagnostic_provisional_blocked` and `claim_ready: false`.
+  Phases 6-8 continued after weak Phase 4 central-claim evidence to add
+  conditional diagnosis and boundary evidence, not to upgrade strong manuscript
+  claims.
 - [x] Phase 9 ran `phase9_exact_greedy_tractability`, generated 15 completed
   diagnostic rows and tractability artifacts under
   `work2_coding/artifacts/work2_robust_menu/phase9_tractability/`, and wrote
   `.planning/results/COMPUTATIONAL_TRACTABILITY_SUMMARY.md` with
   `status: diagnostic_provisional_blocked` and `claim_ready: false`.
-  The configured large scales did not trigger greedy fallback because realized
-  candidate counts stayed below the exact threshold, so exact-vs-greedy quality
-  and computational-credibility claims remain narrowed/blocked.
+  The intended exact-vs-greedy comparison was not established: realized
+  candidate counts stayed below the greedy threshold, so even large configured
+  scales still used the effective exact solver. Phase 9 remains
+  diagnostic/provisional, and exact-vs-greedy quality plus
+  computational-credibility claims remain narrowed/blocked.
+- [x] Phase 10 generated and verified the paper artifact package under both
+  `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/` and
+  `artifacts/work2_robust_menu/phase10_paper_artifacts/`. The package includes
+  `CLAIM_GUARD.json` with schema `phase10-strict-claim-guard-v1`, 8 claims,
+  and overall `claim_ready=false`; `PACKAGE_INDEX.json` contains 74 unique
+  source artifacts with no duplicate `source_path` values. Phase 10 generated
+  paper-facing artifacts, but did not authorize manuscript claim upgrades.
 
 ### Active
 
@@ -90,8 +103,14 @@ opt-out, ETA uncertainty, or capacity constraints.
 - [ ] Use Phase 9 tractability outputs only as diagnostic/provisional evidence
   unless a future run actually exercises greedy fallback or further narrows the
   solver contract.
-- [ ] Continue to artifact, manuscript, and final readiness phases only with
-  claim gates explicit and unresolved blockers visible.
+- [ ] Use Phase 10 paper artifacts as source mapping and claim-boundary
+  evidence only while `claim_ready=false`; do not upgrade empirical claims from
+  the generated package.
+- [ ] If retained, Phase 11 is manuscript structure and claim-boundary writing
+  only. It is not another experiment phase and must not change empirical
+  claims.
+- [ ] Continue to manuscript and final readiness phases only with claim gates
+  explicit and unresolved blockers visible.
 
 ### Out of Scope
 
@@ -181,7 +200,8 @@ before any empirical superiority claim is made.
 | Add a semi-real case only behind gates | Phase 6 found public OSM/open-network data is reproducible enough for a supplemental semi-real external scenario, but no real passenger behavior, acceptance, opt-out, or profit may be claimed from simulated demand/choice. | Validated |
 | Close Phase 7 as scaffold-only | Phase 7 created reproducible planning contracts and validation checks, but upstream gates still block case execution, result artifacts, and manuscript claim upgrades. | Validated |
 | Treat Phase 8 sensitivity as diagnostic boundary evidence | Phase 8 generated 50 completed rows across the four must-have axes, but artifacts and summary remain `diagnostic_provisional_blocked` with `claim_ready=false`; candidate pool, fleet/capacity stress, and pricing sensitivity stay deferred. | Validated |
-| Treat Phase 9 exact-vs-greedy as blocked diagnostic evidence | The 15-row run completed, but realized candidate counts stayed below the exact threshold on the configured large scales, so greedy fallback did not trigger and gap/overlap evidence is unavailable. | Validated |
+| Treat Phase 9 exact-vs-greedy as blocked diagnostic evidence | The 15-row run completed, but realized candidate counts stayed below the greedy threshold on the configured large scales, so the effective exact solver was still used and gap/overlap evidence is unavailable. | Validated |
+| Treat Phase 10 paper artifacts as claim-boundary packaging | Phase 10 generated mirrored paper-facing artifact packages with a strict 8-claim guard and 74 unique indexed source artifacts, but overall `claim_ready=false` blocks manuscript claim upgrades. | Validated |
 
 ## Evolution
 
@@ -203,4 +223,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-16 after Phase 9 diagnostic tractability closeout*
+*Last updated: 2026-06-16 after Phase 10 verified paper-artifact closeout*

@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Work2_TR_E_Service_Menu_Optimization_Final
-status: executing
-last_updated: "2026-06-16T03:59:10.545Z"
-last_activity: 2026-06-16 -- Phase 10 planning complete
+status: ready_to_plan
+last_updated: "2026-06-16T13:56:59+08:00"
+last_activity: 2026-06-16 -- Phase 10 executed, verified, committed, and synchronized
 progress:
   total_phases: 12
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 20
-  completed_plans: 18
-  percent: 75
+  completed_plans: 20
+  percent: 83
+stopped_at: "Phase 10 complete and verified - ready to discuss whether to retain Phase 11"
 ---
 
 # State
@@ -19,19 +20,21 @@ progress:
 
 See: `.planning/PROJECT.md` (updated 2026-06-16)
 
-**Core value:** Produce credible, reproducible TR Part E evidence that
-optimized adaptive `m+w+p` service menus improve, match, or fail to improve
+**Core value:** Produce credible, reproducible TR Part E evidence on when and
+how optimized adaptive `m+w+p` service menus improve, match, or fail to improve
 the profit-service-quality trade-off under paired RC replay, without
 overclaiming beyond artifact and readiness gates.
 
-**Current focus:** Phase 10 - paper-artifact-generation
+**Current focus:** Phase 11, if retained - manuscript structure and
+claim-boundary writing only
 
 ## Current Position
 
-Phase: 10 (paper-artifact-generation) - READY
-Plan: pending
-Status: Ready to execute
-Last activity: 2026-06-16 -- Phase 10 planning complete
+Phase: 11, if retained
+Plan: Not started
+Status: Ready to plan writing-only manuscript structure; no experiments or
+claim upgrades
+Last activity: 2026-06-16 -- Phase 10 verified closeout synchronized
 
 ## Initialization Evidence
 
@@ -122,9 +125,25 @@ Existing runtime files observed:
 
 - Phase 9 did not establish an exact-vs-greedy quality comparison. The
   configured large scales 12 and 16 used the effective `exact` solver because
-  realized candidate counts stayed below the exact threshold; the generated
+  realized candidate counts stayed below the greedy threshold; the generated
   status therefore remains `diagnostic_provisional_blocked` with
   `claim_ready=false`, and gap/overlap evidence is unavailable.
+
+- Phase 10 generated and verified the paper-facing artifact package under both
+  `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/` and
+  `artifacts/work2_robust_menu/phase10_paper_artifacts/`.
+
+- Phase 10 `CLAIM_GUARD.json` uses schema
+  `phase10-strict-claim-guard-v1`, contains 8 claims, and keeps overall
+  `claim_ready=false`. The paper-facing artifacts do not authorize manuscript
+  claim upgrades.
+
+- Phase 10 `PACKAGE_INDEX.json` contains 74 unique source artifacts with no
+  duplicate `source_path` values.
+
+- The next step, if retained as Phase 11, is manuscript structure and
+  claim-boundary writing only. It is not another experiment phase and must not
+  change empirical claims.
 
 - Timestamps should use ISO-8601 with timezone. Planning timestamps default to
   Beijing time; generated run artifacts may use UTC if their own metadata says
@@ -154,20 +173,21 @@ Expected additional checks as phases implement them:
 
 ## Next Step
 
-Phase 9 is verified and complete as diagnostic/provisional tractability
-evidence. Phase 10 is the next planned phase:
+Phase 10 is verified and complete. The Phase 10 commits are preserved, and
+only planning synchronization remains in this closeout.
 
 ```text
-$gsd-execute-phase 10
+$gsd-discuss-phase 11
 ```
 
-Continue avoiding case-study experiments until upstream gates pass. Do not
-reinterpret Phase 8 sensitivity artifacts or Phase 9 tractability artifacts as
-claim-ready evidence.
+Run Phase 11 only if it remains a manuscript structure and claim-boundary
+writing phase. Do not run new experiments, do not change empirical claims, and
+do not reinterpret Phase 8 sensitivity artifacts, Phase 9 tractability
+artifacts, or Phase 10 paper-facing artifacts as claim-ready evidence.
 
 Do not run calibration pilot or final replay until Phase 5 gate cleanup
 conditions are explicitly resolved. Do not run semi-real case experiments or
 generate case-study result claims until upstream gates pass.
 
 ---
-*Updated: 2026-06-16 after Phase 9 diagnostic tractability closeout*
+*Updated: 2026-06-16 after Phase 10 verified paper-artifact closeout*

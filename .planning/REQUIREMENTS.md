@@ -1,10 +1,10 @@
 # Requirements: Work2_TR_E_Service_Menu_Optimization_Final
 
 **Defined:** 2026-06-14
-**Core Value:** Produce credible, reproducible TR Part E evidence that optimized
-adaptive `m+w+p` service menus improve the profit-service-quality trade-off
-under paired RC replay, without overclaiming beyond artifact and readiness
-gates.
+**Core Value:** Produce credible, reproducible TR Part E evidence on when and
+how optimized adaptive `m+w+p` service menus improve, match, or fail to improve
+the profit-service-quality trade-off under paired RC replay, without
+overclaiming beyond artifact and readiness gates.
 
 ## v1 Requirements
 
@@ -40,7 +40,8 @@ gates.
   before formal execution.
 - [x] **RC-02**: The required shared checkpoint path is generated or verified:
   `outputs/shared_training/work2_robust_menu/formal/supervised_ml.pt`.
-- [x] **RC-03**: Formal readiness passes without bypassing blockers.
+- [x] **RC-03**: Formal readiness status is explicit; claim-ready readiness
+  remains blocked without bypassing blockers.
 - [x] **RC-04**: Formal RC replay produces completed or explicitly failed
   normalized rows for comparable policy variants.
 - [x] **RC-05**: Formal artifact generation produces readiness, row, summary,
@@ -123,15 +124,23 @@ gates.
 
 ### Artifacts And Manuscript
 
-- [ ] **ART-01**: Paper-facing tables and figures are generated from run rows
-  and artifact builders only.
-- [ ] **ART-02**: `CLAIM_GUARD.json` states whether each claim is supported
-  before manuscript language is upgraded.
+- [x] **ART-01**: Phase 10 generated paper-facing artifact packages from run
+  rows and artifact builders only under
+  `work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/` and
+  `artifacts/work2_robust_menu/phase10_paper_artifacts/`. `PACKAGE_INDEX.json`
+  contains 74 unique source artifacts with no duplicate `source_path` values.
+- [x] **ART-02**: Phase 10 `CLAIM_GUARD.json` uses schema
+  `phase10-strict-claim-guard-v1`, contains 8 claims, and keeps overall
+  `claim_ready=false`; generated paper-facing artifacts do not authorize
+  manuscript claim upgrades.
 - [ ] **MS-01**: The manuscript plan follows the TR Part E structure:
   Introduction, Literature Review, Problem Description, Model, Solution Method,
   Experimental Design, Results, Discussion, Conclusion, and Appendix.
 - [ ] **MS-02**: Manuscript claims are traceable to source artifacts and avoid
   overstating simulated passenger behavior.
+- [ ] **MS-03**: If retained, Phase 11 is manuscript structure and
+  claim-boundary writing only; it is not another experiment phase and must not
+  change empirical claims.
 - [ ] **FINAL-01**: A final TR Part E readiness review audits novelty, modeling
   rigor, algorithmic contribution, experimental credibility, reproducibility,
   and claim clarity.
@@ -162,22 +171,22 @@ gates.
 | --- | --- | --- |
 | STATE-01..STATE-03 | Phase 1 | Complete |
 | PAPER-01..PAPER-05 | Phase 2 | Complete |
-| RC-01..RC-05 | Phase 3 | Pending |
+| RC-01..RC-05 | Phase 3 | Complete - diagnostic pipeline complete; claim-ready blocked |
 | CLAIM-01..CLAIM-05 | Phase 4 | Complete |
 | CAL-01..CAL-04 | Phase 5 | Complete |
 | CASE-01, CASE-02, CASE-04 | Phase 6 | Complete |
 | CASE-03, CASE-05 | Phase 7 | Complete - scaffold contracts only; no case evidence rows |
 | SENS-01..SENS-03 | Phase 8 | Complete - diagnostic/provisional; nice-to-have axes deferred |
 | COMP-01..COMP-02 | Phase 9 | Complete - diagnostic/provisional; exact-vs-greedy claim blocked by realized candidate counts |
-| ART-01..ART-02 | Phase 10 | Pending |
-| MS-01..MS-02 | Phase 11 | Pending |
+| ART-01..ART-02 | Phase 10 | Complete - paper artifacts generated and verified; claim_ready remains false |
+| MS-01..MS-03 | Phase 11 | Pending - writing-only claim-boundary phase if retained |
 | FINAL-01 | Phase 12 | Pending |
 
 **Coverage:**
-- v1 requirements: 39 total
-- Mapped to phases: 39
+- v1 requirements: 40 total
+- Mapped to phases: 40
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-14*
-*Last updated: 2026-06-16 after Phase 9 diagnostic tractability closeout*
+*Last updated: 2026-06-16 after Phase 10 verified paper-artifact closeout*

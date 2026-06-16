@@ -25,6 +25,8 @@ smoke-only, diagnostic-only, placeholder-only, blocked, or failed rows.
 3. If Phase 4 finds that RC formal evidence does not support any defensible
    central claim, do not continue mechanically into case study and sensitivity.
    First produce failure diagnosis and paper reframing guidance.
+   Phases 6-8 may continue only as conditional diagnosis and boundary evidence,
+   not as a strong-claim upgrade path.
 4. Phase 2 must produce a paper-level mathematical model skeleton, not only a
    prose research plan.
 5. Phase 4 must report paired differences by split and uptake regime. If seed
@@ -101,15 +103,18 @@ script collection.
 available. Claim-ready manuscript use remains blocked by dirty-git readiness
 and generated artifact/claim-guard gates.
 
-**Goal:** Complete the existing RC formal benchmark pipeline and produce
-claim-ready formal artifacts if gates pass.
+**Goal:** Complete the existing RC formal benchmark pipeline diagnostically:
+make readiness/checkpoint status explicit, produce comparable formal rows, and
+build generated status artifacts while preserving claim-ready blockers.
 
 **Success Criteria:**
 1. `formal_robust_menu.yaml` and related manifests are inspected.
 2. Required shared checkpoint is generated or verified.
-3. Formal readiness passes without bypasses.
+3. Formal readiness status is explicit; claim-ready readiness remains blocked
+   without bypasses.
 4. Formal replay executes and writes comparable normalized rows.
-5. Claim-ready artifacts and manuscript frame are built from generated rows.
+5. Generated artifact and manuscript-frame status is explicit, with
+   claim-ready gates blocked until residual blockers are resolved.
 
 **Requirements:** RC-01, RC-02, RC-03, RC-04, RC-05
 
@@ -302,6 +307,18 @@ the claim if the exact-vs-greedy evidence is not established.
 
 ## Phase 10: Paper Artifact Generation
 
+**Status:** Complete (2026-06-16)
+
+**Gate Result:** Phase 10 generated and verified the paper artifact package
+under both
+`work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/` and
+`artifacts/work2_robust_menu/phase10_paper_artifacts/`. `CLAIM_GUARD.json`
+uses schema `phase10-strict-claim-guard-v1`, contains 8 claims, and keeps
+overall `claim_ready=false`. `PACKAGE_INDEX.json` contains 74 unique source
+artifacts with no duplicate `source_path` values. The package is
+paper-facing source and claim-boundary infrastructure; it does not authorize
+manuscript claim upgrades.
+
 **Goal:** Generate paper-facing tables, figures, and manuscript frame.
 
 **Success Criteria:**
@@ -317,7 +334,15 @@ the claim if the exact-vs-greedy evidence is not established.
 
 ## Phase 11: Manuscript Structure And Writing Plan
 
-**Goal:** Prepare the final TR Part E manuscript structure.
+**Status:** Not started; retain only if the next step is writing structure and
+claim-boundary language.
+
+**Gate Result:** Phase 11 is not another experiment phase. It must not run new
+experiments, alter empirical evidence, or upgrade manuscript claims while Phase
+10 `CLAIM_GUARD.json` remains overall `claim_ready=false`.
+
+**Goal:** Prepare the final TR Part E manuscript structure and boundary-safe
+writing plan.
 
 **Success Criteria:**
 1. Manuscript plan covers Introduction, Literature Review, Problem Description,
@@ -326,8 +351,9 @@ the claim if the exact-vs-greedy evidence is not established.
 2. Every claim maps to artifact evidence.
 3. Every figure/table has a source artifact.
 4. Reviewer-risk section is included.
+5. No new experiments are run and no empirical claims are changed or upgraded.
 
-**Requirements:** MS-01, MS-02
+**Requirements:** MS-01, MS-02, MS-03
 
 ## Phase 12: Final Quality Audit For TR Part E
 
@@ -344,4 +370,4 @@ submission.
 **Requirements:** FINAL-01
 
 ---
-*Roadmap initialized: 2026-06-14; updated 2026-06-16 after Phase 9 diagnostic tractability closeout*
+*Roadmap initialized: 2026-06-14; updated 2026-06-16 after Phase 10 verified paper-artifact closeout*
