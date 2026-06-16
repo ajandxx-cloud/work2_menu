@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: executing
-last_updated: "2026-06-16T13:12:34.578Z"
-last_activity: 2026-06-16 -- Phase 01 planning complete
+status: ready_to_plan
+last_updated: 2026-06-16T14:49:15.023Z
+last_activity: 2026-06-16 -- Phase 02 complete
 progress:
   total_phases: 6
-  completed_phases: 0
-  total_plans: 1
-  completed_plans: 0
-  percent: 0
+  completed_phases: 2
+  total_plans: 2
+  completed_plans: 2
+  percent: 33
+stopped_at: Phase 02 complete (1/1) - ready to discuss Phase 3
 ---
 
 # State
@@ -23,15 +24,16 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Phase 1 - repository and evidence boundary audit before any
-repair, final replay, or manuscript writing.
+**Current focus:** Phase 3 - claim-ready evidence decision gate. Decide
+whether final replay is legitimate or the paper should remain conditional
+diagnostic before repair, final replay, or manuscript writing.
 
 ## Current Position
 
-Phase: 1 - Repository And Evidence Boundary Audit
+Phase: 3
 Plan: Not started
-Status: Ready to execute
-Last activity: 2026-06-16 -- Phase 01 planning complete
+Status: Ready to plan
+Last activity: 2026-06-16 -- Phase 02 complete
 new planning rather than restoring deleted legacy GSD docs
 
 ## Initialization Evidence
@@ -91,13 +93,15 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Start Phase 1:
+Discuss Phase 3:
 
 ```text
-$gsd-plan-phase 1
+$gsd-discuss-phase 3
 ```
 
-or execute the audit directly if no additional planning is needed.
+Phase 3 should decide whether frozen final settings and calibration/final-test
+separation justify a clean, pre-registered final replay, or whether the paper
+should remain conditional diagnostic.
 
 ---
-*Updated: 2026-06-16 after regenerated GSD project initialization*
+*Updated: 2026-06-16 after Phase 02 completion*
