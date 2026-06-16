@@ -1,6 +1,7 @@
 import json
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -145,8 +146,10 @@ def test_writer_outputs_indexes_markdown_and_mirror():
         section_map = json.loads((output_root / "ARTIFACT_TO_SECTION_MAP.json").read_text(encoding="utf-8"))
         status = json.loads((output_root / "PACKAGE_STATUS.json").read_text(encoding="utf-8"))
         guard = json.loads((output_root / "CLAIM_GUARD.json").read_text(encoding="utf-8"))
+        path_counts = Counter(entry["source_path"] for entry in package_index["entries"])
         assert result["claim_ready"] is False
         assert package_index["claim_ready"] is False
+        assert not [path for path, count in path_counts.items() if count > 1]
         assert status["claim_ready"] is False
         assert status["strict_claim_guard_claim_ready"] is False
         assert status["manuscript_positive_claims_allowed"] is False

@@ -52,6 +52,7 @@ MAIN_GLOBS = [
     ("README.md", "readme"),
     ("aggregates/*.json", "aggregate"),
     ("aggregates/*.csv", "aggregate"),
+    ("aggregates/*.metadata.json", "aggregate_metadata"),
     ("tables/*.tex", "table"),
     ("tables/*.metadata.json", "table_metadata"),
     ("figures/*.png", "figure"),
@@ -188,6 +189,13 @@ def _artifact_id(source_family, role, path):
     return f"{source_family}:{role}:{safe}"
 
 
+def _matches_role(path, role):
+    name = Path(path).name
+    if role == "aggregate" and name.endswith(".metadata.json"):
+        return False
+    return True
+
+
 def _entry(
     path,
     source_family,
@@ -259,7 +267,7 @@ def classify_phase10_entry(entry):
 def _append_matches(entries, root, glob_specs, family, tier, status, claim_ready, linkage, sections, missing_role_prefix):
     root = Path(root)
     for pattern, role in glob_specs:
-        matches = sorted(path for path in root.glob(pattern) if path.is_file())
+        matches = sorted(path for path in root.glob(pattern) if path.is_file() and _matches_role(path, role))
         if not matches:
             missing_path = root / pattern.replace("*", "missing")
             entries.append(

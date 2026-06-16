@@ -20,11 +20,11 @@
         "blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md: blocked_status artifact is not claim-ready",
         "blocker_status:blocker_status:planning_results_sensitivity_summary_md: blocked_status artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png: blocked_status artifact is not claim-ready",
         "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json: blocked_status artifact is not claim-ready",
@@ -147,9 +147,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
@@ -165,9 +165,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
@@ -183,9 +183,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json",
@@ -403,11 +403,11 @@
         "blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md: blocked_status artifact is not claim-ready",
         "blocker_status:blocker_status:planning_results_sensitivity_summary_md: blocked_status artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png: blocked_status artifact is not claim-ready",
         "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json: blocked_status artifact is not claim-ready",
@@ -433,9 +433,7 @@
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png: diagnostic_appendix artifact is not claim-ready",
@@ -545,9 +543,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
@@ -563,9 +561,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
@@ -581,9 +579,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json",
@@ -815,15 +813,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -839,15 +828,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase8_sensitivity",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -939,11 +919,11 @@
         "Adaptive-window increment must not be inferred from diagnostic appendices.",
         "Current generated artifacts do not provide claim-ready fixed-vs-adaptive increment evidence.",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png: blocked_status artifact is not claim-ready",
         "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json: blocked_status artifact is not claim-ready",
@@ -969,9 +949,7 @@
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png: diagnostic_appendix artifact is not claim-ready",
@@ -1027,9 +1005,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
@@ -1045,9 +1023,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
@@ -1063,9 +1041,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json",
@@ -1297,15 +1275,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -1321,15 +1290,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase8_sensitivity",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -1421,11 +1381,11 @@
         "Exact/greedy evidence is computational-boundary evidence only.",
         "Menu construction diagnostics are available but not claim-ready.",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png: blocked_status artifact is not claim-ready",
         "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json: blocked_status artifact is not claim-ready",
@@ -1451,9 +1411,7 @@
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png: diagnostic_appendix artifact is not claim-ready",
@@ -1467,9 +1425,7 @@
         "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_axis_summary_tex_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:figure:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png: diagnostic_appendix artifact is not claim-ready",
@@ -1523,9 +1479,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
@@ -1541,9 +1497,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
@@ -1559,9 +1515,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json",
@@ -1793,15 +1749,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -1817,15 +1764,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase8_sensitivity",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -1937,15 +1875,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase9_tractability",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -1961,15 +1890,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase9_tractability",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase9_tractability",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -2048,9 +1968,7 @@
         "blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md: blocked_status artifact is not claim-ready",
         "blocker_status:blocker_status:planning_results_sensitivity_summary_md: blocked_status artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png: diagnostic_appendix artifact is not claim-ready",
@@ -2160,15 +2078,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -2184,15 +2093,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase8_sensitivity",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -2290,9 +2190,7 @@
         "blocker_status:blocker_status:planning_results_rc_formal_diagnosis_md: blocked_status artifact is not claim-ready",
         "blocker_status:blocker_status:planning_results_sensitivity_summary_md: blocked_status artifact is not claim-ready",
         "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:figure:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png: diagnostic_appendix artifact is not claim-ready",
@@ -2400,15 +2298,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase9_tractability",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -2424,15 +2313,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase9_tractability",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase9_tractability",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -2522,11 +2402,11 @@
         "case_scaffold:case_scaffold_validator:planning_data_case_studies_test_case_contracts_py: scaffold_only artifact is not claim-ready",
         "case_scaffold:case_scaffold_validator:planning_data_case_studies_validate_case_contracts_py: scaffold_only artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: main_paper_candidate artifact is not claim-ready",
-        "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+        "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png: blocked_status artifact is not claim-ready",
         "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json: blocked_status artifact is not claim-ready",
@@ -2552,9 +2432,7 @@
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_robust_filtering_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json: main_paper_candidate artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png: diagnostic_appendix artifact is not claim-ready",
@@ -2568,9 +2446,7 @@
         "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_axis_summary_tex_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv: diagnostic_appendix artifact is not claim-ready",
-        "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json: diagnostic_appendix artifact is not claim-ready",
-        "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
         "phase9_tractability:figure:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png: diagnostic_appendix artifact is not claim-ready",
@@ -2785,9 +2661,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
@@ -2803,9 +2679,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
@@ -2821,9 +2697,9 @@
           "status": "blocked"
         },
         {
-          "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+          "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
           "claim_ready": false,
-          "package_role": "aggregate",
+          "package_role": "aggregate_metadata",
           "package_tier": "main_paper_candidate",
           "source_family": "main_rc",
           "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/recommended_policy_ranking.json.metadata.json",
@@ -3055,15 +2931,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -3079,15 +2946,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase8_sensitivity",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase8_sensitivity",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -3199,15 +3057,6 @@
           "status": "diagnostic_provisional_blocked"
         },
         {
-          "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase9_tractability",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv.metadata.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
           "artifact_id": "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
           "claim_ready": false,
           "package_role": "aggregate_metadata",
@@ -3223,15 +3072,6 @@
           "package_tier": "diagnostic_appendix",
           "source_family": "phase9_tractability",
           "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json",
-          "status": "diagnostic_provisional_blocked"
-        },
-        {
-          "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
-          "claim_ready": false,
-          "package_role": "aggregate",
-          "package_tier": "diagnostic_appendix",
-          "source_family": "phase9_tractability",
-          "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json.metadata.json",
           "status": "diagnostic_provisional_blocked"
         },
         {
@@ -3504,7 +3344,7 @@
       "support_status": "scaffold_only_blocked"
     }
   ],
-  "generated_at_utc": "2026-06-16T05:45:47+00:00",
+  "generated_at_utc": "2026-06-16T05:48:47+00:00",
   "manuscript_positive_claims_allowed": false,
   "overall_blocker_reasons": [
     "Adaptive-window increment must not be inferred from diagnostic appendices.",
@@ -3563,21 +3403,21 @@
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: main_paper_candidate artifact is not claim-ready",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: main_paper_candidate artifact is not claim-ready",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: main_paper_candidate artifact is not claim-ready",
     "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
-    "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: main_paper_candidate artifact is not claim-ready",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: main_paper_candidate artifact is not claim-ready",
+    "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
     "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
     "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: main_paper_candidate artifact is not claim-ready",
     "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
@@ -3652,12 +3492,8 @@
     "main_rc:table_metadata:work2_coding_artifacts_work2_robust_menu_tables_uptake_regime_tex_metadata_json: missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence.",
     "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic evidence only; not claim-ready",
     "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv: diagnostic_appendix artifact is not claim-ready",
-    "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic evidence only; not claim-ready",
-    "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic evidence only; not claim-ready",
     "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json: diagnostic_appendix artifact is not claim-ready",
-    "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic evidence only; not claim-ready",
-    "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic evidence only; not claim-ready",
     "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json: diagnostic evidence only; not claim-ready",
@@ -3684,12 +3520,8 @@
     "phase8_sensitivity:table_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_tables_sensitivity_boundary_map_tex_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv: diagnostic evidence only; not claim-ready",
     "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv: diagnostic_appendix artifact is not claim-ready",
-    "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic evidence only; not claim-ready",
-    "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json: diagnostic evidence only; not claim-ready",
     "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json: diagnostic_appendix artifact is not claim-ready",
-    "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic evidence only; not claim-ready",
-    "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic evidence only; not claim-ready",
     "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json: diagnostic_appendix artifact is not claim-ready",
     "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json: diagnostic evidence only; not claim-ready",
@@ -3713,7 +3545,7 @@
   ],
   "schema_version": "phase10-strict-claim-guard-v1",
   "source_package_index": {
-    "artifact_count": 78,
+    "artifact_count": 74,
     "package_claim_ready": false,
     "schema_version": "phase10-paper-artifact-package-v1"
   }

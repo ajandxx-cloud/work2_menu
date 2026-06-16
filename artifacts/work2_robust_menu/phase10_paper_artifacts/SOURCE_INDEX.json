@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-06-16T05:45:47+00:00",
+  "generated_at_utc": "2026-06-16T05:48:47+00:00",
   "schema_version": "phase10-paper-artifact-package-v1",
   "source_families": {
     "blocker_status": [
@@ -26,11 +26,11 @@
     ],
     "main_rc": [
       "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv",
-      "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
       "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json",
-      "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
       "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json",
-      "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+      "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
+      "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+      "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
       "main_rc:claim_guard:work2_coding_artifacts_work2_robust_menu_manuscript_claim_guard_json",
       "main_rc:figure:work2_coding_artifacts_work2_robust_menu_figures_missing_png",
       "main_rc:figure_metadata:work2_coding_artifacts_work2_robust_menu_figures_missing_metadata_json",
@@ -58,9 +58,7 @@
     ],
     "phase8_sensitivity": [
       "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv",
-      "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
       "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json",
-      "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
       "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
       "phase8_sensitivity:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
       "phase8_sensitivity:figure:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_figures_optout_acceptance_by_axis_png",
@@ -76,9 +74,7 @@
     ],
     "phase9_tractability": [
       "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv",
-      "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
       "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json",
-      "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
       "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
       "phase9_tractability:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
       "phase9_tractability:figure:work2_coding_artifacts_work2_robust_menu_phase9_tractability_figures_menu_build_time_by_candidate_count_png",

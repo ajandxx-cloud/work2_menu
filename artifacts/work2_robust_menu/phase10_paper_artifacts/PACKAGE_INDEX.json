@@ -365,29 +365,6 @@
       "status": "blocked"
     },
     {
-      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
-      "artifact_kind": "metadata-json",
-      "blocker_reasons": [
-        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
-        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
-      ],
-      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
-      "claim_ready": false,
-      "exists": true,
-      "package_role": "aggregate",
-      "package_tier": "main_paper_candidate",
-      "section_targets": [
-        "experimental_design",
-        "main_rc_results",
-        "product_time_window_ablation",
-        "eta_time_window_robustness",
-        "provenance_and_claim_gates"
-      ],
-      "source_family": "main_rc",
-      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
-      "status": "blocked"
-    },
-    {
       "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json",
       "artifact_kind": "json",
       "blocker_reasons": [
@@ -408,29 +385,6 @@
       ],
       "source_family": "main_rc",
       "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json",
-      "status": "blocked"
-    },
-    {
-      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
-      "artifact_kind": "metadata-json",
-      "blocker_reasons": [
-        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
-        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
-      ],
-      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
-      "claim_ready": false,
-      "exists": true,
-      "package_role": "aggregate",
-      "package_tier": "main_paper_candidate",
-      "section_targets": [
-        "experimental_design",
-        "main_rc_results",
-        "product_time_window_ablation",
-        "eta_time_window_robustness",
-        "provenance_and_claim_gates"
-      ],
-      "source_family": "main_rc",
-      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
       "status": "blocked"
     },
     {
@@ -457,7 +411,7 @@
       "status": "blocked"
     },
     {
-      "artifact_id": "main_rc:aggregate:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+      "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_csv_metadata_json",
       "artifact_kind": "metadata-json",
       "blocker_reasons": [
         "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
@@ -466,7 +420,53 @@
       "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
       "claim_ready": false,
       "exists": true,
-      "package_role": "aggregate",
+      "package_role": "aggregate_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.csv.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_policy_summary_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate_metadata",
+      "package_tier": "main_paper_candidate",
+      "section_targets": [
+        "experimental_design",
+        "main_rc_results",
+        "product_time_window_ablation",
+        "eta_time_window_robustness",
+        "provenance_and_claim_gates"
+      ],
+      "source_family": "main_rc",
+      "source_path": "work2_coding/artifacts/work2_robust_menu/aggregates/policy_summary.json.metadata.json",
+      "status": "blocked"
+    },
+    {
+      "artifact_id": "main_rc:aggregate_metadata:work2_coding_artifacts_work2_robust_menu_aggregates_recommended_policy_ranking_json_metadata_json",
+      "artifact_kind": "metadata-json",
+      "blocker_reasons": [
+        "formal_skipped: Formal evidence was skipped for this Phase 4 run; formal claim readiness is false.",
+        "missing_checkpoint_file: Required checkpoint file is unavailable; refusing random-weight evidence."
+      ],
+      "claim_linkage": "main RC artifact package; promotion depends on explicit claim gate",
+      "claim_ready": false,
+      "exists": true,
+      "package_role": "aggregate_metadata",
       "package_tier": "main_paper_candidate",
       "section_targets": [
         "experimental_design",
@@ -1053,27 +1053,6 @@
       "status": "diagnostic_provisional_blocked"
     },
     {
-      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_csv_metadata_json",
-      "artifact_kind": "metadata-json",
-      "blocker_reasons": [
-        "diagnostic evidence only; not claim-ready"
-      ],
-      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
-      "claim_ready": false,
-      "exists": true,
-      "package_role": "aggregate",
-      "package_tier": "diagnostic_appendix",
-      "section_targets": [
-        "sensitivity_appendix",
-        "product_time_window_ablation",
-        "eta_time_window_robustness",
-        "provenance_and_claim_gates"
-      ],
-      "source_family": "phase8_sensitivity",
-      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.csv.metadata.json",
-      "status": "diagnostic_provisional_blocked"
-    },
-    {
       "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json",
       "artifact_kind": "json",
       "blocker_reasons": [
@@ -1092,27 +1071,6 @@
       ],
       "source_family": "phase8_sensitivity",
       "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json",
-      "status": "diagnostic_provisional_blocked"
-    },
-    {
-      "artifact_id": "phase8_sensitivity:aggregate:work2_coding_artifacts_work2_robust_menu_phase8_sensitivity_aggregates_sensitivity_axis_summary_json_metadata_json",
-      "artifact_kind": "metadata-json",
-      "blocker_reasons": [
-        "diagnostic evidence only; not claim-ready"
-      ],
-      "claim_linkage": "Phase 8 diagnostic sensitivity appendix only",
-      "claim_ready": false,
-      "exists": true,
-      "package_role": "aggregate",
-      "package_tier": "diagnostic_appendix",
-      "section_targets": [
-        "sensitivity_appendix",
-        "product_time_window_ablation",
-        "eta_time_window_robustness",
-        "provenance_and_claim_gates"
-      ],
-      "source_family": "phase8_sensitivity",
-      "source_path": "work2_coding/artifacts/work2_robust_menu/phase8_sensitivity/aggregates/sensitivity_axis_summary.json.metadata.json",
       "status": "diagnostic_provisional_blocked"
     },
     {
@@ -1387,25 +1345,6 @@
       "status": "diagnostic_provisional_blocked"
     },
     {
-      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_csv_metadata_json",
-      "artifact_kind": "metadata-json",
-      "blocker_reasons": [
-        "diagnostic evidence only; not claim-ready"
-      ],
-      "claim_linkage": "Phase 9 diagnostic computational appendix only",
-      "claim_ready": false,
-      "exists": true,
-      "package_role": "aggregate",
-      "package_tier": "diagnostic_appendix",
-      "section_targets": [
-        "computational_performance_appendix",
-        "provenance_and_claim_gates"
-      ],
-      "source_family": "phase9_tractability",
-      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.csv.metadata.json",
-      "status": "diagnostic_provisional_blocked"
-    },
-    {
       "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json",
       "artifact_kind": "json",
       "blocker_reasons": [
@@ -1422,25 +1361,6 @@
       ],
       "source_family": "phase9_tractability",
       "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json",
-      "status": "diagnostic_provisional_blocked"
-    },
-    {
-      "artifact_id": "phase9_tractability:aggregate:work2_coding_artifacts_work2_robust_menu_phase9_tractability_aggregates_exact_greedy_tractability_summary_json_metadata_json",
-      "artifact_kind": "metadata-json",
-      "blocker_reasons": [
-        "diagnostic evidence only; not claim-ready"
-      ],
-      "claim_linkage": "Phase 9 diagnostic computational appendix only",
-      "claim_ready": false,
-      "exists": true,
-      "package_role": "aggregate",
-      "package_tier": "diagnostic_appendix",
-      "section_targets": [
-        "computational_performance_appendix",
-        "provenance_and_claim_gates"
-      ],
-      "source_family": "phase9_tractability",
-      "source_path": "work2_coding/artifacts/work2_robust_menu/phase9_tractability/aggregates/exact_greedy_tractability_summary.json.metadata.json",
       "status": "diagnostic_provisional_blocked"
     },
     {
@@ -1634,6 +1554,6 @@
       "status": "diagnostic_provisional_blocked"
     }
   ],
-  "generated_at_utc": "2026-06-16T05:45:47+00:00",
+  "generated_at_utc": "2026-06-16T05:48:47+00:00",
   "schema_version": "phase10-paper-artifact-package-v1"
 }
