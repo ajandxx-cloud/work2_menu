@@ -259,3 +259,61 @@ Phase 5 must not use positive language such as "dominates", "outperforms",
 "superior", "near-optimal", "adaptive windows improve", "case-study
 validation", or "real passenger behavior" unless regenerated strict
 `CLAIM_GUARD.json` authorizes that exact claim.
+
+## Phase 4 Routing
+
+Phase 4 must choose between a gated Path A and diagnostic-lock Path B based on
+pre-replay gates and generated evidence outcomes.
+
+Path A is allowed only as approved gate cleanup/readiness work first, followed
+by final replay only after all pre-replay gates pass. The authorized replay
+input is the current final candidate manifest after gate cleanup, not a
+retuned or narrowed manifest.
+
+Path B is required when pre-replay gates fail, when a second same-settings
+technical replay attempt fails, or when completed regenerated evidence keeps
+overall `claim_ready=false` and does not authorize the needed manuscript
+claims.
+
+## Pre-Replay Gate Failure
+
+If any required pre-replay gate fails, Phase 4 must lock the diagnostic path
+without running final replay. Gate failure is not permission to probe final
+results, reduce scale, remove baselines, edit generated rows, or alter
+result-affecting runtime settings.
+
+Diagnostic lock should preserve the current evidence boundary and route Phase
+5 toward conditional diagnostic TR-E writing.
+
+## First Final Replay Technical Failure
+
+If all pre-replay gates pass and final replay starts, but the run fails, times
+out, or emits incomplete rows for technical reasons, Phase 4 may allow at most
+one technical rerun.
+
+That rerun must use the same manifest, git SHA, checkpoint path/hash, seeds,
+splits, policy tags, and frozen settings. It may repair only runtime failure,
+environment interruption, or non-result-affecting execution plumbing.
+
+The rerun must not change policy family, split IDs, seeds, metrics,
+checkpoint policy, frozen runtime knobs, or row inclusion rules.
+
+## Second Final Replay Failure
+
+If the second final replay attempt still fails, times out, or emits incomplete
+rows, Phase 4 must lock the diagnostic path immediately.
+
+It must not reduce scale, delete failed rows, delete blocked rows, rerun
+again, replace baselines, or continue tuning. A second technical failure means
+the claim-ready replay path is not available for this milestone.
+
+## Completed Replay With claim_ready=false
+
+If final replay technically completes but regenerated strict `CLAIM_GUARD.json`
+or generated artifact gates still report `claim_ready=false`, that result is
+evidence. Phase 4 and Phase 5 must proceed with a diagnostic or conditional
+manuscript path and do not tune the manifest.
+
+The project may still use claim-specific `manuscript_allowed=true` content
+under the manuscript handoff rule, but it must not upgrade central adaptive
+menu superiority or any other blocked positive claim.
