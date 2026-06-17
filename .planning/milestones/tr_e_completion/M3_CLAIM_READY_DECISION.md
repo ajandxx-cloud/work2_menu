@@ -129,3 +129,76 @@ This passing manifest test supports treating the manifests as candidate
 contracts after gates. It does not authorize final replay, because the
 freeze/protocol, checkpoint, dependency, clean provenance, readiness, row, and
 artifact gates still have to pass first.
+
+## Required Pre-Replay Gates
+
+Final replay is authorized only if all gates below pass before replay starts.
+The gates must be checked against the current manifests and current filesystem
+state, not restored legacy planning files.
+
+| Gate | Required evidence before replay |
+| --- | --- |
+| Freeze/protocol evidence | A current, approved calibration protocol and frozen-final settings record that were not selected from final replay outputs. |
+| Clean or claim-eligible git provenance | `git_sha` is recorded and the claim-supporting tree has `git_dirty=false`, unless a later approved protocol explicitly marks the run diagnostic-only. |
+| Checkpoint provenance | `checkpoint_manifest_path`, `checkpoint_resolved_path`, `checkpoint_sha256`, `checkpoint_sidecar_path`, `checkpoint_sidecar_sha256`, and `checkpoint_load_status=loaded` are recorded. |
+| Dependency provenance | `dependency_snapshot_path` and `dependency_snapshot_sha256` are recorded from the same readiness/evidence chain. |
+| Final manifest stability | Final manifest path and manifest hash are recorded before replay; the manifest is not changed after seeing final outputs. |
+| Policy family | The seven mainline policy tags remain present: no-menu, fixed-menu, random-menu, optimized-m, optimized-mw, optimized-fixed-window, and optimized-adaptive. |
+| Split and seed freeze | Final split IDs, seeds, data seeds, and data-test seeds are fixed before replay. |
+| Paired/varied fields | Paired fields and varied fields validate through the manifest contract without result-affecting drift. |
+| Source-row checkpoint metadata | Source rows include checkpoint hashes and source-row checkpoint load statuses, with required formal rows all reporting `loaded`. |
+| Readiness JSON | `readiness_json_path` and `readiness_json_sha256` are recorded, and readiness status supports claim use. |
+| Generated artifact authority | Generated artifact gates and regenerated strict `CLAIM_GUARD.json` decide final claim readiness. |
+
+Formal readiness and artifact classification must fail closed on dirty git,
+missing or unloaded checkpoints, missing sidecar/hash evidence, dependency
+snapshot gaps, manifest-hash mismatch, placeholder rows, blocked/failed rows,
+incomplete rows, invalid opt-out/home/meeting-point accounting, no-filter-only
+diagnostics, and all-diagnostic policy sets.
+
+## Approved Phase 4 Cleanup Boundary
+
+If Phase 4 pursues Path A, approved cleanup before final replay may repair only
+the evidence chain around the candidate manifests:
+
+- path normalization for current manifest, checkpoint, readiness, dependency,
+  and artifact inputs;
+- metadata sidecars and sidecar hashes;
+- recomputed checkpoint, sidecar, dependency snapshot, readiness JSON, and
+  manifest hashes;
+- checkpoint load-status reporting;
+- dependency snapshot records;
+- readiness metadata;
+- source-row evidence-chain records created by approved replay, not by manual
+  row edits;
+- documentation that links generated gate outputs to the strict claim guard.
+
+These repairs may make provenance auditable. They must not change what the
+final replay is trying to measure.
+
+## Forbidden Phase 4 Cleanup
+
+Phase 4 cleanup must not alter result-affecting runtime settings or empirical
+comparison definitions after seeing current or final evidence. Forbidden
+cleanup includes changes to:
+
+- policy family or required policy tags;
+- split IDs, seeds, data seeds, or test seeds;
+- metrics, objective reporting, or acceptance/accounting definitions;
+- `menu_k`;
+- `max_candidates`;
+- ETA filter mode;
+- menu exact/greedy thresholds when those thresholds affect final evidence;
+- service guardrails, opt-out guardrails, or outside-option handling;
+- checkpoint policy, checkpoint path, or mismatch policy except as approved
+  provenance repair before replay;
+- price model, product mode, time-window mode, menu-contract mode, or pricing
+  mode;
+- row deletion, failed-row deletion, blocked-row deletion, or generated-row
+  edits;
+- artifact status, package status, figure/table data, package indexes, root
+  mirrors, or claim guards by hand.
+
+If fixing a blocker requires any forbidden cleanup, the claim-ready final
+replay path is not available for this milestone and Phase 4 must lock the
+diagnostic path.
