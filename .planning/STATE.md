@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
 status: executing
-last_updated: "2026-06-17T12:27:42.847Z"
-last_activity: 2026-06-17 -- Phase 05 planning complete
+last_updated: "2026-06-17T12:37:00.610Z"
+last_activity: 2026-06-17
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 7
-  completed_plans: 4
-  percent: 57
+  completed_plans: 5
+  percent: 67
 ---
 
 # State
@@ -23,15 +23,15 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Phase 5 - TR-E manuscript draft construction. Use the
+**Current focus:** Phase 05 — tr-e-manuscript-draft-construction
 Phase 4 diagnostic lock and safe claim table as the manuscript claim ceiling.
 
 ## Current Position
 
-Phase: 5
-Plan: 3 plans ready
+Phase: 05 (tr-e-manuscript-draft-construction) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
-Last activity: 2026-06-17 -- Phase 05 planning complete
+Last activity: 2026-06-17
 new planning rather than restoring deleted legacy GSD docs
 
 ## Initialization Evidence
