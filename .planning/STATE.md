@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: ready_to_plan
-last_updated: 2026-06-17T08:31:44.677Z
+status: planning
+last_updated: "2026-06-17T09:29:27.569Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 6
@@ -11,7 +11,6 @@ progress:
   total_plans: 3
   completed_plans: 3
   percent: 50
-stopped_at: Phase 03 complete (1/1) - ready to plan Phase 4
 ---
 
 # State
@@ -51,8 +50,10 @@ Current Phase 10 artifact facts:
 - `CLAIM_GUARD.json`: `claim_ready=false`
 - `PACKAGE_STATUS.json`: 74 artifacts, 108 blockers, 70 existing artifacts,
   4 missing artifacts
+
 - Strict claim guard allows only provenance/status transparency as a ready
   claim
+
 - Main RC is blocked, Phase 8 and Phase 9 are diagnostic/provisional, and
   case-study material is scaffold-only
 
@@ -61,11 +62,14 @@ Current Phase 10 artifact facts:
 - Deleted legacy planning files were not restored by user choice.
 - This regenerated planning keeps `.planning/codebase/` and
   `.planning/data/case_studies/` as current context where present.
+
 - Phase 3 decided that final replay is `blocked_pending_gate_cleanup`.
 - Do not run final replay, calibration, case-study execution, or manuscript
   claim upgrades unless the Phase 3 decision gates authorize them.
+
 - Do not hand-edit generated rows, package status, figures, tables, or claim
   guards.
+
 - If `claim_ready=false` remains, the manuscript must use conditional
   diagnostic language.
 
