@@ -2,16 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: ready_to_plan
-last_updated: 2026-06-17T10:16:45.676Z
-last_activity: 2026-06-17 -- Phase 04 planning complete
+status: planning
+last_updated: "2026-06-17T10:44:37.856Z"
+last_activity: 2026-06-17 -- Phase 5 context gathered; ready to plan Phase 5
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 4
   completed_plans: 4
   percent: 67
-stopped_at: Phase 04 complete (1/1) - ready to discuss Phase 5
 ---
 
 # State
@@ -32,7 +31,7 @@ Phase 4 diagnostic lock and safe claim table as the manuscript claim ceiling.
 Phase: 5
 Plan: Not started
 Status: Ready to plan
-Last activity: 2026-06-17 -- Phase 04 complete; diagnostic manuscript path locked
+Last activity: 2026-06-17 -- Phase 5 context gathered; ready to plan Phase 5
 new planning rather than restoring deleted legacy GSD docs
 
 ## Initialization Evidence
@@ -66,6 +65,7 @@ Current Phase 10 artifact facts:
 - Phase 4 ran the one authorized pre-replay readiness pass for
   `final_robust_menu`; readiness remained blocked by `dirty_git` and
   `missing_formal_checkpoint`.
+
 - Final replay was not run. Do not run final replay, calibration, case-study
   execution, or manuscript claim upgrades unless a later phase explicitly
   reopens those gates with new authorization.
