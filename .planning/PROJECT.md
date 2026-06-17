@@ -65,13 +65,13 @@ stronger than the generated evidence, readiness gates, and strict
   `.planning/milestones/tr_e_completion/M4B_DIAGNOSTIC_MANUSCRIPT_LOCK.md`,
   `.planning/milestones/tr_e_completion/M4B_SAFE_CLAIM_TABLE.md`, and
   `.planning/milestones/tr_e_completion/M4B_REVIEWER_RISK_RESPONSE_PLAN.md`.
+- Phase 5 produced the conditional diagnostic TR-E manuscript package under
+  `manuscript/`, including the full Markdown draft, C1-C8 claim audit,
+  table/figure source map, prohibited-language check, and internal-review
+  response.
 
 ### Active
 
-- [ ] Build the paper as a conditional diagnostic TR-E manuscript using the
-  Phase 4 safe claim table and reviewer-risk response plan.
-- [ ] Build a full manuscript draft with TR-E framing, paragraph prose,
-  consistent notation, claim-safe results, and table/figure source mapping.
 - [ ] Audit final submission readiness for novelty, model rigor, empirical
   credibility, claim safety, reproducibility, and reviewer risk.
 
@@ -161,6 +161,7 @@ materials are scaffold-only.
 | Defer manuscript prose until evidence path is selected | Prevents writing positive claims before gates authorize them. | Validated |
 | Treat Phase 3 as a conditional go-after-gates decision | Current freeze/protocol evidence is missing; Phase 4 must satisfy gates before replay or lock diagnostic. | Validated |
 | Lock Phase 5 to conditional diagnostic manuscript drafting | Phase 4 readiness remained blocked, final replay was not authorized, and strict claim guard still keeps positive empirical claims blocked. | Validated |
+| Use the Phase 5 Markdown manuscript package as the submission-readiness input | The draft and companion audits now provide source-traceable, claim-safe material for Phase 6 review. | Validated |
 
 ## Evolution
 
@@ -182,4 +183,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-17 after Phase 4 diagnostic path lock*
+*Last updated: 2026-06-17 after Phase 5 manuscript draft construction*
