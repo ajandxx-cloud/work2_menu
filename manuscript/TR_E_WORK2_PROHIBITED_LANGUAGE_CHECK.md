@@ -2,7 +2,7 @@
 
 **Purpose:** prevent the Phase 5 draft from exceeding the strict claim guard.
 **Body scan target:** `manuscript/TR_E_WORK2_MANUSCRIPT_DRAFT.md`
-**Current body scan status:** pending until Plan 03.
+**Current body scan status:** complete on 2026-06-17.
 
 ## Forbidden Phrase Inventory
 
@@ -32,10 +32,17 @@ These terms may appear in this audit file as forbidden examples, but they must n
 
 ## Final Draft Scan Results
 
-Pending Plan 03 scan:
+Plan 03 ran:
 
 ```powershell
 rg -n -i "dominat|superior|outperform|near[- ]optimal|real passenger|case-study validation|semi-real validation|no-filter recommendation|operationally recommended|DSPO_PLUS|Behavior-Aware|TR-C|ranking validation|adaptive windows improve|greedy optimal" manuscript/TR_E_WORK2_MANUSCRIPT_DRAFT.md
 ```
 
-Each hit will be classified as `removed`, `allowed only as prohibited-language quote`, `allowed as blocked-claim/status discussion`, or `requires Phase 6 review`.
+Results:
+
+| Draft line | Hit | Classification | Resolution |
+| --- | --- | --- | --- |
+| 101 | `C1_central_adaptive_menu_superiority` | allowed as blocked-claim/status discussion | The term appears only inside the strict claim ID table and is paired with `unsupported_blocked` and `Not allowed as a positive claim`. |
+| 120 | `real passenger behavior` | allowed as blocked-claim/status discussion | The sentence explicitly answers that case material does not reflect real passenger behavior because C8 is scaffold-only. |
+
+No unqualified positive claim was found using dominance, superiority, near-optimality, real-passenger validation, no-filter recommendation, DSPO_PLUS ranking, Behavior-Aware, TR-C, ranking validation, adaptive-window improvement, or greedy optimality language.
