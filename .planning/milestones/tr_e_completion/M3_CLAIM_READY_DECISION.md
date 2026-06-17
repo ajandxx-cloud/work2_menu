@@ -291,9 +291,9 @@ If all pre-replay gates pass and final replay starts, but the run fails, times
 out, or emits incomplete rows for technical reasons, Phase 4 may allow at most
 one technical rerun.
 
-That rerun must use the same manifest, git SHA, checkpoint path/hash, seeds,
-splits, policy tags, and frozen settings. It may repair only runtime failure,
-environment interruption, or non-result-affecting execution plumbing.
+That rerun must use the same manifest, git SHA, checkpoint path/hash, seeds, splits, policy tags, and frozen settings.
+It may repair only runtime failure, environment interruption, or
+non-result-affecting execution plumbing.
 
 The rerun must not change policy family, split IDs, seeds, metrics,
 checkpoint policy, frozen runtime knobs, or row inclusion rules.
