@@ -69,11 +69,15 @@ stronger than the generated evidence, readiness gates, and strict
   `manuscript/`, including the full Markdown draft, C1-C8 claim audit,
   table/figure source map, prohibited-language check, and internal-review
   response.
+- Phase 6 audited final submission readiness in
+  `.planning/milestones/tr_e_completion/M6_FINAL_TR_E_READINESS_AUDIT.md`
+  and produced `manuscript/TR_E_WORK2_FINAL_REVISION_TASKS.md`. The final
+  recommendation is `revise-before-submission`; Work2 remains conditional
+  diagnostic, not claim-ready empirical.
 
 ### Active
 
-- [ ] Audit final submission readiness for novelty, model rigor, empirical
-  credibility, claim safety, reproducibility, and reviewer risk.
+- No active v1 requirements remain in this milestone.
 
 ### Out of Scope
 
@@ -183,4 +187,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-17 after Phase 5 manuscript draft construction*
+*Last updated: 2026-06-17 after Phase 6 final submission readiness audit*
