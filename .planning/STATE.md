@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: planning
-last_updated: "2026-06-17T09:29:27.569Z"
-last_activity: 2026-06-17
+status: executing
+last_updated: "2026-06-17T09:41:02.320Z"
+last_activity: 2026-06-17 -- Phase 04 planning complete
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 3
+  total_plans: 4
   completed_plans: 3
   percent: 50
 ---
@@ -30,9 +30,9 @@ diagnostic path if pre-replay gates fail.
 ## Current Position
 
 Phase: 4
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-06-17
+Plan: 01
+Status: Ready to execute
+Last activity: 2026-06-17 -- Phase 04 planning complete
 new planning rather than restoring deleted legacy GSD docs
 
 ## Initialization Evidence
@@ -93,10 +93,10 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Plan Phase 4:
+Execute Phase 4:
 
 ```text
-$gsd-plan-phase 4
+$gsd-execute-phase 4
 ```
 
 Phase 4 should execute only the evidence-authorized path from
@@ -104,4 +104,4 @@ Phase 4 should execute only the evidence-authorized path from
 pre-replay gates pass, otherwise diagnostic lock.
 
 ---
-*Updated: 2026-06-17 after Phase 03 completion*
+*Updated: 2026-06-17 after Phase 04 planning*
