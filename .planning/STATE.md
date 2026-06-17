@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: verifying
-last_updated: "2026-06-17T08:30:11.539Z"
+status: ready_to_plan
+last_updated: 2026-06-17T08:31:44.677Z
 last_activity: 2026-06-17
 progress:
   total_phases: 6
@@ -11,6 +11,7 @@ progress:
   total_plans: 3
   completed_plans: 3
   percent: 50
+stopped_at: Phase 03 complete (1/1) — ready to discuss Phase 4
 ---
 
 # State
@@ -23,15 +24,15 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Phase 03 — claim-ready-evidence-decision-gate
+**Current focus:** Phase 4 — execute selected claim path
 whether final replay is legitimate or the paper should remain conditional
 diagnostic before repair, final replay, or manuscript writing.
 
 ## Current Position
 
-Phase: 03 (claim-ready-evidence-decision-gate) — EXECUTING
-Plan: 1 of 1
-Status: Phase complete — ready for verification
+Phase: 4
+Plan: Not started
+Status: Ready to plan
 Last activity: 2026-06-17
 new planning rather than restoring deleted legacy GSD docs
 
