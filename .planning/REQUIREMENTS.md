@@ -30,9 +30,9 @@ claims are no stronger than the generated evidence, readiness gates, and strict
 - [x] **GATE-02**: The project documents checkpoint provenance requirements:
   checkpoint path, checkpoint hash, sidecar metadata, and checkpoint load
   status fields.
-- [ ] **GATE-03**: The project decides whether frozen final settings are valid
+- [x] **GATE-03**: The project decides whether frozen final settings are valid
   and pre-registered enough to support a legitimate final replay.
-- [ ] **GATE-04**: The project classifies the manuscript path as claim-ready
+- [x] **GATE-04**: The project classifies the manuscript path as claim-ready
   empirical, conditional diagnostic, or not ready, based on evidence rather
   than desired conclusions.
 
