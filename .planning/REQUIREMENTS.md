@@ -64,13 +64,13 @@ claims are no stronger than the generated evidence, readiness gates, and strict
 
 ### Submission Readiness
 
-- [ ] **SUB-01**: The project audits novelty, model rigor, empirical
+- [x] **SUB-01**: The project audits novelty, model rigor, empirical
   credibility, claim safety, traceability, reproducibility, English quality,
   and reviewer attack points.
-- [ ] **SUB-02**: The project produces a final recommendation:
+- [x] **SUB-02**: The project produces a final recommendation:
   submit-ready, revise-before-submission, diagnostic-only but draftable, or not
   ready.
-- [ ] **SUB-03**: The final decision answers whether the paper can be submitted
+- [x] **SUB-03**: The final decision answers whether the paper can be submitted
   to TR-E as a claim-ready empirical optimization paper or only as a
   conditional diagnostic service-menu optimization paper.
 
