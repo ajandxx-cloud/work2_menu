@@ -86,3 +86,46 @@ authorization.
 
 Therefore, the manifests are candidate contracts after gates. They are not
 current permission to run final replay.
+
+## Manifest Contract Status
+
+Command run from `work2_coding/`:
+
+```powershell
+python scripts/test_calibration_manifests.py
+```
+
+Result:
+
+```text
+PASS: 5 calibration manifest tests
+```
+
+The passing test inspects the current calibration and final manifests without
+running calibration or replay. It checks that both manifests preserve the seven
+mainline policy tags:
+
+1. `mainline_no_menu`
+2. `mainline_fixed_menu`
+3. `mainline_random_menu`
+4. `mainline_optimized_m`
+5. `mainline_optimized_mw`
+6. `mainline_optimized_fixed_window`
+7. `mainline_optimized_adaptive`
+
+It also checks that calibration and final splits are disjoint; that paired
+fields include seed, data seed, runtime instance, checkpoint path/requirement,
+`menu_k`, `max_candidates`, HGS timing, and utility parameters; that varied
+fields include policy behavior fields such as menu policy, product mode,
+time-window mode, menu contract mode, pricing mode, ETA-filter mode, objective
+mode, and service/opt-out guardrails; and that output schema fields preserve
+checkpoint provenance and separate accounting for `count_opted_out`,
+`count_accepted_home`, and `count_accepted_meeting_point`.
+
+The relevant contract names are `paired fields` and `varied fields`; both are
+part of the replay fairness boundary.
+
+This passing manifest test supports treating the manifests as candidate
+contracts after gates. It does not authorize final replay, because the
+freeze/protocol, checkpoint, dependency, clean provenance, readiness, row, and
+artifact gates still have to pass first.
