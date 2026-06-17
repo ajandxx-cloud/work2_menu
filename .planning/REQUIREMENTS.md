@@ -38,14 +38,14 @@ claims are no stronger than the generated evidence, readiness gates, and strict
 
 ### Final Replay Or Diagnostic Lock
 
-- [ ] **PATH-01**: If a final replay is legitimate, the project runs only
+- [x] **PATH-01**: If a final replay is legitimate, the project runs only
   frozen or explicitly pre-registered final settings without tuning on final
   outputs.
-- [ ] **PATH-02**: If a final replay is run, completed, failed, timeout,
+- [x] **PATH-02**: If a final replay is run, completed, failed, timeout,
   infeasible, blocked, and missing rows are all represented durably.
-- [ ] **PATH-03**: If claim-ready evidence is not available, the project locks
+- [x] **PATH-03**: If claim-ready evidence is not available, the project locks
   the paper as a conditional diagnostic TR-E manuscript.
-- [ ] **PATH-04**: Strict `CLAIM_GUARD.json` output determines the final claim
+- [x] **PATH-04**: Strict `CLAIM_GUARD.json` output determines the final claim
   ceiling after any artifact regeneration.
 
 ### Manuscript Construction
@@ -106,7 +106,7 @@ Deferred until v1 claim path is complete.
 | EVID-01..EVID-04 | Phase 1 | Pending |
 | GATE-01..GATE-02 | Phase 2 | Complete |
 | GATE-03..GATE-04 | Phase 3 | Complete |
-| PATH-01..PATH-04 | Phase 4 | Pending |
+| PATH-01..PATH-04 | Phase 4 | Complete |
 | MS-01..MS-05 | Phase 5 | Pending |
 | SUB-01..SUB-03 | Phase 6 | Pending |
 

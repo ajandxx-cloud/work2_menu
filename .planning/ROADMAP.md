@@ -88,7 +88,7 @@ as conditional diagnostic.
 
 ## Phase 4: Execute Selected Claim Path
 
-**Status:** Not started; conditional on Phase 3
+**Status:** Complete (2026-06-17)
 
 **Goal:** Execute only the evidence-authorized path.
 
@@ -101,6 +101,11 @@ Expected deliverables:
 - `.planning/milestones/tr_e_completion/M4A_CLAIM_CLASSIFICATION.md`
 - A regenerated final artifact package under an explicitly named final
   artifact directory
+
+Outcome: pre-replay gates remained blocked, so final replay and final artifact
+generation were not authorized. `M4A_FINAL_REPLAY_REPORT.md` records
+`not_run`; no `M4A_CLAIM_CLASSIFICATION.md` was created because no regenerated
+final package exists.
 
 **Path B - Diagnostic Manuscript Lock:**
 Run if Phase 3 rejects final replay or regenerated evidence still yields

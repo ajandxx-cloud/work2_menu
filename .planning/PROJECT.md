@@ -58,13 +58,18 @@ stronger than the generated evidence, readiness gates, and strict
   final replay is `blocked_pending_gate_cleanup`, immediate replay is not
   authorized, and Phase 4 may proceed only through strict pre-replay gates or
   diagnostic lock.
+- Phase 4 ran the one authorized pre-replay readiness pass for
+  `final_robust_menu`; readiness remained blocked by `dirty_git` and
+  `missing_formal_checkpoint`, final replay was not run, and the diagnostic
+  manuscript path is locked in
+  `.planning/milestones/tr_e_completion/M4B_DIAGNOSTIC_MANUSCRIPT_LOCK.md`,
+  `.planning/milestones/tr_e_completion/M4B_SAFE_CLAIM_TABLE.md`, and
+  `.planning/milestones/tr_e_completion/M4B_REVIEWER_RISK_RESPONSE_PLAN.md`.
 
 ### Active
 
-- [ ] If claim-ready gates can be resolved legitimately, run only a
-  pre-registered final replay and regenerate artifacts from source rows.
-- [ ] If evidence remains mixed or `claim_ready=false`, lock the paper as a
-  conditional diagnostic TR-E manuscript.
+- [ ] Build the paper as a conditional diagnostic TR-E manuscript using the
+  Phase 4 safe claim table and reviewer-risk response plan.
 - [ ] Build a full manuscript draft with TR-E framing, paragraph prose,
   consistent notation, claim-safe results, and table/figure source mapping.
 - [ ] Audit final submission readiness for novelty, model rigor, empirical
@@ -153,8 +158,9 @@ materials are scaffold-only.
 | Keep `mainline_optimized_adaptive` as the primary method | It matches the intended optimized `m+w+p` adaptive-window Lambert-W service-menu method. | Active |
 | Use strict claim guard as claim authority | Current artifacts show `claim_ready=false`; evidence must control wording. | Active |
 | Plan a branch between claim-ready rerun and diagnostic lock | The manuscript path depends on evidence, not desired conclusions. | Active |
-| Defer manuscript prose until evidence path is selected | Prevents writing positive claims before gates authorize them. | Active |
+| Defer manuscript prose until evidence path is selected | Prevents writing positive claims before gates authorize them. | Validated |
 | Treat Phase 3 as a conditional go-after-gates decision | Current freeze/protocol evidence is missing; Phase 4 must satisfy gates before replay or lock diagnostic. | Validated |
+| Lock Phase 5 to conditional diagnostic manuscript drafting | Phase 4 readiness remained blocked, final replay was not authorized, and strict claim guard still keeps positive empirical claims blocked. | Validated |
 
 ## Evolution
 
@@ -176,4 +182,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-17 after Phase 3 claim-ready evidence decision*
+*Last updated: 2026-06-17 after Phase 4 diagnostic path lock*

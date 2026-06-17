@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: executing
-last_updated: "2026-06-17T09:41:02.320Z"
+status: ready_to_plan
+last_updated: 2026-06-17T10:16:45.676Z
 last_activity: 2026-06-17 -- Phase 04 planning complete
 progress:
   total_phases: 6
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 4
-  completed_plans: 3
-  percent: 50
+  completed_plans: 4
+  percent: 67
+stopped_at: Phase 04 complete (1/1) - ready to discuss Phase 5
 ---
 
 # State
@@ -23,16 +24,15 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Phase 4 - execute selected claim path. Use the Phase 3
-decision to perform approved gate cleanup before any final replay, or lock the
-diagnostic path if pre-replay gates fail.
+**Current focus:** Phase 5 - TR-E manuscript draft construction. Use the
+Phase 4 diagnostic lock and safe claim table as the manuscript claim ceiling.
 
 ## Current Position
 
-Phase: 4
-Plan: 01
-Status: Ready to execute
-Last activity: 2026-06-17 -- Phase 04 planning complete
+Phase: 5
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-06-17 -- Phase 04 complete; diagnostic manuscript path locked
 new planning rather than restoring deleted legacy GSD docs
 
 ## Initialization Evidence
@@ -63,9 +63,12 @@ Current Phase 10 artifact facts:
 - This regenerated planning keeps `.planning/codebase/` and
   `.planning/data/case_studies/` as current context where present.
 
-- Phase 3 decided that final replay is `blocked_pending_gate_cleanup`.
-- Do not run final replay, calibration, case-study execution, or manuscript
-  claim upgrades unless the Phase 3 decision gates authorize them.
+- Phase 4 ran the one authorized pre-replay readiness pass for
+  `final_robust_menu`; readiness remained blocked by `dirty_git` and
+  `missing_formal_checkpoint`.
+- Final replay was not run. Do not run final replay, calibration, case-study
+  execution, or manuscript claim upgrades unless a later phase explicitly
+  reopens those gates with new authorization.
 
 - Do not hand-edit generated rows, package status, figures, tables, or claim
   guards.
@@ -93,15 +96,15 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Execute Phase 4:
+Plan Phase 5:
 
 ```text
-$gsd-execute-phase 4
+$gsd-discuss-phase 5
 ```
 
-Phase 4 should execute only the evidence-authorized path from
-`M3_CLAIM_READY_DECISION.md`: gate cleanup and final replay only after all
-pre-replay gates pass, otherwise diagnostic lock.
+Phase 5 should draft from the conditional diagnostic manuscript path using
+`M4B_DIAGNOSTIC_MANUSCRIPT_LOCK.md`, `M4B_SAFE_CLAIM_TABLE.md`, and
+`M4B_REVIEWER_RISK_RESPONSE_PLAN.md`.
 
 ---
-*Updated: 2026-06-17 after Phase 04 planning*
+*Updated: 2026-06-17 after Phase 04 execution*
