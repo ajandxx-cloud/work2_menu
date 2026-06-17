@@ -11,7 +11,7 @@ progress:
   total_plans: 7
   completed_plans: 7
   percent: 83
-stopped_at: Phase 05 complete (3/3) — ready to discuss Phase 6
+stopped_at: Phase 05 complete (3/3) - ready to plan Phase 6
 ---
 
 # State
@@ -24,8 +24,8 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Phase 6 — final tr e submission readiness audit
-Phase 4 diagnostic lock and safe claim table as the manuscript claim ceiling.
+**Current focus:** Phase 6 - final TR-E submission readiness audit.
+Use the Phase 5 manuscript package and Phase 4 diagnostic lock as the claim ceiling.
 
 ## Current Position
 
@@ -97,15 +97,15 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Execute Phase 5:
+Plan Phase 6:
 
 ```text
-$gsd-execute-phase 5
+$gsd-plan-phase 6
 ```
 
-Phase 5 should draft from the conditional diagnostic manuscript path using
-`M4B_DIAGNOSTIC_MANUSCRIPT_LOCK.md`, `M4B_SAFE_CLAIM_TABLE.md`, and
-`M4B_REVIEWER_RISK_RESPONSE_PLAN.md`.
+Phase 6 should audit the Phase 5 manuscript package for novelty, model rigor,
+empirical credibility, claim safety, traceability, reproducibility, English
+quality, and reviewer attack points.
 
 ---
-*Updated: 2026-06-17 after Phase 05 planning*
+*Updated: 2026-06-17 after Phase 05 execution*

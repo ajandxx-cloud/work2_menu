@@ -126,7 +126,7 @@ Expected deliverables:
 
 ## Phase 5: TR-E Manuscript Draft Construction
 
-**Status:** Planned (2026-06-17)
+**Status:** Complete (2026-06-17)
 
 **Goal:** Build a full manuscript draft aligned with the selected claim path.
 
