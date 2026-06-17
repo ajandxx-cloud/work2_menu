@@ -202,3 +202,60 @@ cleanup includes changes to:
 If fixing a blocker requires any forbidden cleanup, the claim-ready final
 replay path is not available for this milestone and Phase 4 must lock the
 diagnostic path.
+
+## Claim-By-Claim Classification
+
+Strict `CLAIM_GUARD.json` is the authority for manuscript claims. Claim
+classification is local to each claim ID. One passing claim cannot upgrade
+unrelated blocked claims or convert the whole paper into a claim-ready
+empirical manuscript.
+
+| Claim ID | Current claim_ready | Current manuscript_allowed | Allowed Phase 5 use |
+| --- | --- | --- | --- |
+| `C1_central_adaptive_menu_superiority` | false | false | Not allowed. Do not state central adaptive-menu superiority or universal dominance. |
+| `C2_product_ablation_value` | false | false | Not allowed as a positive claim; use only as diagnostic structure if the manuscript labels the blocker. |
+| `C3_adaptive_window_increment` | false | false | Not allowed. Do not claim adaptive windows improve outcomes. |
+| `C4_menu_construction_value` | false | false | Not allowed as a positive claim; discuss only as an auditable mechanism with blocked/diagnostic status. |
+| `C5_eta_robustness_boundary` | false | true | Diagnostic boundary content only, with no-filter kept diagnostic and not operationally recommended. |
+| `C6_exact_greedy_computational_credibility` | false | false | Not allowed as computational credibility; exact/greedy material remains diagnostic computational boundary evidence. |
+| `C7_provenance_status_transparency` | true | true | Allowed as provenance/status transparency only; it does not prove empirical effectiveness. |
+| `C8_semi_real_case_validation` | false | false | Not allowed; case-study materials remain scaffold-only/future-work context. |
+
+## Current Claim Ceiling
+
+The current strict package has `claim_ready=false`,
+`strict_claim_guard_claim_ready=false`, and
+`manuscript_positive_claims_allowed=false`. The package indexes 74 artifacts,
+70 existing artifacts, 4 missing expected-pattern artifacts, and 108 blockers.
+
+Only `C7_provenance_status_transparency` is currently claim-ready.
+`C5_eta_robustness_boundary` is `manuscript_allowed=true` only as diagnostic
+boundary material. All blocked positive claims remain forbidden unless a later
+authorized replay and regenerated strict claim guard change the exact claim ID
+status.
+
+Current Phase 8, Phase 9, no-filter, and case-scaffold materials may be used
+only as diagnostic boundary, computational diagnostic, appendix, status, or
+future-work material. They do not support positive main claims.
+
+If `C1_central_adaptive_menu_superiority` remains blocked but some local
+mechanism or boundary claim later passes, the paper must be classified as
+conditional regime-specific, not central adaptive-menu superiority.
+
+## Manuscript Handoff Rule
+
+If overall `claim_ready=false` after any authorized replay, Phase 5 may use
+only claim-specific material with `manuscript_allowed=true`, and every such
+use must include:
+
+1. claim ID;
+2. claim status;
+3. source artifact path;
+4. allowed manuscript use;
+5. a label distinguishing generated evidence, diagnostic evidence, blocked
+   status, scaffold-only material, or conceptual illustration.
+
+Phase 5 must not use positive language such as "dominates", "outperforms",
+"superior", "near-optimal", "adaptive windows improve", "case-study
+validation", or "real passenger behavior" unless regenerated strict
+`CLAIM_GUARD.json` authorizes that exact claim.
