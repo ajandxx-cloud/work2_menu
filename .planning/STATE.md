@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: planning
-last_updated: "2026-06-17T10:44:37.856Z"
-last_activity: 2026-06-17 -- Phase 5 context gathered; ready to plan Phase 5
+status: executing
+last_updated: "2026-06-17T12:27:42.847Z"
+last_activity: 2026-06-17 -- Phase 05 planning complete
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 4
+  total_plans: 7
   completed_plans: 4
-  percent: 67
+  percent: 57
 ---
 
 # State
@@ -29,9 +29,9 @@ Phase 4 diagnostic lock and safe claim table as the manuscript claim ceiling.
 ## Current Position
 
 Phase: 5
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-06-17 -- Phase 5 context gathered; ready to plan Phase 5
+Plan: 3 plans ready
+Status: Ready to execute
+Last activity: 2026-06-17 -- Phase 05 planning complete
 new planning rather than restoring deleted legacy GSD docs
 
 ## Initialization Evidence
@@ -96,10 +96,10 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Plan Phase 5:
+Execute Phase 5:
 
 ```text
-$gsd-discuss-phase 5
+$gsd-execute-phase 5
 ```
 
 Phase 5 should draft from the conditional diagnostic manuscript path using
@@ -107,4 +107,4 @@ Phase 5 should draft from the conditional diagnostic manuscript path using
 `M4B_REVIEWER_RISK_RESPONSE_PLAN.md`.
 
 ---
-*Updated: 2026-06-17 after Phase 04 execution*
+*Updated: 2026-06-17 after Phase 05 planning*
