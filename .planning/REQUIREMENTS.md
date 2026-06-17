@@ -105,7 +105,7 @@ Deferred until v1 claim path is complete.
 | --- | --- | --- |
 | EVID-01..EVID-04 | Phase 1 | Pending |
 | GATE-01..GATE-02 | Phase 2 | Complete |
-| GATE-03..GATE-04 | Phase 3 | Pending |
+| GATE-03..GATE-04 | Phase 3 | Complete |
 | PATH-01..PATH-04 | Phase 4 | Pending |
 | MS-01..MS-05 | Phase 5 | Pending |
 | SUB-01..SUB-03 | Phase 6 | Pending |

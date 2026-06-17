@@ -67,7 +67,7 @@ needed before any final rerun or claim upgrade.
 
 ## Phase 3: Claim-Ready Evidence Decision Gate
 
-**Status:** Not started
+**Status:** Complete (2026-06-17)
 
 **Goal:** Decide whether to pursue a final claim-ready rerun or lock the paper
 as conditional diagnostic.

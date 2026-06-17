@@ -11,7 +11,7 @@ progress:
   total_plans: 3
   completed_plans: 3
   percent: 50
-stopped_at: Phase 03 complete (1/1) — ready to discuss Phase 4
+stopped_at: Phase 03 complete (1/1) - ready to plan Phase 4
 ---
 
 # State
@@ -24,9 +24,9 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Phase 4 — execute selected claim path
-whether final replay is legitimate or the paper should remain conditional
-diagnostic before repair, final replay, or manuscript writing.
+**Current focus:** Phase 4 - execute selected claim path. Use the Phase 3
+decision to perform approved gate cleanup before any final replay, or lock the
+diagnostic path if pre-replay gates fail.
 
 ## Current Position
 
@@ -51,10 +51,8 @@ Current Phase 10 artifact facts:
 - `CLAIM_GUARD.json`: `claim_ready=false`
 - `PACKAGE_STATUS.json`: 74 artifacts, 108 blockers, 70 existing artifacts,
   4 missing artifacts
-
 - Strict claim guard allows only provenance/status transparency as a ready
   claim
-
 - Main RC is blocked, Phase 8 and Phase 9 are diagnostic/provisional, and
   case-study material is scaffold-only
 
@@ -63,13 +61,11 @@ Current Phase 10 artifact facts:
 - Deleted legacy planning files were not restored by user choice.
 - This regenerated planning keeps `.planning/codebase/` and
   `.planning/data/case_studies/` as current context where present.
-
+- Phase 3 decided that final replay is `blocked_pending_gate_cleanup`.
 - Do not run final replay, calibration, case-study execution, or manuscript
-  claim upgrades before Phase 1-3 decisions authorize them.
-
+  claim upgrades unless the Phase 3 decision gates authorize them.
 - Do not hand-edit generated rows, package status, figures, tables, or claim
   guards.
-
 - If `claim_ready=false` remains, the manuscript must use conditional
   diagnostic language.
 
@@ -93,15 +89,15 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Discuss Phase 3:
+Plan Phase 4:
 
 ```text
-$gsd-discuss-phase 3
+$gsd-plan-phase 4
 ```
 
-Phase 3 should decide whether frozen final settings and calibration/final-test
-separation justify a clean, pre-registered final replay, or whether the paper
-should remain conditional diagnostic.
+Phase 4 should execute only the evidence-authorized path from
+`M3_CLAIM_READY_DECISION.md`: gate cleanup and final replay only after all
+pre-replay gates pass, otherwise diagnostic lock.
 
 ---
-*Updated: 2026-06-16 after Phase 02 completion*
+*Updated: 2026-06-17 after Phase 03 completion*

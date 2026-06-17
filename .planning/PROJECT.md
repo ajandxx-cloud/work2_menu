@@ -53,11 +53,14 @@ stronger than the generated evidence, readiness gates, and strict
   provenance requirement set for path, hash, sidecar metadata, load status,
   dependency snapshot, manifest hash, git SHA, dirty state, readiness JSON
   hash, and source-row checkpoint metadata.
+- Phase 3 validated the claim-ready evidence decision gate in
+  `.planning/milestones/tr_e_completion/M3_CLAIM_READY_DECISION.md`: current
+  final replay is `blocked_pending_gate_cleanup`, immediate replay is not
+  authorized, and Phase 4 may proceed only through strict pre-replay gates or
+  diagnostic lock.
 
 ### Active
 
-- [ ] Decide whether a final claim-ready rerun is scientifically legitimate
-  under calibration/final-test separation.
 - [ ] If claim-ready gates can be resolved legitimately, run only a
   pre-registered final replay and regenerate artifacts from source rows.
 - [ ] If evidence remains mixed or `claim_ready=false`, lock the paper as a
@@ -151,6 +154,7 @@ materials are scaffold-only.
 | Use strict claim guard as claim authority | Current artifacts show `claim_ready=false`; evidence must control wording. | Active |
 | Plan a branch between claim-ready rerun and diagnostic lock | The manuscript path depends on evidence, not desired conclusions. | Active |
 | Defer manuscript prose until evidence path is selected | Prevents writing positive claims before gates authorize them. | Active |
+| Treat Phase 3 as a conditional go-after-gates decision | Current freeze/protocol evidence is missing; Phase 4 must satisfy gates before replay or lock diagnostic. | Validated |
 
 ## Evolution
 
@@ -172,4 +176,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-16 after Phase 1 evidence-boundary audit*
+*Last updated: 2026-06-17 after Phase 3 claim-ready evidence decision*
