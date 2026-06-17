@@ -14,15 +14,21 @@ The legacy `manuscript/main.tex` may contribute the following material only afte
 - Literature references and bibliography entries from `manuscript/references.bib`.
 - Elsevier metadata such as author, affiliation, and bibliography wiring.
 
+Plan 02 migrated the notation and model skeleton into `TR_E_WORK2_MANUSCRIPT_DRAFT.md` after rewriting the venue, contribution, and results framing around the conditional diagnostic TR-E path. The draft uses service-menu optimization, paired replay, checkpoint provenance, artifact status, and strict claim guard language as the organizing frame.
+
 ## Removed Unsafe Framing
 
 The Phase 5 manuscript must not carry forward these legacy elements:
+
+Status label: removed unsafe framing.
 
 - TR-C venue framing.
 - Behavior-Aware foregrounding in title, abstract, or contribution list.
 - DSPO_PLUS foregrounding as the central paper identity.
 - Ranking validation promises.
 - Dominance, superiority, improvement, proof, real-passenger validation, or near-optimality claims not authorized by the strict claim guard.
+
+Plan 02 removed the legacy title, TR-C abstract framing, DSPO_PLUS-centered contribution frame, and policy-ranking promise from the new Markdown draft. Legacy method material was rewritten as service-menu formulation and diagnostic evaluation structure rather than as an empirical ranking claim.
 
 ## Reviewer-Risk Response
 
@@ -43,6 +49,7 @@ The Phase 5 manuscript must not carry forward these legacy elements:
 - Novelty framing must remain service-menu optimization centered without overstating current evidence.
 - Any future positive claim requires regenerated evidence and strict guard authorization.
 - Final LaTeX migration remains out of Phase 5 scope.
+- Phase 6 should review whether the conditional diagnostic positioning is strong enough for TR-E or should be routed to revise-before-submission.
 
 ## Final Verification
 
