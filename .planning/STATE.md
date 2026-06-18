@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: TR-E Claim-Ready Manuscript Completion
-status: milestone_complete
-last_updated: 2026-06-17T13:56:11.584Z
-last_activity: 2026-06-17
+status: active
+last_updated: "2026-06-18T03:28:51.582Z"
+last_activity: 2026-06-18
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 6
   total_plans: 8
   completed_plans: 8
-  percent: 100
-stopped_at: Milestone complete (Phase 06 was final phase)
+  percent: 86
+stopped_at: Phase 7 context gathered
 ---
 
 # State
@@ -24,16 +24,18 @@ See: `.planning/PROJECT.md` (regenerated 2026-06-16)
 claims are no stronger than the generated evidence, readiness gates, and strict
 `CLAIM_GUARD.json` allow.
 
-**Current focus:** Milestone complete
-Use the Phase 5 manuscript package and Phase 4 diagnostic lock as the claim ceiling.
+**Current focus:** Phase 7 manuscript revision planning
+Use the Phase 5 manuscript package, Phase 6 readiness audit, and Phase 4
+diagnostic lock as the claim ceiling.
 
 ## Current Position
 
-Phase: 06
+Phase: 07
 Plan: Not started
-Status: Milestone complete
-Last activity: 2026-06-17
-new planning rather than restoring deleted legacy GSD docs
+Status: Context gathered
+Last activity: 2026-06-18
+Phase 7 has been added to revise the conditional diagnostic manuscript into a
+coherent TR-E-ready revised draft without reopening evidence generation.
 
 ## Initialization Evidence
 
@@ -77,6 +79,9 @@ Current Phase 10 artifact facts:
 - If `claim_ready=false` remains, the manuscript must use conditional
   diagnostic language.
 
+- Phase 7 context is available at
+  `.planning/phases/07-tr-e-manuscript-revision-and-submission-package/07-CONTEXT.md`.
+
 ## Verification Baseline
 
 Minimum check after implementation phases:
@@ -97,15 +102,16 @@ Expected additional checks when relevant:
 
 ## Next Step
 
-Plan Phase 6:
+Plan Phase 7:
 
 ```text
-$gsd-plan-phase 6
+$gsd-plan-phase 7
 ```
 
-Phase 6 should audit the Phase 5 manuscript package for novelty, model rigor,
-empirical credibility, claim safety, traceability, reproducibility, English
-quality, and reviewer attack points.
+Phase 7 should create `manuscript/TR_E_WORK2_MANUSCRIPT_REVISED.md`,
+`manuscript/TR_E_WORK2_REVISION_SUMMARY.md`, and
+`manuscript/TR_E_WORK2_REVISED_PROHIBITED_LANGUAGE_CHECK.md` while preserving
+the current strict claim ceiling and generated-evidence boundary.
 
 ---
-*Updated: 2026-06-17 after Phase 05 execution*
+*Updated: 2026-06-18 after Phase 07 context gathering*

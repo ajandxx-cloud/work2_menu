@@ -153,7 +153,7 @@ Expected deliverables:
 
 ## Phase 6: Final TR-E Submission Readiness Audit
 
-**Status:** Not started
+**Status:** Complete (2026-06-17)
 
 **Goal:** Determine whether the manuscript is ready for TR-E submission or
 requires another milestone.
@@ -184,6 +184,64 @@ python scripts/test_manuscript_claim_guard.py
 ```
 
 **Requirements:** SUB-01, SUB-02, SUB-03
+
+## Phase 7: TR-E Manuscript Revision And Submission Package
+
+**Status:** Not planned
+
+**Goal:** Rewrite the conditional diagnostic manuscript into a coherent
+TR-E-ready revised draft while preserving the current claim ceiling and
+generated-evidence boundary.
+
+**Success Criteria:**
+1. A complete revised manuscript is created as a new file, preserving the
+   Phase 5 draft as historical input.
+2. The revised manuscript strengthens the TR-E service-menu contribution,
+   mathematical model, solution method, diagnostic results framing,
+   discussion, conclusion, and appendix consistency.
+3. The manuscript keeps `claim_ready=false` and conditional diagnostic status
+   explicit; no positive empirical superiority, validation, near-optimality,
+   no-filter recommendation, or case-study validation claim is introduced.
+4. The Mathematical Model is readable without planning artifacts and defines
+   candidate bundles, displayed menus, MNL response probabilities, objective
+   components, feasibility constraints, outside option, accepted home pickup,
+   accepted meeting-point pickup, and opt-out accounting.
+5. Phase 7 does not run final replay, calibration, case-study execution, claim
+   upgrade, artifact regeneration, or hand edits to generated rows, package
+   status, claim guards, figures, tables, or mirrors.
+
+**Deliverables:**
+- `manuscript/TR_E_WORK2_MANUSCRIPT_REVISED.md`
+- `manuscript/TR_E_WORK2_REVISION_SUMMARY.md`
+- `manuscript/TR_E_WORK2_REVISED_PROHIBITED_LANGUAGE_CHECK.md`
+- `manuscript/TR_E_WORK2_TABLE_FIGURE_SOURCE_MAP.md` only if table, figure,
+  caption, or appendix-object identities change.
+
+**Verification:**
+
+```powershell
+cd work2_coding
+python -c "import sys; sys.path.insert(0, '.'); import Src.config; print('IMPORT_OK')"
+python scripts/test_manuscript_claim_guard.py
+python scripts/test_manuscript_readiness_package.py
+```
+
+From repository root:
+
+```powershell
+Test-Path manuscript/TR_E_WORK2_MANUSCRIPT_REVISED.md
+Test-Path manuscript/TR_E_WORK2_REVISION_SUMMARY.md
+Test-Path manuscript/TR_E_WORK2_REVISED_PROHIBITED_LANGUAGE_CHECK.md
+rg -n -i "dominat|superior|outperform|near[- ]optimal|real passenger|case-study validation|semi-real validation|no-filter recommendation|operationally recommended|DSPO_PLUS|Behavior-Aware|TR-C|ranking validation|adaptive windows improve|greedy optimal" manuscript/TR_E_WORK2_MANUSCRIPT_REVISED.md
+```
+
+**Requirements:** MS-01, MS-02, MS-03, MS-04, MS-05, SUB-01, SUB-02, SUB-03
+
+**Depends on:** Phase 6
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 7 to break down)
 
 ---
 *Roadmap regenerated: 2026-06-16*
