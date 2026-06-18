@@ -187,7 +187,7 @@ python scripts/test_manuscript_claim_guard.py
 
 ## Phase 7: TR-E Manuscript Revision And Submission Package
 
-**Status:** Not planned
+**Status:** Planned
 
 **Goal:** Rewrite the conditional diagnostic manuscript into a coherent
 TR-E-ready revised draft while preserving the current claim ceiling and
@@ -238,10 +238,16 @@ rg -n -i "dominat|superior|outperform|near[- ]optimal|real passenger|case-study 
 **Requirements:** MS-01, MS-02, MS-03, MS-04, MS-05, SUB-01, SUB-02, SUB-03
 
 **Depends on:** Phase 6
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd-plan-phase 7 to break down)
+- [ ] `07-01-PLAN.md` - Revised manuscript core narrative, model, and method
+- [ ] `07-02-PLAN.md` - Claim-gated evidence sections, appendix, and source map sync
+- [ ] `07-03-PLAN.md` - Revision summary, prohibited-language scan, and verification closeout
+
+**Cross-cutting constraints:**
+
+- D-14: Update the source map only if table, figure, caption, or appendix-object identities change.
 
 ---
 *Roadmap regenerated: 2026-06-16*
