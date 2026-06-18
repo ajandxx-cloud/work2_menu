@@ -50,16 +50,16 @@ claims are no stronger than the generated evidence, readiness gates, and strict
 
 ### Manuscript Construction
 
-- [ ] **MS-01**: The project creates a full TR-E manuscript draft in Markdown
+- [x] **MS-01**: The project creates a full TR-E manuscript draft in Markdown
   or LaTeX, depending on the available source format.
-- [ ] **MS-02**: The manuscript uses academic English paragraph prose rather
+- [x] **MS-02**: The manuscript uses academic English paragraph prose rather
   than outline fragments in the body.
-- [ ] **MS-03**: The manuscript includes Introduction, Literature Review,
+- [x] **MS-03**: The manuscript includes Introduction, Literature Review,
   Problem Description, Mathematical Model, Solution Method, Experimental
   Design, Results, Discussion, Conclusion, and Appendix.
-- [ ] **MS-04**: Every table and figure has a source artifact path, claim ID,
+- [x] **MS-04**: Every table and figure has a source artifact path, claim ID,
   claim status, and allowed manuscript use.
-- [ ] **MS-05**: The manuscript contains no prohibited positive language unless
+- [x] **MS-05**: The manuscript contains no prohibited positive language unless
   strict claim guard output authorizes that exact claim.
 
 ### Submission Readiness
@@ -103,12 +103,12 @@ Deferred until v1 claim path is complete.
 
 | Requirement | Phase | Status |
 | --- | --- | --- |
-| EVID-01..EVID-04 | Phase 1 | Pending |
+| EVID-01..EVID-04 | Phase 1 | Complete |
 | GATE-01..GATE-02 | Phase 2 | Complete |
 | GATE-03..GATE-04 | Phase 3 | Complete |
 | PATH-01..PATH-04 | Phase 4 | Complete |
-| MS-01..MS-05 | Phase 5 | Pending |
-| SUB-01..SUB-03 | Phase 6 | Pending |
+| MS-01..MS-05 | Phase 5 and Phase 7 | Complete |
+| SUB-01..SUB-03 | Phase 6 and Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 20 total

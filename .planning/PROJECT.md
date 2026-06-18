@@ -74,6 +74,12 @@ stronger than the generated evidence, readiness gates, and strict
   and produced `manuscript/TR_E_WORK2_FINAL_REVISION_TASKS.md`. The final
   recommendation is `revise-before-submission`; Work2 remains conditional
   diagnostic, not claim-ready empirical.
+- Phase 7 produced the revised conditional diagnostic submission package:
+  `manuscript/TR_E_WORK2_MANUSCRIPT_REVISED.md`,
+  `manuscript/TR_E_WORK2_REVISION_SUMMARY.md`, and
+  `manuscript/TR_E_WORK2_REVISED_PROHIBITED_LANGUAGE_CHECK.md`, with
+  verification recorded in
+  `.planning/phases/07-tr-e-manuscript-revision-and-submission-package/07-VERIFICATION.md`.
 
 ### Active
 
@@ -187,4 +193,4 @@ After each milestone:
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-06-17 after Phase 6 final submission readiness audit*
+*Last updated: 2026-06-18 after Phase 7 manuscript revision package*
