@@ -1,0 +1,24 @@
+Many-to-one demand-responsive transit (DRT) platforms increasingly face a
+service-design decision that is richer than route insertion alone. For each
+arriving request, the operator may display several feasible service bundles,
+where each bundle combines a pickup location, a pickup time-window treatment,
+and a price. This paper formulates that decision as dynamic service-menu
+optimization. The service bundle is written as $b=(m,w,p)$, with $m$ denoting
+home or meeting-point pickup, $w$ denoting pickup-window handling, and $p$
+denoting the displayed price. Passenger response is modeled experimentally
+with a multinomial-logit (MNL) choice model over displayed bundles and the
+outside option. The outside option represents refusal or lost demand, not
+accepted home pickup, so accepted home service, accepted meeting-point service,
+and opt-out are kept as separate accounting outcomes.
+
+The manuscript follows a conditional diagnostic evidence path. It describes
+the formulation, the menu-construction and paired-replay evaluation pipeline,
+and the package-level claim gates that govern manuscript interpretation. In
+the current generated package, the claim-ready flag, strict claim-guard flag,
+and positive-claims permission flag are all false. Positive empirical claims
+about adaptive-menu effects, product ablations, adaptive-window increments,
+menu-construction value, exact/greedy computational credibility, and semi-real
+case evidence remain blocked by readiness and strict claim-guard status. The
+contribution is therefore a claim-gated service-menu optimization framework
+and a transparent diagnostic evidence architecture for future claim-ready
+evaluation.

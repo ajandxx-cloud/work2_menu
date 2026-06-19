@@ -1,6 +1,6 @@
 {
-  "mode": "yolo",
-  "granularity": "fine",
+  "mode": "interactive",
+  "granularity": "standard",
   "parallelization": false,
   "commit_docs": true,
   "model_profile": "balanced",
@@ -10,6 +10,7 @@
     "verifier": true,
     "nyquist_validation": true,
     "auto_advance": false,
+    "text_mode": false,
     "_auto_chain_active": false
   },
   "ship": {
@@ -17,25 +18,25 @@
       {
         "heading": "User Stories & Acceptance Criteria",
         "enabled": true,
-        "source": "REQUIREMENTS.md ## v1 Requirements || ROADMAP.md ## Phase",
-        "fallback": "- Acceptance criteria are covered by mapped requirements and verification evidence."
+        "source": "REQUIREMENTS.md ## v1 Requirements || REQUIREMENTS.md ## Acceptance Criteria",
+        "fallback": "- Acceptance criteria are covered by the linked requirements and verification evidence."
       },
       {
         "heading": "Risks & Dependencies",
         "enabled": true,
-        "source": "ROADMAP.md ## Risks || PLAN.md ## Dependencies",
-        "fallback": "- No known high-risk rollout dependencies beyond documented experiment gates."
+        "source": "ROADMAP.md ## Risks || PLAN.md ## Risks || PLAN.md ## Dependencies",
+        "fallback": "- No known high-risk rollout dependencies."
       },
       {
         "heading": "Success Metrics & Release Criteria",
         "enabled": true,
-        "source": "REQUIREMENTS.md ## Traceability || STATE.md ## Verification Baseline",
-        "fallback": "- Release when smoke, readiness, artifact, and claim gates pass."
+        "source": "REQUIREMENTS.md ## Definition of Done || VERIFICATION.md ## Release Criteria",
+        "fallback": "- Release when automated verification and required manual checks pass."
       },
       {
         "heading": "Stakeholder Review & Approval",
-        "enabled": false,
-        "template": "- Research owner approval pending for {phase_name}."
+        "enabled": true,
+        "template": "- Internal manuscript and evidence approval pending for {phase_name}."
       }
     ]
   }

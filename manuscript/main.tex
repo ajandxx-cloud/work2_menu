@@ -1,4 +1,4 @@
-\documentclass[a4paper,fleqn,review]{els-cas-dc}
+\documentclass[a4paper,fleqn,review]{cas-dc}
 
 \usepackage[authoryear,longnamesfirst]{natbib}
 \usepackage{booktabs}
@@ -8,32 +8,19 @@
 \usepackage{graphicx}
 \usepackage{url}
 
-\newcommand{\dspo}{\textsc{DSPO}}
-\newcommand{\dspoplus}{\textsc{DSPO\_PLUS}}
-
-\newcommand{\ArtifactTable}[2]{%
-  \IfFileExists{#1}{\input{#1}}{%
-    \begin{table}[t]
-      \centering
-      \caption{#2}
-      \begin{tabular}{@{}l@{}}
-        \toprule
-        Pending regenerated artifact \\
-        \bottomrule
-      \end{tabular}
-    \end{table}
-  }%
-}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\emergencystretch=2em
+\Urlmuskip=0mu plus 1mu\relax
 
 \begin{document}
 \let\WriteBookmarks\relax
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
 
-\shorttitle{Behavior-aware service menu optimization}
+\shorttitle{Claim-gated service-menu optimization}
 \shortauthors{J. Ana}
 
-\title[mode=title]{Behavior-Aware Service Menu Optimization for Many-to-One Demand-Responsive Transit with Meeting Points and Time Windows}
+\title[mode=title]{Claim-Gated Dynamic Service-Menu Optimization for Many-to-One Demand-Responsive Transit}
 
 \author[1]{Jin Ana}
 \ead{jandxx@buaa.edu.cn}
@@ -44,276 +31,524 @@
   country={China}}
 
 \begin{abstract}
-This paper studies many-to-one demand-responsive transit in which the platform
-offers each passenger a limited service menu consisting of meeting-point,
-pickup-time-window, and price alternatives. The research objective is to
-compare no-pricing, static-pricing, \dspo, and \dspoplus{} policies under a
-shared multinomial-logit choice model with an outside option, paired replayed
-requests, and explicit provenance gates. The manuscript is currently written as
-a claim-gated TR-C draft: the method, experimental design, and artifact contract
-are specified, while empirical dominance claims remain blocked until checkpoint
-provenance and formal evidence gates pass. This separation is deliberate. It
-prevents diagnostic, placeholder, or failed rows from being converted into
-publication claims and makes the eventual ranking test reproducible.
+Many-to-one demand-responsive transit (DRT) platforms increasingly face a
+service-design decision that is richer than route insertion alone. For each
+arriving request, the operator may display several feasible service bundles,
+where each bundle combines a pickup location, a pickup time-window treatment,
+and a price. This paper formulates that decision as dynamic service-menu
+optimization. The service bundle is written as $b=(m,w,p)$, with $m$ denoting
+home or meeting-point pickup, $w$ denoting pickup-window handling, and $p$
+denoting the displayed price. Passenger response is modeled experimentally
+with a multinomial-logit (MNL) choice model over displayed bundles and the
+outside option. The outside option represents refusal or lost demand, not
+accepted home pickup, so accepted home service, accepted meeting-point service,
+and opt-out are kept as separate accounting outcomes.
+
+The manuscript follows a conditional diagnostic evidence path. It describes
+the formulation, the menu-construction and paired-replay evaluation pipeline,
+and the package-level claim gates that govern manuscript interpretation. In
+the current generated package, the claim-ready flag, strict claim-guard flag,
+and positive-claims permission flag are all false. Positive empirical claims
+about adaptive-menu effects, product ablations, adaptive-window increments,
+menu-construction value, exact/greedy computational credibility, and semi-real
+case evidence remain blocked by readiness and strict claim-guard status. The
+contribution is therefore a claim-gated service-menu optimization framework
+and a transparent diagnostic evidence architecture for future claim-ready
+evaluation.
 \end{abstract}
 
 \begin{keywords}
-demand-responsive transit \sep meeting points \sep service menu optimization \sep multinomial logit \sep decision-focused learning \sep time windows
+demand-responsive transit \sep service-menu optimization \sep meeting points \sep pickup time windows \sep multinomial logit \sep paired replay \sep artifact gates \sep transportation operations
 \end{keywords}
 
 \maketitle
 
 \section{Introduction}
 
-Demand-responsive transit (DRT) systems must balance operational efficiency with
-passenger acceptance. Meeting points can reduce routing cost and improve vehicle
-productivity, but they also impose walking and timing burdens on passengers
-\citep{stiglic2015benefits,fielbaum2021ondemand,cortenbach2024}. A platform
-therefore cannot treat a meeting-point assignment as a purely operational
-decision. It must decide which alternatives passengers see, how those
-alternatives are priced, and how time-window feasibility is communicated before
-the passenger chooses or opts out.
+Many-to-one DRT systems must coordinate route efficiency, passenger
+convenience, service reliability, and price while requests arrive sequentially
+\citep{cordeau2007dial,ho2018survey}. In a last-mile or feeder setting, a
+platform can sometimes serve a passenger at home, sometimes ask the passenger
+to walk to a meeting point, and sometimes decline to serve the request if
+service is unattractive or infeasible. Meeting points can reduce routing burden
+and improve consolidation, but they also impose walking and timing burdens on
+passengers \citep{stiglic2015benefits,zheng2019meeting,fielbaum2021ondemand,cortenbach2024}.
+These outcomes are shaped not only by routing cost, but also by what the
+passenger is shown. A displayed alternative is a service product: it tells the
+passenger where to be picked up, when pickup is expected, and what price
+applies.
 
-We study this interaction as a behavior-aware service-menu problem. Each
-displayed alternative is a bundle containing a pickup location, a pickup
-time-window treatment, and a price. The platform selects a limited menu from a
-larger feasible candidate set; the passenger then chooses among displayed
-bundles and an outside option according to a multinomial-logit (MNL) model
-\citep{mcfadden1974conditional,ben1985discrete}. The central tension is that the
-menu should steer demand toward operationally efficient meeting points without
-manufacturing profit gains through unrealistic price manipulation or by hiding
-the opt-out channel.
+This paper makes the displayed service menu the central decision object. At
+request epoch $i$, the platform observes the current fleet and route state,
+generates feasible service bundles, and chooses a limited menu to display.
+Each displayed bundle has the form $b=(m,w,p)$, where $m$ is the pickup
+location, $w$ is the pickup time-window treatment, and $p$ is the price. The
+menu also competes with an outside option. If the passenger accepts a home
+bundle, the request is served as accepted home pickup. If the passenger accepts
+a meeting-point bundle, the request is served through the selected pickup
+point. If the outside option is selected, the passenger opts out and the route
+does not mutate. This separation is essential for transportation operations:
+accepted service consumes capacity and changes routes, whereas opt-out is lost
+demand.
 
-The paper is organized around three contributions. First, it formulates
-many-to-one DRT menu design as an assortment-style optimization problem with
-route-aware costs, time-window filters, prices, and passenger choice. Second, it
-positions \dspo{} and \dspoplus{} as decision-focused menu-learning policies
-whose differences must be visible in the objective, cost-learning, and behavior
-gating contracts rather than asserted post hoc. Third, it defines a reproducible
-experimental ladder on the RC benchmark: no pricing, static pricing, \dspo, and
-\dspoplus{} are compared under paired replay only after checkpoint provenance,
-row schema, and claim-readiness gates pass.
+The paper is written for \emph{Transportation Research Part E} as a service
+operations and logistics contribution. It connects meeting-point design,
+pickup-window handling, pricing, passenger choice, route feasibility, and
+evidence traceability in one dynamic optimization framework. The formulation
+is not a pricing-only model, a pure route-insertion heuristic, a standalone
+assortment model, or an attention-model paper. The service menu couples an
+assortment-style display decision with route-dependent costs and
+state-dependent feasibility.
 
-The present draft intentionally separates manuscript structure from final
-claims. Current artifacts report a blocked claim state because pilot/formal
-checkpoint provenance is unavailable. As a result, the results section describes
-the evidence contract, current blockers, and planned ranking tests rather than
-claiming that \dspoplus{} already dominates the baselines.
+The empirical status is deliberately stated at the beginning. The current
+package is conditional diagnostic, not claim-ready empirical. Phase 4 did not
+authorize final replay because the pre-replay gate remained blocked by dirty
+git provenance and missing formal checkpoint evidence. The Phase 10 package
+reports 74 artifacts, 70 existing artifacts, 4 missing artifacts, and 108
+blockers. The strict claim guard allows only provenance/status transparency as
+a supported claim, while ETA/no-filter material is diagnostic-only. This paper
+therefore does not convert blocked artifacts into positive results. Instead,
+it uses the blocker state as a reproducibility boundary: the manuscript can
+formulate, evaluate diagnostically, audit, and identify conditions for future
+claim upgrades.
+
+The manuscript makes four claim-safe contributions. First, it formulates a
+dynamic displayed service-menu problem for many-to-one DRT with bundles
+$b=(m,w,p)$. Second, it provides a self-contained mathematical model covering
+candidate bundles, displayed menus, MNL response, feasibility constraints,
+objective components, and separate outcome accounting. Third, it describes an
+auditable service-menu evaluation pipeline that connects candidate generation,
+ETA/window handling, pricing, menu selection, replay logging, and claim-gate
+reporting. Fourth, it documents how strict claim guards prevent diagnostic,
+blocked, or scaffold-only material from being used as claim-ready empirical
+evidence.
 
 \section{Literature Review}
 
-\subsection{DRT, Dial-a-Ride, and Meeting Points}
+The first stream of related work studies DRT, dial-a-ride, and flexible
+last-mile service operations. These models usually emphasize routing,
+capacity, time-window feasibility, fleet repositioning, and service quality
+\citep{cordeau2007dial,parragh2008survey,ho2018survey}. Meeting-point DRT
+extends this setting by allowing passengers to walk to shared pickup points,
+which can reduce route burden and improve consolidation
+\citep{stiglic2015benefits,zheng2019meeting,fielbaum2021ondemand,cortenbach2024}.
+In the present paper, meeting points are not treated as route nodes alone.
+They are components of displayed service bundles, and their operational value
+depends on time-window treatment, price, and passenger response.
 
-Classical dial-a-ride and pickup-and-delivery models provide the operational
-foundation for shared DRT systems \citep{cordeau2007dial,parragh2008survey,
-ho2018survey}. In these models, routing, capacity, and time-window constraints
-determine whether requests can be served. Recent work on meeting-point DRT
-extends this view by allowing passengers to walk to shared pickup locations,
-which can reduce vehicle distance and improve pooling efficiency
-\citep{stiglic2015benefits,zheng2019meeting,fielbaum2021ondemand}. Our focus is
-not only where meeting points are located, but which meeting-point alternatives
-are displayed to a passenger at the decision epoch.
+The second stream concerns pickup-window design and service reliability.
+Time-window promises affect both passenger acceptance and operational
+feasibility. A narrow pickup window may make the service more attractive but
+harder to route; a flexible window may reduce route pressure but lower
+perceived convenience. Robust ETA filtering and adaptive-window logic are
+therefore natural service-menu ingredients. Under the current evidence state,
+however, these ingredients are model components and diagnostic comparison
+slots rather than authorized effect claims.
 
-\subsection{Service Menus and Assortment Optimization}
+The third stream is assortment and menu optimization under discrete choice.
+Retail assortment models choose which products to offer when customers may
+substitute or choose an outside option \citep{talluri2004revenue,rusmevichientong2010dynamic,desir2022capacitated}.
+A DRT service menu has a related choice structure, but each product is
+state-dependent and operationally endogenous. Passenger response is represented
+with a multinomial-logit structure grounded in the discrete-choice literature
+\citep{mcfadden1974conditional,ben1985discrete}. The cost of a bundle depends
+on the current route, capacity, pickup location, time window, and feasibility
+checks. The menu decision is therefore both a display decision and a
+transportation operations decision.
 
-The displayed menu is closely related to assortment optimization under discrete
-choice \citep{talluri2004revenue,rusmevichientong2010dynamic,desir2022capacitated}.
-In classical assortment settings, products have known utilities and revenues.
-In DRT, each product is an endogenous service bundle whose cost depends on the
-current routing state and whose attractiveness depends on walking, in-vehicle
-time, time-window reliability, and price. This makes the menu problem both an
-assortment decision and an operational control problem.
+The fourth stream integrates pricing with operational decision-making.
+Pricing can shape willingness to accept meeting-point service or time-window
+trade-offs. In this paper, Lambert-W pricing is one price-generation component
+inside a wider service-menu pipeline. It does not define the full contribution
+by itself. The paper also separates price generation from menu feasibility,
+choice response, route mutation, and artifact-gated evidence interpretation.
 
-\subsection{SPO and Decision-Focused Learning}
+Finally, computational transportation studies increasingly need transparent
+provenance and reproducibility controls. Decision-focused and
+predict-then-optimize pipelines underline why predictive and optimization
+components should be evaluated through the downstream decision they support
+\citep{elmachtoub2022smart}. The current manuscript treats paired replay,
+checkpoint load status, normalized rows, artifact status, package status, and
+strict claim guards as first-class evidence controls. This framing does not
+replace empirical evidence. It prevents a manuscript from overstating what the
+generated evidence can support and clarifies what future work must regenerate
+before stronger claims are available.
 
-Decision-focused learning trains predictive models through the downstream
-optimization loss rather than through prediction error alone
-\citep{elmachtoub2022smart}. The \dspo{} family used here follows this logic:
-cost predictions matter because they change menus, prices, and passenger
-choices. The \dspoplus{} extension is treated as an enhanced decision-focused
-policy with behavior-gated menu objectives, opt-out guardrails, service-quit
-penalties, and robust time-window metadata. The manuscript requires the
-\dspo{}/\dspoplus{} distinction to be generated as \texttt{\detokenize{method_family}}
-metadata in experiment rows, not inferred manually from policy labels.
+\section{Problem Description}
 
-\section{Problem Formulation}
+Requests arrive sequentially. At epoch $i$, a passenger request is observed
+together with the current system state $S_i$. The state includes the active
+fleet and route plan, vehicle capacity, time information, the passenger's home
+location, candidate meeting points, routing and insertion costs, pickup-window
+metadata, price settings, and service guardrails. The platform must decide
+which service alternatives to display before the passenger response is known.
 
-Consider a set of passenger requests $\mathcal{R}$ arriving over a planning
-horizon. For each request $r$, the platform constructs a feasible candidate set
-$\mathcal{B}(r)$. A service bundle is
+A service alternative is a bundle $b=(m,w,p)$. The pickup component $m$ may be
+the passenger's home or a feasible meeting point. The time-window component
+$w$ records how pickup timing is offered, such as fixed-window or
+adaptive-window handling. The price component $p$ is the displayed fare or
+discounted fare associated with the bundle. A displayed menu $M_i$ is a subset
+of feasible bundles and is constrained by a menu-size limit.
+
+The passenger may choose one displayed bundle or choose the outside option.
+The outside option is refusal or lost demand. It is not home service and
+should not change the route. This distinction yields three accounting
+outcomes. Accepted home pickup means the passenger chooses a home-service
+bundle and the vehicle route is updated for home pickup. Accepted
+meeting-point pickup means the passenger chooses a meeting-point bundle and
+the route is updated for that location. Opt-out means the passenger chooses
+the outside option and no pickup route is inserted.
+
+The operator's decision is difficult because passenger attractiveness and
+operational cost move together. A far meeting point may reduce vehicle cost
+but reduce passenger utility. A home pickup may be attractive but costly. A
+price can compensate or discourage acceptance. A pickup window can increase
+reliability for one request but reduce downstream flexibility. Dynamic
+service-menu optimization evaluates these trade-offs under current route
+state, feasible products, and evidence gates that determine which results may
+be interpreted as claim-bearing.
+
+\section{Mathematical Model}
+
+Let $\mathcal{I}$ be the sequence of requests. For request $i\in\mathcal{I}$,
+let $S_i$ denote the system state before the menu is displayed. Let $L_i$ be
+the feasible pickup-location set, including home service and any feasible
+meeting-point alternatives. For each $m\in L_i$, let $W_i(m)$ be the feasible
+set of pickup-window treatments, and let $P_i(m,w)$ be the feasible set of
+prices for location-window pair $(m,w)$.
+
+The candidate bundle set is
+\begin{align}
+B_i=\{b=(m,w,p):\;&m\in L_i,\; w\in W_i(m),\; p\in P_i(m,w), \nonumber\\
+& b\in \mathcal{F}_i(S_i)\},
+\end{align}
+where $\mathcal{F}_i(S_i)$ is the set of route-, capacity-, ETA/window-, and
+guardrail-feasible bundles under state $S_i$.
+The platform chooses binary display variables $x_{ib}$, where $x_{ib}=1$ if
+bundle $b$ is displayed. The menu is
 \begin{equation}
-  b = (m_b, [t_b^{\mathrm{lo}}, t_b^{\mathrm{hi}}], p_b),
+M_i = \{b\in B_i:x_{ib}=1\},
 \end{equation}
-where $m_b$ is a home or meeting-point pickup location,
-$[t_b^{\mathrm{lo}}, t_b^{\mathrm{hi}}]$ is the pickup time window, and $p_b$
-is the displayed price. The platform chooses a displayed menu
-$\mathcal{M}(r) \subseteq \mathcal{B}(r)$ subject to a menu-size limit and
-feasibility checks.
-
-Passenger utility for a displayed bundle is modeled as
+with menu-size constraint
 \begin{equation}
-  U_{rb} = \alpha_0 + \beta_p p_b + \beta_{\mathrm{ivt}}\widehat{\tau}^{\mathrm{ivt}}_{rb}
-  + \beta_{\mathrm{walk}} d_{rb} + \beta_{\mathrm{tw}} q_{rb},
-  \label{eq:utility}
+\sum_{b\in B_i}x_{ib}\le K.
 \end{equation}
-where $d_{rb}$ is walking distance, $\widehat{\tau}^{\mathrm{ivt}}_{rb}$ is
-predicted in-vehicle time, and $q_{rb}$ summarizes pickup-time-window
-compatibility. In the implementation, $q_{rb}$ is the semantic counterpart of
-time deviation, ETA/window filtering, and \texttt{menu\_eta\_filter\_mode}
-diagnostics, not a second independent time-window model. The coefficient signs
-are interpreted semantically: price, in-vehicle time, walking distance, and
-time-window deviation reduce utility, while the base and home-pickup terms
-capture alternative-specific preference shifts. The outside option is
-normalized to $U_{r0}=0$ in the paper formula; generated rows still record the
-actual runtime \texttt{\detokenize{outside_option_util}} value, which defaults to 0 and may
-be disabled in diagnostic settings. The choice probability is
+
+The feasibility constraints include the following conditions. Pickup-location
+feasibility requires the location to be home service or an available meeting
+point for request $i$. ETA/window feasibility requires the predicted pickup
+time to be compatible with the bundle's time-window treatment. Capacity and
+route feasibility require the insertion to respect vehicle capacity and route
+state. Service guardrails exclude alternatives that violate the service
+contract. Policy-comparison comparability requires paired replay settings,
+seeds, demand splits, checkpoint requirements, and policy-only overrides to
+remain controlled across policies.
+
+Passenger response is represented by an MNL model over displayed bundles and
+the outside option. Let $U_{ib}$ be the systematic utility of displayed bundle
+$b$:
 \begin{equation}
-  P_{rb}(\mathcal{M}) =
-  \frac{\exp(U_{rb})}{\exp(U_{r0}) + \sum_{j \in \mathcal{M}(r)} \exp(U_{rj})}.
-  \label{eq:mnl}
+U_{ib}=\alpha_0+\alpha_p p_{ib}+\alpha_d d_{ib}+\alpha_t t_{ib}
+       +\alpha_w q_{ib}+\alpha_h h_{ib},
 \end{equation}
-
-The platform's expected menu value is the MNL-weighted net contribution of the
-displayed bundles,
+where $d_{ib}$ is walking distance, $t_{ib}$ is pickup-time or in-vehicle-time
+burden, $q_{ib}$ summarizes time-window compatibility, and $h_{ib}$ indicates
+home service. Let $U_{i0}$ denote outside-option utility. The probability of
+choosing displayed bundle $b$ is
 \begin{equation}
-  \widehat{\Pi}(\mathcal{M}(r)) =
-  \sum_{b \in \mathcal{M}(r)} P_{rb}(\mathcal{M})
-  \left(p_b - \widehat{c}_{rb}^{\mathrm{route}} - \widehat{c}_{rb}^{\mathrm{risk}}\right).
-  \label{eq:menu_objective}
+\Pr_i(b\mid M_i)=
+\frac{\exp(U_{ib})}{\exp(U_{i0})+\sum_{j\in M_i}\exp(U_{ij})}.
 \end{equation}
-Capacity, service feasibility, and time-window feasibility constrain which
-bundles enter $\mathcal{B}(r)$ and which bundles remain eligible for display.
+The outside-option probability is
+\begin{equation}
+\Pr_i(0\mid M_i)=
+\frac{\exp(U_{i0})}{\exp(U_{i0})+\sum_{j\in M_i}\exp(U_{ij})}.
+\end{equation}
 
-\section{Methodology}
+The expected one-request menu objective can be written as
+\begin{align}
+\max_x\quad
+&\sum_{b\in B_i}x_{ib}\Pr_i(b\mid M_i)\left[p_{ib}-c_{ib}(S_i)\right] \nonumber\\
+&-\lambda_{\mathrm{out}}\Pr_i(0\mid M_i)-\Phi(M_i,S_i),
+\end{align}
+where $c_{ib}(S_i)$ is predicted operational cost, $\lambda_{\mathrm{out}}$
+is an opt-out/lost-demand penalty, and $\Phi(M_i,S_i)$ collects
+service-quality, ETA/window, and guardrail penalties. This representation is
+intentionally general: concrete runtime policies can use different
+menu-objective modes, pricing modes, and solver contracts while preserving the
+same evidence accounting.
 
-\subsection{\dspo{} Baseline}
+The realized outcome after choice is recorded separately. If the chosen bundle
+is home service, the row increments accepted home pickup. If the chosen bundle
+is a meeting-point service, the row increments accepted meeting-point pickup.
+If the outside option is chosen, the row increments opt-out and the route is
+not mutated. Generated rows also record checkpoint status, policy tag,
+settings hash, manifest hash, outside-option utility, and method metadata.
+These fields are required because formal interpretation depends on provenance
+and artifact gates, not only on numerical objective values.
 
-The \dspo{} baseline combines learned cost prediction with menu optimization.
-It estimates operational costs for feasible bundles, constructs a limited menu,
-and evaluates expected menu value under the MNL choice model. In the experiment
-contract, \dspo{} rows are identified by generated
-\texttt{\detokenize{method_family=DSPO}} metadata and must share request traces, seeds,
-pricing mode, routing settings, and checkpoint provenance with all baselines.
+\section{Solution Method}
 
-\subsection{\dspoplus{} Extension}
+The method is an online diagnostic service-menu pipeline. It uses the current
+request and route state to generate feasible products, score menus, record
+choice and outcome metadata, and route the resulting evidence through claim
+gates. The pipeline is written as pseudocode because the manuscript's purpose
+is to describe an auditable evaluation contract, not to assert claim-ready
+algorithmic performance.
 
-\dspoplus{} is defined as the enhanced decision-focused policy family only when
-the generated rows carry explicit \texttt{\detokenize{method_family=DSPO_PLUS}} metadata.
-Its minimum contract includes behavior-gated menu objectives, outside-option
-and opt-out guardrails, service-quit penalties, and robust time-window metadata.
-Attention-based variants remain diagnostic/V2 and do not satisfy the v1
-\dspoplus{} contract. Any intended advantage must come from the generated
-family contract and downstream validation, not from a price-only shortcut or a
-manual relabeling of current mainline rows.
+\begin{table*}[t]
+\centering
+\caption{Diagnostic service-menu evaluation pipeline.}
+\begin{tabular}{@{}p{0.06\textwidth}p{0.88\textwidth}@{}}
+\toprule
+Step & Operation \\
+\midrule
+1 & Read current route, capacity, request, and replay state. \\
+2 & Generate candidate pickup locations: home plus feasible meeting points. \\
+3 & For each location, generate candidate pickup-window treatments. \\
+4 & For each location-window pair, generate or assign prices. \\
+5 & Form candidate bundles $b=(m,w,p)$. \\
+6 & Apply route, capacity, ETA/window, and service-guardrail filters. \\
+7 & Select a displayed menu subject to menu-size and policy contracts. Use exact enumeration when candidate count is inside the exact limit; use greedy fallback when candidate count exceeds that limit; record solver diagnostics, candidate counts, fallback reason, build time, and selected menu metadata. \\
+8 & Evaluate the MNL response model over displayed bundles plus outside option. \\
+9 & Apply the selected outcome: accepted home pickup mutates the route through home service; accepted meeting-point pickup mutates the route through the chosen meeting point; opt-out records lost demand and does not mutate the route. \\
+10 & Emit normalized row fields, checkpoint load status, policy tag, method metadata, manifest/settings hashes, and outcome counts. \\
+11 & Classify generated artifacts through readiness, row, artifact, package, and strict claim-guard gates. \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-\subsection{Menu and Time-Window Extension}
+Candidate bundle generation starts from feasible service products. Home
+service may be retained as a displayed option or may be part of the candidate
+pool, depending on the policy contract. Meeting-point candidates carry walking
+distance, predicted route cost, ETA, time-window metadata, and service-quality
+features. The service guardrails prevent infeasible or contract-violating
+alternatives from being displayed.
 
-The Work2 contribution is the interaction of menus and time windows. A menu is
-the displayed subset of candidate meeting-point bundles. A time-window filter is
-an eligibility rule that can remove bundles before menu scoring. The no-filter
-case is a diagnostic endpoint: it disables ETA pruning but does not disable
-routing, capacity, or service feasibility. Formal claims must distinguish robust
-time-window handling from diagnostic no-filter exposure.
+ETA and pickup-window handling are modeled as feasibility and scoring
+components. Robust ETA filters can exclude or penalize bundles whose predicted
+pickup timing is outside the relevant service window. A no-filter diagnostic
+path can expose how the ETA filter changes the candidate set, but it is not an
+operating recommendation in this manuscript. Fixed-window and adaptive-window
+settings are comparison slots governed by the strict claim guard.
+
+Pricing is applied after candidate construction or during menu evaluation. The
+Lambert-W pricing component maps utility and cost terms into candidate prices
+when that pricing mode is active. The paper treats this component as part of a
+larger service-menu method, because the displayed decision also depends on
+route feasibility, menu size, choice response, outside-option treatment, and
+claim-gated evidence status.
+
+Menu selection may use exact enumeration for small candidate sets and greedy
+fallback for larger sets. Current computational material is diagnostic and C6
+is blocked, so the method section does not assert computational credibility.
+It reports the contract: the runtime records the effective solver, threshold,
+candidate count, fallback flag, fallback reason, and related diagnostics so
+future evidence can be audited.
 
 \section{Experimental Design}
 
-\subsection{Dataset}
+The evaluation design is paired replay. Each policy comparison must preserve
+the same demand splits, seeds, replay settings, checkpoint requirements,
+manifest structure, and non-policy runtime settings. Only declared policy
+overrides may differ. This design prevents a comparison from mixing policy
+effects with changes in scenario, checkpoint provenance, or replay conditions.
 
-The primary dataset is the RC benchmark because it is the controlled setting
-used by the current Work2 robust-menu pipeline. Yanjiao or additional external
-instances are future extensions unless the RC formal ladder passes first.
+\begin{table*}[t]
+\centering
+\caption{Primary policy family and paired-comparison roles.}
+\begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
+\toprule
+Policy tag & Role in paired comparison \\
+\midrule
+\code{mainline_no_menu} & Baseline slot without displayed service-menu construction \\
+\code{mainline_fixed_menu} & Fixed service-menu slot \\
+\code{mainline_random_menu} & Random displayed-menu diagnostic slot \\
+\code{mainline_optimized_m} & Optimized meeting-point-only product slot \\
+\code{mainline_optimized_mw} & Optimized meeting-point and window product slot \\
+\code{mainline_optimized_fixed_window} & Optimized menu with fixed-window handling \\
+\code{mainline_optimized_adaptive} & Optimized menu with adaptive-window handling \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-\subsection{Baselines and Policies}
+These tags define the comparison surface. Under the current strict claim
+guard, they do not authorize directional effect language. They are used to
+explain how the service-menu family is organized and what future claim-ready
+evidence would need to compare.
 
-The required comparison ladder is no pricing, static pricing, \dspo, and
-\dspoplus. The DSPO-family variants are further split into clip and wide
-configurations when the manifest supports both. The target ranking
-\begin{equation}
-  \dspoplus > \dspo > \text{Static Pricing} > \text{No Pricing}
-\end{equation}
-is a validation criterion, not an assumption. If the ranking fails, the workflow
-stops and reports the failure reason, minimal fix, and rerun command.
+The normalized rows record profit and service metrics, including
+\code{net_profit}, \code{acceptance_rate}, \code{optout_rate}, accepted home
+count, accepted meeting-point count, home share, meeting-point uptake, served
+rate, and status fields. Provenance fields include policy tag, manifest hash,
+settings hash, checkpoint path, checkpoint hash, checkpoint requirement, and
+\code{checkpoint_load_status}. The checkpoint fields are not administrative
+details: formal and pilot evidence cannot support manuscript claims without
+explicit load status and matching metadata.
 
-\subsection{Metrics}
-
-The primary metric is realized net profit. Secondary metrics include served
-rate, accepted-home count, opt-out rate, meeting-point adoption rate,
-price-boundary diagnostics, checkpoint load status,
-\texttt{\detokenize{outside_option_util}}, \texttt{\detokenize{method_family}}, and artifact
-eligibility. \texttt{\detokenize{home_share}} is retained as a compatibility field with a
-total-choice denominator; it is not an accepted-home-only rate unless that
-denominator is stated explicitly. Opt-out, accepted home pickup, and accepted
-meeting-point pickup remain separate outcome states in simulator counters,
-normalized rows, artifact gates, and manuscript language.
+Evidence is classified into four tiers. Formal evidence can support
+claim-bearing language only when readiness, row validity, artifact status,
+package status, and strict claim guard all pass. Diagnostic evidence can
+support mechanism and boundary discussion. Blocked evidence can support
+status/provenance transparency but not positive empirical conclusions.
+Scaffold-only material can define future study protocols but cannot establish
+executed case evidence. The claim gates are therefore part of the experimental
+design.
 
 \section{Results}
 
-\subsection{Current Artifact Status}
+The Results section begins with the strict claim gate. In the current package,
+the claim-ready flag, strict claim-guard flag, and positive-claims permission
+flag are all false. It contains 74 package artifacts, 70 existing artifacts, 4
+missing artifacts, and 108 blockers. The package is usable for diagnostic
+interpretation and provenance transparency, but it is not claim-ready
+empirical evidence.
 
-Current Work2 robust-menu artifacts are not claim-ready. The claim guard reports
-blocked status due to missing checkpoint provenance and formal evidence not yet
-completed. Therefore, this draft reports artifact status and planned result
-families rather than empirical dominance claims.
+\begin{table*}[t]
+\centering
+\caption{Claim status and allowed manuscript use under the current strict guard.}
+\small
+\begin{tabular}{@{}p{0.22\textwidth}p{0.20\textwidth}p{0.50\textwidth}@{}}
+\toprule
+Claim & Current status & Allowed manuscript use \\
+\midrule
+C1 adaptive menu & unsupported blocked & Not allowed as a positive claim; status and blockers only \\
+C2 product ablation & diagnostic blocked & Diagnostic structure and future upgrade conditions only \\
+C3 adaptive window & unsupported & Comparison slot only; no directional effect language \\
+C4 menu construction & diagnostic blocked & Auditable mechanism discussion only \\
+C5 ETA boundary & diagnostic only & ETA/no-filter boundary discussion only \\
+C6 exact/greedy & blocked diagnostic & Computational diagnostic appendix only \\
+C7 provenance & status supported & Provenance/status transparency only \\
+C8 semi-real case & scaffold blocked & Future-study scaffold only \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-\ArtifactTable{../work2_coding/artifacts/work2_robust_menu/tables/provenance_status.tex}{Current provenance and claim-gate status.}
+This claim table shapes the diagnostic findings. First, the service-menu
+framework can be described as implemented and auditable, but central adaptive
+menu performance claims remain blocked. Second, product and time-window
+ablations can be described as diagnostic comparison structure, not as
+claim-ready evidence of value. Third, ETA/no-filter material can identify a
+robustness boundary, but no-filter is not presented as a deployment rule.
+Fourth, exact/greedy output can document computational status and fallback
+metadata, while computational credibility remains blocked. Fifth, case-study
+material remains scaffold-only and future-study oriented.
 
-\subsection{Planned Ranking Validation}
+The source-family status reinforces this interpretation. Main RC artifacts
+are blocked because formal readiness and checkpoint evidence are unavailable.
+Phase 8 sensitivity artifacts are diagnostic and provisional. Phase 9
+tractability artifacts are diagnostic and provisional. Case material is
+scaffold-only. Blocker-status documents are provenance/status material. The
+result is a transparent diagnostic package rather than a positive empirical
+result package.
 
-The formal result table will be generated only after no-pricing, static-pricing,
-\dspo, and \dspoplus{} rows are regenerated under paired replay with loaded
-checkpoint provenance. Until then, any ranking language remains conditional.
+This interpretation is not a paper weakness to hide; it is the paper's
+evidence discipline. A reader can see which model components exist, which
+comparison slots are planned, which generated artifacts are blocked, which
+diagnostic boundaries are visible, and what future regenerated evidence would
+need to change before any claim ID is upgraded.
 
-\ArtifactTable{../work2_coding/artifacts/work2_robust_menu/tables/policy_summary.tex}{Diagnostic policy summary from the current artifact bundle.}
+\section{Discussion}
 
-\section{Ablation Study}
+The primary contribution is the formulation of a displayed service-menu
+decision for many-to-one DRT. The model ties meeting points, pickup-window
+handling, prices, MNL response, route feasibility, and outside-option
+accounting into one sequential decision. That contribution is useful even
+under a diagnostic evidence ceiling because it clarifies what the platform
+actually controls and what generated evidence must preserve.
 
-The ablation section will be populated after the corresponding experiment gates
-pass. The required ablations are: (i) removing time-window filtering or
-time-window feasibility effects, (ii) removing menu expansion so that the policy
-cannot benefit from a richer candidate set, and (iii) decomposing the
-\dspo{}--\dspoplus{} gap into cost-learning, behavior-gating, and pricing/menu
-channels. Ablation outputs must be generated from artifacts, not edited by hand.
+The second contribution is the evidence architecture. Paired replay controls
+scenario comparability. Checkpoint metadata records whether required
+prediction models were available and loaded. Normalized rows separate accepted
+home pickup, accepted meeting-point pickup, and opt-out. Artifact gates
+classify evidence into formal, diagnostic, blocked, and scaffold-only tiers.
+Strict claim guards then translate those tiers into allowed manuscript
+language. This makes the manuscript harder to overstate and easier to audit.
+
+The limitation is equally explicit. Final replay was not run in this
+milestone because the pre-replay gate remained blocked. The current package
+has \code{claim_ready=false}, and the guard blocks positive claims for C1,
+C2, C3, C4, C6, and C8. The manuscript therefore cannot conclude that one menu
+family has claim-ready performance effects over another. It can only state the
+formulation, diagnostic boundaries, blocker status, and future evidence path.
+
+The reviewer implications are direct. If a reviewer asks where the adaptive
+menu performance claim is, the answer is that C1 is blocked and not asserted.
+If a reviewer asks whether no-filter should be used operationally, the answer
+is that C5 is diagnostic boundary material only. If a reviewer asks whether
+case material reflects executed passenger evidence, the manuscript explicitly
+does not claim such behavior because C8 remains scaffold-only. If a reviewer
+asks whether exact/greedy material establishes solver quality, the answer is
+that C6 is blocked diagnostic and future evidence is required.
+
+Future claim upgrades require new evidence, not editorial substitution. A
+future milestone would need clean provenance, loaded checkpoint status and
+sidecar metadata, complete formal rows, dependency snapshots, artifact-status
+passes, package regeneration, and a strict claim guard that authorizes the
+exact claim ID. Only then should the manuscript wording change from
+conditional diagnostic to claim-ready empirical.
 
 \section{Conclusion}
 
-This draft reframes Work2 as a TR-C paper on behavior-aware service-menu
-optimization for many-to-one DRT. The contribution is the joint treatment of
-meeting points, time windows, pricing, and passenger choice under a
-claim-gated, paired-replay experiment design. The final empirical conclusion
-depends on passing the RC evidence ladder. Until those gates pass, the
-manuscript's defensible claim is that the framework, contracts, and artifact
-guards are in place; policy dominance remains to be verified.
+This paper formulates dynamic displayed service-menu optimization for
+many-to-one DRT. The central decision is the displayed bundle $b=(m,w,p)$,
+combining pickup location, pickup-window handling, and price. The model
+defines candidate bundles, menus, MNL response, objective components,
+feasibility constraints, outside option, accepted home pickup, accepted
+meeting-point pickup, and opt-out accounting. The method describes an
+auditable diagnostic pipeline from candidate generation through claim-gate
+reporting.
 
-\section*{GSD Execution Report}
+The current manuscript remains conditional diagnostic with
+\code{claim_ready=false}. It provides a service-menu formulation, paired-replay
+evaluation architecture, and transparent claim-boundary audit. Positive
+empirical claims remain blocked by readiness and strict claim-guard status,
+and final replay was not authorized in the current milestone. The paper is
+therefore a claim-gated diagnostic manuscript and a foundation for future
+clean evidence regeneration.
 
-Milestone v1.1 starts from the completed V1 robust-menu pipeline and continues
-phase numbering from Phase 6. The immediate manuscript action in this draft is
-format and structure scaffolding only. Formal paper claims are blocked until
-the code/experiment audit, model consistency repair, baseline validation,
-\dspo{} runs, and \dspoplus{} runs have passed.
+\appendix
 
-\section*{Reviewer-Style Risk Analysis}
+\section{Source Map And Claim Audit}
 
-\textbf{Novelty risk.} The strongest novelty is the combination of
-behavior-aware service menus, meeting points, time windows, and decision-focused
-policy learning. The risk is that reviewers may see parts of the framework as
-known unless the \dspo{}/\dspoplus{} distinction and menu-time-window
-interaction are made concrete.
+The manuscript uses
+\path{manuscript/TR_E_WORK2_TABLE_FIGURE_SOURCE_MAP.md} as the source map for
+planned manuscript objects. Each object is required to identify source
+artifact path, claim ID, claim status, allowed manuscript use, and evidence
+class. The strict claim boundary is documented in
+\path{manuscript/TR_E_WORK2_CLAIM_AUDIT.md} and the generated
+\path{work2_coding/artifacts/work2_robust_menu/phase10_paper_artifacts/CLAIM_GUARD.json}.
 
-\textbf{Modeling risk.} The MNL parameters and outside option must be framed as
-simulator design or calibrated inputs unless external passenger-demand
-estimation is added.
+\section{ETA And No-Filter Diagnostic Boundary}
 
-\textbf{Experiment risk.} The target ranking cannot be asserted before
-checkpoint provenance, paired replay, and artifact gates pass. Missing
-checkpoint status is currently a blocking issue.
+ETA/no-filter material belongs to C5\_eta\_robustness\_boundary and is
+diagnostic-only under the current guard. It may be used to identify boundary
+conditions created by ETA filtering and pickup-window handling. It does not
+authorize a no-filter operating recommendation or any deployment language.
 
-\textbf{Acceptance probability.} At this draft stage the acceptance probability
-is low to medium because the paper structure is in place but formal empirical
-support is not yet claim-ready. It can improve only after the RC evidence ladder
-passes and reviewer-facing risks are addressed directly.
+\section{Exact/Greedy Computational Diagnostics}
 
-\printcredits
+Exact enumeration and greedy fallback are runtime contracts whose diagnostics
+include candidate count, effective solver, threshold, fallback flag, fallback
+reason, and build time. Current Phase 9 material is diagnostic and
+provisional, and C6\_exact\_greedy\_computational\_credibility remains
+blocked. The appendix may report computational status only within that
+boundary.
+
+\section{Case-Scaffold Boundary}
+
+Case-study material under \code{.planning/data/case_studies/} is
+scaffold-only. It may define future source contracts, route-selection ideas,
+and demand protocols. It cannot be presented as executed case evidence, real
+passenger evidence, or claim-ready validation in the current manuscript.
+
+\section{Prohibited-Language Check}
+
+The revised prohibited-language check is maintained in
+\path{manuscript/TR_E_WORK2_REVISED_PROHIBITED_LANGUAGE_CHECK.md}. Hits from
+the scan must be classified as safe blocked-claim/status discussion, safe
+explicit denial, or unsafe language requiring manuscript revision. The final
+status is pass only when no unqualified positive claim remains.
 
 \bibliographystyle{cas-model2-names}
 \bibliography{references}
